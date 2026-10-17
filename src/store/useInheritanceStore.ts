@@ -27,6 +27,7 @@ export interface InheritanceState {
   wizardStep: number;
 
   // Domain Entities
+  activeDesignSystem: import("@/types/designs").DesignSystemId;
   deceased: DeceasedInfo;
   assets: EstateAssets;
   debts: EstateDebts;
@@ -35,6 +36,7 @@ export interface InheritanceState {
   // Actions
   setLanguage: (lang: Language) => void;
   setTheme: (theme: Theme) => void;
+  setDesignSystem: (design: import("@/types/designs").DesignSystemId) => void;
   setFontScale: (scale: FontScale) => void;
   setFontStyle: (style: FontStyle) => void;
   setActiveView: (view: ViewTab) => void;
@@ -133,6 +135,7 @@ export const useInheritanceStore = create<InheritanceState>()(
       activeView: "wizard",
       wizardStep: 1,
 
+      activeDesignSystem: "vanilla",
       deceased: initialDeceased,
       assets: initialAssets,
       debts: initialDebts,
@@ -150,6 +153,13 @@ export const useInheritanceStore = create<InheritanceState>()(
         set({ theme });
         if (typeof document !== "undefined") {
           document.documentElement.setAttribute("data-theme", theme);
+        }
+      },
+
+      setDesignSystem: (design) => {
+        set({ activeDesignSystem: design });
+        if (typeof document !== "undefined") {
+          document.documentElement.setAttribute("data-design", design);
         }
       },
 
@@ -211,6 +221,7 @@ export const useInheritanceStore = create<InheritanceState>()(
       partialize: (state) => ({
         language: state.language,
         theme: state.theme,
+        activeDesignSystem: state.activeDesignSystem,
         fontScale: state.fontScale,
         fontStyle: state.fontStyle,
         deceased: state.deceased,

@@ -116,6 +116,15 @@ export const Navbar: React.FC = () => {
               ))}
             </div>
 
+            {/* 10 World-Class Design Studio Link */}
+            <a
+              href="/designs"
+              className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-[var(--theme-gold)] to-[var(--theme-gold-dark)] text-black font-bold text-xs shadow-md shadow-[var(--theme-gold)]/20 hover:brightness-110 transition-all"
+            >
+              <Palette className="w-3.5 h-3.5" />
+              <span>10 Design Styles</span>
+            </a>
+
             {/* Urdu / English Language Switcher */}
             <button
               onClick={() => setLanguage(language === "en" ? "ur" : "en")}
