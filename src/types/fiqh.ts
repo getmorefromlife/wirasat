@@ -52,7 +52,41 @@ export interface DeceasedInfo {
   habwah: HabwahItems;
 }
 
+export interface PersonNode {
+  id: string;
+  name: string;
+  gender: 'MALE' | 'FEMALE';
+  isAlive: boolean;
+  relation: 'SPOUSE' | 'FATHER' | 'MOTHER' | 'SON' | 'DAUGHTER' | 'GRANDCHILD' | 'SIBLING' | 'NEPHEW_NIECE' | 'UNCLE_AUNT' | 'COUSIN';
+  parentId?: string; // Links grandchild/descendant to their specific parent
+  impediments: {
+    isKiller: boolean;
+    isNonMuslim: boolean;
+    isLian: boolean;
+    "isLi’an"?: boolean;
+  };
+  habwahEligible?: boolean; // For eldest living sane son of a deceased father
+  children?: PersonNode[];  // Recursive sub-branch
+  daughterBranchEqualRatio?: boolean; // Fatwa toggle: true for 1:1 classical equality, false for 2:1 ahwat wujubi
+}
+
+export interface BranchCalculationResult {
+  person: PersonNode;
+  parentHypotheticalShare: number; // The fractional share of the deceased parent
+  subBranchShare: number;          // The portion within this sibling cluster
+  finalFraction: string;           // E.g., "1/6", "7/24"
+  percentage: number;
+  monetaryValue: number;
+  fiqhBasisUrdu: string;
+  fiqhBasisEnglish: string;
+  isExcluded: boolean;             // True if blocked by living closer relative (al-Aqrab Yamna' al-Ab'ad)
+  exclusionReason?: string;
+}
+
 export interface HeirsInput {
+  // Named multi-generational descendants (Tanzīl representation)
+  namedDescendants?: PersonNode[];
+
   // Spouses
   spouseCount: number; // 0 or 1 for husband (if deceased female); 0 to 4 for wives (if deceased male)
   
@@ -160,6 +194,7 @@ export interface InheritanceCalculationResult {
     value: number;
   };
   heirShares: HeirShareResult[];
+  branchResults?: BranchCalculationResult[];
   notes: string[];
 }
 

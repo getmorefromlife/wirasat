@@ -1,5 +1,6 @@
 import {
   BalanceSheetSummary,
+  BranchCalculationResult,
   DeceasedInfo,
   EstateAssets,
   EstateDebts,
@@ -7,6 +8,7 @@ import {
   HeirsInput,
   InheritanceCalculationResult,
   MarjaId,
+  PersonNode,
   ShariaProof,
 } from "@/types/fiqh";
 import { MARJA_DATABASE } from "./marja-rules";
@@ -100,6 +102,12 @@ export function determineActiveTier(heirs: HeirsInput): {
   activeTier: 1 | 2 | 3 | null;
   excludedTiers: number[];
 } {
+  const hasNamedTier1 = (heirs.namedDescendants || []).some(
+    (n) =>
+      ((n.relation === "SON" || n.relation === "DAUGHTER" || n.relation === "GRANDCHILD") && n.isAlive) ||
+      (n.children && n.children.some((c) => c.isAlive))
+  );
+
   const hasTier1 =
     (heirs.fatherAlive && !heirs.fatherImpediment) ||
     (heirs.motherAlive && !heirs.motherImpediment) ||
@@ -110,7 +118,8 @@ export function determineActiveTier(heirs: HeirsInput): {
     (heirs.deceasedDaughtersWithChildren &&
       heirs.deceasedDaughtersWithChildren.some(
         (c) => c.sons > 0 || c.daughters > 0
-      ));
+      )) ||
+    hasNamedTier1;
 
   if (hasTier1) {
     return { activeTier: 1, excludedTiers: [2, 3] };
@@ -201,6 +210,204 @@ export function formatFraction(
 }
 
 /**
+ * Advanced Tanzīl & Named Descendants Calculation Engine
+ * Strictly enforces Ja'fari Fiqh & Sayyid al-Sistani / al-Khamenei / al-Khoei rulings:
+ * 1. Proximity Rule (Al-Aqrab Yamna' al-Ab'ad): If ANY direct child is alive, ALL grandchildren are completely excluded.
+ * 2. Tanzil (Representation): If NO direct children are alive, grandchildren step into their deceased parent's shoes.
+ * 3. Sub-branch Division: Deceased son's children divide 2:1. Deceased daughter's children divide 2:1 (ahwat wujubi) or 1:1 (classical toggle).
+ */
+export function calculateNamedTanzilBranches(
+  namedDescendants: PersonNode[],
+  distributableToChildrenPortion: number,
+  netBloodEstate: number,
+  currency: string = "PKR"
+): { branchResults: BranchCalculationResult[]; tanzilHeirShares: HeirShareResult[]; notes: string[] } {
+  const branchResults: BranchCalculationResult[] = [];
+  const tanzilHeirShares: HeirShareResult[] = [];
+  const notes: string[] = [];
+
+  if (!namedDescendants || namedDescendants.length === 0) {
+    return { branchResults, tanzilHeirShares, notes };
+  }
+
+  // 1. Identify direct children (sons and daughters)
+  const directChildren = namedDescendants.filter(
+    (n) => n.relation === "SON" || n.relation === "DAUGHTER"
+  );
+  const livingDirectChildren = directChildren.filter(
+    (n) => n.isAlive && !n.impediments?.isKiller && !n.impediments?.isNonMuslim
+  );
+
+  // Collect all grandchildren
+  const allGrandchildren: Array<{ node: PersonNode; parentNode?: PersonNode }> = [];
+  directChildren.forEach((child) => {
+    if (child.children && child.children.length > 0) {
+      child.children.forEach((gc) => {
+        allGrandchildren.push({ node: gc, parentNode: child });
+      });
+    }
+  });
+  namedDescendants
+    .filter((n) => n.relation === "GRANDCHILD")
+    .forEach((gc) => {
+      if (!allGrandchildren.some((item) => item.node.id === gc.id)) {
+        const parentNode = directChildren.find((p) => p.id === gc.parentId);
+        allGrandchildren.push({ node: gc, parentNode });
+      }
+    });
+
+  // 2. GOLDEN PROXIMITY RULE (Al-Aqrab Yamna' al-Ab'ad - الأقرب يمنع الأبعد)
+  if (livingDirectChildren.length > 0) {
+    notes.push(
+      `Al-Aqrab Yamna‘ al-Ab‘ad (الأقرب يمنع الأبعد): All grandchildren are completely excluded because the deceased has ${livingDirectChildren.length} surviving living child(ren) (${livingDirectChildren.map((c) => c.name).join(", ")}).`
+    );
+    allGrandchildren.forEach(({ node, parentNode }) => {
+      branchResults.push({
+        person: node,
+        parentHypotheticalShare: 0,
+        subBranchShare: 0,
+        finalFraction: "0",
+        percentage: 0,
+        monetaryValue: 0,
+        isExcluded: true,
+        exclusionReason: `Grandchild completely excluded by surviving direct child (${livingDirectChildren.map((c) => c.name).join(", ")}) under the Golden Proximity Rule (Al-Aqrab Yamna‘ al-Ab‘ad).`,
+        fiqhBasisEnglish:
+          "Golden Proximity Rule (Al-Aqrab Yamna' al-Ab'ad): In Class 1, the presence of even a single living son or daughter completely bars all grandchildren, even children of a deceased eldest son.",
+        fiqhBasisUrdu:
+          "قاعدہ اقربیت (الأقرب يمنع الأبعد): فقہ جعفریہ میں اگر میت کا ایک بھی صلبی بیٹا یا بیٹی زندہ ہو، تو تمام پوتے، پوتیاں، نواسے اور نواسیاں قطعی طور پر محروم ہو جاتے ہیں۔",
+      });
+    });
+    return { branchResults, tanzilHeirShares, notes };
+  }
+
+  // 3. TANZIL (REPRESENTATION) — Direct children are ALL deceased
+  const activeBranches: Array<{
+    parent: PersonNode;
+    grandchildren: PersonNode[];
+    parentUnits: number;
+  }> = [];
+
+  directChildren.forEach((parent) => {
+    const survivingGC = (parent.children || []).filter(
+      (gc) => gc.isAlive && !gc.impediments?.isKiller && !gc.impediments?.isNonMuslim
+    );
+    namedDescendants.forEach((n) => {
+      if (
+        n.relation === "GRANDCHILD" &&
+        n.parentId === parent.id &&
+        n.isAlive &&
+        !n.impediments?.isKiller &&
+        !n.impediments?.isNonMuslim
+      ) {
+        if (!survivingGC.some((g) => g.id === n.id)) survivingGC.push(n);
+      }
+    });
+
+    if (survivingGC.length > 0) {
+      const parentUnits = parent.gender === "MALE" ? 2 : 1;
+      activeBranches.push({ parent, grandchildren: survivingGC, parentUnits });
+    }
+  });
+
+  if (activeBranches.length === 0) {
+    return { branchResults, tanzilHeirShares, notes };
+  }
+
+  notes.push(
+    "Tanzīl (تنزیل): In the absence of living direct children, grandchildren step into the exact shoes (Manzilah) of their deceased parents."
+  );
+
+  const totalBranchUnits = activeBranches.reduce((sum, b) => sum + b.parentUnits, 0);
+
+  activeBranches.forEach((branch) => {
+    const parentHypotheticalFraction = branch.parentUnits / totalBranchUnits;
+    const parentBranchMoney = distributableToChildrenPortion * parentHypotheticalFraction;
+
+    const isSonBranch = branch.parent.gender === "MALE";
+    const useEqualRatioForDaughter =
+      !isSonBranch && !!branch.parent.daughterBranchEqualRatio;
+
+    let subUnits = 0;
+    if (useEqualRatioForDaughter) {
+      subUnits = branch.grandchildren.length;
+    } else {
+      branch.grandchildren.forEach((gc) => {
+        subUnits += gc.gender === "MALE" ? 2 : 1;
+      });
+    }
+
+    branch.grandchildren.forEach((gc) => {
+      const gcUnit = useEqualRatioForDaughter ? 1 : gc.gender === "MALE" ? 2 : 1;
+      const subShare = subUnits > 0 ? gcUnit / subUnits : 0;
+      const gcMoney = parentBranchMoney * subShare;
+      const gcOverallFraction = netBloodEstate > 0 ? gcMoney / netBloodEstate : 0;
+      const percent = netBloodEstate > 0 ? (gcMoney / netBloodEstate) * 100 : 0;
+
+      const basisEn = isSonBranch
+        ? `Tanzīl via deceased son (${branch.parent.name}): Takes father's share (2 units), divided 2:1 among siblings pursuant to Minhāj al-Ṣāliḥīn, Mas'alah 1029.`
+        : useEqualRatioForDaughter
+        ? `Tanzīl via deceased daughter (${branch.parent.name}): Takes mother's share (1 unit), divided equally (1:1) based on classical fatwa.`
+        : `Tanzīl via deceased daughter (${branch.parent.name}): Takes mother's share (1 unit), divided 2:1 pursuant to al-Aḥwaṭ al-Wujūbī of Sayyid al-Sistani and Sayyid al-Khamenei.`;
+
+      const basisUr = isSonBranch
+        ? `تنزیل بذریعہ مرحوم بیٹا (${branch.parent.name}): والد کا حصہ (2 حصے)، بہن بھائیوں میں 2:1 کے تناسب سے تقسیم (منہاج الصالحین، مسئلہ 1029)۔`
+        : useEqualRatioForDaughter
+        ? `تنزیل بذریعہ مرحومہ بیٹی (${branch.parent.name}): والدہ کا حصہ (1 حصہ)، قدیم فقہاء کے فتوے کے مطابق برابر (1:1) تقسیم۔`
+        : `تنزیل بذریعہ مرحومہ بیٹی (${branch.parent.name}): والدہ کا حصہ (1 حصہ)، سید سیستانی و سید خامنہ ای کے احوط وجوبی کے تحت 2:1 کے تناسب سے تقسیم۔`;
+
+      const fractionStr = formatFraction(
+        Math.round(gcOverallFraction * 2400),
+        2400
+      ).str;
+
+      branchResults.push({
+        person: gc,
+        parentHypotheticalShare: parentHypotheticalFraction,
+        subBranchShare: subShare,
+        finalFraction: fractionStr,
+        percentage: Number(percent.toFixed(2)),
+        monetaryValue: Math.round(gcMoney),
+        fiqhBasisEnglish: basisEn,
+        fiqhBasisUrdu: basisUr,
+        isExcluded: false,
+      });
+
+      tanzilHeirShares.push({
+        id: `tanzil_${gc.id}`,
+        relationKey: gc.gender === "MALE" ? "grandson" : "granddaughter",
+        tier: 1,
+        count: 1,
+        fractionNumerator: Math.round(gcOverallFraction * 2400),
+        fractionDenominator: 2400,
+        fractionString: fractionStr,
+        percentage: Number(percent.toFixed(2)),
+        totalMonetaryShare: Math.round(gcMoney),
+        sharePerIndividual: Math.round(gcMoney),
+        proof: {
+          quranAyahArabic:
+            "وَأُولُو الْأَرْحَامِ بَعْضُهُمْ أَوْلَىٰ بِبَعْضٍ فِي كِتَابِ اللَّهِ",
+          quranAyahTranslation:
+            "Principle of Tanzīl: Children of the deceased child take the portion of their parent.",
+          quranReference: "Surah Al-Ahzāb (33:6)",
+          hadithTextArabic:
+            "ابن الابن يقوم مقام الابن إذا لم يكن للميت ولد لصلبه، وبنت البنت تقوم مقام البنت",
+          hadithSource:
+            "Wasā'il al-Shī'ah, Kitāb al-Mawārīth, Bāb Tanzīl al-Ahfād",
+          masalahReference: "Minhāj al-Ṣāliḥīn, Mas'alah 1029-1031",
+          ruleExplanation: basisEn,
+        },
+        notes: [
+          `Tanzīl (${gc.name}): Inherits through deceased parent ${branch.parent.name}.`,
+          `Branch share: ${(parentHypotheticalFraction * 100).toFixed(1)}% | Sub-share: ${(subShare * 100).toFixed(1)}%`,
+        ],
+      });
+    });
+  });
+
+  return { branchResults, tanzilHeirShares, notes };
+}
+
+/**
  * Main Ja'fari Distribution Engine
  */
 export function calculateInheritance(
@@ -215,6 +422,7 @@ export function calculateInheritance(
 
   const notes: string[] = [];
   const heirShares: HeirShareResult[] = [];
+  let branchResults: BranchCalculationResult[] = [];
 
   let rejectionOfAwlApplied = false;
   let rejectionOfTasibApplied = false;
@@ -277,15 +485,35 @@ export function calculateInheritance(
       },
       habwahAwarded,
       heirShares: [],
+      branchResults: [],
       notes,
     };
   }
 
-  // Check presence of children or descendants
+  // Check presence of children or descendants (including namedDescendants)
+  const namedLivingDirectChildren = (heirs.namedDescendants || []).filter(
+    (n) =>
+      (n.relation === "SON" || n.relation === "DAUGHTER") &&
+      n.isAlive &&
+      !n.impediments?.isKiller &&
+      !n.impediments?.isNonMuslim
+  );
+  const namedGrandchildrenList: PersonNode[] = [];
+  (heirs.namedDescendants || []).forEach((n) => {
+    if (n.relation === "GRANDCHILD") namedGrandchildrenList.push(n);
+    if (n.children && n.children.length > 0) {
+      n.children.forEach((c) => namedGrandchildrenList.push(c));
+    }
+  });
+
   const directChildrenCount =
-    (heirs.sonsCount || 0) + (heirs.daughtersCount || 0);
+    (heirs.sonsCount || 0) +
+    (heirs.daughtersCount || 0) +
+    namedLivingDirectChildren.length;
+
   const hasDescendants =
     directChildrenCount > 0 ||
+    namedGrandchildrenList.length > 0 ||
     (heirs.deceasedSonsWithChildren &&
       heirs.deceasedSonsWithChildren.some(
         (c) => (c.sons || 0) > 0 || (c.daughters || 0) > 0
@@ -1216,6 +1444,31 @@ export function calculateInheritance(
           });
         }
       }
+
+      // Named Multi-Generational Descendants & Tanzīl Integration
+      if (heirs.namedDescendants && heirs.namedDescendants.length > 0) {
+        const parentShareTotal = heirShares
+          .filter((s) => s.relationKey === "father" || s.relationKey === "mother")
+          .reduce((sum, s) => sum + s.totalMonetaryShare, 0);
+        const distributableToDescendants = Math.max(
+          0,
+          distributableToBloodHeirs - parentShareTotal
+        );
+
+        const tanzilOutput = calculateNamedTanzilBranches(
+          heirs.namedDescendants,
+          distributableToDescendants,
+          distributableToBloodHeirs,
+          deceased.currency
+        );
+
+        branchResults = tanzilOutput.branchResults;
+        notes.push(...tanzilOutput.notes);
+
+        if (directChildrenCount === 0) {
+          heirShares.push(...tanzilOutput.tanzilHeirShares);
+        }
+      }
     }
   }
 
@@ -1427,6 +1680,7 @@ export function calculateInheritance(
     },
     habwahAwarded,
     heirShares,
+    branchResults,
     notes,
   };
 }

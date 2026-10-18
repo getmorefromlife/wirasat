@@ -3,8 +3,10 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Mīrāth al-Thaqalayn | میراثِ ثقلین — Shia Inheritance Engine & Academy",
-  description: "Accredited Ja'fari Jurisprudence Inheritance Calculator and Academy with multi-marja comparative matrix, interactive mind-maps, and bilingual certificates.",
-  keywords: ["Shia Inheritance", "Fiqh al-Mawarith", "Ja'fari Law", "Wirasat Shia", "میراث ثقلین", "Sistani", "Khamenei", "Khoei"],
+  description: "A scholarly project by Maulana Syed Imon Rizvi (مولانا سیّد آئمن رضوی) — Accredited Ja'fari Jurisprudence Inheritance Calculator and Academy with multi-marja comparative matrix, interactive mind-maps, and estate planning studio.",
+  authors: [{ name: "Maulana Syed Imon Rizvi (مولانا سیّد آئمن رضوی)" }],
+  creator: "Maulana Syed Imon Rizvi",
+  keywords: ["Shia Inheritance", "Fiqh al-Mawarith", "Ja'fari Law", "Wirasat Shia", "میراث ثقلین", "Maulana Syed Imon Rizvi", "مولانا سید آئمن رضوی", "Sistani", "Khamenei", "Khoei"],
 };
 
 export default function RootLayout({

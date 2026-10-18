@@ -67,12 +67,12 @@ export const Step2BalanceSheet: React.FC = () => {
             <Calculator className="w-6 h-6 text-[var(--theme-gold)]" />
             <span>{t.step2Title}</span>
           </h2>
-          <p className="text-xs sm:text-sm text-[var(--theme-text-secondary)] mt-1">
+          <p className="text-sm sm:text-sm text-[var(--theme-text-secondary)] mt-1">
             {t.step2Desc}
           </p>
         </div>
 
-        <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-[var(--theme-gold)]/10 text-[var(--theme-gold)] border border-[var(--theme-gold)]/30 self-start sm:self-auto">
+        <span className="text-sm font-mono font-bold px-3 py-1 rounded-full bg-[var(--theme-gold)]/10 text-[var(--theme-gold)] border border-[var(--theme-gold)]/30 self-start sm:self-auto">
           Currency: {deceased.currency}
         </span>
       </div>
@@ -83,7 +83,7 @@ export const Step2BalanceSheet: React.FC = () => {
 
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-[var(--theme-border)]/50 pb-6">
           <div className="space-y-1">
-            <span className="text-xs uppercase font-black tracking-widest text-[var(--theme-gold)] flex items-center gap-1.5">
+            <span className="text-sm uppercase font-black tracking-widest text-[var(--theme-gold)] flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5" />
               {t.netDistributable} (التركة الصافية)
             </span>
@@ -95,7 +95,7 @@ export const Step2BalanceSheet: React.FC = () => {
                 {deceased.currency}
               </span>
             </div>
-            <p className="text-xs text-[var(--theme-text-muted)]">
+            <p className="text-sm text-[var(--theme-text-muted)]">
               {language === "ur"
                 ? "کفن و دفن، قرضہ جات، خمس و زکوٰۃ اور وصیت کی منہائی کے بعد خالص قابلِ تقسیم ترکہ"
                 : "Net estate legally free for distribution to heirs after full Sharia satisfaction."}
@@ -103,9 +103,9 @@ export const Step2BalanceSheet: React.FC = () => {
           </div>
 
           {/* Quick Metrics Badges */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
             <div className="p-3 rounded-xl bg-[var(--theme-bg)] border border-[var(--theme-border)]">
-              <span className="text-[10px] uppercase font-bold text-[var(--theme-text-muted)] block">
+              <span className="text-sm uppercase font-bold text-[var(--theme-text-muted)] block">
                 {t.grossTotal}
               </span>
               <span className="font-mono font-bold text-sm text-[var(--theme-text-primary)]">
@@ -114,7 +114,7 @@ export const Step2BalanceSheet: React.FC = () => {
             </div>
 
             <div className="p-3 rounded-xl bg-[var(--theme-bg)] border border-red-500/30">
-              <span className="text-[10px] uppercase font-bold text-red-400 block">
+              <span className="text-sm uppercase font-bold text-red-400 block">
                 Total Liabilities
               </span>
               <span className="font-mono font-bold text-sm text-red-400">
@@ -123,7 +123,7 @@ export const Step2BalanceSheet: React.FC = () => {
             </div>
 
             <div className="p-3 rounded-xl bg-[var(--theme-bg)] border border-[var(--theme-gold)]/30 col-span-2 sm:col-span-1">
-              <span className="text-[10px] uppercase font-bold text-[var(--theme-gold)] block">
+              <span className="text-sm uppercase font-bold text-[var(--theme-gold)] block">
                 Max Will (1/3rd)
               </span>
               <span className="font-mono font-bold text-sm text-[var(--theme-gold)]">
@@ -136,7 +136,7 @@ export const Step2BalanceSheet: React.FC = () => {
         {/* Visual Liquidation Waterfall Progress Bar */}
         {balanceSheet.grossEstate > 0 && (
           <div className="space-y-2">
-            <div className="flex items-center justify-between text-[11px] font-semibold text-[var(--theme-text-muted)]">
+            <div className="flex items-center justify-between text-sm font-semibold text-[var(--theme-text-muted)]">
               <span>Sharia Liquidation Breakdown</span>
               <span>
                 Net Available:{" "}
@@ -150,32 +150,32 @@ export const Step2BalanceSheet: React.FC = () => {
               {debtsPct > 0 && (
                 <div
                   style={{ width: `${debtsPct}%` }}
-                  className="h-full bg-gradient-to-r from-red-600 to-rose-500 rounded-full"
+                  className="h-full bg-linear-to-r from-red-700 to-red-500 rounded-full"
                   title={`Debts: ${balanceSheet.totalDebts.toLocaleString()}`}
                 />
               )}
               {wasiyyahPct > 0 && (
                 <div
                   style={{ width: `${wasiyyahPct}%` }}
-                  className="h-full bg-gradient-to-r from-amber-600 to-yellow-500 rounded-full"
+                  className="h-full bg-linear-to-r from-amber-600 to-amber-400 rounded-full"
                   title={`Will: ${balanceSheet.deductedWasiyyah.toLocaleString()}`}
                 />
               )}
               {netPct > 0 && (
                 <div
                   style={{ width: `${netPct}%` }}
-                  className="h-full bg-gradient-to-r from-emerald-500 to-[var(--theme-gold)] rounded-full"
+                  className="h-full bg-linear-to-r from-emerald-600 to-[var(--theme-gold)] rounded-full"
                   title={`Net Distributable: ${balanceSheet.netDistributableEstate.toLocaleString()}`}
                 />
               )}
             </div>
 
-            <div className="flex flex-wrap items-center gap-4 text-[11px] pt-1">
-              <span className="flex items-center gap-1.5 text-rose-400">
-                <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
+            <div className="flex flex-wrap items-center gap-4 text-sm pt-1">
+              <span className="flex items-center gap-1.5 text-red-700 font-medium">
+                <span className="w-2.5 h-2.5 rounded-full bg-red-600" />
                 Debts ({debtsPct.toFixed(1)}%)
               </span>
-              <span className="flex items-center gap-1.5 text-amber-400">
+              <span className="flex items-center gap-1.5 text-amber-800 font-medium">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
                 Will ({wasiyyahPct.toFixed(1)}%)
               </span>
@@ -189,17 +189,17 @@ export const Step2BalanceSheet: React.FC = () => {
 
         {/* Insolvency Alert if applicable */}
         {balanceSheet.isInsolvent && (
-          <div className="p-4 rounded-xl bg-red-950/50 border border-red-500/70 text-red-200 text-xs flex items-start gap-3 shadow-lg">
-            <AlertTriangle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
-            <div>
-              <span className="font-bold text-sm text-red-300 block">
+          <div className="p-4 sm:p-5 rounded-2xl bg-[#fef2f2] border-2 border-[#ef4444] shadow-sm flex items-start gap-3.5">
+            <AlertTriangle className="w-5 h-5 text-[#dc2626] shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <span className="font-bold text-sm sm:text-base text-[#991b1b] block">
                 {t.insolventWarning}
               </span>
-              <p className="mt-1 leading-relaxed">
+              <p className="leading-relaxed text-[#7f1d1d] text-sm font-medium">
                 Total commercial, personal, and religious debts (
                 {balanceSheet.totalDebts.toLocaleString()} {deceased.currency}) exceed the gross assets (
                 {balanceSheet.grossEstate.toLocaleString()} {deceased.currency}) by a deficit of{" "}
-                <strong>
+                <strong className="underline decoration-[#ef4444]">
                   {balanceSheet.deficitAmount.toLocaleString()} {deceased.currency}
                 </strong>
                 . Under Ja&apos;fari Jurisprudence, creditors must be satisfied proportionally; no heir distribution occurs.
@@ -220,7 +220,7 @@ export const Step2BalanceSheet: React.FC = () => {
                 {t.grossAssets}
               </h3>
             </div>
-            <span className="text-[11px] font-mono font-bold text-[var(--theme-text-muted)]">
+            <span className="text-sm font-mono font-bold text-[var(--theme-text-muted)]">
               Total: {balanceSheet.grossEstate.toLocaleString()}
             </span>
           </div>
@@ -228,20 +228,20 @@ export const Step2BalanceSheet: React.FC = () => {
           <div className="space-y-4">
             {/* Cash on Hand */}
             <div>
-              <div className="flex items-center justify-between text-xs font-semibold text-[var(--theme-text-secondary)] mb-1.5">
+              <div className="flex items-center justify-between text-sm font-semibold text-[var(--theme-text-secondary)] mb-1.5">
                 <span>{t.cashInHand}</span>
                 <div className="flex items-center gap-1">
                   <button
                     type="button"
                     onClick={() => quickAddAsset("cash", 100000)}
-                    className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--theme-card-subtle)] hover:bg-[var(--theme-gold)]/20 text-[var(--theme-gold)] border border-[var(--theme-border)]"
+                    className="text-sm px-1.5 py-0.5 rounded bg-[var(--theme-card-subtle)] hover:bg-[var(--theme-gold)]/20 text-[var(--theme-gold)] border border-[var(--theme-border)]"
                   >
                     +100K
                   </button>
                   <button
                     type="button"
                     onClick={() => quickAddAsset("cash", 1000000)}
-                    className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--theme-card-subtle)] hover:bg-[var(--theme-gold)]/20 text-[var(--theme-gold)] border border-[var(--theme-border)]"
+                    className="text-sm px-1.5 py-0.5 rounded bg-[var(--theme-card-subtle)] hover:bg-[var(--theme-gold)]/20 text-[var(--theme-gold)] border border-[var(--theme-border)]"
                   >
                     +1M
                   </button>
@@ -256,7 +256,7 @@ export const Step2BalanceSheet: React.FC = () => {
                   className="w-full sacred-input px-3.5 py-2.5 ps-16 text-sm font-mono font-bold"
                   placeholder="0"
                 />
-                <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-xs font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
+                <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-sm font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
                   {deceased.currency}
                 </span>
               </div>
@@ -264,13 +264,13 @@ export const Step2BalanceSheet: React.FC = () => {
 
             {/* Bank Accounts */}
             <div>
-              <div className="flex items-center justify-between text-xs font-semibold text-[var(--theme-text-secondary)] mb-1.5">
+              <div className="flex items-center justify-between text-sm font-semibold text-[var(--theme-text-secondary)] mb-1.5">
                 <span>{t.bankBalances}</span>
                 <div className="flex items-center gap-1">
                   <button
                     type="button"
                     onClick={() => quickAddAsset("bankAccounts", 1000000)}
-                    className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--theme-card-subtle)] hover:bg-[var(--theme-gold)]/20 text-[var(--theme-gold)] border border-[var(--theme-border)]"
+                    className="text-sm px-1.5 py-0.5 rounded bg-[var(--theme-card-subtle)] hover:bg-[var(--theme-gold)]/20 text-[var(--theme-gold)] border border-[var(--theme-border)]"
                   >
                     +1M
                   </button>
@@ -285,7 +285,7 @@ export const Step2BalanceSheet: React.FC = () => {
                   className="w-full sacred-input px-3.5 py-2.5 ps-16 text-sm font-mono font-bold"
                   placeholder="0"
                 />
-                <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-xs font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
+                <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-sm font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
                   {deceased.currency}
                 </span>
               </div>
@@ -293,7 +293,7 @@ export const Step2BalanceSheet: React.FC = () => {
 
             {/* Residential Land */}
             <div>
-              <label className="block text-xs font-semibold text-[var(--theme-text-secondary)] mb-1.5">
+              <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1.5">
                 {t.residentialLand}
               </label>
               <div className="relative">
@@ -305,7 +305,7 @@ export const Step2BalanceSheet: React.FC = () => {
                   className="w-full sacred-input px-3.5 py-2.5 ps-16 text-sm font-mono font-bold"
                   placeholder="0"
                 />
-                <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-xs font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
+                <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-sm font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
                   {deceased.currency}
                 </span>
               </div>
@@ -313,7 +313,7 @@ export const Step2BalanceSheet: React.FC = () => {
 
             {/* Agricultural Land */}
             <div>
-              <label className="block text-xs font-semibold text-[var(--theme-text-secondary)] mb-1.5">
+              <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1.5">
                 {t.agriculturalLand}
               </label>
               <div className="relative">
@@ -325,7 +325,7 @@ export const Step2BalanceSheet: React.FC = () => {
                   className="w-full sacred-input px-3.5 py-2.5 ps-16 text-sm font-mono font-bold"
                   placeholder="0"
                 />
-                <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-xs font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
+                <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-sm font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
                   {deceased.currency}
                 </span>
               </div>
@@ -333,7 +333,7 @@ export const Step2BalanceSheet: React.FC = () => {
 
             {/* Buildings & Constructed Infrastructure */}
             <div>
-              <label className="block text-xs font-semibold text-[var(--theme-text-secondary)] mb-1.5">
+              <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1.5">
                 {t.buildingsStructures}
               </label>
               <div className="relative">
@@ -345,7 +345,7 @@ export const Step2BalanceSheet: React.FC = () => {
                   className="w-full sacred-input px-3.5 py-2.5 ps-16 text-sm font-mono font-bold"
                   placeholder="0"
                 />
-                <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-xs font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
+                <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-sm font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
                   {deceased.currency}
                 </span>
               </div>
@@ -353,7 +353,7 @@ export const Step2BalanceSheet: React.FC = () => {
 
             {/* Movable Property (Gold, Jewelry, Cars) */}
             <div>
-              <label className="block text-xs font-semibold text-[var(--theme-text-secondary)] mb-1.5">
+              <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1.5">
                 {t.movableProperty}
               </label>
               <div className="relative">
@@ -365,7 +365,7 @@ export const Step2BalanceSheet: React.FC = () => {
                   className="w-full sacred-input px-3.5 py-2.5 ps-16 text-sm font-mono font-bold"
                   placeholder="0"
                 />
-                <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-xs font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
+                <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-sm font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
                   {deceased.currency}
                 </span>
               </div>
@@ -382,7 +382,7 @@ export const Step2BalanceSheet: React.FC = () => {
                 {t.preliminaryDeductions}
               </h3>
             </div>
-            <span className="text-[11px] font-mono font-bold text-red-400">
+            <span className="text-sm font-mono font-bold text-red-400">
               Total: -{balanceSheet.totalDebts.toLocaleString()}
             </span>
           </div>
@@ -390,7 +390,7 @@ export const Step2BalanceSheet: React.FC = () => {
           <div className="space-y-4">
             {/* 1. Funeral Expenses */}
             <div>
-              <label className="block text-xs font-semibold text-[var(--theme-text-secondary)] mb-1.5">
+              <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1.5">
                 {t.burialExpenses}
               </label>
               <div className="relative">
@@ -402,7 +402,7 @@ export const Step2BalanceSheet: React.FC = () => {
                   className="w-full sacred-input px-3.5 py-2.5 ps-16 text-sm font-mono font-bold"
                   placeholder="0"
                 />
-                <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-xs font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
+                <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-sm font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
                   {deceased.currency}
                 </span>
               </div>
@@ -411,7 +411,7 @@ export const Step2BalanceSheet: React.FC = () => {
             {/* 2. Worldly Debts (Duyūn al-Nās) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-[var(--theme-text-secondary)] mb-1.5">
+                <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1.5">
                   {t.securedDebts}
                 </label>
                 <div className="relative">
@@ -423,14 +423,14 @@ export const Step2BalanceSheet: React.FC = () => {
                     className="w-full sacred-input px-3.5 py-2.5 ps-16 text-sm font-mono font-bold"
                     placeholder="0"
                   />
-                  <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-xs font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
+                  <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-sm font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
                     {deceased.currency}
                   </span>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[var(--theme-text-secondary)] mb-1.5">
+                <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1.5">
                   {t.unsecuredDebts}
                 </label>
                 <div className="relative">
@@ -442,7 +442,7 @@ export const Step2BalanceSheet: React.FC = () => {
                     className="w-full sacred-input px-3.5 py-2.5 ps-16 text-sm font-mono font-bold"
                     placeholder="0"
                   />
-                  <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-xs font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
+                  <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-sm font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
                     {deceased.currency}
                   </span>
                 </div>
@@ -452,7 +452,7 @@ export const Step2BalanceSheet: React.FC = () => {
             {/* 3. Religious Debts (Ḥuqūq Allāh) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-[var(--theme-text-secondary)] mb-1.5">
+                <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1.5">
                   {t.unpaidKhums}
                 </label>
                 <div className="relative">
@@ -464,14 +464,14 @@ export const Step2BalanceSheet: React.FC = () => {
                     className="w-full sacred-input px-3.5 py-2.5 ps-16 text-sm font-mono font-bold"
                     placeholder="0"
                   />
-                  <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-xs font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
+                  <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-sm font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
                     {deceased.currency}
                   </span>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[var(--theme-text-secondary)] mb-1.5">
+                <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1.5">
                   {t.unfulfilledHajj}
                 </label>
                 <div className="relative">
@@ -483,7 +483,7 @@ export const Step2BalanceSheet: React.FC = () => {
                     className="w-full sacred-input px-3.5 py-2.5 ps-16 text-sm font-mono font-bold"
                     placeholder="0"
                   />
-                  <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-xs font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
+                  <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-sm font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
                     {deceased.currency}
                   </span>
                 </div>
@@ -492,11 +492,11 @@ export const Step2BalanceSheet: React.FC = () => {
 
             {/* 4. Enforceable Will (Al-Waṣiyyah) */}
             <div className="pt-3 border-t border-[var(--theme-border)]/60 space-y-2">
-              <div className="flex items-center justify-between text-xs">
+              <div className="flex items-center justify-between text-sm">
                 <span className="font-bold text-[var(--theme-gold)]">
                   {t.wasiyyahSection}
                 </span>
-                <span className="text-[11px] font-mono text-[var(--theme-text-muted)]">
+                <span className="text-sm font-mono text-[var(--theme-text-muted)]">
                   Max: {Math.round(balanceSheet.maxAllowableWasiyyah).toLocaleString()} {deceased.currency}
                 </span>
               </div>
@@ -510,15 +510,15 @@ export const Step2BalanceSheet: React.FC = () => {
                   className="w-full sacred-input px-3.5 py-2.5 ps-16 text-sm font-mono font-bold"
                   placeholder="0"
                 />
-                <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-xs font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
+                <span className="absolute inset-y-0 inset-inline-start-0 flex items-center px-3 text-sm font-mono font-bold text-[var(--theme-gold)] border-inline-end border-[var(--theme-border)]">
                   {deceased.currency}
                 </span>
               </div>
 
-              <div className="p-3 rounded-xl bg-[var(--theme-bg)]/80 border border-[var(--theme-border)] text-xs text-[var(--theme-text-muted)] leading-relaxed space-y-2">
+              <div className="p-3 rounded-xl bg-[var(--theme-bg)]/80 border border-[var(--theme-border)] text-sm text-[var(--theme-text-muted)] leading-relaxed space-y-2">
                 <p>{t.wasiyyahLimitNotice}</p>
                 {debts.wasiyyahAmount > balanceSheet.maxAllowableWasiyyah && (
-                  <div className="flex items-start gap-2.5 text-amber-300 p-2 rounded-lg bg-amber-950/40 border border-amber-500/40">
+                  <div className="flex items-start gap-2.5 p-3 rounded-xl bg-[#fffbeb] border border-[#f59e0b] text-[#78350f]">
                     <input
                       type="checkbox"
                       id="wasiyyahApproved2"
@@ -528,9 +528,9 @@ export const Step2BalanceSheet: React.FC = () => {
                           wasiyyahApprovedExceedingOneThird: e.target.checked,
                         })
                       }
-                      className="mt-0.5 rounded text-[var(--theme-gold)] focus:ring-[var(--theme-gold)]"
+                      className="mt-0.5 rounded text-[#245642] focus:ring-[#245642]"
                     />
-                    <label htmlFor="wasiyyahApproved2" className="cursor-pointer text-[11px] font-medium">
+                    <label htmlFor="wasiyyahApproved2" className="cursor-pointer text-sm font-semibold text-[#78350f]">
                       {t.wasiyyahApproved}
                     </label>
                   </div>

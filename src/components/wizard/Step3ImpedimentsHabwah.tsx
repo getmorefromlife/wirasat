@@ -56,28 +56,28 @@ export const Step3ImpedimentsHabwah: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-4 rounded-lg bg-[var(--theme-bg)] border border-[var(--theme-border)]">
-            <span className="text-xs font-bold text-red-400 block mb-1">
+            <span className="text-sm font-bold text-red-400 block mb-1">
               1. {language === "ur" ? "کفر و ارتداد" : "Kufr / Apostasy"}
             </span>
-            <p className="text-xs text-[var(--theme-text-secondary)] leading-relaxed">
+            <p className="text-sm text-[var(--theme-text-secondary)] leading-relaxed">
               {t.impedimentKufr}
             </p>
           </div>
 
           <div className="p-4 rounded-lg bg-[var(--theme-bg)] border border-[var(--theme-border)]">
-            <span className="text-xs font-bold text-red-400 block mb-1">
+            <span className="text-sm font-bold text-red-400 block mb-1">
               2. {language === "ur" ? "قتلِ ناحق" : "Unlawful Homicide (Qatl)"}
             </span>
-            <p className="text-xs text-[var(--theme-text-secondary)] leading-relaxed">
+            <p className="text-sm text-[var(--theme-text-secondary)] leading-relaxed">
               {t.impedimentQatl}
             </p>
           </div>
 
           <div className="p-4 rounded-lg bg-[var(--theme-bg)] border border-[var(--theme-border)]">
-            <span className="text-xs font-bold text-red-400 block mb-1">
+            <span className="text-sm font-bold text-red-400 block mb-1">
               3. {language === "ur" ? "لعان" : "Li‘ān (Disavowal)"}
             </span>
-            <p className="text-xs text-[var(--theme-text-secondary)] leading-relaxed">
+            <p className="text-sm text-[var(--theme-text-secondary)] leading-relaxed">
               {t.impedimentLian}
             </p>
           </div>
@@ -93,13 +93,13 @@ export const Step3ImpedimentsHabwah: React.FC = () => {
               {t.habwahTitle}
             </h3>
           </div>
-          <span className="text-xs font-naskh text-[var(--theme-gold)] px-2 py-0.5 rounded bg-[var(--theme-gold)]/10">
+          <span className="text-sm font-naskh text-[var(--theme-gold)] px-2 py-0.5 rounded bg-[var(--theme-gold)]/10">
             حق الولد الأكبر
           </span>
         </div>
 
         {deceased.gender === "female" ? (
-          <div className="p-4 rounded-lg bg-[var(--theme-bg)] text-xs text-[var(--theme-text-muted)]">
+          <div className="p-4 rounded-lg bg-[var(--theme-bg)] text-sm text-[var(--theme-text-muted)]">
             {language === "ur"
               ? "حبوہ فقط متوفی والد کی طرف سے مخصوص ہے۔ متوفیہ والدہ کے ترکہ میں حبوہ جاری نہیں ہوتا۔"
               : "Ḥabwah is strictly exclusive to a deceased father's estate under Ja'fari Law. It does not apply when the deceased is a mother."}
@@ -116,7 +116,7 @@ export const Step3ImpedimentsHabwah: React.FC = () => {
                   onChange={(e) => updateDeceased({ hasEldestSon: e.target.checked })}
                   className="mt-1 rounded text-[var(--theme-gold)] focus:ring-[var(--theme-gold)]"
                 />
-                <label htmlFor="hasEldestSon" className="text-xs text-[var(--theme-text-secondary)] cursor-pointer">
+                <label htmlFor="hasEldestSon" className="text-sm text-[var(--theme-text-secondary)] cursor-pointer">
                   <span className="font-bold text-[var(--theme-text-primary)] block">
                     {t.habwahEligible}
                   </span>
@@ -139,7 +139,7 @@ export const Step3ImpedimentsHabwah: React.FC = () => {
                 />
                 <label
                   htmlFor="eldestSonIsSane"
-                  className={`text-xs cursor-pointer ${
+                  className={`text-sm cursor-pointer ${
                     !deceased.hasEldestSon ? "opacity-50" : "text-[var(--theme-text-secondary)]"
                   }`}
                 >
@@ -156,7 +156,7 @@ export const Step3ImpedimentsHabwah: React.FC = () => {
             {/* 4 Sacred Items */}
             {deceased.hasEldestSon && deceased.eldestSonIsSaneAndNonAqq && (
               <div className="space-y-3 pt-2">
-                <span className="text-xs font-semibold text-[var(--theme-text-primary)] block">
+                <span className="text-sm font-semibold text-[var(--theme-text-primary)] block">
                   {t.habwahItemsNotice}
                 </span>
 
@@ -172,7 +172,7 @@ export const Step3ImpedimentsHabwah: React.FC = () => {
                     }`}
                   >
                     <Book className="w-5 h-5 mx-auto mb-1.5" />
-                    <span className="text-xs font-semibold block">{t.habwahQuran}</span>
+                    <span className="text-sm font-semibold block">{t.habwahQuran}</span>
                   </div>
 
                   <div
@@ -186,7 +186,7 @@ export const Step3ImpedimentsHabwah: React.FC = () => {
                     }`}
                   >
                     <Gem className="w-5 h-5 mx-auto mb-1.5" />
-                    <span className="text-xs font-semibold block">{t.habwahRing}</span>
+                    <span className="text-sm font-semibold block">{t.habwahRing}</span>
                   </div>
 
                   <div
@@ -203,7 +203,7 @@ export const Step3ImpedimentsHabwah: React.FC = () => {
                     }`}
                   >
                     <Sword className="w-5 h-5 mx-auto mb-1.5" />
-                    <span className="text-xs font-semibold block">{t.habwahSword}</span>
+                    <span className="text-sm font-semibold block">{t.habwahSword}</span>
                   </div>
 
                   <div
@@ -217,12 +217,12 @@ export const Step3ImpedimentsHabwah: React.FC = () => {
                     }`}
                   >
                     <Shirt className="w-5 h-5 mx-auto mb-1.5" />
-                    <span className="text-xs font-semibold block">{t.habwahClothes}</span>
+                    <span className="text-sm font-semibold block">{t.habwahClothes}</span>
                   </div>
                 </div>
 
                 <div className="max-w-xs pt-2">
-                  <label className="block text-xs font-semibold text-[var(--theme-text-secondary)] mb-1">
+                  <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1">
                     {t.habwahValue} ({deceased.currency})
                   </label>
                   <input
@@ -241,7 +241,7 @@ export const Step3ImpedimentsHabwah: React.FC = () => {
                 </div>
 
                 {/* Marja fatwa note on Habwah */}
-                <div className="p-3 rounded-lg bg-[var(--theme-bg)]/80 border border-[var(--theme-border)] text-xs text-[var(--theme-text-muted)] flex items-start gap-2">
+                <div className="p-3 rounded-lg bg-[var(--theme-bg)]/80 border border-[var(--theme-border)] text-sm text-[var(--theme-text-muted)] flex items-start gap-2">
                   <Info className="w-4 h-4 text-[var(--theme-gold)] shrink-0 mt-0.5" />
                   <div>
                     <span className="font-bold text-[var(--theme-text-secondary)] block">

@@ -21,21 +21,21 @@ export const Step1Marja: React.FC = () => {
           <BookOpen className="w-6 h-6 text-[var(--theme-gold)]" />
           <span>{t.step1Title}</span>
         </h2>
-        <p className="text-xs sm:text-sm text-[var(--theme-text-secondary)] mt-1">
+        <p className="text-sm sm:text-sm text-[var(--theme-text-secondary)] mt-1">
           {t.step1Desc}
         </p>
       </div>
 
       {/* Deceased Basic Details */}
       <div className="sacred-card p-5 sm:p-6 rounded-2xl space-y-4">
-        <span className="text-xs font-bold uppercase tracking-wider text-[var(--theme-gold)] flex items-center gap-1.5">
+        <span className="text-sm font-bold uppercase tracking-wider text-[var(--theme-gold)] flex items-center gap-1.5">
           <Landmark className="w-3.5 h-3.5" />
           {t.deceasedDetails}
         </span>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-[var(--theme-text-secondary)] mb-1.5">
+            <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1.5">
               {t.deceasedName}
             </label>
             <input
@@ -48,16 +48,16 @@ export const Step1Marja: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[var(--theme-text-secondary)] mb-1.5">
+            <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1.5">
               {t.deceasedGender}
             </label>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => updateDeceased({ gender: "male" })}
-                className={`py-2 px-3 text-xs font-bold rounded-xl border transition-all ${
+                className={`py-2 px-3 text-sm font-bold rounded-xl border transition-all ${
                   deceased.gender === "male"
-                    ? "bg-gradient-to-r from-[var(--theme-gold)] to-[var(--theme-gold-dark)] text-black border-[var(--theme-gold)] shadow-md shadow-[var(--theme-gold)]/20"
+                    ? "bg-linear-to-r from-[var(--theme-gold)] to-[var(--theme-gold-dark)] text-white border-[var(--theme-gold)] shadow-md shadow-[var(--theme-gold)]/20"
                     : "sacred-card text-[var(--theme-text-secondary)] hover:text-white"
                 }`}
               >
@@ -66,9 +66,9 @@ export const Step1Marja: React.FC = () => {
               <button
                 type="button"
                 onClick={() => updateDeceased({ gender: "female" })}
-                className={`py-2 px-3 text-xs font-bold rounded-xl border transition-all ${
+                className={`py-2 px-3 text-sm font-bold rounded-xl border transition-all ${
                   deceased.gender === "female"
-                    ? "bg-gradient-to-r from-[var(--theme-gold)] to-[var(--theme-gold-dark)] text-black border-[var(--theme-gold)] shadow-md shadow-[var(--theme-gold)]/20"
+                    ? "bg-linear-to-r from-[var(--theme-gold)] to-[var(--theme-gold-dark)] text-white border-[var(--theme-gold)] shadow-md shadow-[var(--theme-gold)]/20"
                     : "sacred-card text-[var(--theme-text-secondary)] hover:text-white"
                 }`}
               >
@@ -78,7 +78,7 @@ export const Step1Marja: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[var(--theme-text-secondary)] mb-1.5">
+            <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1.5">
               {t.currency}
             </label>
             <div className="relative">
@@ -96,7 +96,7 @@ export const Step1Marja: React.FC = () => {
 
       {/* Marāji‘ Selection Grid */}
       <div className="space-y-3">
-        <span className="text-xs font-bold uppercase tracking-wider text-[var(--theme-gold)] block">
+        <span className="text-sm font-bold uppercase tracking-wider text-[var(--theme-gold)] block">
           Select Accredited Marja‘ al-Taqlīd (مرجعِ تقلید کا انتخاب)
         </span>
 
@@ -113,40 +113,41 @@ export const Step1Marja: React.FC = () => {
                     : "sacred-card hover:border-[var(--theme-gold)]/50"
                 }`}
               >
-                {isSelected && (
-                  <div className="absolute top-4 inset-inline-end-4 w-7 h-7 rounded-full bg-gradient-to-br from-[var(--theme-gold)] to-[var(--theme-gold-dark)] text-black flex items-center justify-center shadow-lg">
-                    <Check className="w-4 h-4 stroke-[3]" />
-                  </div>
-                )}
+
 
                 <div>
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <ShieldCheck className="w-4 h-4 text-[var(--theme-gold)]" />
-                    <span className="text-[11px] font-black uppercase tracking-widest text-[var(--theme-gold)]">
+                  <div className="flex items-start gap-2 mb-1.5">
+                    <ShieldCheck className="w-4 h-4 shrink-0 mt-1 text-[var(--theme-gold)]" />
+                    <span className="min-w-0 flex-1 text-sm font-black uppercase tracking-widest text-[var(--theme-gold)]">
                       {language === "ur" ? m.titleUr : m.titleEn}
                     </span>
+                    {isSelected && (
+                      <span aria-label={language === "ur" ? "منتخب" : "Selected"} className="shrink-0 w-7 h-7 rounded-full bg-[var(--theme-gold)] text-white flex items-center justify-center">
+                        <Check className="w-4 h-4 stroke-[3]" />
+                      </span>
+                    )}
                   </div>
 
                   <h3 className="text-base sm:text-lg font-bold text-[var(--theme-text-primary)]">
                     {language === "ur" ? m.nameUr : m.nameEn}
                   </h3>
-                  <p className="text-xs text-[var(--theme-gold-light)] font-naskh mt-0.5">
+                  <p className="text-sm text-[var(--theme-gold-light)] font-naskh mt-0.5">
                     {m.nameAr}
                   </p>
 
-                  <div className="mt-4 text-xs bg-[var(--theme-bg)]/80 p-3 rounded-xl border border-[var(--theme-border)]">
+                  <div className="mt-4 text-sm bg-[var(--theme-bg)]/80 p-3 rounded-xl border border-[var(--theme-border)]">
                     <p className="font-bold text-[var(--theme-text-primary)] mb-1 flex items-center gap-1.5">
                       <BookOpen className="w-3.5 h-3.5 text-[var(--theme-gold)]" />
                       <span>{m.treatiseBook}</span>
                     </p>
-                    <p className="text-[11px] text-[var(--theme-text-muted)] leading-relaxed">
+                    <p className="text-sm text-[var(--theme-text-muted)] leading-relaxed">
                       {language === "ur" ? m.fullBioUr : m.fullBioEn}
                     </p>
                   </div>
                 </div>
 
                 {/* Key Rulings Badges */}
-                <div className="mt-4 pt-3 border-t border-[var(--theme-border)]/60 grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
+                <div className="mt-4 pt-3 border-t border-[var(--theme-border)]/60 grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
                   <div className="p-2.5 rounded-xl bg-[var(--theme-bg)] border border-[var(--theme-border)]">
                     <span className="font-bold text-[var(--theme-gold)] block">
                       {language === "ur" ? "اراضی میں بیوہ کا حق:" : "Widow's Land Right:"}

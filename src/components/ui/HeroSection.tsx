@@ -1,125 +1,36 @@
 "use client";
-
-import React from "react";
+import { ArrowRight, ArrowUpRight, ShieldCheck, LockKeyhole, Scale, GitFork, BookOpen, Check, Leaf } from "lucide-react";
 import { useInheritanceStore } from "@/store/useInheritanceStore";
-import { TRANSLATIONS } from "@/lib/translations";
-import {
-  Sparkles,
-  BookOpen,
-  Scale,
-  ShieldCheck,
-  FileCheck,
-  Compass,
-  GitFork,
-  ArrowRight,
-  GraduationCap,
-} from "lucide-react";
-
-export const HeroSection: React.FC = () => {
-  const { language, setActiveView, setWizardStep } = useInheritanceStore();
-  const t = TRANSLATIONS[language];
-
-  return (
-    <section className="relative overflow-hidden pt-8 pb-10 border-b border-[var(--theme-border)]/60">
-      {/* Background Ambient Lighting & Arabesque Grid */}
-      <div className="absolute inset-0 islamic-pattern pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[var(--theme-gold)]/10 blur-[130px] rounded-full pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-6">
-        {/* Sacred Calligraphic Badge */}
-        <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[var(--theme-gold)]/10 border border-[var(--theme-gold)]/30 backdrop-blur-md shadow-lg shadow-[var(--theme-gold)]/5">
-          <span className="w-2 h-2 rounded-full bg-[var(--theme-gold)] animate-pulse" />
-          <span className="font-naskh text-sm md:text-base text-[var(--theme-gold-light)] font-bold tracking-wider" dir="rtl">
-            بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ • فِقْهُ الْمَوَارِيثِ
-          </span>
-          <span className="w-2 h-2 rounded-full bg-[var(--theme-gold)] animate-pulse" />
-        </div>
-
-        {/* Grand Title */}
-        <div className="space-y-2">
-          <h1 className="font-cinzel text-3xl sm:text-5xl md:text-6xl font-black tracking-wider uppercase">
-            <span className="gold-gradient-text">
-              {language === "ur" ? "میراثِ ثقلین" : "MĪRĀTH AL-THAQALAYN"}
-            </span>
-          </h1>
-          <p className="font-naskh text-lg sm:text-2xl text-[var(--theme-text-secondary)] font-medium">
-            {language === "ur"
-              ? "مکتبِ اہلِ بیت علیہم السلام کے مطابق فقہ المواریث کا جامع و مستند نظام"
-              : "The Shia Inheritance Engine & Academy"}
-          </p>
-          <p className="max-w-3xl mx-auto text-xs sm:text-sm text-[var(--theme-text-muted)] leading-relaxed">
-            {language === "ur"
-              ? "قرآن و سنت، کتبِ اربعہ اور معاصر مراجعِ عظام (آیۃ اللہ سیستانی، خامنہ ای، خوئی، مکارم اور بشیر نجفی) کے فتاویٰ کے عین مطابق ترکہ کی شرعی تقسیم، بطلانِ عول و تعصیب، اور سرکاری سند کا اجراء۔"
-              : "Infallible Ja'fari estate distribution engine codifying the rulings of contemporary Grand Ayatollahs (Sistani, Khamenei, Khoei, Makarem, Najafi) with mathematical proofs, interactive genealogical trees, and Sharia certificates."}
-          </p>
-        </div>
-
-        {/* Quick Action Navigation Buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-          <button
-            onClick={() => {
-              setActiveView("wizard");
-              setWizardStep(1);
-            }}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[var(--theme-gold)] to-[var(--theme-gold-dark)] text-black font-bold text-xs sm:text-sm shadow-xl shadow-[var(--theme-gold)]/20 hover:brightness-110 active:scale-95 transition-all"
-          >
-            <Compass className="w-4 h-4" />
-            <span>{language === "ur" ? "شرعی تقسیم شروع کریں" : "Calculate Inheritance Now"}</span>
-            <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-          </button>
-
-          <button
-            onClick={() => setActiveView("tree")}
-            className="flex items-center gap-2 px-5 py-3 rounded-xl bg-[var(--theme-card)] hover:bg-[var(--theme-card-subtle)] border border-[var(--theme-border)] text-xs sm:text-sm font-semibold text-[var(--theme-text-primary)] transition-all shadow-md"
-          >
-            <GitFork className="w-4 h-4 text-[var(--theme-gold)]" />
-            <span>{language === "ur" ? "شجرۂ نسب دیکھیں" : "Interactive Family Tree"}</span>
-          </button>
-
-          <button
-            onClick={() => setActiveView("matrix")}
-            className="flex items-center gap-2 px-5 py-3 rounded-xl bg-[var(--theme-card)] hover:bg-[var(--theme-card-subtle)] border border-[var(--theme-border)] text-xs sm:text-sm font-semibold text-[var(--theme-text-primary)] transition-all shadow-md"
-          >
-            <Scale className="w-4 h-4 text-[var(--theme-gold)]" />
-            <span>{language === "ur" ? "پانچوں مراجع کا موازنہ" : "Compare 5 Marāji‘"}</span>
-          </button>
-        </div>
-
-        {/* 4 Sacred Pillars Badges */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 max-w-4xl mx-auto pt-4 text-xs">
-          <div className="p-3 rounded-xl bg-[var(--theme-card)]/60 border border-[var(--theme-border)]/60 flex items-center gap-2.5 text-start">
-            <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
-            <div>
-              <span className="font-bold text-[var(--theme-text-primary)] block">Zero Ta‘ṣīb &amp; ‘Awl</span>
-              <span className="text-[10px] text-[var(--theme-text-muted)]">Ahl al-Bayt Infallibility</span>
-            </div>
-          </div>
-
-          <div className="p-3 rounded-xl bg-[var(--theme-card)]/60 border border-[var(--theme-border)]/60 flex items-center gap-2.5 text-start">
-            <Scale className="w-5 h-5 text-[var(--theme-gold)] shrink-0" />
-            <div>
-              <span className="font-bold text-[var(--theme-text-primary)] block">5 Marāji‘ Differentials</span>
-              <span className="text-[10px] text-[var(--theme-text-muted)]">Widow Land &amp; Ḥabwah</span>
-            </div>
-          </div>
-
-          <div className="p-3 rounded-xl bg-[var(--theme-card)]/60 border border-[var(--theme-border)]/60 flex items-center gap-2.5 text-start">
-            <GitFork className="w-5 h-5 text-cyan-400 shrink-0" />
-            <div>
-              <span className="font-bold text-[var(--theme-text-primary)] block">3 Tabaqāt Mind-Map</span>
-              <span className="text-[10px] text-[var(--theme-text-muted)]">Live Ḥujub al-Ḥirmān</span>
-            </div>
-          </div>
-
-          <div className="p-3 rounded-xl bg-[var(--theme-card)]/60 border border-[var(--theme-border)]/60 flex items-center gap-2.5 text-start">
-            <FileCheck className="w-5 h-5 text-amber-400 shrink-0" />
-            <div>
-              <span className="font-bold text-[var(--theme-text-primary)] block">Official Certificate</span>
-              <span className="text-[10px] text-[var(--theme-text-muted)]">High-Res Bilingual PDF</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
+export function HeroSection() {
+ const { language, setActiveView } = useInheritanceStore();
+ const ur = language === "ur";
+ return <div className="home-intro">
+ <section className="legacy-hero">
+  <div className="hero-copy"><div className="eyebrow"><span/> GUIDED BY FAITH. DESIGNED FOR CLARITY.</div>
+  <h1>
+    {ur ? (
+      <>
+        <span>منصفانہ تقسیم،</span>
+        <br />
+        <span className="hero-subline">ایک پائیدار میراث۔</span>
+      </>
+    ) : (
+      <>
+        Honor a lifetime.
+        <br />
+        <em>Leave a fair legacy.</em>
+      </>
+    )}
+  </h1>
+  <p>{ur ? "فقہ جعفریہ کی روشنی میں ترکے کی تقسیم کو سمجھیں۔ اپنے خاندان کے لیے وضاحت اور اطمینان حاصل کریں۔" : "Navigate inheritance with confidence and care. A thoughtful way to understand each rightful share, guided by Ja’fari jurisprudence."}</p>
+  <div className="hero-actions"><button className="primary-button" onClick={() => document.getElementById("calculator")?.scrollIntoView({behavior:"smooth", block:"start"})}>{ur ? "حساب شروع کریں" : "Begin your calculation"}<ArrowRight size={17}/></button><button className="text-button" onClick={() => setActiveView("academy")}>{ur ? "مزید جانیں" : "Explore the principles"}<ArrowUpRight size={16}/></button></div>
+  <div className="hero-assurances"><span><LockKeyhole size={14}/>Private by design</span><span><Check size={15}/>No sign-up needed</span><span><GlobeIcon/>English & Urdu</span></div>
+  </div>
+  <div className="hero-art" aria-label="Decorative tree representing a lasting family legacy"><div className="arch arch-outer"/><div className="arch arch-inner"/><div className="art-orbit orbit-one"/><div className="art-orbit orbit-two"/><div className="tree-illustration"><svg viewBox="0 0 400 390" fill="none" aria-hidden="true"><path d="M201 340V155M201 289L120 208M201 251L282 170M201 210L150 159M201 320L294 227" stroke="#b9a97c" strokeWidth="3"/>{[[200,109,42],[145,153,35],[258,139,41],[109,201,38],[170,208,36],[291,192,36],[250,236,40],[135,262,31],[307,244,29],[203,169,43]].map(([x,y,r],i)=><circle key={i} cx={x} cy={y} r={r} fill={i%3===0?"#8d9b73":i%3===1?"#bdc5a0":"#617b5b"} fillOpacity=".85"/>)}<path d="M161 340H241" stroke="#b9a97c" strokeWidth="2"/></svg></div><span className="art-star star-one">✦</span><span className="art-star star-two">✧</span><div className="art-caption">Rooted in faith. Connected by family.</div><div className="floating-note"><span className="note-icon"><Scale size={19}/></span><span>Every share has a purpose.<small>Every family deserves clarity.</small></span></div></div>
+ </section>
+ <div className="trust-strip"><div><ShieldCheck size={21}/><span>Faithfully grounded<small>Ja’fari inheritance principles</small></span></div><div><Scale size={21}/><span>Multiple perspectives<small>Five contemporary marāji‘</small></span></div><div><GitFork size={21}/><span>Your family, visualized<small>Understand the connections</small></span></div><div><LockKeyhole size={21}/><span>Personal stays personal<small>Saved locally in your browser</small></span></div></div>
+ <section className="workspace-heading" id="calculator"><div><div className="eyebrow">YOUR PATH TO CLARITY</div><h2>{ur ? "آئیے، ایک قدم سے شروع کریں۔" : "A considered process. A clear outcome."}</h2></div><span><span className="status-dot"/> Your progress is saved on this device</span></section>
+ <div className="resource-grid"><button onClick={() => setActiveView("tree")}><span className="resource-icon"><GitFork size={20}/></span><span>See the bigger picture<small>Explore your interactive family tree</small></span><ArrowUpRight size={18}/></button><button onClick={() => setActiveView("academy")}><span className="resource-icon"><BookOpen size={20}/></span><span>Knowledge brings confidence<small>Learn the foundations of inheritance</small></span><ArrowUpRight size={18}/></button><button onClick={() => setActiveView("matrix")}><span className="resource-icon"><Leaf size={20}/></span><span>Understand the nuances<small>Compare rulings across marāji‘</small></span><ArrowUpRight size={18}/></button></div>
+ </div>;
+}
+function GlobeIcon(){return <span aria-hidden="true" style={{fontSize:15}}>◎</span>}

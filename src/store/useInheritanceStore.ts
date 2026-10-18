@@ -10,12 +10,13 @@ import {
   InheritanceCalculationResult,
   Language,
   MarjaId,
+  PersonNode,
   Theme,
 } from "@/types/fiqh";
 import { calculateInheritance } from "@/lib/fiqh-engine";
 import { SCENARIO_PRESETS } from "@/lib/scenarios";
 
-export type ViewTab = "wizard" | "tree" | "academy" | "matrix" | "certificate";
+export type ViewTab = "wizard" | "tree" | "academy" | "matrix" | "visuals" | "galaxy" | "glossary";
 
 export interface InheritanceState {
   // App UI Controls
@@ -25,6 +26,7 @@ export interface InheritanceState {
   fontStyle: FontStyle;
   activeView: ViewTab;
   wizardStep: number;
+  isSample: boolean;
 
   // Domain Entities
   activeDesignSystem: import("@/types/designs").DesignSystemId;
@@ -47,6 +49,30 @@ export interface InheritanceState {
   updateAssets: (partial: Partial<EstateAssets>) => void;
   updateDebts: (partial: Partial<EstateDebts>) => void;
   updateHeirs: (partial: Partial<HeirsInput>) => void;
+  updateNamedDescendants: (nodes: PersonNode[]) => void;
+  toggleChildSurvival: (id: string) => void;
+  toggleDaughterBranchRatio: (parentId: string) => void;
+
+  // Provenance Drawer State
+  activeProvenanceKey: string | null;
+  isProvenanceOpen: boolean;
+  openProvenance: (key: string) => void;
+  closeProvenance: () => void;
+
+  // Estate Planning Studio State
+  wasiyyahPercentage: number;
+  wasiyyahBeneficiary: string;
+  lifetimeGiftAmount: number;
+  lifetimeGiftRecipient: string;
+  setWasiyyahPercentage: (pct: number) => void;
+  setWasiyyahBeneficiary: (ben: string) => void;
+  setLifetimeGiftAmount: (amt: number) => void;
+  setLifetimeGiftRecipient: (rec: string) => void;
+
+  // Glossary State
+  selectedGlossaryTermId: string | null;
+  setSelectedGlossaryTermId: (id: string | null) => void;
+  openGlossaryTerm: (termId: string) => void;
 
   loadPreset: (presetId: string) => void;
   resetAll: () => void;
@@ -55,7 +81,7 @@ export interface InheritanceState {
   getCalculationResult: () => InheritanceCalculationResult;
 }
 
-const initialDeceased: DeceasedInfo = {
+const legacyDeceased: DeceasedInfo = {
   gender: "male",
   name: "Marhūm Syed Muhammad",
   dateOfDeath: new Date().toISOString().split("T")[0],
@@ -72,7 +98,7 @@ const initialDeceased: DeceasedInfo = {
   },
 };
 
-const initialAssets: EstateAssets = {
+const legacyAssets: EstateAssets = {
   cash: 1500000,
   bankAccounts: 2500000,
   residentialLand: 12000000,
@@ -82,7 +108,7 @@ const initialAssets: EstateAssets = {
   movableProperty: 2000000,
 };
 
-const initialDebts: EstateDebts = {
+const legacyDebts: EstateDebts = {
   funeralExpenses: 250000,
   securedDebts: 500000,
   unsecuredDebts: 750000,
@@ -94,7 +120,78 @@ const initialDebts: EstateDebts = {
   wasiyyahApprovedExceedingOneThird: false,
 };
 
-const initialHeirs: HeirsInput = {
+export const initialNamedDescendants: PersonNode[] = [
+  {
+    id: "child-1",
+    name: "Ali (Elder Son)",
+    gender: "MALE",
+    isAlive: false, // Deceased: children inherit via Tanzil
+    relation: "SON",
+    habwahEligible: true,
+    impediments: { isKiller: false, isNonMuslim: false, isLian: false },
+    children: [
+      {
+        id: "gc-1",
+        name: "Hasan",
+        gender: "MALE",
+        isAlive: true,
+        relation: "GRANDCHILD",
+        parentId: "child-1",
+        impediments: { isKiller: false, isNonMuslim: false, isLian: false },
+      },
+      {
+        id: "gc-2",
+        name: "Zahra",
+        gender: "FEMALE",
+        isAlive: true,
+        relation: "GRANDCHILD",
+        parentId: "child-1",
+        impediments: { isKiller: false, isNonMuslim: false, isLian: false },
+      },
+    ],
+  },
+  {
+    id: "child-2",
+    name: "Fatima (Daughter)",
+    gender: "FEMALE",
+    isAlive: false, // Deceased
+    relation: "DAUGHTER",
+    daughterBranchEqualRatio: false, // false for 2:1, true for 1:1
+    impediments: { isKiller: false, isNonMuslim: false, isLian: false },
+    children: [
+      {
+        id: "gc-3",
+        name: "Husayn",
+        gender: "MALE",
+        isAlive: true,
+        relation: "GRANDCHILD",
+        parentId: "child-2",
+        impediments: { isKiller: false, isNonMuslim: false, isLian: false },
+      },
+      {
+        id: "gc-4",
+        name: "Sukayna",
+        gender: "FEMALE",
+        isAlive: true,
+        relation: "GRANDCHILD",
+        parentId: "child-2",
+        impediments: { isKiller: false, isNonMuslim: false, isLian: false },
+      },
+    ],
+  },
+  {
+    id: "child-3",
+    name: "Zaynab (Direct Daughter)",
+    gender: "FEMALE",
+    isAlive: false, // Toggle true to test Al-Aqrab Yamna' al-Ab'ad
+    relation: "DAUGHTER",
+    impediments: { isKiller: false, isNonMuslim: false, isLian: false },
+    children: [],
+  },
+];
+
+const legacyHeirs: HeirsInput = {
+  namedDescendants: initialNamedDescendants,
   spouseCount: 1,
   fatherAlive: true,
   fatherImpediment: false,
@@ -125,6 +222,25 @@ const initialHeirs: HeirsInput = {
   maternalCousinsCount: 0,
 };
 
+// A new calculation starts empty; examples are loaded only on request.
+const initialDeceased: DeceasedInfo = {
+  ...legacyDeceased,
+  name: "",
+  dateOfDeath: "",
+  hasEldestSon: false,
+  eldestSonIsSaneAndNonAqq: false,
+  habwah: { quran: false, ring: false, swordOrDefensiveWeapon: false, clothes: false, estimatedValue: 0 },
+};
+const initialAssets = Object.fromEntries(Object.keys(legacyAssets).map((key) => [key, 0])) as unknown as EstateAssets;
+const initialDebts: EstateDebts = {
+  ...Object.fromEntries(Object.keys(legacyDebts).filter((key) => key !== "wasiyyahApprovedExceedingOneThird").map((key) => [key, 0])),
+  wasiyyahApprovedExceedingOneThird: false,
+} as EstateDebts;
+const initialHeirs: HeirsInput = {
+  ...legacyHeirs,
+  spouseCount: 0, fatherAlive: false, motherAlive: false, sonsCount: 0, daughtersCount: 0,
+};
+
 export const useInheritanceStore = create<InheritanceState>()(
   persist(
     (set, get) => ({
@@ -134,6 +250,20 @@ export const useInheritanceStore = create<InheritanceState>()(
       fontStyle: "nastaliq",
       activeView: "wizard",
       wizardStep: 1,
+      isSample: false,
+
+      // Provenance
+      activeProvenanceKey: null,
+      isProvenanceOpen: false,
+
+      // Estate Planning
+      wasiyyahPercentage: 15,
+      wasiyyahBeneficiary: "grandchild",
+      lifetimeGiftAmount: 0,
+      lifetimeGiftRecipient: "daughter",
+
+      // Glossary
+      selectedGlossaryTermId: null,
 
       activeDesignSystem: "vanilla",
       deceased: initialDeceased,
@@ -174,6 +304,17 @@ export const useInheritanceStore = create<InheritanceState>()(
       setActiveView: (view) => set({ activeView: view }),
       setWizardStep: (step) => set({ wizardStep: step }),
 
+      openProvenance: (key) => set({ activeProvenanceKey: key, isProvenanceOpen: true }),
+      closeProvenance: () => set({ isProvenanceOpen: false }),
+
+      setWasiyyahPercentage: (pct) => set({ wasiyyahPercentage: Math.max(0, Math.min(33.33, pct)) }),
+      setWasiyyahBeneficiary: (ben) => set({ wasiyyahBeneficiary: ben }),
+      setLifetimeGiftAmount: (amt) => set({ lifetimeGiftAmount: Math.max(0, amt) }),
+      setLifetimeGiftRecipient: (rec) => set({ lifetimeGiftRecipient: rec }),
+
+      setSelectedGlossaryTermId: (id) => set({ selectedGlossaryTermId: id }),
+      openGlossaryTerm: (termId) => set({ selectedGlossaryTermId: termId, activeView: "glossary" }),
+
       updateDeceased: (partial) =>
         set((state) => ({ deceased: { ...state.deceased, ...partial } })),
 
@@ -189,6 +330,36 @@ export const useInheritanceStore = create<InheritanceState>()(
       updateHeirs: (partial) =>
         set((state) => ({ heirs: { ...state.heirs, ...partial } })),
 
+      updateNamedDescendants: (nodes) =>
+        set((state) => ({ heirs: { ...state.heirs, namedDescendants: nodes } })),
+
+      toggleChildSurvival: (id) =>
+        set((state) => {
+          const list = state.heirs.namedDescendants || initialNamedDescendants;
+          const updated = list.map((node) => {
+            if (node.id === id) {
+              return { ...node, isAlive: !node.isAlive };
+            }
+            return node;
+          });
+          return { heirs: { ...state.heirs, namedDescendants: updated } };
+        }),
+
+      toggleDaughterBranchRatio: (parentId) =>
+        set((state) => {
+          const list = state.heirs.namedDescendants || initialNamedDescendants;
+          const updated = list.map((node) => {
+            if (node.id === parentId) {
+              return {
+                ...node,
+                daughterBranchEqualRatio: !node.daughterBranchEqualRatio,
+              };
+            }
+            return node;
+          });
+          return { heirs: { ...state.heirs, namedDescendants: updated } };
+        }),
+
       loadPreset: (presetId) => {
         const found = SCENARIO_PRESETS.find((p) => p.id === presetId);
         if (found) {
@@ -198,6 +369,8 @@ export const useInheritanceStore = create<InheritanceState>()(
             debts: { ...found.debts },
             heirs: { ...found.heirs },
             wizardStep: 5,
+            activeView: "wizard",
+            isSample: true,
           });
         }
       },
@@ -209,6 +382,7 @@ export const useInheritanceStore = create<InheritanceState>()(
           debts: initialDebts,
           heirs: initialHeirs,
           wizardStep: 1,
+          isSample: false,
         }),
 
       getCalculationResult: () => {
@@ -218,7 +392,21 @@ export const useInheritanceStore = create<InheritanceState>()(
     }),
     {
       name: "mirath-thaqalayn-storage",
+      version: 1,
+      migrate: (persisted) => {
+        const saved = persisted as Pick<InheritanceState, "language" | "theme" | "activeDesignSystem" | "fontScale" | "fontStyle" | "deceased" | "assets" | "debts" | "heirs"> & { isSample?: boolean };
+        // Clear only the former untouched demo; preserve users' own saved work.
+        const isLegacyDemo = saved.deceased?.name === legacyDeceased.name &&
+          JSON.stringify(saved.assets) === JSON.stringify(legacyAssets) &&
+          JSON.stringify(saved.debts) === JSON.stringify(legacyDebts) &&
+          JSON.stringify(saved.heirs) === JSON.stringify(legacyHeirs) &&
+          JSON.stringify({ ...saved.deceased, dateOfDeath: "" }) === JSON.stringify({ ...legacyDeceased, dateOfDeath: "" });
+        return isLegacyDemo
+          ? { ...saved, deceased: initialDeceased, assets: initialAssets, debts: initialDebts, heirs: initialHeirs, isSample: false }
+          : { ...saved, isSample: saved.isSample ?? false };
+      },
       partialize: (state) => ({
+        isSample: state.isSample,
         language: state.language,
         theme: state.theme,
         activeDesignSystem: state.activeDesignSystem,

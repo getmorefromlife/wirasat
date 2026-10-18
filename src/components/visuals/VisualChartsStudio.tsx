@@ -1,0 +1,1334 @@
+"use client";
+
+import React, { useState } from "react";
+import { useInheritanceStore } from "@/store/useInheritanceStore";
+import { TRANSLATIONS } from "@/lib/translations";
+import { MARJA_DATABASE } from "@/lib/marja-rules";
+import { PersonNode, BranchCalculationResult } from "@/types/fiqh";
+import { EstatePlanningStudio } from "@/components/visuals/EstatePlanningStudio";
+import { KinshipGalaxy } from "@/components/visuals/KinshipGalaxy";
+import {
+  GitFork,
+  Disc,
+  Columns,
+  Workflow,
+  LayoutGrid,
+  Radio,
+  GitCommit,
+  PieChart,
+  Split,
+  Clock,
+  TableProperties,
+  BookOpen,
+  Sparkles,
+  ShieldAlert,
+  CheckCircle2,
+  AlertCircle,
+  HelpCircle,
+  Users,
+  UserCheck,
+  UserX,
+  Scale,
+  DollarSign,
+  ChevronRight,
+  ChevronDown,
+  ArrowRight,
+  Info,
+  Check,
+  RefreshCw,
+} from "lucide-react";
+
+export type VisualParadigmId =
+  | "tree_tanzil"
+  | "rings"
+  | "lanes"
+  | "sankey_flow"
+  | "cards"
+  | "radial"
+  | "decision_path"
+  | "share_wheel"
+  | "snapshots"
+  | "timeline"
+  | "matrix_grid"
+  | "story_mode"
+  | "kinship_galaxy";
+
+interface ParadigmMeta {
+  id: VisualParadigmId;
+  number: number;
+  titleEn: string;
+  titleUr: string;
+  icon: React.ComponentType<{ className?: string; size?: number }>;
+  categoryEn: string;
+  categoryUr: string;
+  descEn: string;
+  descUr: string;
+}
+
+export const PARADIGMS: ParadigmMeta[] = [
+  {
+    id: "tree_tanzil",
+    number: 1,
+    titleEn: "Living Tree & Tanzīl",
+    titleUr: "شجرۂ حیات و تنزیل",
+    icon: GitFork,
+    categoryEn: "Kinship & Lineage",
+    categoryUr: "نسب و قرابت",
+    descEn: "Generational tree highlighting named grandchildren inheriting by representation (Tanzīl) or excluded by proximity.",
+    descUr: "نسل در نسل شجرہ جو پوتوں، پوتیوں، نواسوں اور نواسیوں کی بقائم مقامی (تنزیل) یا محرومی کی وضاحت کرتا ہے۔",
+  },
+  {
+    id: "rings",
+    number: 2,
+    titleEn: "Concentric Family Rings",
+    titleUr: "مرکزی خاندانی دائرے",
+    icon: Disc,
+    categoryEn: "Proximity & Priority",
+    categoryUr: "قربت و اولویت",
+    descEn: "Radial proximity orbits radiating outward from the deceased, demonstrating priority tiers and generational blocking.",
+    descUr: "میت کے گرد دائرہ نما طبقات جو قرابت کے مدارج اور حجبِ حرمان کی واضح عکاسی کرتے ہیں۔",
+  },
+  {
+    id: "lanes",
+    number: 3,
+    titleEn: "Color-Coded Tier Lanes",
+    titleUr: "طبقاتی راستے (سوئم لینز)",
+    icon: Columns,
+    categoryEn: "Statutory Classes",
+    categoryUr: "فقہی طبقات",
+    descEn: "Distinct horizontal lanes dividing heirs across Spouse, Tier 1, Tier 2, and Tier 3 with live eligibility indicators.",
+    descUr: "چار فقہی راستے (زوجیت، طبقہ اول، طبقہ دوم، طبقہ سوم) جو اہل اور محروم وارثین کو الگ ظاہر کرتے ہیں۔",
+  },
+  {
+    id: "sankey_flow",
+    number: 4,
+    titleEn: "Estate-Flow Pipeline",
+    titleUr: "بہاؤ ترکہ (پائپ لائن)",
+    icon: Workflow,
+    categoryEn: "Balance Sheet & Money",
+    categoryUr: "میزان ترکہ و رقوم",
+    descEn: "Strict Qur'anic deduction pipeline: Gross Estate → Kafn → Debts → Wasiyyah (1/3 check) → Distributable Blood Shares.",
+    descUr: "قرآنی و فقہی اخراجات کا تسلسل: کل ترکہ ← کفن و تدفین ← دیون ← وصیت (تہائی حد) ← تقسیمِ ورثاء۔",
+  },
+  {
+    id: "cards",
+    number: 5,
+    titleEn: "Household Cards",
+    titleUr: "گھریلو وارث کارڈز",
+    icon: LayoutGrid,
+    categoryEn: "Direct Controls",
+    categoryUr: "براہ راست کنٹرول",
+    descEn: "Modular cards with direct survival toggles, impediment badges (Qatl, Kufr), and individual share breakdowns.",
+    descUr: "انفرادی وارث کارڈز جن میں حیات، قتل یا کفر کے موانع اور رقم کے فوری حساب کی سہولت موجود ہے۔",
+  },
+  {
+    id: "radial",
+    number: 6,
+    titleEn: "Radial Kinship Map",
+    titleUr: "شعاعی قرابتی نقشہ",
+    icon: Radio,
+    categoryEn: "Orbital Network",
+    categoryUr: "مداری رابطہ",
+    descEn: "Orbital constellation graph connecting all family branches to the central deceased hub.",
+    descUr: "میت کو مرکز مان کر تمام شاخوں کے مابین کھنچے ہوئے قرابتی تعلقات کا شعاعی خاکہ۔",
+  },
+  {
+    id: "decision_path",
+    number: 7,
+    titleEn: "Decision-Path Flowchart",
+    titleUr: "فقہی فیصلے کا راستہ",
+    icon: GitCommit,
+    categoryEn: "Algorithmic Logic",
+    categoryUr: "فقہی استدلال",
+    descEn: "Step-by-step logic tree tracing how the fiqh engine resolved exclusion, Hajb, and final fractional shares.",
+    descUr: "قدم بہ قدم فقہی استدلال کا فلو چارٹ جو بتاتا ہے کہ کون کیونکر وارث بنا یا محروم ہوا۔",
+  },
+  {
+    id: "share_wheel",
+    number: 8,
+    titleEn: "Family Tree + Share Wheel",
+    titleUr: "شجرہ و چرخۂ حصص",
+    icon: PieChart,
+    categoryEn: "Proportional Geometry",
+    categoryUr: "تناسبی ہندسہ",
+    descEn: "Synchronized dual-view linking heir nodes to a dynamic donut distribution wheel with slice hover highlights.",
+    descUr: "شجرۂ نسب اور دائروی پائی چارٹ کا ہم آہنگ منظر، جہاں ہر وارث کا قرآنی حصہ نمایاں ہے۔",
+  },
+  {
+    id: "snapshots",
+    number: 9,
+    titleEn: "Estate Planning 'What-If' Studio",
+    titleUr: "شرعی منصوبہ بندی (وصیت و ہبۂ حیات اسٹوڈیو)",
+    icon: Split,
+    categoryEn: "Scenario Simulations",
+    categoryUr: "مفروضہ مناظر و تخمینہ کار",
+    descEn: "Interactive sandbox comparing statutory baseline vs 1/3rd Wasiyyah vs uncapped lifetime gift (Hibah) with live delta diffs.",
+    descUr: "متحرک تخمینہ کار جہاں شریعتِ خالص، ثلثِ وصیت اور ہبۂ حیات کا باہمی موازنہ اور نفع و نقصان دیکھا جا سکتا ہے۔",
+  },
+  {
+    id: "timeline",
+    number: 10,
+    titleEn: "Estate Legal Timeline",
+    titleUr: "قانونی مراحل کا خطِ زمانی",
+    icon: Clock,
+    categoryEn: "Chronology of Law",
+    categoryUr: "ترتیبِ احکام",
+    descEn: "Sequential legal timeline: Death → Tajhīz → Debt Clearance → Wasiyyah → Class Resolution → Distribution.",
+    descUr: "احکامِ ترکہ کی زمانی ترتیب: انتقال ← تجہیز و تکفین ← ادائیگیِ دیون ← نفاذِ وصیت ← تعینِ طبقات ← تقسیم۔",
+  },
+  {
+    id: "matrix_grid",
+    number: 11,
+    titleEn: "Inheritance Matrix Grid",
+    titleUr: "جامع جدولِ وراثت",
+    icon: TableProperties,
+    categoryEn: "Institutional Audit",
+    categoryUr: "جامع آڈٹ ٹیبل",
+    descEn: "High-density spreadsheet listing every relative, Qur'anic base fraction, Radd surplus, decimal, and proof citation.",
+    descUr: "ایک تفصیلی جدول جس میں ہر وارث کا فرض، رد، اعشاری تناسب، نقد رقم اور فقہی حوالہ درج ہے۔",
+  },
+  {
+    id: "story_mode",
+    number: 12,
+    titleEn: "Guided Narrative Story",
+    titleUr: "روایتی بیانیہ داستان",
+    icon: BookOpen,
+    categoryEn: "Human Explanation",
+    categoryUr: "سلیس بیانیہ",
+    descEn: "Editorial walkthrough explaining the family's estate case in warm, plain language with divine justice rationale.",
+    descUr: "سادہ، سلیس اور دلنشین زبان میں خاندان کے ترکے کی مکمل داستان، بلا کسی پیچیدہ اصطلاح کے۔",
+  },
+  {
+    id: "kinship_galaxy",
+    number: 13,
+    titleEn: "The Kinship Galaxy",
+    titleUr: "فلکِ قرابت و بطلانِ اوہام",
+    icon: Sparkles,
+    categoryEn: "Subcontinent Myth-Shatterer",
+    categoryUr: "بطلانِ اوہام و رسومات",
+    descEn: "Interactive celestial matrix shattering subcontinent customary myths (uncles vs daughters, in-laws, maternal parity).",
+    descUr: "برصغیر کے خاندانی اوہام (چچاؤں کا دعویٰ، سسرال کا دخل، میکے کی محرومی) کا فلکیاتی و بصری ابطال۔",
+  },
+];
+
+export const VisualChartsStudio: React.FC = () => {
+  const {
+    language,
+    deceased,
+    assets,
+    debts,
+    heirs,
+    getCalculationResult,
+    toggleChildSurvival,
+    toggleDaughterBranchRatio,
+    openProvenance,
+  } = useInheritanceStore();
+
+  const [activeParadigm, setActiveParadigm] = useState<VisualParadigmId>("tree_tanzil");
+  const [selectedRelativeId, setSelectedRelativeId] = useState<string>("child-1");
+
+  const result = getCalculationResult();
+  const isUr = language === "ur";
+  const currency = deceased.currency || "PKR";
+
+  const currentMeta = PARADIGMS.find((p) => p.id === activeParadigm) || PARADIGMS[0];
+  const namedDescendants = heirs.namedDescendants || [];
+
+  // Check living direct children
+  const livingDirectChildren = namedDescendants.filter(
+    (n) => (n.relation === "SON" || n.relation === "DAUGHTER") && n.isAlive
+  );
+  const isGrandchildrenExcluded = livingDirectChildren.length > 0;
+
+  // Daughter branch ratio toggle state
+  const daughterNode = namedDescendants.find((n) => n.relation === "DAUGHTER" && n.children && n.children.length > 0);
+  const daughterBranchEqualRatio = !!daughterNode?.daughterBranchEqualRatio;
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in duration-300">
+      {/* Studio Header */}
+      <div className="sacred-card p-6 md:p-8 rounded-3xl border border-[var(--theme-border-strong)] relative overflow-hidden bg-gradient-to-br from-[var(--theme-card)] via-[var(--theme-card)] to-[var(--theme-card-subtle)] shadow-sm">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--theme-gold)]/5 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <span className="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#edf3e7] text-[#245642] border border-[#a5b69d] flex items-center gap-1.5 shadow-2xs">
+                <Sparkles size={13} className="text-[#245642]" />
+                <span>{isUr ? "۱۲ بصری اسٹوڈیو و رصدگاہ" : "12-Paradigm Interactive Visual Observatory"}</span>
+              </span>
+              <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-[#e8f0e0] text-[#1e4634] border border-[#b7c9a5]">
+                {isUr ? "تنزیل و اقربیت انجن فعال" : "Tanzīl & Proximity Engine Active"}
+              </span>
+            </div>
+
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold font-cinzel text-[var(--theme-text-primary)] pt-1.5 pb-1">
+              {isUr ? "شجرۂ تنزیل و ۱۲ جہتی بصری رصدگاہ" : "Mawārīth Visual Observatory & Tanzīl Studio"}
+            </h1>
+
+            <p className="text-sm md:text-base text-[var(--theme-text-secondary)] max-w-2xl leading-relaxed">
+              {isUr
+                ? "اہلِ بیت (ع) کے احکامِ وراثت کی تفہیم کے لیے ۱۲ جدید بصری خاکے، بمع قاعدۂ اقربیت اور پوتوں، نواسوں کی بقائم مقامی (تنزیل)۔"
+                : "Explore Shia Islamic inheritance rules across 12 distinct interactive mathematical and genealogical perspectives."}
+            </p>
+          </div>
+
+          {/* Quick Tanzil Interactive Test Toolbar */}
+          <div className="bg-[#f9faf7] p-5 rounded-2xl border border-[#d8e0d2] space-y-3.5 min-w-[340px] shadow-xs">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-extrabold text-[#245642] uppercase tracking-wider flex items-center gap-1.5">
+                <Scale size={14} className="text-[#245642]" />
+                {isUr ? "فوری تجرباتی کنٹرول (تنزیل)" : "Live Tanzīl Simulator Controls"}
+              </span>
+              <span
+                className={`text-[11px] font-extrabold px-3 py-0.5 rounded-full border shadow-2xs ${
+                  isGrandchildrenExcluded
+                    ? "bg-[#fff7ed] text-[#9a3412] border-[#fdba74]"
+                    : "bg-[#f0fdf4] text-[#166534] border-[#86efac]"
+                }`}
+              >
+                {isGrandchildrenExcluded
+                  ? isUr
+                    ? "پوتے محروم (اقربیت)"
+                    : "Grandchildren Excluded (Proximity)"
+                  : isUr
+                  ? "تنزیل فعال (پوتے وارث)"
+                  : "Tanzīl Active (Heirs via Representation)"}
+              </span>
+            </div>
+
+            <div className="space-y-2">
+              {/* Direct Child Living Toggle */}
+              <button
+                onClick={() => toggleChildSurvival("child-3")}
+                className={`w-full py-2.5 px-3.5 rounded-xl text-xs font-bold flex items-center justify-between transition-all ${
+                  isGrandchildrenExcluded
+                    ? "bg-[#245642] text-white border border-[#1b3d30] shadow-sm hover:bg-[#1a4031]"
+                    : "bg-white border border-[#c5d0bb] text-[#243d32] hover:border-[#245642] shadow-2xs"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  {isGrandchildrenExcluded ? <UserCheck size={15} className="text-emerald-300" /> : <UserX size={15} className="text-stone-500" />}
+                  <span className={isGrandchildrenExcluded ? "text-white font-extrabold" : "text-[#243d32]"}>
+                    {isUr ? "صلبی بیٹی (زینب) کی حیات:" : "Direct Child (Zaynab) Living:"}
+                  </span>
+                </div>
+                <span className={`font-extrabold uppercase px-2 py-0.5 rounded text-[10px] ${
+                  isGrandchildrenExcluded ? "bg-white/20 text-white" : "bg-stone-100 text-stone-700 border border-stone-200"
+                }`}>
+                  {isGrandchildrenExcluded ? (isUr ? "زندہ (پوتے محروم!)" : "ALIVE (Excludes Grandchildren)") : (isUr ? "مرحومہ (تنزیل فعال)" : "DECEASED (Tanzīl On)")}
+                </span>
+              </button>
+
+              {/* Daughter's Branch 2:1 vs 1:1 Fatwa Toggle */}
+              {daughterNode && (
+                <button
+                  onClick={() => toggleDaughterBranchRatio(daughterNode.id)}
+                  className="w-full py-2.5 px-3.5 rounded-xl text-xs font-bold bg-white border border-[#c5d0bb] text-[#243d32] hover:border-[#245642] flex items-center justify-between transition-all shadow-2xs"
+                >
+                  <span className="truncate text-stone-700">
+                    {isUr ? "نواسیوں میں تقسیم کا فتویٰ:" : "Daughter's Children Ratio Fatwa:"}
+                  </span>
+                  <span className="text-[#245642] font-extrabold ml-2 flex-shrink-0 bg-[#eef4ea] px-2 py-0.5 rounded border border-[#d2ded0]">
+                    {daughterBranchEqualRatio
+                      ? isUr ? "۱:۱ (مساوی، قدیم فتویٰ)" : "1:1 (Classical Equal)"
+                      : isUr ? "۲:۱ (احوط وجوبی، سیستانی)" : "2:1 (Ahwat Wujubi, Sistani)"}
+                  </span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* 12-Paradigm Navigation Selector */}
+        <div className="mt-8 pt-6 border-t border-[var(--theme-border)]">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-extrabold text-[#3a5243] uppercase tracking-wider">
+              {isUr ? "بارہ بصری نمونہ جات منتخب کریں:" : "Select Visual Architecture Paradigm:"}
+            </span>
+            <span className="text-xs text-[#245642] font-extrabold bg-[#edf3e7] px-2.5 py-0.5 rounded-full border border-[#b7c9a5]">
+              {currentMeta.number}/12: {isUr ? currentMeta.titleUr : currentMeta.titleEn}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5">
+            {PARADIGMS.map((p) => {
+              const Icon = p.icon;
+              const isSelected = activeParadigm === p.id;
+              return (
+                <button
+                  key={p.id}
+                  onClick={() => setActiveParadigm(p.id)}
+                  className={`p-3 rounded-xl border text-start transition-all flex flex-col gap-1.5 relative ${
+                    isSelected
+                      ? "bg-[#245642] border-[#173e30] text-white shadow-md"
+                      : "bg-white border-[#d8e0d2] text-[#243d32] hover:border-[#245642] hover:bg-[#fafbf8]"
+                  }`}
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <Icon size={17} className={isSelected ? "text-emerald-300" : "text-[#527449]"} />
+                    <span className={`text-[10px] font-mono font-extrabold px-1.5 py-0.5 rounded ${
+                      isSelected ? "bg-white/20 text-white" : "bg-[#f1f4ed] text-[#465c49]"
+                    }`}>
+                      #{p.number}
+                    </span>
+                  </div>
+                  <div className={`text-xs font-extrabold leading-snug line-clamp-1 py-0.5 ${isSelected ? "text-white" : "text-[#1d3526]"}`}>
+                    {isUr ? p.titleUr : p.titleEn}
+                  </div>
+                  <div className={`text-[10px] line-clamp-1 ${isSelected ? "text-white/80" : "text-[#596851]"}`}>
+                    {isUr ? p.categoryUr : p.categoryEn}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Active Paradigm Workspace */}
+      <div className="sacred-card p-6 md:p-8 rounded-3xl border border-[var(--theme-border)] relative bg-white shadow-xs">
+        {/* Paradigm Banner */}
+        <div className="flex items-center justify-between pb-6 mb-6 border-b border-[var(--theme-border)]">
+          <div className="flex items-center gap-3.5">
+            <div className="w-11 h-11 rounded-2xl bg-[#edf3e7] border border-[#a5b69d] flex items-center justify-center text-[#245642] shadow-2xs shrink-0">
+              <currentMeta.icon size={22} />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-extrabold text-[#245642]">
+                  {isUr ? `نمونہ نمبر ${currentMeta.number}` : `Model #${currentMeta.number}`}
+                </span>
+                <span className="text-xs text-stone-400">•</span>
+                <span className="text-xs text-stone-600 font-semibold">
+                  {isUr ? currentMeta.categoryUr : currentMeta.categoryEn}
+                </span>
+              </div>
+              <h2 className="text-xl md:text-2xl font-bold text-[#172e22] font-cinzel pt-1 pb-0.5">
+                {isUr ? currentMeta.titleUr : currentMeta.titleEn}
+              </h2>
+            </div>
+          </div>
+
+          <p className="hidden md:block text-xs text-stone-600 max-w-md text-end font-medium leading-relaxed">
+            {isUr ? currentMeta.descUr : currentMeta.descEn}
+          </p>
+        </div>
+
+        {/* Dynamic Model Render */}
+        <div className="min-h-[500px]">
+          {activeParadigm === "tree_tanzil" && (
+            <TreeTanzilView
+              heirs={heirs}
+              result={result}
+              isUr={isUr}
+              currency={currency}
+              selectedId={selectedRelativeId}
+              onSelect={setSelectedRelativeId}
+              onToggleChild={toggleChildSurvival}
+              onToggleRatio={toggleDaughterBranchRatio}
+            />
+          )}
+
+          {activeParadigm === "rings" && (
+            <ConcentricRingsView result={result} isUr={isUr} currency={currency} heirs={heirs} />
+          )}
+
+          {activeParadigm === "lanes" && (
+            <ColorCodedLanesView result={result} isUr={isUr} currency={currency} heirs={heirs} />
+          )}
+
+          {activeParadigm === "sankey_flow" && (
+            <EstateFlowPipelineView result={result} isUr={isUr} currency={currency} debts={debts} assets={assets} />
+          )}
+
+          {activeParadigm === "cards" && (
+            <HouseholdCardsView
+              result={result}
+              isUr={isUr}
+              currency={currency}
+              heirs={heirs}
+              onToggleChild={toggleChildSurvival}
+            />
+          )}
+
+          {activeParadigm === "radial" && (
+            <RadialKinshipView result={result} isUr={isUr} currency={currency} heirs={heirs} />
+          )}
+
+          {activeParadigm === "decision_path" && (
+            <DecisionPathView result={result} isUr={isUr} currency={currency} heirs={heirs} openProvenance={openProvenance} />
+          )}
+
+          {activeParadigm === "share_wheel" && (
+            <ShareWheelView result={result} isUr={isUr} currency={currency} heirs={heirs} />
+          )}
+
+          {activeParadigm === "snapshots" && (
+            <EstatePlanningStudio result={result} isUr={isUr} currency={currency} heirs={heirs} />
+          )}
+
+          {activeParadigm === "timeline" && (
+            <EstateTimelineView result={result} isUr={isUr} currency={currency} debts={debts} />
+          )}
+
+          {activeParadigm === "matrix_grid" && (
+            <InheritanceMatrixGridView result={result} isUr={isUr} currency={currency} deceased={deceased} openProvenance={openProvenance} />
+          )}
+
+          {activeParadigm === "story_mode" && (
+            <GuidedStoryView result={result} isUr={isUr} currency={currency} deceased={deceased} debts={debts} />
+          )}
+
+          {activeParadigm === "kinship_galaxy" && (
+            <KinshipGalaxy />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* =========================================================================
+   1. LIVING TREE & TANZĪL VIEW
+   ========================================================================= */
+function TreeTanzilView({
+  heirs,
+  result,
+  isUr,
+  currency,
+  selectedId,
+  onSelect,
+  onToggleChild,
+  onToggleRatio,
+}: {
+  heirs: any;
+  result: any;
+  isUr: boolean;
+  currency: string;
+  selectedId: string;
+  onSelect: (id: string) => void;
+  onToggleChild: (id: string) => void;
+  onToggleRatio: (id: string) => void;
+}) {
+  const namedDescendants: PersonNode[] = heirs.namedDescendants || [];
+  const branchResults = result.branchResults || [];
+  const livingDirectChildren = namedDescendants.filter(
+    (n) => (n.relation === "SON" || n.relation === "DAUGHTER") && n.isAlive
+  );
+  const isGrandchildrenExcluded = livingDirectChildren.length > 0;
+
+  return (
+    <div className="space-y-6">
+      {/* Exclusion Status Alert: High contrast amber or emerald (NO PINK!) */}
+      {isGrandchildrenExcluded ? (
+        <div className="p-5 rounded-2xl bg-[#fffbeb] border-2 border-[#f59e0b] text-[#78350f] text-sm flex items-start gap-3.5 shadow-xs">
+          <ShieldAlert className="w-5 h-5 text-[#b45309] flex-shrink-0 mt-0.5" />
+          <div className="space-y-1">
+            <h4 className="font-extrabold text-[#78350f] text-base">
+              {isUr
+                ? "قاعدۂ اقربیت فعال: تمام پوتے، پوتیاں، نواسے اور نواسیاں محروم ہیں"
+                : "Golden Proximity Rule (Al-Aqrab Yamna‘ al-Ab‘ad) Active: Grandchildren Excluded"}
+            </h4>
+            <p className="text-xs text-[#92400e] leading-relaxed font-medium">
+              {isUr
+                ? `میت کی صلبی بیٹی (${livingDirectChildren.map((c) => c.name).join(", ")}) حیات ہے۔ فقہ جعفریہ کے متفقہ اصول کے تحت اگر ایک بھی صلبی اولاد زندہ ہو، تو وہ نچلی نسل (پوتوں/نواسوں) کو مکمل طور پر محجوب (محروم) کر دیتی ہے۔`
+                : `Living direct child (${livingDirectChildren.map((c) => c.name).join(", ")}) survives. Under strict Ja'fari Law, grandchildren inherit only when the direct child generation is completely empty.`}
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="p-5 rounded-2xl bg-[#f0fdf4] border-2 border-[#22c55e] text-[#14532d] text-sm flex items-start gap-3.5 shadow-xs">
+          <CheckCircle2 className="w-5 h-5 text-[#15803d] flex-shrink-0 mt-0.5" />
+          <div className="space-y-1">
+            <h4 className="font-extrabold text-[#14532d] text-base">
+              {isUr ? "تنزیل (بقائم مقامی) فعال ہے: پوتے اور نواسے وارث ہیں" : "Tanzīl (Representation) Active: Grandchildren Inherit"}
+            </h4>
+            <p className="text-xs text-[#166534] leading-relaxed font-medium">
+              {isUr
+                ? "میت کی کوئی بھی صلبی اولاد زندہ نہیں ہے۔ لہٰذا ہر پوتا، پوتی، نواسا اور نواسی اپنے مرحوم والد یا والدہ کے قائم مقام بن کر ان کا مقررہ حصہ وصول کر رہے ہیں۔"
+                : "No living direct children exist. Grandchildren step into the exact shoes (Manzilah) of their deceased parents."}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Connected Tree Visual */}
+      <div className="p-6 rounded-2xl bg-[#fafbf8] border border-[#d8e0d2] overflow-x-auto">
+        <div className="min-w-[760px] flex flex-col items-center gap-8 py-4">
+          {/* Deceased Root Card */}
+          <div className="text-center p-4 rounded-2xl w-72 bg-[#245642] text-white shadow-md border-2 border-[#173e30]">
+            <div className="text-xs uppercase font-extrabold text-emerald-200">
+              {isUr ? "مورث / متوفی" : "Deceased Subject (Muwarith)"}
+            </div>
+            <strong className="text-lg block mt-1 font-serif text-white">Marhūm Syed Muhammad</strong>
+            <div className="text-xs text-white/90 font-medium mt-1">
+              {isUr ? "کل ترکہ بعد از دیون:" : "Net Distributable Estate:"} {result.balanceSheet.netDistributableEstate.toLocaleString()} {currency}
+            </div>
+          </div>
+
+          {/* Stem Down to Children */}
+          <div className="w-0.5 h-6 bg-[#b6c7a9]" />
+
+          {/* Children Tier Branches */}
+          <div className="grid grid-cols-3 gap-6 w-full max-w-4xl">
+            {namedDescendants.map((child) => {
+              const isChildAlive = child.isAlive;
+              const hasSubChildren = child.children && child.children.length > 0;
+
+              return (
+                <div
+                  key={child.id}
+                  className={`p-4 rounded-2xl border transition-all flex flex-col justify-between ${
+                    isChildAlive
+                      ? "bg-[#f4f7ee] border-[#245642] shadow-sm ring-2 ring-[#245642]/20"
+                      : "bg-white border-[#d8e0d2]"
+                  }`}
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-[#eef1e6] text-[#344b39]">
+                        {child.relation}
+                      </span>
+                      <button
+                        onClick={() => onToggleChild(child.id)}
+                        className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border transition-all ${
+                          isChildAlive
+                            ? "bg-[#245642] text-white border-[#173e30] shadow-xs"
+                            : "bg-stone-100 text-stone-700 border-stone-300"
+                        }`}
+                      >
+                        {isChildAlive ? (isUr ? "حیات (زندہ)" : "LIVING") : (isUr ? "مرحوم (فوت شدہ)" : "DECEASED")}
+                      </button>
+                    </div>
+
+                    <div>
+                      <strong className="text-sm block text-[#172e22]">{child.name}</strong>
+                      <span className="text-xs text-stone-600 font-medium">
+                        {child.gender === "MALE" ? (isUr ? "مرحوم بیٹا (۲ حصے)" : "Son (2 units share)") : (isUr ? "مرحومہ بیٹی (۱ حصہ)" : "Daughter (1 unit share)")}
+                      </span>
+                    </div>
+
+                    {/* Daughter's Branch ratio toggle */}
+                    {child.relation === "DAUGHTER" && hasSubChildren && (
+                      <button
+                        onClick={() => onToggleRatio(child.id)}
+                        className="w-full text-start text-[10px] font-bold p-2 rounded-lg bg-[#edf3e7] text-[#245642] border border-[#c5d0bb] mt-1 hover:bg-[#e4eedb]"
+                      >
+                        {child.daughterBranchEqualRatio
+                          ? isUr ? "نواسیوں میں تقسیم: مساوی (۱:۱)" : "Ratio: 1:1 Equal (Classical)"
+                          : isUr ? "نواسیوں میں تقسیم: احوط وجوبی (۲:۱)" : "Ratio: 2:1 (Ahwat Wujubi, Sistani)"}
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Sub-branch of Grandchildren */}
+                  {hasSubChildren && (
+                    <div className="mt-4 pt-3 border-t border-[#d8e0d2] space-y-2">
+                      <span className="text-[10px] font-extrabold text-[#245642] uppercase tracking-wider block">
+                        {isUr ? "اولاد (پوتے/نواسے بذریعہ تنزیل):" : "Descendants (via Tanzīl):"}
+                      </span>
+
+                      <div className="space-y-1.5">
+                        {child.children!.map((gc) => {
+                          const gcResult = branchResults.find((b: any) => b.person.id === gc.id);
+                          const isExcluded = gcResult?.isExcluded;
+
+                          return (
+                            <div
+                              key={gc.id}
+                              className={`p-2.5 rounded-xl text-xs border flex items-center justify-between ${
+                                isExcluded
+                                  ? "bg-stone-50 border-stone-200 text-stone-600 opacity-80"
+                                  : "bg-white border-[#b7c9a5] text-[#172e22] shadow-2xs"
+                              }`}
+                            >
+                              <div>
+                                <span className={`font-bold block ${isExcluded ? "line-through text-stone-500" : "text-[#172e22]"}`}>
+                                  {gc.name}
+                                </span>
+                                <span className="text-[10px] text-stone-600 block">
+                                  {gc.gender === "MALE" ? (isUr ? "پوتا/نواسا" : "Grandson") : (isUr ? "پوتی/نواسی" : "Granddaughter")}
+                                </span>
+                              </div>
+
+                              <div className="text-end">
+                                {isExcluded ? (
+                                  <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-stone-200 text-stone-800 border border-stone-300">
+                                    {isUr ? "محروم" : "EXCLUDED"}
+                                  </span>
+                                ) : (
+                                  <>
+                                    <span className="font-extrabold text-[#245642] block">
+                                      {gcResult?.finalFraction || "0"}
+                                    </span>
+                                    <span className="text-[10px] text-stone-700 font-bold block">
+                                      {(gcResult?.monetaryValue || 0).toLocaleString()} {currency}
+                                    </span>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Explanatory Cards Table with High Contrast Text */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {branchResults.map((b: any) => (
+          <div
+            key={b.person.id}
+            className={`p-4 rounded-2xl border space-y-2.5 ${
+              b.isExcluded
+                ? "bg-[#fafaf9] border-stone-300 text-stone-800"
+                : "bg-white border-[#c5d0bb] text-[#172e22] shadow-xs"
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <strong className="text-sm flex items-center gap-2">
+                <span className={b.isExcluded ? "text-stone-700" : "text-[#172e22]"}>{b.person.name}</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-stone-100 text-stone-700 font-bold border border-stone-200">
+                  {b.person.gender}
+                </span>
+              </strong>
+              <span className={`text-xs font-extrabold ${b.isExcluded ? "text-stone-800 bg-stone-200 px-2.5 py-0.5 rounded border border-stone-300" : "text-[#245642] bg-[#edf3e7] px-2.5 py-0.5 rounded border border-[#b7c9a5]"}`}>
+                {b.isExcluded ? (isUr ? "حجبِ حرمان (محروم)" : "Blocked by Proximity") : `${b.finalFraction} (${b.percentage}%)`}
+              </span>
+            </div>
+
+            <p className="text-xs text-stone-700 leading-relaxed font-medium">
+              {isUr ? b.fiqhBasisUrdu : b.fiqhBasisEnglish}
+            </p>
+
+            {!b.isExcluded && (
+              <div className="pt-2 border-t border-stone-200 flex items-center justify-between text-xs font-semibold">
+                <span className="text-stone-600">{isUr ? "نقد حصہ:" : "Net Monetary Share:"}</span>
+                <span className="font-extrabold text-[#245642] text-sm">
+                  {b.monetaryValue.toLocaleString()} {currency}
+                </span>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================================
+   2. CONCENTRIC RINGS VIEW (Redesigned with NO overlapping labels & High Contrast!)
+   ========================================================================= */
+function ConcentricRingsView({ result, isUr, currency, heirs }: any) {
+  const activeTier = result.activeTier;
+
+  const tiersList = [
+    {
+      tierNum: 1,
+      nameEn: "Ring 1: Tier 1 (Parents & Children / Tanzīl)",
+      nameUr: "مدار ۱: والدین و اولاد / تنزیل (طبقہ اول)",
+      membersEn: "Father, Mother, Direct Children, and Grandchildren via Tanzīl.",
+      membersUr: "والدین، صلبی اولاد اور بقائم مقامی پوتے/نواسے (تنزیل)۔",
+      statusEn: activeTier === 1 ? "ACTIVE & INHERITING" : "INACTIVE",
+      statusUr: activeTier === 1 ? "فعال اور وارث" : "غیر فعال",
+      isActive: activeTier === 1,
+      color: "border-[#245642] text-[#245642] bg-[#edf3e7]",
+    },
+    {
+      tierNum: 2,
+      nameEn: "Ring 2: Tier 2 (Grandparents & Siblings)",
+      nameUr: "مدار ۲: اجداد و اخوہ (طبقہ دوم)",
+      membersEn: "Grandparents (paternal & maternal), Brothers, Sisters, Nephews.",
+      membersUr: "دادا، دادی، نانا، نانی، بہن، بھائی اور ان کی اولاد۔",
+      statusEn: activeTier === 2 ? "ACTIVE & INHERITING" : "BLOCKED BY TIER 1",
+      statusUr: activeTier === 2 ? "فعال اور وارث" : "طبقہ اول سے محجوب",
+      isActive: activeTier === 2,
+      color: "border-[#d97706] text-[#b45309] bg-[#fef3c7]",
+    },
+    {
+      tierNum: 3,
+      nameEn: "Ring 3: Tier 3 (Uncles, Aunts & Cousins)",
+      nameUr: "مدار ۳: اعمام و اخوال (طبقہ سوم)",
+      membersEn: "Paternal/Maternal Uncles, Aunts, and Cousins.",
+      membersUr: "چچا، پھوپھی، ماموں، خالہ اور ان کی اولاد۔",
+      statusEn: activeTier === 3 ? "ACTIVE & INHERITING" : "BLOCKED BY TIER 1 & 2",
+      statusUr: activeTier === 3 ? "فعال اور وارث" : "طبقہ اول و دوم سے محجوب",
+      isActive: activeTier === 3,
+      color: "border-stone-500 text-stone-800 bg-stone-100",
+    },
+  ];
+
+  return (
+    <div className="space-y-8">
+      {/* Visual Non-Overlapping Canvas */}
+      <div className="p-8 rounded-2xl bg-[#fafbf8] border border-[#d8e0d2] flex flex-col items-center justify-center min-h-[460px]">
+        {/* SVG-Rendered Concentric Orbit System */}
+        <div className="relative w-80 h-80 sm:w-[420px] sm:h-[420px] flex items-center justify-center">
+          {/* Ring 3 (Outer) */}
+          <div
+            className={`absolute inset-0 rounded-full border-2 border-dashed transition-all flex items-start justify-center pt-2 ${
+              activeTier === 3 ? "border-[#245642] bg-[#edf3e7]/40 ring-4 ring-[#245642]/10" : "border-stone-300 bg-stone-100/30"
+            }`}
+          >
+            {/* Outer label at very top */}
+            <span className="text-[10px] font-extrabold px-3 py-0.5 rounded-full bg-white text-stone-800 border border-stone-300 shadow-2xs">
+              {isUr ? "مدار ۳: طبقہ سوم (اعمام و اخوال)" : "Ring 3: Class 3 (Uncles & Aunts)"}
+            </span>
+          </div>
+
+          {/* Ring 2 (Middle) */}
+          <div
+            className={`absolute inset-14 rounded-full border-2 border-dashed transition-all flex items-end justify-center pb-2 ${
+              activeTier === 2 ? "border-[#245642] bg-[#edf3e7]/50 ring-4 ring-[#245642]/10" : "border-stone-300 bg-stone-100/40"
+            }`}
+          >
+            {/* Middle label placed at bottom to completely avoid collision! */}
+            <span className="text-[10px] font-extrabold px-3 py-0.5 rounded-full bg-white text-stone-800 border border-stone-300 shadow-2xs">
+              {isUr ? "مدار ۲: طبقہ دوم (اجداد و اخوہ)" : "Ring 2: Class 2 (Grandparents & Siblings)"}
+            </span>
+          </div>
+
+          {/* Ring 1 (Inner) */}
+          <div
+            className={`absolute inset-28 rounded-full border-2 transition-all flex items-start justify-center pt-2 ${
+              activeTier === 1
+                ? "border-[#245642] bg-[#edf3e7] shadow-md ring-4 ring-[#245642]/20"
+                : "border-stone-300 bg-white"
+            }`}
+          >
+            {/* Inner label placed with clear clearance */}
+            <span className="text-[10px] font-extrabold px-3 py-0.5 rounded-full bg-[#245642] text-white shadow-xs">
+              {isUr ? "مدار ۱: طبقہ اول (والدین و اولاد)" : "Ring 1: Class 1 (Parents & Children)"}
+            </span>
+          </div>
+
+          {/* Hub: Deceased & Estate */}
+          <div className="relative z-20 w-28 h-28 rounded-full bg-[#245642] text-white border-4 border-[#173e30] flex flex-col items-center justify-center text-center p-2 shadow-xl">
+            <div className="text-[10px] font-extrabold text-emerald-200 uppercase tracking-wider">
+              {isUr ? "مرکزِ ترکہ" : "Estate Hub"}
+            </div>
+            <strong className="text-xs text-white block mt-0.5 font-bold">
+              {result.balanceSheet.netDistributableEstate.toLocaleString()}
+            </strong>
+            <span className="text-[9px] text-emerald-200/90 font-medium">{currency}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Distinct Non-Colliding Tier Legend Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {tiersList.map((tier) => (
+          <div
+            key={tier.tierNum}
+            className={`p-5 rounded-2xl border transition-all flex flex-col justify-between ${
+              tier.isActive
+                ? "bg-white border-[#245642] shadow-sm ring-2 ring-[#245642]/20"
+                : "bg-[#fafaf9] border-stone-200 text-stone-600 opacity-80"
+            }`}
+          >
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border ${
+                  tier.isActive ? "bg-[#edf3e7] text-[#245642] border-[#b7c9a5]" : "bg-stone-200 text-stone-700 border-stone-300"
+                }`}>
+                  {tier.isActive ? (isUr ? "فعال طبقہ" : "ACTIVE TIER") : (isUr ? "محجوب" : "BLOCKED")}
+                </span>
+                <span className="text-xs font-bold text-stone-500">Tier #{tier.tierNum}</span>
+              </div>
+
+              <h4 className={`font-bold text-sm ${tier.isActive ? "text-[#172e22]" : "text-stone-700"}`}>
+                {isUr ? tier.nameUr : tier.nameEn}
+              </h4>
+
+              <p className="text-xs text-stone-600 leading-relaxed font-medium">
+                {isUr ? tier.membersUr : tier.membersEn}
+              </p>
+            </div>
+
+            <div className="mt-4 pt-3 border-t border-stone-200 text-xs font-bold">
+              {tier.isActive ? (
+                <span className="text-[#245642]">
+                  {isUr ? "اس مدار کے ورثاء میں ترکہ تقسیم ہو رہا ہے" : "Heirs in this orbit are inheriting the estate"}
+                </span>
+              ) : (
+                <span className="text-stone-600 font-semibold">
+                  {isUr ? "حجبِ حرمان: اندرونی مدار کی وجہ سے محروم" : "Hajb al-Hirmān: Blocked by closer inner orbit"}
+                </span>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================================
+   3. COLOR-CODED LANES VIEW (NO PINK! High contrast botanical palette)
+   ========================================================================= */
+function ColorCodedLanesView({ result, isUr, currency }: any) {
+  const lanes = [
+    {
+      titleEn: "Spousal Lane (Permanent Share)",
+      titleUr: "شاہراہِ زوجیت (دائمی قرآنی حصہ)",
+      tier: 0,
+      activeColor: "border-[#1e3a8a] bg-[#eff6ff] text-[#1e3a8a]",
+      inactiveColor: "border-stone-200 bg-stone-50 text-stone-600",
+      active: true,
+      descEn: "Inherits alongside all 3 classes without exclusion (1/8 with children, 1/4 without).",
+      descUr: "تمام طبقات کے ساتھ بلا استثناء ہمیشہ شریکِ وراثت (اولاد کے ساتھ ۱/۸، بغیر اولاد ۱/۴)۔",
+    },
+    {
+      titleEn: "Tier 1: Parents & Direct Lineage",
+      titleUr: "طبقہ اول: والدین و صلبی اولاد / تنزیل",
+      tier: 1,
+      activeColor: "border-[#245642] bg-[#f4f7ee] text-[#172e22]",
+      inactiveColor: "border-stone-200 bg-stone-50 text-stone-600",
+      active: result.activeTier === 1,
+      descEn: "Parents, sons, daughters, and grandchildren via Tanzīl representation.",
+      descUr: "والدین، بیٹے، بیٹیاں اور بقائم مقامی پوتے/نواسے (تنزیل)۔",
+    },
+    {
+      titleEn: "Tier 2: Grandparents & Collaterals",
+      titleUr: "طبقہ دوم: اجداد و برادران و خواہران",
+      tier: 2,
+      activeColor: "border-[#b45309] bg-[#fffbeb] text-[#78350f]",
+      inactiveColor: "border-stone-200 bg-stone-50 text-stone-600",
+      active: result.activeTier === 2,
+      descEn: "Paternal/maternal grandparents, full/consanguine/uterine siblings, and nephews.",
+      descUr: "دادا، دادی، نانا، نانی، بہن، بھائی اور ان کی اولاد۔",
+    },
+    {
+      titleEn: "Tier 3: Paternal & Maternal Agnates",
+      titleUr: "طبقہ سوم: اعمام و اخوال (چچا، ماموں)",
+      tier: 3,
+      activeColor: "border-[#475569] bg-[#f8fafc] text-[#1e293b]",
+      inactiveColor: "border-stone-200 bg-stone-50 text-stone-600",
+      active: result.activeTier === 3,
+      descEn: "Paternal/maternal uncles, aunts, and cousins.",
+      descUr: "عم، عمہ، خال، خالہ اور ان کی اولاد۔",
+    },
+  ];
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {lanes.map((lane) => (
+        <div
+          key={lane.tier}
+          className={`p-5 rounded-2xl border-2 transition-all flex flex-col justify-between min-h-[300px] ${
+            lane.active ? lane.activeColor : lane.inactiveColor
+          }`}
+        >
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-black/10">
+                {lane.tier === 0 ? "Spouse" : `Tier ${lane.tier}`}
+              </span>
+              <span
+                className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full ${
+                  lane.active ? "bg-[#245642] text-white" : "bg-stone-200 text-stone-700"
+                }`}
+              >
+                {lane.active ? (isUr ? "فعال" : "ACTIVE") : (isUr ? "محجوب" : "BLOCKED")}
+              </span>
+            </div>
+
+            <h3 className="font-bold text-base">{isUr ? lane.titleUr : lane.titleEn}</h3>
+            <p className="text-xs opacity-90 leading-relaxed font-medium">{isUr ? lane.descUr : lane.descEn}</p>
+          </div>
+
+          <div className="mt-6 pt-3 border-t border-current/20 text-xs font-bold">
+            {lane.active ? (
+              <span>
+                {isUr ? "اس طبقے کے ورثاء میں تقسیم جاری ہے" : "Heirs in this class are inheriting"}
+              </span>
+            ) : (
+              <span className="opacity-70">{isUr ? "اقرب طبقے کی موجودگی سے محروم" : "Excluded by closer class"}</span>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* =========================================================================
+   4. ESTATE FLOW PIPELINE VIEW (NO PINK! High contrast stages)
+   ========================================================================= */
+function EstateFlowPipelineView({ result, isUr, currency, debts, assets }: any) {
+  const bs = result.balanceSheet;
+
+  const stages = [
+    { labelEn: "1. Gross Estate", labelUr: "۱. کل مجموعی ترکہ", amount: bs.grossEstate, color: "bg-[#2563eb]" },
+    { labelEn: "2. Funeral / Tajhīz", labelUr: "۲. تجہیز و تکفین", amount: bs.burialAndFuneral, color: "bg-[#d97706]" },
+    { labelEn: "3. Debts to People", labelUr: "۳. دیون الناس (قرضے)", amount: bs.debtsToPeople, color: "bg-[#b91c1c]" },
+    { labelEn: "4. Debts to Allah", labelUr: "۴. حقوق اللہ (خمس، حج)", amount: bs.debtsToAllah, color: "bg-[#7f1d1d]" },
+    { labelEn: "5. Will (Waṣiyyah ≤ 1/3)", labelUr: "۵. نافذ وصیت (ثلث)", amount: bs.deductedWasiyyah, color: "bg-[#4f46e5]" },
+    { labelEn: "6. Net Distributable", labelUr: "۶. خالص قابلِ تقسیم ترکہ", amount: bs.netDistributableEstate, color: "bg-[#245642]" },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+        {stages.map((st, i) => (
+          <div key={i} className="p-4 rounded-2xl bg-[#fafbf8] border border-[#d8e0d2] space-y-1">
+            <span className="text-[10px] font-extrabold text-[#596851] block truncate">
+              {isUr ? st.labelUr : st.labelEn}
+            </span>
+            <strong className="text-sm md:text-base font-extrabold block text-[#172e22]">
+              {st.amount.toLocaleString()}
+            </strong>
+            <span className="text-[10px] text-stone-500 font-medium">{currency}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Visual Pipeline Bar */}
+      <div className="p-6 rounded-2xl bg-[#fafbf8] border border-[#d8e0d2] space-y-3">
+        <h4 className="text-xs font-extrabold uppercase tracking-wider text-[#245642]">
+          {isUr ? "ترکے کے قانونی اخراجات کا تصویری تناسب:" : "Estate Distribution Visual Sequence:"}
+        </h4>
+        <div className="h-7 w-full rounded-xl overflow-hidden flex bg-stone-200 border border-stone-300">
+          {stages.slice(1).map((st, i) => {
+            const pct = bs.grossEstate > 0 ? (st.amount / bs.grossEstate) * 100 : 0;
+            if (pct <= 0) return null;
+            return (
+              <div
+                key={i}
+                style={{ width: `${pct}%` }}
+                className={`${st.color} h-full transition-all flex items-center justify-center text-[10px] font-extrabold text-white px-1 truncate`}
+                title={`${isUr ? st.labelUr : st.labelEn}: ${st.amount.toLocaleString()} ${currency} (${pct.toFixed(1)}%)`}
+              >
+                {pct > 5 && `${pct.toFixed(0)}%`}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================================
+   5. HOUSEHOLD CARDS VIEW
+   ========================================================================= */
+function HouseholdCardsView({ result, isUr, currency, heirs, onToggleChild }: any) {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {result.heirShares.map((share: any) => (
+        <div
+          key={share.id}
+          className="p-5 rounded-2xl border border-[#d8e0d2] bg-white space-y-3 hover:border-[#245642] transition-all shadow-xs"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-extrabold text-[#245642] uppercase tracking-wider">
+              {share.relationKey}
+            </span>
+            <span className="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-[#edf3e7] text-[#245642] border border-[#b7c9a5]">
+              {share.fractionString} ({share.percentage}%)
+            </span>
+          </div>
+
+          <div>
+            <strong className="text-lg font-bold block text-[#172e22]">
+              {share.totalMonetaryShare.toLocaleString()} {currency}
+            </strong>
+            {share.count > 1 && (
+              <span className="text-xs text-stone-600 font-medium">
+                {isUr ? "فی کس حصہ:" : "Per individual:"} {share.sharePerIndividual.toLocaleString()} {currency}
+              </span>
+            )}
+          </div>
+
+          <p className="text-xs text-stone-700 italic leading-relaxed pt-2 border-t border-stone-200">
+            &ldquo;{share.proof.ruleExplanation}&rdquo;
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* =========================================================================
+   6. RADIAL KINSHIP MAP VIEW
+   ========================================================================= */
+function RadialKinshipView({ result, isUr, currency }: any) {
+  return (
+    <div className="p-8 rounded-2xl bg-[#fafbf8] border border-[#d8e0d2] flex flex-col items-center justify-center min-h-[440px]">
+      <div className="relative w-80 h-80 sm:w-96 sm:h-96 flex items-center justify-center">
+        {/* Hub */}
+        <div className="w-24 h-24 rounded-full bg-[#245642] text-white border-4 border-[#173e30] flex flex-col items-center justify-center text-center p-2 z-20 shadow-xl">
+          <span className="text-[10px] uppercase font-extrabold text-emerald-200">{isUr ? "میت" : "Deceased"}</span>
+          <span className="text-xs font-bold text-white mt-0.5">{currency}</span>
+        </div>
+
+        {/* Orbiting Heir Nodes */}
+        {result.heirShares.map((h: any, idx: number) => {
+          const total = result.heirShares.length || 1;
+          const angle = (idx / total) * 2 * Math.PI;
+          const radius = 135; // px
+          const x = Math.cos(angle) * radius;
+          const y = Math.sin(angle) * radius;
+
+          return (
+            <div
+              key={h.id}
+              style={{ transform: `translate(${x}px, ${y}px)` }}
+              className="absolute z-10 p-2.5 rounded-xl bg-white border border-[#245642] shadow-sm text-center w-28"
+            >
+              <span className="text-[10px] font-extrabold block truncate text-[#172e22]">{h.relationKey}</span>
+              <span className="text-xs font-extrabold text-[#245642] block">{h.fractionString}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================================
+   7. DECISION PATH FLOWCHART VIEW
+   ========================================================================= */
+function DecisionPathView({ result, isUr, currency, heirs, openProvenance }: any) {
+  const namedDescendants = heirs.namedDescendants || [];
+  const livingDirectChildren = namedDescendants.filter((n: any) => (n.relation === "SON" || n.relation === "DAUGHTER") && n.isAlive);
+  const isGrandchildrenExcluded = livingDirectChildren.length > 0;
+
+  const steps = [
+    {
+      topicKey: "WASAYAH_CEILING",
+      qEn: "Step 1: Check Sacred Deductions (Ḥuqūq al-Tarkah)",
+      qUr: "مرحلہ ۱: واجباتِ ترکہ کی جانچ",
+      resEn: `Burial + Debts + Will: ${result.balanceSheet.totalDebts.toLocaleString()} ${currency} discharged.`,
+      resUr: `تجہیز، دیون اور وصیت کی مکمل ادائیگی۔`,
+    },
+    {
+      topicKey: "PROXIMITY_TIER1_VS_GRANDCHILDREN",
+      qEn: "Step 2: Check Active Class (Hajb al-Hirmān)",
+      qUr: "مرحلہ ۲: فعال طبقے کی تعیین",
+      resEn: `Class #${result.activeTier} is active. Outer classes permanently blocked.`,
+      resUr: `طبقہ نمبر ${result.activeTier} فعال ہے۔ بیرونی طبقات محجوب۔`,
+    },
+    {
+      topicKey: "TANZIL_REPRESENTATION",
+      qEn: "Step 3: Golden Proximity Check (Al-Aqrab Yamna‘ al-Ab‘ad)",
+      qUr: "مرحلہ ۳: قاعدۂ اقربیت کی جانچ",
+      resEn: isGrandchildrenExcluded
+        ? `Living direct child (${livingDirectChildren.map((c: any) => c.name).join(", ")}) blocks all grandchildren.`
+        : `No living direct children. Grandchildren inherit via Tanzīl (representation).`,
+      resUr: isGrandchildrenExcluded
+        ? `صلبی اولاد کی موجودگی کی وجہ سے تمام پوتے اور نواسے محروم ہیں۔`
+        : `کوئی صلبی اولاد زندہ نہیں، لہٰذا پوتے اور نواسے تنزیل کے تحت وارث بنتے ہیں۔`,
+    },
+    {
+      topicKey: "BUTLAN_AL_AWL",
+      qEn: "Step 4: Repudiation of ‘Awl & Ta'ṣīb",
+      qUr: "مرحلہ ۴: ردِّ عول و تعصیب کا اطلاق",
+      resEn: "Ja'fari jurisprudence rejects deficit reduction across all shares; surplus reverts by Radd.",
+      resUr: "شیعہ امامیہ فقہ میں عول باطل ہے؛ خسارہ مخصوص قرابت پر آتا ہے اور زائد ترکہ رد ہوتا ہے۔",
+    },
+  ];
+
+  return (
+    <div className="space-y-4 max-w-2xl mx-auto">
+      {steps.map((st, i) => (
+        <div key={i} className="p-5 rounded-2xl bg-white border border-[#d8e0d2] space-y-2.5 relative shadow-xs">
+          <div className="flex items-center gap-2.5">
+            <span className="w-6 h-6 rounded-full bg-[#245642] text-white font-extrabold text-xs flex items-center justify-center">
+              {i + 1}
+            </span>
+            <h4 className="font-extrabold text-sm text-[#172e22]">{isUr ? st.qUr : st.qEn}</h4>
+          </div>
+          <p className="text-xs text-stone-700 pl-8.5 font-medium leading-relaxed">{isUr ? st.resUr : st.resEn}</p>
+
+          <div className="pt-2 flex items-center justify-between border-t border-[#edf3e7]">
+            <button
+              onClick={() => openProvenance(st.topicKey)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#edf3e7] hover:bg-[#245642] text-[#245642] hover:text-white transition-all text-xs font-bold border border-[#a5b69d] shadow-2xs"
+            >
+              <Scale className="w-3.5 h-3.5" />
+              <span>{isUr ? "شرعی دلیل و فتویٰ ملاحظہ کریں" : "View Scholarly Fatwa"}</span>
+            </button>
+            <span className="text-[10px] text-stone-500 font-mono">
+              {isUr ? "تمام ۵ مراجع کے فتاویٰ" : "5-Marāji‘ Citations"}
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* =========================================================================
+   8. SHARE WHEEL VIEW
+   ========================================================================= */
+function ShareWheelView({ result, isUr, currency }: any) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+      <div className="p-8 rounded-2xl bg-[#fafbf8] border border-[#d8e0d2] flex flex-col items-center justify-center min-h-[320px]">
+        <PieChart size={64} className="text-[#245642] mb-4 animate-pulse" />
+        <h4 className="text-sm font-extrabold text-[#172e22]">{isUr ? "تقسیمِ ترکہ کا ہندسی تناسب" : "Proportional Estate Distribution"}</h4>
+        <span className="text-xs text-stone-600 mt-1 font-semibold">{result.heirShares.length} {isUr ? "وارثین کے گروہ" : "Heir Groups"}</span>
+      </div>
+
+      <div className="space-y-2">
+        {result.heirShares.map((h: any) => (
+          <div key={h.id} className="p-3.5 rounded-xl bg-white border border-[#d8e0d2] flex items-center justify-between text-xs shadow-2xs">
+            <span className="font-bold text-[#172e22]">{h.relationKey}</span>
+            <div className="text-end">
+              <span className="font-extrabold text-[#245642] block">{h.fractionString} ({h.percentage}%)</span>
+              <span className="text-[10px] text-stone-600 font-semibold">{h.totalMonetaryShare.toLocaleString()} {currency}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================================
+   9. BEFORE & AFTER SNAPSHOTS VIEW (NO PINK! High contrast comparison)
+   ========================================================================= */
+function BeforeAfterSnapshotsView({ result, isUr, currency }: any) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Snapshot A */}
+      <div className="p-6 rounded-2xl border-2 border-emerald-300 bg-[#f0fdf4] space-y-3.5 shadow-xs">
+        <span className="text-xs font-extrabold text-[#166534] uppercase tracking-wider block">
+          {isUr ? "منظر الف: تمام صلبی اولاد فوت شدہ (تنزیل فعال)" : "Snapshot A: All Direct Children Deceased (Tanzīl Active)"}
+        </span>
+        <p className="text-xs text-[#14532d] font-medium leading-relaxed">
+          {isUr ? "پوتے، پوتیاں، نواسے اور نواسیاں اپنے والدین کے قائم مقام بن کر ان کا مکمل حصہ وصول کرتے ہیں۔" : "Grandchildren inherit their deceased parent's full fractional share via legal representation."}
+        </p>
+        <div className="p-3.5 rounded-xl bg-white border border-emerald-300 text-xs font-extrabold text-[#15803d]">
+          {isUr ? "پوتے اور نواسے وارث ہیں ✓" : "Grandchildren are inheriting ✓"}
+        </div>
+      </div>
+
+      {/* Snapshot B: High contrast stone instead of pink */}
+      <div className="p-6 rounded-2xl border-2 border-stone-300 bg-[#fafaf9] space-y-3.5 shadow-xs">
+        <span className="text-xs font-extrabold text-stone-800 uppercase tracking-wider block">
+          {isUr ? "منظر ب: ایک صلبی اولاد حیات (اقربیت فعال)" : "Snapshot B: One Direct Child Alive (Proximity Active)"}
+        </span>
+        <p className="text-xs text-stone-700 font-medium leading-relaxed">
+          {isUr ? "قاعدۂ اقربیت کے تحت زندہ بیٹا یا بیٹی تمام پوتوں اور نواسوں کو قطعی طور پر محروم کر دیتا ہے۔" : "Under Al-Aqrab Yamna‘ al-Ab‘ad, a single surviving child completely excludes all grandchildren."}
+        </p>
+        <div className="p-3.5 rounded-xl bg-white border border-stone-300 text-xs font-extrabold text-stone-800">
+          {isUr ? "پوتے مکمل محروم ہیں ✕" : "All grandchildren excluded ✕"}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================================
+   10. ESTATE TIMELINE VIEW
+   ========================================================================= */
+function EstateTimelineView({ result, isUr, currency }: any) {
+  const steps = [
+    { titleEn: "1. Death & Tajhīz", titleUr: "۱. وفات و تجہیز و تکفین", descEn: "Funeral costs cleared first from gross assets." },
+    { titleEn: "2. Commercial Debts", titleUr: "۲. ادائے دیون الناس", descEn: "Secured and unsecured personal debts paid in full." },
+    { titleEn: "3. Religious Debts", titleUr: "۳. ادائے حقوق اللہ", descEn: "Unpaid Khums, Zakat, Hajj, and Kaffarat deducted." },
+    { titleEn: "4. Enforceable Will", titleUr: "۴. نفاذِ وصیت (ثلث)", descEn: "Wasiyyah executed up to 1/3 ceiling." },
+    { titleEn: "5. Active Class Resolution", titleUr: "۵. تعینِ طبقۂ وراثت", descEn: "Hajb al-Hirman identifies the single inheriting tier." },
+    { titleEn: "6. Final Blood Distribution", titleUr: "۶. تقسیمِ مابین ورثاء", descEn: "Qur'anic fixed shares, Tanzīl, and Radd distribution." },
+  ];
+
+  return (
+    <div className="space-y-4 max-w-2xl mx-auto">
+      {steps.map((s, idx) => (
+        <div key={idx} className="p-4 rounded-2xl bg-white border border-[#d8e0d2] flex items-start gap-3.5 shadow-2xs">
+          <div className="w-7 h-7 rounded-full bg-[#245642] text-white font-extrabold text-xs flex items-center justify-center flex-shrink-0">
+            {idx + 1}
+          </div>
+          <div>
+            <h4 className="text-sm font-extrabold text-[#172e22]">{isUr ? s.titleUr : s.titleEn}</h4>
+            <p className="text-xs text-stone-600 mt-0.5 font-medium">{s.descEn}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* =========================================================================
+   11. INHERITANCE MATRIX GRID VIEW
+   ========================================================================= */
+function InheritanceMatrixGridView({ result, isUr, currency, deceased, openProvenance }: any) {
+  const getTopicForHeir = (h: any) => {
+    if (h.id === "husband") return "HUSBAND_SHARE";
+    if (h.id === "wives" || h.id === "wife") return "WIDOW_LAND_VALUATION";
+    if (h.id === "father" || h.id === "mother") return "PARENTS_SHARE";
+    if (h.tier === 1) return "PROXIMITY_TIER1_VS_GRANDCHILDREN";
+    return "BUTLAN_AL_AWL";
+  };
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-start text-xs border-collapse">
+        <thead>
+          <tr className="border-b-2 border-stone-300 text-[#245642] font-extrabold bg-[#fafbf8]">
+            <th className="py-3 px-3.5">{isUr ? "وارث" : "Heir"}</th>
+            <th className="py-3 px-3.5">{isUr ? "تعداد" : "Count"}</th>
+            <th className="py-3 px-3.5">{isUr ? "کسری حصہ" : "Fraction"}</th>
+            <th className="py-3 px-3.5">{isUr ? "فیصد" : "Percentage"}</th>
+            <th className="py-3 px-3.5">{isUr ? "کل رقم" : "Total Monetary"}</th>
+            <th className="py-3 px-3.5">{isUr ? "شرعی سند و فتویٰ" : "Sharia Reference & Fatwa"}</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-stone-200">
+          {result.heirShares.map((h: any) => (
+            <tr key={h.id} className="hover:bg-[#fafbf8] transition-colors">
+              <td className="py-3 px-3.5 font-bold text-[#172e22]">{h.relationKey}</td>
+              <td className="py-3 px-3.5 font-medium">{h.count}</td>
+              <td className="py-3 px-3.5 font-extrabold text-[#245642]">{h.fractionString}</td>
+              <td className="py-3 px-3.5 font-semibold">{h.percentage}%</td>
+              <td className="py-3 px-3.5 font-bold text-[#172e22]">{h.totalMonetaryShare.toLocaleString()} {currency}</td>
+              <td className="py-3 px-3.5 text-stone-600 font-medium">
+                <button
+                  onClick={() => openProvenance(getTopicForHeir(h))}
+                  className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-[#edf3e7] hover:bg-[#245642] text-[#245642] hover:text-white transition-colors font-bold text-[11px] border border-[#a5b69d]"
+                >
+                  <Scale className="w-3 h-3" />
+                  <span>{h.proof.quranReference || (isUr ? "شرعی فتویٰ" : "View Ruling")}</span>
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/* =========================================================================
+   12. GUIDED STORY MODE VIEW
+   ========================================================================= */
+function GuidedStoryView({ result, isUr, currency, deceased }: any) {
+  return (
+    <div className="max-w-3xl mx-auto space-y-6 p-6 rounded-2xl bg-white border border-[#d8e0d2] text-sm leading-relaxed shadow-xs">
+      <h3 className="text-lg font-bold font-cinzel text-[#245642]">
+        {isUr ? "مرحوم کے ترکے کی شرعی داستانِ تقسیم" : "The Sacred Story of Estate Distribution"}
+      </h3>
+
+      <p className="text-stone-700 font-medium">
+        {isUr
+          ? `جب ${deceased.name || "مرحوم"} کا انتقال ہوا، تو ان کے ترکے کی کل مالیت ${result.balanceSheet.grossEstate.toLocaleString()} ${currency} تھی۔ سب سے پہلے شرعی واجبات بشمول تجہیز، دیون اور وصیت ادا کی گئیں۔ اس کے بعد تقسیم کے لیے خالص ترکہ ${result.balanceSheet.netDistributableEstate.toLocaleString()} ${currency} باقی بچا۔`
+          : `When the deceased passed away, their gross estate was valued at ${result.balanceSheet.grossEstate.toLocaleString()} ${currency}. In strict accordance with divine law, all debts, funeral requirements, and religious obligations were discharged first, leaving ${result.balanceSheet.netDistributableEstate.toLocaleString()} ${currency} for legal heirs.`}
+      </p>
+
+      <p className="text-stone-700 font-medium">
+        {isUr
+          ? `فقہ جعفریہ کے احکام کے تحت طبقہ اول فعال ہوا، جس نے باقی تمام رشتہ داروں (بہن، بھائی، چچا، وغیرہ) کو محجوب کر دیا۔ اللہ تعالیٰ نے قرآنِ مجید میں فرمایا: "وَأُولُو الْأَرْحَامِ بَعْضُهُمْ أَوْلَىٰ بِبَعْضٍ فِي كِتَابِ اللَّهِ"۔`
+          : `Under Ja'fari jurisprudence, Class 1 took immediate precedence, completely barring extended classes under the rule of divine proximity (Al-Aqrab Yamna' al-Ab'ad).`}
+      </p>
+    </div>
+  );
+}

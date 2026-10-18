@@ -27,7 +27,7 @@ export const AcademyView: React.FC = () => {
   >("mindmap");
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+    <div className="academy-workspace max-w-6xl mx-auto px-4 py-8 space-y-8">
       {/* Academy Header */}
       <div className="border-b border-[var(--theme-border)] pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -40,36 +40,42 @@ export const AcademyView: React.FC = () => {
           <p className="text-sm text-[var(--theme-text-secondary)] mt-1">
             {t.academySubtitle}
           </p>
+          <div className="mt-2.5 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#edf3e7] border border-[#a5b69d] text-xs font-semibold text-[#245642]">
+            <span>{language === "ur" ? "تحقیق و تدوین: مولانا سیّد آئمن رضوی" : "Scholarly Research & Curation: Maulana Syed Imon Rizvi"}</span>
+          </div>
         </div>
 
         {/* Sub-tab Navigation */}
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[var(--theme-card)] border border-[var(--theme-border)]">
+        <div className="academy-tabs flex flex-wrap items-center gap-2 p-2 rounded-xl bg-[var(--theme-card)] border border-[var(--theme-border)]">
           <button
+            aria-pressed={activeTab === "mindmap"}
             onClick={() => setActiveTab("mindmap")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+            className={`px-3 py-1.5 rounded-lg text-base font-bold transition-all ${
               activeTab === "mindmap"
-                ? "bg-[var(--theme-gold)] text-black shadow-sm"
-                : "text-[var(--theme-text-secondary)] hover:text-white"
+                ? "bg-[var(--theme-gold)] text-white shadow-sm"
+                : "text-[var(--theme-text-secondary)] hover:text-[var(--theme-gold)]"
             }`}
           >
             {t.tabMindMap}
           </button>
           <button
+            aria-pressed={activeTab === "whyWeDiffer"}
             onClick={() => setActiveTab("whyWeDiffer")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+            className={`px-3 py-1.5 rounded-lg text-base font-bold transition-all ${
               activeTab === "whyWeDiffer"
-                ? "bg-[var(--theme-gold)] text-black shadow-sm"
-                : "text-[var(--theme-text-secondary)] hover:text-white"
+                ? "bg-[var(--theme-gold)] text-white shadow-sm"
+                : "text-[var(--theme-text-secondary)] hover:text-[var(--theme-gold)]"
             }`}
           >
             {t.tabWhyWeDiffer}
           </button>
           <button
+            aria-pressed={activeTab === "scenarios"}
             onClick={() => setActiveTab("scenarios")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+            className={`px-3 py-1.5 rounded-lg text-base font-bold transition-all ${
               activeTab === "scenarios"
-                ? "bg-[var(--theme-gold)] text-black shadow-sm"
-                : "text-[var(--theme-text-secondary)] hover:text-white"
+                ? "bg-[var(--theme-gold)] text-white shadow-sm"
+                : "text-[var(--theme-text-secondary)] hover:text-[var(--theme-gold)]"
             }`}
           >
             {t.tabSimulations}
@@ -87,7 +93,7 @@ export const AcademyView: React.FC = () => {
                 ? "جعفری قانونِ حجبِ حرمان کا بنیادی فکری نقشہ"
                 : "The Cardinal Flow of Ja'fari Priority (Ḥujub al-Ḥirmān)"}
             </h3>
-            <p className="text-xs text-[var(--theme-text-secondary)] leading-relaxed">
+            <p className="text-base text-[var(--theme-text-secondary)] leading-relaxed">
               {language === "ur"
                 ? "فقہ جعفریہ میں ورثاء تین غیر مبدل طبقات میں منقسم ہیں۔ جب تک پہلے طبقے کا ایک بھی وارث زندہ ہے، دوسرے اور تیسرے طبقے کو ایک پیسہ بھی نہیں مل سکتا۔ قرابت میں جو جتنا متوفی کے قریب ہوگا وہ دور والے کو کلی طور پر ساقط کر دے گا۔"
                 : "In Ja'fari Law, blood relatives are structured into three mutually exclusive Tiers. The presence of a single heir in an earlier Tier permanently and totally excludes all subsequent Tiers (Ḥujub al-Ḥirmān)."}
@@ -99,17 +105,17 @@ export const AcademyView: React.FC = () => {
             <div className="p-6 rounded-2xl bg-[var(--theme-card)] border-2 border-[var(--theme-gold)] shadow-xl relative overflow-hidden flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-bold uppercase tracking-wider text-[var(--theme-gold)]">
+                  <span className="text-base font-bold uppercase tracking-wider text-[var(--theme-gold)]">
                     Priority Tier 1
                   </span>
-                  <span className="text-xs font-naskh text-[var(--theme-gold)] px-2 py-0.5 rounded bg-[var(--theme-gold)]/15">
+                  <span className="text-base font-naskh text-[var(--theme-gold)] px-2 py-0.5 rounded bg-[var(--theme-gold)]/15">
                     الطبقة الأولى
                   </span>
                 </div>
                 <h4 className="text-lg font-bold text-[var(--theme-text-primary)]">
                   {language === "ur" ? "والدین اور اولاد" : "Parents & Children"}
                 </h4>
-                <ul className="mt-4 space-y-2 text-xs text-[var(--theme-text-secondary)]">
+                <ul className="mt-4 space-y-2 text-base text-[var(--theme-text-secondary)]">
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-[var(--theme-gold)]" />
                     <strong>Group A:</strong> Father and Mother
@@ -125,7 +131,7 @@ export const AcademyView: React.FC = () => {
                 </ul>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-[var(--theme-border)]/60 text-[11px] text-emerald-400 font-semibold">
+              <div className="mt-6 pt-4 border-t border-[var(--theme-border)]/60 text-sm text-emerald-400 font-semibold">
                 ✓ Excludes Tier 2 and Tier 3 permanently.
               </div>
             </div>
@@ -134,17 +140,17 @@ export const AcademyView: React.FC = () => {
             <div className="p-6 rounded-2xl bg-[var(--theme-card)] border border-[var(--theme-border)] shadow-md relative overflow-hidden flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-bold uppercase tracking-wider text-[var(--theme-text-muted)]">
+                  <span className="text-base font-bold uppercase tracking-wider text-[var(--theme-text-muted)]">
                     Priority Tier 2
                   </span>
-                  <span className="text-xs font-naskh text-[var(--theme-text-muted)] px-2 py-0.5 rounded bg-[var(--theme-card-subtle)]">
+                  <span className="text-base font-naskh text-[var(--theme-text-muted)] px-2 py-0.5 rounded bg-[var(--theme-card-subtle)]">
                     الطبقة الثانية
                   </span>
                 </div>
                 <h4 className="text-lg font-bold text-[var(--theme-text-primary)]">
                   {language === "ur" ? "دادا دادی و بہن بھائی" : "Grandparents & Siblings"}
                 </h4>
-                <ul className="mt-4 space-y-2 text-xs text-[var(--theme-text-secondary)]">
+                <ul className="mt-4 space-y-2 text-base text-[var(--theme-text-secondary)]">
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
                     <strong>Group A:</strong> Paternal & Maternal Grandparents
@@ -160,7 +166,7 @@ export const AcademyView: React.FC = () => {
                 </ul>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-[var(--theme-border)]/60 text-[11px] text-amber-400 font-semibold">
+              <div className="mt-6 pt-4 border-t border-[var(--theme-border)]/60 text-sm text-amber-400 font-semibold">
                 ⚠ Unlocks ONLY when Tier 1 is entirely empty.
               </div>
             </div>
@@ -169,33 +175,33 @@ export const AcademyView: React.FC = () => {
             <div className="p-6 rounded-2xl bg-[var(--theme-card)] border border-[var(--theme-border)] shadow-md relative overflow-hidden flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-bold uppercase tracking-wider text-[var(--theme-text-muted)]">
+                  <span className="text-base font-bold uppercase tracking-wider text-[var(--theme-text-muted)]">
                     Priority Tier 3
                   </span>
-                  <span className="text-xs font-naskh text-[var(--theme-text-muted)] px-2 py-0.5 rounded bg-[var(--theme-card-subtle)]">
+                  <span className="text-base font-naskh text-[var(--theme-text-muted)] px-2 py-0.5 rounded bg-[var(--theme-card-subtle)]">
                     الطبقة الثالثة
                   </span>
                 </div>
                 <h4 className="text-lg font-bold text-[var(--theme-text-primary)]">
                   {language === "ur" ? "چچا، پھوپھی، ماموں، خالہ" : "Uncles, Aunts & Cousins"}
                 </h4>
-                <ul className="mt-4 space-y-2 text-xs text-[var(--theme-text-secondary)]">
+                <ul className="mt-4 space-y-2 text-base text-[var(--theme-text-secondary)]">
                   <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-rose-400" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-700" />
                     <strong>Paternal Line:</strong> Paternal Uncles & Aunts (2/3)
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-rose-400" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-700" />
                     <strong>Maternal Line:</strong> Maternal Uncles & Aunts (1/3)
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-rose-400" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-700" />
                     <strong>Special Case:</strong> Son of full uncle vs consanguine uncle
                   </li>
                 </ul>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-[var(--theme-border)]/60 text-[11px] text-red-400 font-semibold">
+              <div className="mt-6 pt-4 border-t border-[var(--theme-border)]/60 text-sm text-red-700 dark:text-red-400 font-semibold">
                 ⛔ Unlocks ONLY when Tiers 1 & 2 are empty.
               </div>
             </div>
@@ -209,10 +215,10 @@ export const AcademyView: React.FC = () => {
           {/* REFUTATION 1: BUTLAN AL-TA'SIB */}
           <div className="p-6 sm:p-8 rounded-2xl bg-[var(--theme-card)] border-2 border-emerald-500/50 shadow-xl space-y-4">
             <div className="flex items-center justify-between border-b border-[var(--theme-border)] pb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+              <span className="text-base font-bold uppercase tracking-wider text-[#15803d]">
                 Foundational Distinction #1
               </span>
-              <span className="text-xs font-naskh text-emerald-400 px-2 py-0.5 rounded bg-emerald-500/10">
+              <span className="text-base font-naskh text-[#14532d] px-2.5 py-1 rounded-lg bg-[#dcfce7] border border-[#86efac] font-bold">
                 بطلان التعصيب (Repudiation of Ta‘ṣīb)
               </span>
             </div>
@@ -223,7 +229,7 @@ export const AcademyView: React.FC = () => {
                 : "Why Ja'fari Law Rejects Ta‘ṣīb: Protecting Daughters and Mothers from Distant Agnatic Relatives"}
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-[var(--theme-text-secondary)] leading-relaxed">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-base text-[var(--theme-text-secondary)] leading-relaxed">
               <div className="space-y-3">
                 <h4 className="font-bold text-[var(--theme-gold)] text-sm">
                   {language === "ur" ? "تاریخی پس منظر و تعصبِ جاہلیت" : "Historical Context & Pre-Islamic Relapse"}
@@ -237,7 +243,7 @@ export const AcademyView: React.FC = () => {
               </div>
 
               <div className="space-y-3 p-4 rounded-xl bg-[var(--theme-bg)] border border-[var(--theme-border)]">
-                <h4 className="font-bold text-emerald-400 text-sm">
+                <h4 className="font-bold text-[#15803d] text-sm">
                   {language === "ur" ? "قرآنی دلیل اور فرمانِ امام جعفر صادق (ع)" : "The Qur'anic Proof & Imam al-Sadiq (as)"}
                 </h4>
                 <p className="font-naskh text-sm text-[var(--theme-text-primary)]" dir="rtl">
@@ -254,12 +260,12 @@ export const AcademyView: React.FC = () => {
           </div>
 
           {/* REFUTATION 2: BUTLAN AL-'AWL */}
-          <div className="p-6 sm:p-8 rounded-2xl bg-[var(--theme-card)] border-2 border-amber-500/50 shadow-xl space-y-4">
+          <div className="p-6 sm:p-8 rounded-2xl bg-[var(--theme-card)] border-2 border-[#f59e0b]/50 shadow-xl space-y-4">
             <div className="flex items-center justify-between border-b border-[var(--theme-border)] pb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
+              <span className="text-base font-bold uppercase tracking-wider text-[#b45309]">
                 Foundational Distinction #2
               </span>
-              <span className="text-xs font-naskh text-amber-400 px-2 py-0.5 rounded bg-amber-500/10">
+              <span className="text-base font-naskh text-[#78350f] px-2.5 py-1 rounded-lg bg-[#fef3c7] border border-[#fde68a] font-bold">
                 بطلان العول (Repudiation of ‘Awl)
               </span>
             </div>
@@ -270,7 +276,7 @@ export const AcademyView: React.FC = () => {
                 : "Why Ja'fari Law Rejects ‘Awl: The Infallible Logic of Imam Ali (as)"}
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-[var(--theme-text-secondary)] leading-relaxed">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-base text-[var(--theme-text-secondary)] leading-relaxed">
               <div className="space-y-3">
                 <h4 className="font-bold text-[var(--theme-gold)] text-sm">
                   {language === "ur" ? "مسئلہ عول کی پیدائش" : "The Origin of the Deficit"}
@@ -310,7 +316,7 @@ export const AcademyView: React.FC = () => {
               <Sparkles className="w-5 h-5 text-[var(--theme-gold)]" />
               {language === "ur" ? "عملی پیچیدہ کیس اسٹڈیز و نقلی امتحانات" : "Interactive Complex Case Studies"}
             </h3>
-            <p className="text-xs text-[var(--theme-text-secondary)]">
+            <p className="text-base text-[var(--theme-text-secondary)]">
               {language === "ur"
                 ? "نیچے دی گئی مثالوں میں سے کسی پر بھی کلک کر کے اسے براہ راست کیلکولیٹر میں لوڈ کریں اور تمام تفصیلات کا جائزہ لیں۔"
                 : "Select any real-world estate scenario below to populate the calculation engine and review verified Ja'fari outputs."}
@@ -324,20 +330,20 @@ export const AcademyView: React.FC = () => {
                 className="p-5 rounded-xl bg-[var(--theme-card)] border border-[var(--theme-border)] hover:border-[var(--theme-gold)]/60 transition-all flex flex-col justify-between space-y-4 shadow-sm"
               >
                 <div>
-                  <div className="flex items-center justify-between text-xs text-[var(--theme-gold)] font-bold mb-1">
+                  <div className="flex items-center justify-between text-base text-[var(--theme-gold)] font-bold mb-1">
                     <span>Preset Case</span>
                     <span className="uppercase font-mono">{preset.deceased.currency}</span>
                   </div>
                   <h4 className="text-base font-bold text-[var(--theme-text-primary)]">
                     {language === "ur" ? preset.titleUr : preset.titleEn}
                   </h4>
-                  <p className="text-xs text-[var(--theme-text-secondary)] mt-2 leading-relaxed">
+                  <p className="text-base text-[var(--theme-text-secondary)] mt-2 leading-relaxed">
                     {language === "ur" ? preset.descriptionUr : preset.descriptionEn}
                   </p>
                 </div>
 
                 <div className="pt-3 border-t border-[var(--theme-border)]/60 flex items-center justify-between">
-                  <span className="text-[11px] font-mono text-[var(--theme-text-muted)]">
+                  <span className="text-sm font-mono text-[var(--theme-text-muted)]">
                     Marja: {preset.deceased.marja.toUpperCase()}
                   </span>
                   <button
@@ -345,7 +351,7 @@ export const AcademyView: React.FC = () => {
                       loadPreset(preset.id);
                       setActiveView("wizard");
                     }}
-                    className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[var(--theme-gold)] text-black text-xs font-bold hover:bg-[var(--theme-gold-light)] transition-all shadow"
+                    className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[var(--theme-gold)] text-white text-base font-bold hover:bg-[var(--theme-gold-light)] transition-all shadow"
                   >
                     <PlayCircle className="w-3.5 h-3.5" />
                     <span>{language === "ur" ? "کیلکولیٹر میں چلائیں" : "Simulate Case"}</span>

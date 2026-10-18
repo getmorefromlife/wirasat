@@ -47,21 +47,21 @@ export const Step4Relatives: React.FC = () => {
           <Users className="w-6 h-6 text-[var(--theme-gold)]" />
           <span>{t.step4Title}</span>
         </h2>
-        <p className="text-xs sm:text-sm text-[var(--theme-text-secondary)] mt-1">
+        <p className="text-sm sm:text-sm text-[var(--theme-text-secondary)] mt-1">
           {t.step4Desc}
         </p>
       </div>
 
       {/* SECTION 1: Spouses (Non-Blockable - Zawj / Zawjah) */}
-      <div className="sacred-card p-6 rounded-2xl space-y-4 border-rose-500/30">
+      <div className="sacred-card p-6 rounded-2xl space-y-4 border-sky-500/30">
         <div className="flex items-center justify-between border-b border-[var(--theme-border)] pb-3">
           <div className="flex items-center gap-2">
-            <Heart className="w-5 h-5 text-rose-400 fill-rose-500/30" />
+            <Heart className="w-5 h-5 text-sky-700 dark:text-sky-400 fill-sky-700/20" />
             <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--theme-gold)]">
               {t.spousesHeading}
             </h3>
           </div>
-          <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30">
+          <span className="text-sm font-bold px-3 py-1 rounded-full bg-sky-50 dark:bg-sky-950/40 text-sky-800 dark:text-sky-300 border border-sky-300 dark:border-sky-700">
             {language === "ur" ? "کسی سے محجوب نہیں ہوتے" : "Inherits alongside all Tiers"}
           </span>
         </div>
@@ -84,7 +84,7 @@ export const Step4Relatives: React.FC = () => {
           </div>
         ) : (
           <div>
-            <label className="block text-xs font-semibold text-[var(--theme-text-secondary)] mb-2">
+            <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-2">
               {t.wivesCount}
             </label>
             <div className="flex items-center gap-2.5">
@@ -95,7 +95,7 @@ export const Step4Relatives: React.FC = () => {
                   onClick={() => updateHeirs({ spouseCount: count })}
                   className={`w-12 h-11 rounded-xl font-bold text-sm border transition-all ${
                     heirs.spouseCount === count
-                      ? "bg-gradient-to-r from-[var(--theme-gold)] to-[var(--theme-gold-dark)] text-black border-[var(--theme-gold)] shadow-md shadow-[var(--theme-gold)]/20"
+                      ? "bg-linear-to-r from-[var(--theme-gold)] to-[var(--theme-gold-dark)] text-white border-[var(--theme-gold)] shadow-md shadow-[var(--theme-gold)]/20"
                       : "sacred-card text-[var(--theme-text-secondary)] hover:border-[var(--theme-gold)]/50"
                   }`}
                 >
@@ -116,7 +116,7 @@ export const Step4Relatives: React.FC = () => {
               {t.tier1Heading}
             </h3>
           </div>
-          <span className="text-xs font-bold px-3 py-1 rounded-full bg-[var(--theme-gold)]/15 text-[var(--theme-gold)] border border-[var(--theme-gold)]/30">
+          <span className="text-sm font-bold px-3 py-1 rounded-full bg-[var(--theme-gold)]/15 text-[var(--theme-gold)] border border-[var(--theme-gold)]/30">
             الطبقة الأولى
           </span>
         </div>
@@ -135,7 +135,7 @@ export const Step4Relatives: React.FC = () => {
                 {t.fatherAlive}
               </span>
             </div>
-            <span className="text-xs font-mono text-[var(--theme-gold)] font-bold">
+            <span className="text-sm font-mono text-[var(--theme-gold)] font-bold">
               {heirs.fatherAlive ? "Alive" : "Deceased"}
             </span>
           </label>
@@ -152,7 +152,7 @@ export const Step4Relatives: React.FC = () => {
                 {t.motherAlive}
               </span>
             </div>
-            <span className="text-xs font-mono text-[var(--theme-gold)] font-bold">
+            <span className="text-sm font-mono text-[var(--theme-gold)] font-bold">
               {heirs.motherAlive ? "Alive" : "Deceased"}
             </span>
           </label>
@@ -162,7 +162,7 @@ export const Step4Relatives: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
           <div className="p-4 sm:p-5 rounded-xl sacred-card flex items-center justify-between">
             <div>
-              <span className="text-xs font-bold text-[var(--theme-text-secondary)] block">
+              <span className="text-sm font-bold text-[var(--theme-text-secondary)] block">
                 {t.sonsCount}
               </span>
               <span className="text-2xl font-black font-mono text-[var(--theme-text-primary)] mt-1">
@@ -186,7 +186,7 @@ export const Step4Relatives: React.FC = () => {
                 onClick={() =>
                   updateHeirs({ sonsCount: (heirs.sonsCount || 0) + 1 })
                 }
-                className="w-9 h-9 rounded-xl bg-[var(--theme-gold)] text-black font-bold flex items-center justify-center hover:bg-[var(--theme-gold-light)] shadow-md"
+                className="w-9 h-9 rounded-xl bg-[var(--theme-gold)] text-white font-bold flex items-center justify-center hover:bg-[var(--theme-gold-light)] shadow-md"
               >
                 <Plus className="w-4 h-4" />
               </button>
@@ -195,7 +195,7 @@ export const Step4Relatives: React.FC = () => {
 
           <div className="p-4 sm:p-5 rounded-xl sacred-card flex items-center justify-between">
             <div>
-              <span className="text-xs font-bold text-[var(--theme-text-secondary)] block">
+              <span className="text-sm font-bold text-[var(--theme-text-secondary)] block">
                 {t.daughtersCount}
               </span>
               <span className="text-2xl font-black font-mono text-[var(--theme-text-primary)] mt-1">
@@ -221,7 +221,7 @@ export const Step4Relatives: React.FC = () => {
                     daughtersCount: (heirs.daughtersCount || 0) + 1,
                   })
                 }
-                className="w-9 h-9 rounded-xl bg-[var(--theme-gold)] text-black font-bold flex items-center justify-center hover:bg-[var(--theme-gold-light)] shadow-md"
+                className="w-9 h-9 rounded-xl bg-[var(--theme-gold)] text-white font-bold flex items-center justify-center hover:bg-[var(--theme-gold-light)] shadow-md"
               >
                 <Plus className="w-4 h-4" />
               </button>
@@ -231,7 +231,7 @@ export const Step4Relatives: React.FC = () => {
 
         {/* Mother Sibling Blocking Check (Ḥujub al-Nuqṣān) */}
         {heirs.motherAlive && (
-          <div className="p-4 rounded-xl bg-[var(--theme-bg)]/80 border border-[var(--theme-border)] text-xs space-y-2.5">
+          <div className="p-4 rounded-xl bg-[var(--theme-bg)]/80 border border-[var(--theme-border)] text-sm space-y-2.5">
             <span className="font-bold text-[var(--theme-gold)] block">
               {t.motherBlockingCheck} (حجب النقصان):
             </span>
@@ -243,7 +243,7 @@ export const Step4Relatives: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
               <div>
-                <label className="block text-[11px] font-semibold text-[var(--theme-text-secondary)] mb-1">
+                <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1">
                   {t.motherBrothersCount}
                 </label>
                 <input
@@ -255,12 +255,12 @@ export const Step4Relatives: React.FC = () => {
                       motherBlockingBrothers: parseInt(e.target.value) || 0,
                     })
                   }
-                  className="w-full sacred-input px-3 py-2 font-mono text-xs"
+                  className="w-full sacred-input px-3 py-2 font-mono text-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-[var(--theme-text-secondary)] mb-1">
+                <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1">
                   {t.motherSistersCount}
                 </label>
                 <input
@@ -272,7 +272,7 @@ export const Step4Relatives: React.FC = () => {
                       motherBlockingSisters: parseInt(e.target.value) || 0,
                     })
                   }
-                  className="w-full sacred-input px-3 py-2 font-mono text-xs"
+                  className="w-full sacred-input px-3 py-2 font-mono text-sm"
                 />
               </div>
             </div>
@@ -297,25 +297,25 @@ export const Step4Relatives: React.FC = () => {
               {t.tier2Heading}
             </h3>
           </div>
-          <span className="text-xs font-mono text-[var(--theme-text-muted)]">
+          <span className="text-sm font-mono text-[var(--theme-text-muted)]">
             الطبقة الثانية
           </span>
         </div>
 
         {hasTier1Heir ? (
-          <div className="p-4 rounded-xl bg-red-950/40 border border-red-500/50 text-red-300 text-xs flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 shrink-0 text-red-400 mt-0.5" />
+          <div className="p-4 sm:p-5 rounded-2xl bg-[#fef2f2] border-2 border-[#ef4444]/60 text-sm flex items-start gap-3 shadow-sm">
+            <AlertCircle className="w-5 h-5 shrink-0 text-[#dc2626] mt-0.5" />
             <div>
-              <span className="font-bold text-sm block">
+              <span className="font-bold text-sm sm:text-base text-[#991b1b] block">
                 {language === "ur" ? "حجبِ حرمان کا نفاذ:" : "Blocked by Ḥujub al-Ḥirmān:"}
               </span>
-              <p className="mt-0.5 leading-relaxed">{t.tier2Locked}</p>
+              <p className="mt-0.5 leading-relaxed text-[#7f1d1d] font-medium">{t.tier2Locked}</p>
             </div>
           </div>
         ) : (
           <div className="space-y-4">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <label className="flex items-center gap-2 text-xs p-3 rounded-xl sacred-card cursor-pointer">
+              <label className="flex items-center gap-2 text-sm p-3 rounded-xl sacred-card cursor-pointer">
                 <input
                   type="checkbox"
                   checked={heirs.paternalGrandfatherAlive}
@@ -327,7 +327,7 @@ export const Step4Relatives: React.FC = () => {
                 <span>{t.paternalGrandfather}</span>
               </label>
 
-              <label className="flex items-center gap-2 text-xs p-3 rounded-xl sacred-card cursor-pointer">
+              <label className="flex items-center gap-2 text-sm p-3 rounded-xl sacred-card cursor-pointer">
                 <input
                   type="checkbox"
                   checked={heirs.paternalGrandmotherAlive}
@@ -339,7 +339,7 @@ export const Step4Relatives: React.FC = () => {
                 <span>{t.paternalGrandmother}</span>
               </label>
 
-              <label className="flex items-center gap-2 text-xs p-3 rounded-xl sacred-card cursor-pointer">
+              <label className="flex items-center gap-2 text-sm p-3 rounded-xl sacred-card cursor-pointer">
                 <input
                   type="checkbox"
                   checked={heirs.maternalGrandfatherAlive}
@@ -351,7 +351,7 @@ export const Step4Relatives: React.FC = () => {
                 <span>{t.maternalGrandfather}</span>
               </label>
 
-              <label className="flex items-center gap-2 text-xs p-3 rounded-xl sacred-card cursor-pointer">
+              <label className="flex items-center gap-2 text-sm p-3 rounded-xl sacred-card cursor-pointer">
                 <input
                   type="checkbox"
                   checked={heirs.maternalGrandmotherAlive}
@@ -366,7 +366,7 @@ export const Step4Relatives: React.FC = () => {
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
               <div>
-                <label className="block text-[11px] font-semibold text-[var(--theme-text-secondary)] mb-1">
+                <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1">
                   {t.fullBrothers}
                 </label>
                 <input
@@ -376,12 +376,12 @@ export const Step4Relatives: React.FC = () => {
                   onChange={(e) =>
                     updateHeirs({ fullBrothersCount: parseInt(e.target.value) || 0 })
                   }
-                  className="w-full sacred-input px-3 py-2 text-xs font-mono"
+                  className="w-full sacred-input px-3 py-2 text-sm font-mono"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-[var(--theme-text-secondary)] mb-1">
+                <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1">
                   {t.fullSisters}
                 </label>
                 <input
@@ -391,12 +391,12 @@ export const Step4Relatives: React.FC = () => {
                   onChange={(e) =>
                     updateHeirs({ fullSistersCount: parseInt(e.target.value) || 0 })
                   }
-                  className="w-full sacred-input px-3 py-2 text-xs font-mono"
+                  className="w-full sacred-input px-3 py-2 text-sm font-mono"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-[var(--theme-text-secondary)] mb-1">
+                <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1">
                   {t.uterineBrothers}
                 </label>
                 <input
@@ -406,7 +406,7 @@ export const Step4Relatives: React.FC = () => {
                   onChange={(e) =>
                     updateHeirs({ uterineBrothersCount: parseInt(e.target.value) || 0 })
                   }
-                  className="w-full sacred-input px-3 py-2 text-xs font-mono"
+                  className="w-full sacred-input px-3 py-2 text-sm font-mono"
                 />
               </div>
             </div>
@@ -433,25 +433,25 @@ export const Step4Relatives: React.FC = () => {
               {t.tier3Heading}
             </h3>
           </div>
-          <span className="text-xs font-mono text-[var(--theme-text-muted)]">
+          <span className="text-sm font-mono text-[var(--theme-text-muted)]">
             الطبقة الثالثة
           </span>
         </div>
 
         {hasTier1Heir || hasTier2Heir ? (
-          <div className="p-4 rounded-xl bg-red-950/40 border border-red-500/50 text-red-300 text-xs flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 shrink-0 text-red-400 mt-0.5" />
+          <div className="p-4 sm:p-5 rounded-2xl bg-[#fef2f2] border-2 border-[#ef4444]/60 text-sm flex items-start gap-3 shadow-sm">
+            <AlertCircle className="w-5 h-5 shrink-0 text-[#dc2626] mt-0.5" />
             <div>
-              <span className="font-bold text-sm block">
+              <span className="font-bold text-sm sm:text-base text-[#991b1b] block">
                 {language === "ur" ? "حجبِ حرمان کا نفاذ:" : "Blocked by Ḥujub al-Ḥirmān:"}
               </span>
-              <p className="mt-0.5 leading-relaxed">{t.tier3Locked}</p>
+              <p className="mt-0.5 leading-relaxed text-[#7f1d1d] font-medium">{t.tier3Locked}</p>
             </div>
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div>
-              <label className="block text-[11px] font-semibold text-[var(--theme-text-secondary)] mb-1">
+              <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1">
                 {t.paternalUncles}
               </label>
               <input
@@ -461,12 +461,12 @@ export const Step4Relatives: React.FC = () => {
                 onChange={(e) =>
                   updateHeirs({ paternalUnclesCount: parseInt(e.target.value) || 0 })
                 }
-                className="w-full sacred-input px-3 py-2 text-xs font-mono"
+                className="w-full sacred-input px-3 py-2 text-sm font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-[11px] font-semibold text-[var(--theme-text-secondary)] mb-1">
+              <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1">
                 {t.paternalAunts}
               </label>
               <input
@@ -476,12 +476,12 @@ export const Step4Relatives: React.FC = () => {
                 onChange={(e) =>
                   updateHeirs({ paternalAuntsCount: parseInt(e.target.value) || 0 })
                 }
-                className="w-full sacred-input px-3 py-2 text-xs font-mono"
+                className="w-full sacred-input px-3 py-2 text-sm font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-[11px] font-semibold text-[var(--theme-text-secondary)] mb-1">
+              <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1">
                 {t.maternalUncles}
               </label>
               <input
@@ -491,12 +491,12 @@ export const Step4Relatives: React.FC = () => {
                 onChange={(e) =>
                   updateHeirs({ maternalUnclesCount: parseInt(e.target.value) || 0 })
                 }
-                className="w-full sacred-input px-3 py-2 text-xs font-mono"
+                className="w-full sacred-input px-3 py-2 text-sm font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-[11px] font-semibold text-[var(--theme-text-secondary)] mb-1">
+              <label className="block text-sm font-semibold text-[var(--theme-text-secondary)] mb-1">
                 {t.paternalCousins}
               </label>
               <input
@@ -506,7 +506,7 @@ export const Step4Relatives: React.FC = () => {
                 onChange={(e) =>
                   updateHeirs({ paternalCousinsCount: parseInt(e.target.value) || 0 })
                 }
-                className="w-full sacred-input px-3 py-2 text-xs font-mono"
+                className="w-full sacred-input px-3 py-2 text-sm font-mono"
               />
             </div>
           </div>

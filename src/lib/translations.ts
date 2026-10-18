@@ -9,7 +9,7 @@ export const TRANSLATIONS = {
     navTree: "Family Tree",
     navAcademy: "Academy & Mind-Maps",
     navMatrix: "Marja‘ Matrix",
-    navCertificate: "Estate Certificate",
+    navVisuals: "12 Visuals Studio",
 
     // Controls
     themeEmerald: "Rawḍah Emerald",
@@ -155,7 +155,7 @@ export const TRANSLATIONS = {
     btnPrev: "Previous Step",
     btnCalculate: "Calculate Distribution",
     btnReset: "Reset All",
-    btnLoadPreset: "Load Scenario Preset",
+    btnLoadPreset: "Browse samples",
     btnPrintPdf: "Export Sharia Certificate (PDF)",
     btnQuickMatrix: "Compare Across All 5 Marāji‘",
 
@@ -188,7 +188,7 @@ export const TRANSLATIONS = {
     navTree: "شجرۂ وراثت",
     navAcademy: "اکیڈمی و فکری نقشہ",
     navMatrix: "موازنہ مراجعِ کرام",
-    navCertificate: "فردِ تقسیمِ ترکہ",
+    navVisuals: "۱۲ بصری اسٹوڈیو",
 
     // Controls
     themeEmerald: "روضۂ سبز",
@@ -334,7 +334,7 @@ export const TRANSLATIONS = {
     btnPrev: "پچھلا مرحلہ",
     btnCalculate: "شرعی حساب لگائیں",
     btnReset: "دوبارہ شروع کریں",
-    btnLoadPreset: "مشہور مثالیں لوڈ کریں",
+    btnLoadPreset: "نمونے دیکھیں",
     btnPrintPdf: "شرعی سند (PDF) ڈاؤنلوڈ کریں",
     btnQuickMatrix: "پانچوں مراجع کا موازنہ دیکھیں",
 
