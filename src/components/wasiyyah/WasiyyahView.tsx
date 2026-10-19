@@ -106,11 +106,14 @@ export function WasiyyahView() {
   };
 
   return (
-    <div className="min-h-screen bg-[#faf8f5] text-[#0f172a] pb-28 selection:bg-amber-500/20">
+    <div
+      className="w-full min-h-screen bg-[#faf8f5] text-[#0f172a] pb-28 selection:bg-amber-500/20"
+      dir={isUr ? "rtl" : "ltr"}
+    >
       {/* =========================================================================
           TOP BREADCRUMB & STICKY SUB-NAV ANCHOR BAR
           ========================================================================= */}
-      <div className="bg-white/95 backdrop-blur-md border-b border-[#e2e8f0] sticky top-0 z-30 shadow-2xs">
+      <div className="w-full bg-white/95 backdrop-blur-md border-b border-[#e2e8f0] sticky top-0 z-30 shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-[#245642]">
             <button
@@ -150,8 +153,8 @@ export function WasiyyahView() {
           </div>
         </div>
 
-        {/* Horizontal Navigation Pills Bar */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 overflow-x-auto flex items-center gap-2 border-t border-stone-100 no-scrollbar">
+        {/* Horizontal Navigation Pills Bar (Centered on desktop, scrollable on mobile) */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 overflow-x-auto flex items-center justify-start sm:justify-center gap-2 border-t border-stone-100 no-scrollbar">
           {navSections.map((sec) => (
             <button
               key={sec.id}
@@ -164,17 +167,17 @@ export function WasiyyahView() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 space-y-14">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-8 space-y-14">
         {/* =========================================================================
             MAJESTIC HERO BANNER & SCRIPTURAL FOUNDATION
             ========================================================================= */}
-        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#164e3a] via-[#245642] to-[#0f2e21] text-white p-6 sm:p-10 md:p-12 shadow-2xl border-2 border-[#164e3a]">
+        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#164e3a] via-[#245642] to-[#0f2e21] text-white p-6 sm:p-10 md:p-12 shadow-2xl border-2 border-[#164e3a] text-center">
           {/* Subtle Background Radial Radiance */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-400/15 via-transparent to-transparent pointer-events-none" />
 
-          <div className="relative z-10 max-w-4xl space-y-6">
+          <div className="relative z-10 max-w-4xl mx-auto space-y-6">
             {/* Top Seal Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#fef3c7] text-[#78350f] text-xs font-black uppercase tracking-wider shadow-sm border border-amber-300">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#fef3c7] text-[#78350f] text-xs font-black uppercase tracking-wider shadow-sm border border-amber-300 mx-auto">
               <Scroll className="w-4 h-4 text-[#b45309]" />
               <span className="font-serif">
                 {isUr ? "دلیل الوصية الشرعية في فقه أهل البيت علیہم السلام" : "Kitāb al-Waṣāyā • Ja‘farī Testamentary Jurisprudence"}
@@ -187,7 +190,7 @@ export function WasiyyahView() {
                   ? "احکامِ وصیت: جامع شرعی و بصری انسائیکلوپیڈیا"
                   : "The Comprehensive Sharia Will & Testamentary Guide"}
               </h1>
-              <p className="text-base sm:text-lg text-emerald-100 font-medium font-nastaliq leading-[2.3]">
+              <p className="text-base sm:text-lg text-emerald-100 font-medium font-nastaliq leading-[2.3] max-w-3xl mx-auto">
                 {isUr
                   ? "اسلامی قانونِ تصفیہ میں وصیت اور ادائے دیون وراثت کی تقسیم سے مقدم ہے — انسان کا آخری شرعی و اخلاقی اختیار۔"
                   : "In Islamic liquidation, testamentary bequests and debt clearance strictly precede statutory inheritance."}
@@ -195,17 +198,17 @@ export function WasiyyahView() {
             </div>
 
             {/* Sacred Quranic Inscription Banner */}
-            <div className="p-5 sm:p-6 rounded-2xl bg-black/30 backdrop-blur-xs border border-emerald-400/30 text-emerald-50 space-y-3 shadow-inner">
-              <div className="text-center sm:text-start font-arabic text-xl sm:text-3xl font-bold tracking-wide text-amber-300">
+            <div className="max-w-3xl mx-auto p-5 sm:p-6 rounded-2xl bg-black/30 backdrop-blur-xs border border-emerald-400/30 text-emerald-50 space-y-3 shadow-inner">
+              <div className="text-center font-arabic text-2xl sm:text-4xl font-bold tracking-wide text-amber-300 py-1">
                 مِن بَعْدِ وَصِيَّةٍ يُوصِي بِهَا أَوْ دَيْنٍ ۗ
               </div>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs sm:text-sm text-emerald-200/90 font-medium gap-2 border-t border-emerald-500/20 pt-2.5">
-                <span className="font-nastaliq leading-[2.2]">
+                <span className="font-nastaliq leading-[2.2] text-center sm:text-start flex-1">
                   {isUr
                     ? "«وراثت کی تقسیم اس وصیت کے نفاذ اور قرض کی ادائیگی کے بعد ہوگی جو میت نے کی ہو۔» (سورۃ النساء: ۱۱)"
                     : "“After payment of any bequest the deceased may have bequeathed, or debts.” (Surah an-Nisā’ 4:11)"}
                 </span>
-                <span className="text-[11px] font-mono font-bold text-amber-300 shrink-0">
+                <span className="text-[11px] font-mono font-bold text-amber-300 shrink-0 mx-auto sm:mx-0">
                   Surah 4:11
                 </span>
               </div>

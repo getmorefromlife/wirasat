@@ -35,7 +35,7 @@ export default function Home() {
       {activeView === "wizard" && <HeroSection />}
 
       {/* Dynamic View Mount */}
-      <main className="flex-1 transition-opacity duration-300 relative z-10">
+      <main className="flex-1 w-full transition-opacity duration-300 relative z-10">
         {activeView === "wizard" && <WizardContainer />}
         {activeView === "dashboard" && (
           <div className="max-w-5xl mx-auto px-4 py-8">
