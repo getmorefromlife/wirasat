@@ -20,14 +20,19 @@ import {
   FileCheck,
   Award,
   BookOpen,
+  LayoutDashboard,
+  SlidersHorizontal,
 } from "lucide-react";
 import { ScenarioCaseStoryCard } from "./ScenarioCaseStoryCard";
+import { OnePageDashboard } from "@/components/dashboard/OnePageDashboard";
 
 export const WizardContainer: React.FC = () => {
   const {
     language,
     wizardStep,
     setWizardStep,
+    calculatorMode,
+    setCalculatorMode,
     resetAll,
     loadPreset,
     isSample,
@@ -60,7 +65,49 @@ export const WizardContainer: React.FC = () => {
   ];
 
   return (
-    <div id="calculator-workspace" className="calculator-workspace max-w-5xl mx-auto px-4 py-8 space-y-8 scroll-mt-6">
+    <div id="calculator-workspace" className="calculator-workspace max-w-5xl mx-auto px-4 py-8 space-y-6 scroll-mt-6">
+      {/* Dual Mode Switcher: 5-Step Guided Wizard vs All-in-One Dashboard */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-2 rounded-2xl bg-[#edf3e7] border border-[#c4d4be] shadow-xs">
+        <div className="flex items-center gap-2 px-2 text-xs font-bold text-[#245642]">
+          <SlidersHorizontal className="w-4 h-4 text-[#245642]" />
+          <span>{language === "ur" ? "طرزِ حساب منتخب فرمائیں:" : "Calculator Display Mode:"}</span>
+        </div>
+
+        <div className="flex items-center gap-1.5 w-full sm:w-auto">
+          <button
+            type="button"
+            onClick={() => setCalculatorMode("wizard")}
+            className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+              calculatorMode === "wizard"
+                ? "bg-[#245642] text-white shadow-sm"
+                : "bg-white/80 hover:bg-white text-[#52735a] border border-[#c4d4be]"
+            }`}
+          >
+            <Compass className="w-4 h-4" />
+            <span>{language === "ur" ? "مرحلہ وار گائیڈ (۵ مراحل)" : "Guided 5-Step Wizard"}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setCalculatorMode("dashboard")}
+            className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+              calculatorMode === "dashboard"
+                ? "bg-[#245642] text-white shadow-sm"
+                : "bg-white/80 hover:bg-white text-[#52735a] border border-[#c4d4be]"
+            }`}
+          >
+            <LayoutDashboard className="w-4 h-4" />
+            <span>{language === "ur" ? "جامع یک صفحاتی ڈیش بورڈ" : "All-in-One Dashboard"}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Render All-in-One Dashboard Mode */}
+      {calculatorMode === "dashboard" ? (
+        <OnePageDashboard />
+      ) : (
+        /* Render 5-Step Guided Wizard Mode */
+        <>
       {/* Top Banner: Scenario Presets & Reset */}
       <div className="sacred-card p-4 sm:p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -275,6 +322,8 @@ export const WizardContainer: React.FC = () => {
           </button>
         )}
       </div>
-    </div>
-  );
+    </>
+  )}
+</div>
+);
 };

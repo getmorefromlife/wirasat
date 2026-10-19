@@ -215,31 +215,31 @@ export const SimpleDistributionInfographic: React.FC<Props> = ({
       )}
 
       {/* The Total Money Treasure Banner */}
-      <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-[#172e22] via-[#245642] to-[#1e4634] text-white shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative overflow-hidden">
+      <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-[#ffffff] via-[#f9faf7] to-[#edf3e7] border-2 border-[#b8cbb0] text-[#172e22] shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative overflow-hidden">
         <div className="flex items-center gap-4 relative z-10">
-          <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-[#245642] text-amber-300 flex items-center justify-center shrink-0 shadow-md">
             <Coins className="w-6 h-6 text-amber-300" />
           </div>
           <div>
-            <span className="text-xs font-extrabold uppercase tracking-widest text-emerald-300 block">
+            <span className="text-xs font-black uppercase tracking-wider text-[#245642] block">
               {isUr ? "کل قابلِ تقسیم خالص ترکہ (Net Distributable Estate)" : "Total Net Distributable Estate"}
             </span>
-            <div className="flex items-baseline gap-2 mt-0.5 flex-wrap">
-              <span className="font-mono text-2xl sm:text-3xl font-black text-white" dir="ltr">
+            <div className="flex items-baseline gap-2 mt-1 flex-wrap">
+              <span className="font-mono text-2xl sm:text-3xl font-black text-[#172e22]" dir="ltr">
                 {activeBaseAmount.toLocaleString()} {currency}
               </span>
-              <span className="text-sm sm:text-base font-bold text-amber-300 font-nastaliq leading-[2.2]">
+              <span className="text-sm sm:text-base font-bold text-[#b45309] font-nastaliq leading-[2.2]">
                 ({formattedTotal.spokenUr})
               </span>
             </div>
           </div>
         </div>
 
-        <div className="text-start md:text-end relative z-10 bg-white/10 px-3.5 py-2 rounded-xl border border-white/15">
-          <span className="text-[11px] font-bold text-emerald-200 block uppercase">
+        <div className="text-start md:text-end relative z-10 bg-white px-4 py-2.5 rounded-xl border border-[#c4d4be] shadow-xs">
+          <span className="text-[11px] font-bold text-[#52735a] block uppercase tracking-wider">
             {isUr ? "وارثین کی کل تعداد:" : "Total Qualifying Heirs:"}
           </span>
-          <span className="font-extrabold text-base text-white">
+          <span className="font-extrabold text-base sm:text-lg text-[#172e22]">
             {activeHeirs.reduce((sum, h) => sum + h.count, 0)} {isUr ? "افراد" : "Heirs"}
           </span>
         </div>

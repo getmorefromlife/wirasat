@@ -30,6 +30,7 @@ export interface InheritanceState {
   activeView: ViewTab;
   activeVisualParadigm: string;
   wizardStep: number;
+  calculatorMode: "wizard" | "dashboard";
   isSample: boolean;
   activePresetId: string | null;
 
@@ -49,6 +50,7 @@ export interface InheritanceState {
   setActiveView: (view: ViewTab) => void;
   setActiveVisualParadigm: (paradigm: string) => void;
   setWizardStep: (step: number) => void;
+  setCalculatorMode: (mode: "wizard" | "dashboard") => void;
 
   updateDeceased: (partial: Partial<DeceasedInfo>) => void;
   setMarja: (marja: MarjaId) => void;
@@ -365,6 +367,7 @@ export const useInheritanceStore = create<InheritanceState>()(
       activeView: "wizard",
       activeVisualParadigm: "tree_tanzil",
       wizardStep: 1,
+      calculatorMode: "wizard",
       isSample: false,
       activePresetId: null,
 
@@ -420,6 +423,7 @@ export const useInheritanceStore = create<InheritanceState>()(
       setActiveView: (view) => set({ activeView: view }),
       setActiveVisualParadigm: (paradigm) => set({ activeVisualParadigm: paradigm }),
       setWizardStep: (step) => set({ wizardStep: step }),
+      setCalculatorMode: (mode) => set({ calculatorMode: mode }),
 
       openProvenance: (key) => set({ activeProvenanceKey: key, isProvenanceOpen: true }),
       closeProvenance: () => set({ isProvenanceOpen: false }),
