@@ -26,6 +26,7 @@ import {
 import { WirasatLogo } from "@/components/ui/WirasatLogo";
 import { ScenarioCaseStoryCard } from "@/components/wizard/ScenarioCaseStoryCard";
 import { SimpleDistributionInfographic } from "@/components/wizard/SimpleDistributionInfographic";
+import { WasiyyahLink } from "@/components/wasiyyah/WasiyyahLink";
 
 export const Step5Results: React.FC = () => {
   const {
@@ -180,6 +181,93 @@ export const Step5Results: React.FC = () => {
       {/* 2. SCHOLARLY DETAILED SECTIONS */}
       {(viewMode === "detailed" || viewMode === "both") && (
         <div className="space-y-6 animate-in fade-in duration-300">
+          {/* Estate Balance Sheet & Liquidation Audit Card */}
+          {result.balanceSheet && (result.balanceSheet.grossEstate > 0 || result.balanceSheet.deductedWasiyyah > 0) && (
+            <div className="sacred-card p-5 sm:p-6 rounded-2xl border-2 border-[#164e3a] bg-gradient-to-br from-[#ffffff] via-[#f7faf4] to-[#edf3e7] shadow-md space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#c4d4be] pb-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-[#245642] text-white flex items-center justify-center font-bold text-lg shadow-sm">
+                    📜
+                  </div>
+                  <div>
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#edf3e7] text-[#245642] text-[10px] font-bold tracking-wider uppercase border border-[#c4d4be]">
+                      <span>{language === "ur" ? "ترتیبِ تصفیہ و کٹوتیاں" : "Liquidation Sequence & Audit"}</span>
+                    </div>
+                    <h3 className="font-serif font-bold text-lg text-[#172e22] mt-0.5">
+                      {language === "ur" ? "میزانِ ترکہ و نفاذِ وصیت" : "Estate Balance Sheet & Bequest Audit"}
+                    </h3>
+                  </div>
+                </div>
+                <div className="text-start sm:text-end">
+                  <span className="text-xs font-bold text-[#52735a] block uppercase">
+                    {language === "ur" ? "خالص قابلِ تقسیم ترکہ" : "Net Distributable Estate"}
+                  </span>
+                  <span className="font-mono font-black text-xl text-[#245642]">
+                    {Math.round(result.balanceSheet.netDistributableEstate).toLocaleString()} {deceased.currency}
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="p-3 rounded-xl bg-white border border-[#c4d4be]">
+                  <span className="text-[11px] font-bold text-stone-500 block uppercase">
+                    {language === "ur" ? "۱. کل مجموعی ترکہ" : "1. Gross Estate"}
+                  </span>
+                  <span className="font-mono font-black text-base text-[#172e22] mt-0.5 block">
+                    {result.balanceSheet.grossEstate.toLocaleString()} {deceased.currency}
+                  </span>
+                </div>
+
+                <div className="p-3 rounded-xl bg-white border border-[#c4d4be]">
+                  <span className="text-[11px] font-bold text-stone-500 block uppercase">
+                    {language === "ur" ? "۲. قرض و تکفین (واجبِ مالی)" : "2. Debts & Funeral"}
+                  </span>
+                  <span className="font-mono font-black text-base text-[#991b1b] mt-0.5 block">
+                    -{result.balanceSheet.totalDebts.toLocaleString()} {deceased.currency}
+                  </span>
+                </div>
+
+                <div className="p-3 rounded-xl bg-[#fffdfa] border-2 border-[#d97706]/40 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold text-[#b45309] block uppercase">
+                      {language === "ur" ? "۳. نافذ وصیت (زیادہ سے زیادہ ثلث)" : "3. Enforceable Will (1/3 Max)"}
+                    </span>
+                  </div>
+                  <div className="flex items-baseline justify-between gap-1 mt-0.5">
+                    <span className="font-mono font-black text-base text-[#b45309]">
+                      -{Math.round(result.balanceSheet.deductedWasiyyah).toLocaleString()} {deceased.currency}
+                    </span>
+                    <WasiyyahLink section="thuluth" showBadge={false} className="text-[11px]">
+                      {language === "ur" ? "احکام" : "Rules"}
+                    </WasiyyahLink>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-[#f0fdf4] border-2 border-[#16a34a]/40 shadow-xs">
+                  <span className="text-[11px] font-bold text-[#166534] block uppercase">
+                    {language === "ur" ? "۴. حصصِ قرآنی ورثاء" : "4. Qur'anic Heirs Pool"}
+                  </span>
+                  <span className="font-mono font-black text-base text-[#15803d] mt-0.5 block">
+                    {Math.round(result.balanceSheet.netDistributableEstate).toLocaleString()} {deceased.currency}
+                  </span>
+                </div>
+              </div>
+
+              {result.balanceSheet.deductedWasiyyah > 0 && (
+                <div className="text-xs text-[#52735a] bg-[#edf3e7] p-2.5 rounded-xl border border-[#c4d4be] flex items-center justify-between flex-wrap gap-2">
+                  <span className="font-nastaliq leading-[2.2]">
+                    {language === "ur"
+                      ? "وصیت کا نفاذ قرضوں کی ادائیگی کے بعد بچے ہوئے خالص مال کے ایک تہائی (۳۳.۳٪) تک محدود ہے۔"
+                      : "The testamentary bequest is strictly capped at one-third (33.33%) of the net estate after debts."}
+                  </span>
+                  <WasiyyahLink section="heir_bequest">
+                    {language === "ur" ? "کیا وارث کے حق میں وصیت جائز ہے؟" : "Can an heir receive a will in Shia Fiqh?"}
+                  </WasiyyahLink>
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="flex items-center gap-2 pt-2 border-t border-[var(--theme-border)]">
             <Scale className="w-5 h-5 text-[#245642]" />
             <h3 className="font-bold text-lg text-[#172e22]">

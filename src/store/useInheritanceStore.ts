@@ -82,6 +82,12 @@ export interface InheritanceState {
   openProvenance: (key: string) => void;
   closeProvenance: () => void;
 
+  // Wasiyyah Guide Drawer State
+  isWasiyyahGuideOpen: boolean;
+  activeWasiyyahSection: string | null;
+  openWasiyyahGuide: (section?: string) => void;
+  closeWasiyyahGuide: () => void;
+
   // Estate Planning Studio State
   wasiyyahPercentage: number;
   wasiyyahBeneficiary: string;
@@ -375,6 +381,10 @@ export const useInheritanceStore = create<InheritanceState>()(
       activeProvenanceKey: null,
       isProvenanceOpen: false,
 
+      // Wasiyyah Guide Drawer
+      isWasiyyahGuideOpen: false,
+      activeWasiyyahSection: null,
+
       // Estate Planning
       wasiyyahPercentage: 15,
       wasiyyahBeneficiary: "grandchild",
@@ -427,6 +437,10 @@ export const useInheritanceStore = create<InheritanceState>()(
 
       openProvenance: (key) => set({ activeProvenanceKey: key, isProvenanceOpen: true }),
       closeProvenance: () => set({ isProvenanceOpen: false }),
+
+      openWasiyyahGuide: (section) =>
+        set({ isWasiyyahGuideOpen: true, activeWasiyyahSection: section || null }),
+      closeWasiyyahGuide: () => set({ isWasiyyahGuideOpen: false }),
 
       setWasiyyahPercentage: (pct) => set({ wasiyyahPercentage: Math.max(0, Math.min(33.33, pct)) }),
       setWasiyyahBeneficiary: (ben) => set({ wasiyyahBeneficiary: ben }),

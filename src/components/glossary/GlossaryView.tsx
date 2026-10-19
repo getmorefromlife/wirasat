@@ -37,6 +37,7 @@ export function GlossaryView() {
     selectedGlossaryTermId,
     setSelectedGlossaryTermId,
     openProvenance,
+    openWasiyyahGuide,
     deceased,
   } = useInheritanceStore();
 
@@ -456,6 +457,24 @@ export function GlossaryView() {
                           );
                         })}
                       </div>
+                    </div>
+                  )}
+
+                  {/* Primary Waṣiyyah Guide Trigger */}
+                  {item.id === "wasiyyah" && (
+                    <div className="pt-3 border-t border-[#edf3e7]">
+                      <button
+                        type="button"
+                        onClick={() => openWasiyyahGuide()}
+                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#245642] to-[#172e22] text-[#fef9c3] hover:brightness-110 text-xs sm:text-sm font-bold shadow-md cursor-pointer transition-all border border-[#245642]/40"
+                      >
+                        <Sparkles className="w-4 h-4 text-amber-400" />
+                        <span>
+                          {isUr
+                            ? "مکمل شرعی گائیڈ کھولیں | Open Complete Waṣiyyah Guide"
+                            : "Open Complete Waṣiyyah Guide | مکمل شرعی گائیڈ کھولیں"}
+                        </span>
+                      </button>
                     </div>
                   )}
 

@@ -19,6 +19,7 @@ import {
   BadgePercent,
   Plus,
 } from "lucide-react";
+import { WasiyyahLink } from "@/components/wasiyyah/WasiyyahLink";
 
 export const Step2BalanceSheet: React.FC = () => {
   const {
@@ -493,8 +494,10 @@ export const Step2BalanceSheet: React.FC = () => {
             {/* 4. Enforceable Will (Al-Waṣiyyah) */}
             <div className="pt-3 border-t border-[var(--theme-border)]/60 space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span className="font-bold text-[var(--theme-gold)]">
-                  {t.wasiyyahSection}
+                <span className="font-bold text-[var(--theme-gold)] flex items-center gap-1.5">
+                  <WasiyyahLink section="thuluth" showBadge={true}>
+                    {t.wasiyyahSection}
+                  </WasiyyahLink>
                 </span>
                 <span className="text-sm font-mono text-[var(--theme-text-muted)]">
                   Max: {Math.round(balanceSheet.maxAllowableWasiyyah).toLocaleString()} {deceased.currency}
@@ -516,7 +519,12 @@ export const Step2BalanceSheet: React.FC = () => {
               </div>
 
               <div className="p-3 rounded-xl bg-[var(--theme-bg)]/80 border border-[var(--theme-border)] text-sm text-[var(--theme-text-muted)] leading-relaxed space-y-2">
-                <p>{t.wasiyyahLimitNotice}</p>
+                <p>
+                  {t.wasiyyahLimitNotice}{" "}
+                  <WasiyyahLink section="thuluth">
+                    {language === "ur" ? "ایک تہائی (ثلث) کے احکام ملاحظہ کریں" : "View 1/3rd ceiling rules"}
+                  </WasiyyahLink>
+                </p>
                 {debts.wasiyyahAmount > balanceSheet.maxAllowableWasiyyah && (
                   <div className="flex items-start gap-2.5 p-3 rounded-xl bg-[#fffbeb] border border-[#f59e0b] text-[#78350f]">
                     <input

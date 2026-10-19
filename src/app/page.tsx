@@ -11,6 +11,7 @@ import { VisualChartsStudio } from "@/components/visuals/VisualChartsStudio";
 import { KinshipGalaxy } from "@/components/visuals/KinshipGalaxy";
 import { GlossaryView } from "@/components/glossary/GlossaryView";
 import { ProvenanceDrawer } from "@/components/provenance/ProvenanceDrawer";
+import { WasiyyahGuideDrawer } from "@/components/wasiyyah/WasiyyahGuideDrawer";
 import { Footer } from "@/components/layout/Footer";
 import { useInheritanceStore } from "@/store/useInheritanceStore";
 import { OnePageDashboard } from "@/components/dashboard/OnePageDashboard";
@@ -25,6 +26,9 @@ export default function Home() {
 
       {/* Global Scholarly Provenance & Fatwa Drawer */}
       <ProvenanceDrawer />
+
+      {/* Global Wasiyyah (Testamentary Wills) Guide Drawer */}
+      <WasiyyahGuideDrawer />
 
       {/* Hero Section Banner */}
       {activeView === "wizard" && <HeroSection />}

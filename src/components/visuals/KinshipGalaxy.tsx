@@ -30,6 +30,7 @@ import { useInheritanceStore } from "@/store/useInheritanceStore";
 import { calculateInheritance } from "@/lib/fiqh-engine";
 import { MARJA_DATABASE } from "@/lib/marja-rules";
 import { MarjaId } from "@/types/fiqh";
+import { WasiyyahLink } from "@/components/wasiyyah/WasiyyahLink";
 
 /* =========================================================================
    TYPES & NODE DEFINITIONS (SPATIOUS 1200 × 860 FULL HD MATRIX)
@@ -1083,8 +1084,13 @@ export function KinshipGalaxy() {
           </div>
 
           {activePreset.actionRecommendationUr && (
-            <div className="text-xs text-emerald-300 bg-emerald-950/60 px-3 py-1.5 rounded-xl border border-emerald-500/30 self-start sm:self-center">
+            <div className="text-xs text-emerald-300 bg-emerald-950/60 px-3 py-1.5 rounded-xl border border-emerald-500/30 self-start sm:self-center flex items-center gap-2 flex-wrap">
               <span>{isUr ? activePreset.actionRecommendationUr : activePreset.actionRecommendationEn}</span>
+              {(activePreset.id === "orphaned_grandchild" || activePreset.id === "adopted_child") && (
+                <WasiyyahLink section="thuluth" className="text-amber-300 font-bold text-xs underline">
+                  {isUr ? "احکامِ وصیت" : "Will Rules"}
+                </WasiyyahLink>
+              )}
             </div>
           )}
         </div>
@@ -1594,6 +1600,42 @@ export function KinshipGalaxy() {
                 </span>
                 <p className="text-xs text-amber-900 leading-relaxed font-medium">
                   {isUr ? selectedNode.mythWarningUr : selectedNode.mythWarningEn}
+                </p>
+              </div>
+            )}
+
+            {/* Inspector Warning Alert: Orphaned Grandchildren & Adopted Children (Preset 4 & 5) */}
+            {(activePreset.id === "orphaned_grandchild" ||
+              activePreset.id === "adopted_child" ||
+              selectedNode.id === "nonblood_adopted" ||
+              (selectedNode.id === "pota_poti" && selectedStatus.state === "blocked")) && (
+              <div className="p-3.5 rounded-2xl bg-[#fffbeb] border-2 border-[#f59e0b] shadow-xs space-y-2">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-[#78350f]">
+                  <AlertTriangle className="w-4 h-4 text-[#d97706] shrink-0" />
+                  <span>
+                    {isUr
+                      ? "شرعی انتباہ و حل: ثلث وصیت کی فوری ضرورت"
+                      : "Sharia Remedy: Safeguard via 1/3rd Waṣiyyah"}
+                  </span>
+                </div>
+                <p className="text-xs text-[#92400e] leading-relaxed font-medium font-nastaliq leading-[2.2]">
+                  {isUr ? (
+                    <>
+                      انہیں قطعی محرومی سے بچانے کے لیے سرپرست کو چاہیے کہ وہ{" "}
+                      <WasiyyahLink section="thuluth">
+                        ایک تہائی (ثلث) مال کی وصیت
+                      </WasiyyahLink>{" "}
+                      یا اپنی زندگی میں ہبۂ حیات کا شرعی معاہدہ لازماً تحریر فرمائیں۔
+                    </>
+                  ) : (
+                    <>
+                      To safeguard this dependent from total statutory exclusion, the guardian should execute a{" "}
+                      <WasiyyahLink section="thuluth">
+                        discretionary 1/3rd Waṣiyyah
+                      </WasiyyahLink>{" "}
+                      or an inter-vivos gift (Hibat al-Ḥayāt).
+                    </>
+                  )}
                 </p>
               </div>
             )}

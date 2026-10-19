@@ -25,6 +25,7 @@ import {
   RefreshCw,
   GitBranch,
 } from "lucide-react";
+import { WasiyyahLink } from "@/components/wasiyyah/WasiyyahLink";
 
 interface ExpositionProps {
   pillarNumber: number;
@@ -222,14 +223,16 @@ function Pillar1Exposition({ isUr }: { isUr: boolean }) {
               <Scroll className="w-5 h-5 text-purple-600" />
             </div>
             <h5 className="font-bold text-sm sm:text-base text-stone-900 dark:text-white">
-              {isUr ? "ایک تہائی وصیت (Al-Waṣiyyah)" : "The Enforceable Will (Al-Waṣiyyah)"}
+              <WasiyyahLink section="thuluth" showBadge={false}>
+                {isUr ? "ایک تہائی وصیت (Al-Waṣiyyah)" : "The Enforceable Will (Al-Waṣiyyah)"}
+              </WasiyyahLink>
             </h5>
-            <p className="text-xs text-stone-800 dark:text-stone-200 font-semibold">
+            <p className="text-xs text-stone-800 dark:text-stone-200 font-semibold font-nastaliq leading-[2.2]">
               {isUr
                 ? "مذکورہ بالا تینوں حقوق کے بعد جو خالص ترکہ بچے، اس کے ۱/۳ حصے میں وصیت نافذ ہوتی ہے۔"
                 : "Calculated strictly against the net residue remaining after Steps 1, 2, and 3."}
             </p>
-            <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
+            <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed font-nastaliq leading-[2.2]">
               {isUr
                 ? "میت کو صرف 33.33% حصے پر تصرف کا اختیار ہے۔ باقی 66.67% لازمی طور پر شرعی ورثاء کا حق ہے۔"
                 : "The testator exercises absolute testamentary discretion over up to 33.33% of the residue."}
@@ -258,12 +261,20 @@ function Pillar1Exposition({ isUr }: { isUr: boolean }) {
                 2/3 Heirs
               </div>
             </div>
-            <p className="text-[11px] text-purple-900 dark:text-purple-300 leading-tight">
+            <p className="text-[11px] text-purple-900 dark:text-purple-300 leading-tight font-nastaliq leading-[2.2]">
               <strong>{isUr ? "استثناء:" : "Excess Rule:"}</strong>{" "}
               {isUr
                 ? "۱/۳ سے زائد کی وصیت تبھی نافذ ہو گی جب وفات کے بعد تمام عاقل و بالغ ورثاء رضا مندی دیں۔"
                 : "Any excess over 1/3rd requires unanimous post-mortem heir consent. A dissenting heir protects their share."}
             </p>
+            <div className="pt-2 border-t border-purple-200 dark:border-purple-800/60 flex items-center justify-between">
+              <WasiyyahLink section="thuluth" showBadge={true} className="text-xs">
+                {isUr ? "مکمل شرعی گائیڈ کھولیں" : "Open Complete Waṣiyyah Guide"}
+              </WasiyyahLink>
+              <WasiyyahLink section="heir_bequest" className="text-xs">
+                {isUr ? "وارث کے لیے وصیت؟" : "Bequest to Heir?"}
+              </WasiyyahLink>
+            </div>
           </div>
         </div>
       </div>

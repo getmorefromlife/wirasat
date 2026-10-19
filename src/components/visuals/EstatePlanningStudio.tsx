@@ -17,6 +17,7 @@ import {
   Heart,
 } from "lucide-react";
 import { useInheritanceStore } from "@/store/useInheritanceStore";
+import { WasiyyahLink } from "@/components/wasiyyah/WasiyyahLink";
 
 interface EstatePlanningStudioProps {
   result: any;
@@ -379,16 +380,19 @@ export function EstatePlanningStudio({ result, isUr, currency, heirs }: EstatePl
       {/* TAB 2: 1/3RD WAṢIYYAH SIMULATOR */}
       {activeTab === "wasiyyah" && (
         <div className="p-6 rounded-2xl bg-[#fffbeb] border-2 border-[#f59e0b] shadow-xs space-y-6">
-          <div className="flex items-center justify-between border-b border-[#fde68a] pb-4">
+          <div className="flex items-center justify-between border-b border-[#fde68a] pb-4 flex-wrap gap-3">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-[#fef3c7] border border-[#f59e0b] flex items-center justify-center shrink-0">
                 <FileText className="w-5 h-5 text-[#78350f]" />
               </div>
               <div>
-                <h4 className="text-base font-extrabold text-[#78350f]">
-                  {isUr ? "وصیت کا تفصیلی تخمینہ کار (ثلثِ مال)" : "The 1/3rd Waṣiyyah (Will) Simulation"}
+                <h4 className="text-base font-extrabold text-[#78350f] flex items-center gap-2 flex-wrap">
+                  <span>{isUr ? "وصیت کا تفصیلی تخمینہ کار (ثلثِ مال)" : "The 1/3rd Waṣiyyah (Will) Simulation"}</span>
+                  <WasiyyahLink section="thuluth" showBadge={true}>
+                    {isUr ? "شرعی گائیڈ" : "Fiqh Guide"}
+                  </WasiyyahLink>
                 </h4>
-                <p className="text-xs text-[#92400e] font-medium">
+                <p className="text-xs text-[#92400e] font-medium font-nastaliq leading-[2.2]">
                   {isUr
                     ? "وصیت بعد از وفات نافذ ہوتی ہے اور اس کی شرعی حد کل خالص ترکے کا ایک تہائی (۳۳.۳۳٪) ہے۔"
                     : "Post-mortem bequests are enforceable up to 1/3rd of net estate without heir consent."}
@@ -396,9 +400,14 @@ export function EstatePlanningStudio({ result, isUr, currency, heirs }: EstatePl
               </div>
             </div>
 
-            <span className="text-xs font-mono font-extrabold px-3 py-1 rounded-full bg-white border border-[#f59e0b] text-[#78350f]">
-              {wasiyyahPercentage.toFixed(1)}% / 33.33% Max
-            </span>
+            <div className="flex items-center gap-2">
+              <WasiyyahLink section="heir_bequest" className="text-xs">
+                {isUr ? "وارث کے حق میں وصیت؟" : "Bequest to an Heir?"}
+              </WasiyyahLink>
+              <span className="text-xs font-mono font-extrabold px-3 py-1 rounded-full bg-white border border-[#f59e0b] text-[#78350f]">
+                {wasiyyahPercentage.toFixed(1)}% / 33.33% Max
+              </span>
+            </div>
           </div>
 
           {/* Interactive Slider & Value Input */}
@@ -428,15 +437,20 @@ export function EstatePlanningStudio({ result, isUr, currency, heirs }: EstatePl
 
             {/* Over-Cap Safeguard Alert Banner */}
             {wasiyyahPercentage >= 33.33 && (
-              <div className="p-4 rounded-xl bg-[#fff7ed] border border-[#ea580c] text-xs space-y-1 mt-3">
-                <div className="flex items-center gap-2 font-bold text-[#9a3412]">
-                  <AlertCircle className="w-4 h-4 text-[#ea580c]" />
-                  <span>{isUr ? "شرعی انتباہ: ثلث سے زائد وصیت کا بطلان" : "Divine Ceiling Safeguard Active"}</span>
+              <div className="p-4 rounded-xl bg-[#fff7ed] border border-[#ea580c] text-xs space-y-2 mt-3">
+                <div className="flex items-center justify-between gap-2 font-bold text-[#9a3412]">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 text-[#ea580c]" />
+                    <span>{isUr ? "شرعی انتباہ: ثلث سے زائد وصیت کا بطلان" : "Divine Ceiling Safeguard Active"}</span>
+                  </div>
+                  <WasiyyahLink section="invalid_signs">
+                    {isUr ? "باطل وصیت کی علامات" : "Signs of Invalid Will"}
+                  </WasiyyahLink>
                 </div>
-                <p className="leading-relaxed text-[#7c2d12] font-medium">
+                <p className="leading-relaxed text-[#7c2d12] font-medium font-nastaliq leading-[2.2]">
                   {isUr
                     ? "فقہ جعفریہ کی رو سے ایک تہائی (1/3) سے زائد وصیت شرعاً نافذ نہیں ہوگی تاوقتیکہ تمام عاقل و بالغ ورثاء بعد از وفات رضامندی نہ دیں۔"
-                    : "Under Ja'fari Law, bequests exceeding 1/3 of the net estate are legally void (Bāṭil) unless all mature heirs unanimously consent after death."}
+                    : "Under Ja'fari Law, bequests exceeding 1/3 of the net estate are legally suspended (Mawqūf) unless all mature heirs unanimously consent after death."}
                 </p>
               </div>
             )}

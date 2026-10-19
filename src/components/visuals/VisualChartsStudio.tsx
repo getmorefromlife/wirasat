@@ -8,6 +8,7 @@ import { PersonNode, BranchCalculationResult } from "@/types/fiqh";
 import { EstatePlanningStudio } from "@/components/visuals/EstatePlanningStudio";
 import { KinshipGalaxy } from "@/components/visuals/KinshipGalaxy";
 import { SimpleDistributionInfographic } from "@/components/wizard/SimpleDistributionInfographic";
+import { WasiyyahLink } from "@/components/wasiyyah/WasiyyahLink";
 import {
   GitFork,
   Disc,
@@ -1251,9 +1252,15 @@ function EstateFlowPipelineView({ result, isUr, currency, debts, assets }: any) 
     <div className="space-y-6">
       <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
         {stages.map((st, i) => (
-          <div key={i} className="p-4 rounded-2xl bg-[#fafbf8] border border-[#d8e0d2] space-y-1">
+          <div key={i} className={`p-4 rounded-2xl bg-[#fafbf8] border ${i === 4 ? "border-[#f59e0b] bg-[#fffdfa]" : "border-[#d8e0d2]"} space-y-1`}>
             <span className="text-[10px] font-extrabold text-[#596851] block truncate">
-              {isUr ? st.labelUr : st.labelEn}
+              {i === 4 ? (
+                <WasiyyahLink section="thuluth" showBadge={false}>
+                  {isUr ? st.labelUr : st.labelEn}
+                </WasiyyahLink>
+              ) : (
+                isUr ? st.labelUr : st.labelEn
+              )}
             </span>
             <strong className="text-sm md:text-base font-extrabold block text-[#172e22]">
               {st.amount.toLocaleString()}
@@ -1871,7 +1878,15 @@ function EstateTimelineView({ result, isUr, currency }: any) {
             {idx + 1}
           </div>
           <div>
-            <h4 className="text-sm font-extrabold text-[#172e22]">{isUr ? s.titleUr : s.titleEn}</h4>
+            <h4 className="text-sm font-extrabold text-[#172e22] flex items-center gap-1.5">
+              {idx === 3 ? (
+                <WasiyyahLink section="thuluth" showBadge={false}>
+                  {isUr ? s.titleUr : s.titleEn}
+                </WasiyyahLink>
+              ) : (
+                isUr ? s.titleUr : s.titleEn
+              )}
+            </h4>
             <p className="text-xs text-stone-600 mt-0.5 font-medium">{s.descEn}</p>
           </div>
         </div>
