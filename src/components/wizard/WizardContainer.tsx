@@ -36,6 +36,20 @@ export const WizardContainer: React.FC = () => {
 
   const t = TRANSLATIONS[language];
   const [showPresetDropdown, setShowPresetDropdown] = useState(false);
+  const stepperRef = React.useRef<HTMLDivElement>(null);
+  const isFirstRender = React.useRef(true);
+
+  // Automatically keep user anchored at the calculator whenever step changes
+  React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    const timer = setTimeout(() => {
+      stepperRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 40);
+    return () => clearTimeout(timer);
+  }, [wizardStep]);
 
   const steps = [
     { num: 1, title: t.step1Title, subtitle: "Marja‘" },
@@ -46,7 +60,7 @@ export const WizardContainer: React.FC = () => {
   ];
 
   return (
-    <div className="calculator-workspace max-w-5xl mx-auto px-4 py-8 space-y-8">
+    <div id="calculator-workspace" className="calculator-workspace max-w-5xl mx-auto px-4 py-8 space-y-8 scroll-mt-6">
       {/* Top Banner: Scenario Presets & Reset */}
       <div className="sacred-card p-4 sm:p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -167,7 +181,7 @@ export const WizardContainer: React.FC = () => {
       )}
 
       {/* Illuminated Stepper Progress Journey */}
-      <div className="wizard-steps grid grid-cols-5 gap-2 sm:gap-3">
+      <div ref={stepperRef} className="wizard-steps grid grid-cols-5 gap-2 sm:gap-3 scroll-mt-8">
         {steps.map((s) => {
           const isCurrent = wizardStep === s.num;
           const isDone = wizardStep > s.num;
