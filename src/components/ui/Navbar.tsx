@@ -20,7 +20,7 @@ export function Navbar() {
     ["glossary", BookOpen, "Glossary", "فرہنگ / لغت"],
   ] as const;
   return <header className="site-header">
-    <div className="topline"><span>{language === "ur" ? "علمی کاوش: مولانا سیّد آئمن رضوی" : "A project by Maulana Syed Imon Rizvi"}</span><span className="font-naskh">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</span><span><Sparkles size={12}/> {language === "ur" ? "میراثِ اہلِ بیت (ع)" : "Rooted in Ja‘farī Jurisprudence"}</span></div>
+    <div className="topline"><span>{language === "ur" ? "علمی کاوش: مولانا سیّد آئمن رضوی" : "A project by Maulana Syed Imon Rizvi"}</span><span className="font-naskh">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</span><span><Sparkles size={12}/> {language === "ur" ? "عدل و انصاف کی میراث" : "A Legacy of Fairness"}</span></div>
     <div className="navigation"><button className="brand hover:opacity-95 transition-opacity" onClick={() => setActiveView("wizard")} aria-label="Wirasat home"><WirasatLogo variant="navbar" color="emerald" language={language} /></button>
     <nav aria-label="Main navigation">{links.map(([view, Icon, en, ur]) => <button key={view} onClick={() => setActiveView(view as ViewTab)} aria-current={activeView === view ? "page" : undefined} className={activeView === view ? "nav-item selected" : "nav-item"}><Icon size={16}/>{language === "ur" ? ur : en}</button>)}</nav>
     <div className="nav-actions">

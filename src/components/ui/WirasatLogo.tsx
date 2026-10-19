@@ -96,12 +96,12 @@ export const WirasatLogo: React.FC<WirasatLogoProps> = ({
             <span
               className={`font-serif font-bold tracking-tight text-[#172e22] dark:text-emerald-100 ${dims.textScale}`}
             >
-              {language === "ur" ? "شِیعَہ وِرَاثَت" : "SHIA WIRASAT"}
+              {language === "ur" ? "وِرَاثَت" : "WIRASAT"}
             </span>
             <span
               className={`font-jakarta uppercase font-semibold tracking-widest text-[#52735a] dark:text-emerald-400/80 mt-0.5 ${dims.subScale}`}
             >
-              {language === "ur" ? "میراثِ اہلِ بیت (ع) — شرعی ضابطۂ تقسیم" : "Ja'fari Inheritance & Estate Engine"}
+              {language === "ur" ? "عدل و انصاف کی تابندہ وراثت" : "A Legacy of Fairness"}
             </span>
           </div>
         )}
@@ -118,7 +118,7 @@ export const WirasatLogo: React.FC<WirasatLogoProps> = ({
       >
         <Image
           src={src}
-          alt="Shia Wirasat Emblem"
+          alt="Wirasat Emblem"
           width={dims.width}
           height={dims.height}
           className="w-full h-full object-contain"
@@ -136,7 +136,7 @@ export const WirasatLogo: React.FC<WirasatLogoProps> = ({
         </div>
         {showCaption && (
           <span className="text-[8px] sm:text-[8.5px] font-jakarta font-semibold tracking-[0.16em] uppercase text-[#627066] mt-1">
-            {language === "ur" ? "میراثِ اہلِ بیت (ع)" : "A LEGACY OF FAIRNESS"}
+            {language === "ur" ? "عدل و انصاف کی میراث" : "A LEGACY OF FAIRNESS"}
           </span>
         )}
       </div>

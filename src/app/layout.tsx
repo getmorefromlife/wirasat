@@ -2,11 +2,36 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Mīrāth al-Thaqalayn | میراثِ ثقلین — Shia Inheritance Engine & Academy",
-  description: "A scholarly project by Maulana Syed Imon Rizvi (مولانا سیّد آئمن رضوی) — Accredited Ja'fari Jurisprudence Inheritance Calculator and Academy with multi-marja comparative matrix, interactive mind-maps, and estate planning studio.",
+  metadataBase: new URL("https://shia-wirasat.vercel.app"),
+  title: "Wirasat — A Legacy of Fairness | وراثت",
+  description: "Wirasat: A Legacy of Fairness. Educational Ja‘farī Inheritance Platform curated by Maulana Syed Imon Rizvi.",
+  applicationName: "Wirasat",
   authors: [{ name: "Maulana Syed Imon Rizvi (مولانا سیّد آئمن رضوی)" }],
   creator: "Maulana Syed Imon Rizvi",
-  keywords: ["Shia Inheritance", "Fiqh al-Mawarith", "Ja'fari Law", "Wirasat Shia", "میراث ثقلین", "Maulana Syed Imon Rizvi", "مولانا سید آئمن رضوی", "Sistani", "Khamenei", "Khoei"],
+  keywords: ["Wirasat", "وراثت", "A Legacy of Fairness", "Shia Inheritance", "Fiqh al-Mawarith", "Ja'fari Law", "Maulana Syed Imon Rizvi", "مولانا سید آئمن رضوی", "Sistani", "Khamenei"],
+  openGraph: {
+    type: "website",
+    url: "https://shia-wirasat.vercel.app",
+    title: "Wirasat — A Legacy of Fairness | وراثت",
+    description: "Wirasat: A Legacy of Fairness. Educational Ja‘farī Inheritance Platform curated by Maulana Syed Imon Rizvi.",
+    siteName: "Wirasat",
+    locale: "en_US",
+    alternateLocale: ["ur_PK"],
+    images: [
+      {
+        url: "/images/icon-192.png",
+        width: 192,
+        height: 192,
+        alt: "Wirasat — A Legacy of Fairness",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: "Wirasat — A Legacy of Fairness | وراثت",
+    description: "Wirasat: A Legacy of Fairness. Educational Ja‘farī Inheritance Platform curated by Maulana Syed Imon Rizvi.",
+    images: ["/images/icon-192.png"],
+  },
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },

@@ -59,7 +59,7 @@ export const Footer: React.FC = () => {
                   English Notice:
                 </strong>
                 <p>
-                  Mīrāth al-Thaqalayn is an educational research initiative conceived and initiated by <strong>Maulana Syed Imon Rizvi</strong> (Graduate, Islamic Seminary of Qom) to translate classical Ja‘farī inheritance jurisprudence into accessible digital models. Calculations utilize automated algorithmic logic under continuous scholarly review. The project is actively engaged in ongoing consultation and review with traditional seminaries (<em>Ḥawzāt</em>) and the representative offices (<em>Dafātir</em>) of esteemed Marāji‘ and scholars for formal verification. This platform is not a substitute for formal judicial decrees or personal consultation with authorized representatives (Wukalā’).
+                  Wirasat is an educational research initiative conceived and initiated by <strong>Maulana Syed Imon Rizvi</strong> (Graduate, Islamic Seminary of Qom) to translate classical Ja‘farī inheritance jurisprudence into accessible digital models. Calculations utilize automated algorithmic logic under continuous scholarly review. The project is actively engaged in ongoing consultation and review with traditional seminaries (<em>Ḥawzāt</em>) and the representative offices (<em>Dafātir</em>) of esteemed Marāji‘ and scholars for formal verification. This platform is not a substitute for formal judicial decrees or personal consultation with authorized representatives (Wukalā’).
                 </p>
               </div>
 
@@ -68,7 +68,7 @@ export const Footer: React.FC = () => {
                   اردو اعلامیہ:
                 </strong>
                 <p className="text-stone-800 dark:text-stone-200">
-                  میراثِ ثقلین ایک تعلیمی و تحقیقی اقدام ہے جس کی بنیاد اور ابتدا <strong>مولانا سیّد آئمن رضوی</strong> (فاضل حوزہ علمیہ قم) نے رکھی ہے تاکہ فقہِ جعفریہ کے احکامِ مواریث کو جدید تکنیکی اور عام فہم قالب میں پیش کیا جا سکے۔ یہ حسابی نتائج مراجعِ عظام کے فتاویٰ کے حتمی عدالتی فیصلے کا متبادل نہیں ہیں۔ حسابی و فقہی صحت اور حتمی توثیق کے لیے مختلف علمی اداروں، حوزاتِ علمیہ اور مراجعِ عظام و علمائے کرام کے دفاتر سے مسلسل رابطہ اور تبادلہ خیال کا عمل جاری ہے۔ ترکے کی تقسیم سے قبل مستند علمائے کرام اور وکلاءِ مراجع سے تصدیق شرعاً لازم ہے۔
+                  وراثت ایک تعلیمی و تحقیقی اقدام ہے جس کی بنیاد اور ابتدا <strong>مولانا سیّد آئمن رضوی</strong> (فاضل حوزہ علمیہ قم) نے رکھی ہے تاکہ فقہِ جعفریہ کے احکامِ مواریث کو جدید تکنیکی اور عام فہم قالب میں پیش کیا جا سکے۔ یہ حسابی نتائج مراجعِ عظام کے فتاویٰ کے حتمی عدالتی فیصلے کا متبادل نہیں ہیں۔ حسابی و فقہی صحت اور حتمی توثیق کے لیے مختلف علمی اداروں، حوزاتِ علمیہ اور مراجعِ عظام و علمائے کرام کے دفاتر سے مسلسل رابطہ اور تبادلہ خیال کا عمل جاری ہے۔ ترکے کی تقسیم سے قبل مستند علمائے کرام اور وکلاءِ مراجع سے تصدیق شرعاً لازم ہے۔
                 </p>
               </div>
             </div>
@@ -105,7 +105,7 @@ export const Footer: React.FC = () => {
           {/* 4. Bottom Copyright & Brand Bar */}
           <div className="pt-4 text-[11px] text-[var(--theme-text-muted)] flex flex-wrap items-center justify-center gap-3 border-t border-[var(--theme-border)]/50 max-w-lg mx-auto">
             <span className="font-bold text-[var(--theme-gold)]">
-              Mīrāth al-Thaqalayn (میراثِ ثقلین)
+              Wirasat (وراثت) — A Legacy of Fairness
             </span>
             <span>•</span>
             <span>Ja‘farī Inheritance Planning</span>

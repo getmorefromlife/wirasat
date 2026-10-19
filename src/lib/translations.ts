@@ -1,8 +1,8 @@
 export const TRANSLATIONS = {
   en: {
-    appTitle: "Mīrāth al-Thaqalayn",
-    appSubtitle: "The Shia Inheritance Engine & Academy",
-    tagline: "Accredited Ja'fari Jurisprudence (Fiqh al-Mawārīth) System",
+    appTitle: "Wirasat",
+    appSubtitle: "A Legacy of Fairness",
+    tagline: "Wirasat — A Legacy of Fairness",
     
     // Navigation Tabs
     navWizard: "Guided Wizard",
@@ -179,9 +179,9 @@ export const TRANSLATIONS = {
   },
 
   ur: {
-    appTitle: "میراثِ ثقلین",
-    appSubtitle: "جعفری نظامِ تقسیمِ وراثت و اکیڈمی",
-    tagline: "فقہ جعفریہ (فقہ المواریث بحوالہ اہل بیت علیہم السلام) کا مستند نظام",
+    appTitle: "وراثت",
+    appSubtitle: "عدل و انصاف کی میراث",
+    tagline: "وراثت — عدل و انصاف کی میراث",
 
     // Navigation Tabs
     navWizard: "مرحلہ وار رہنماء",
