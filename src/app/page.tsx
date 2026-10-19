@@ -12,6 +12,7 @@ import { KinshipGalaxy } from "@/components/visuals/KinshipGalaxy";
 import { GlossaryView } from "@/components/glossary/GlossaryView";
 import { ProvenanceDrawer } from "@/components/provenance/ProvenanceDrawer";
 import { WasiyyahGuideDrawer } from "@/components/wasiyyah/WasiyyahGuideDrawer";
+import { WasiyyahView } from "@/components/wasiyyah/WasiyyahView";
 import { Footer } from "@/components/layout/Footer";
 import { useInheritanceStore } from "@/store/useInheritanceStore";
 import { OnePageDashboard } from "@/components/dashboard/OnePageDashboard";
@@ -41,6 +42,7 @@ export default function Home() {
             <OnePageDashboard />
           </div>
         )}
+        {activeView === "wasiyyah" && <WasiyyahView />}
         {activeView === "tree" && <FamilyTree />}
         {activeView === "academy" && <AcademyView />}
         {activeView === "matrix" && <MarjaMatrixView />}

@@ -19,7 +19,7 @@ import {
 import { calculateInheritance } from "@/lib/fiqh-engine";
 import { SCENARIO_PRESETS } from "@/lib/scenarios";
 
-export type ViewTab = "wizard" | "dashboard" | "tree" | "academy" | "matrix" | "visuals" | "galaxy" | "glossary";
+export type ViewTab = "wizard" | "dashboard" | "wasiyyah" | "tree" | "academy" | "matrix" | "visuals" | "galaxy" | "glossary";
 
 export interface InheritanceState {
   // App UI Controls
@@ -439,7 +439,7 @@ export const useInheritanceStore = create<InheritanceState>()(
       closeProvenance: () => set({ isProvenanceOpen: false }),
 
       openWasiyyahGuide: (section) =>
-        set({ isWasiyyahGuideOpen: true, activeWasiyyahSection: section || null }),
+        set({ activeView: "wasiyyah", isWasiyyahGuideOpen: true, activeWasiyyahSection: section || null }),
       closeWasiyyahGuide: () => set({ isWasiyyahGuideOpen: false }),
 
       setWasiyyahPercentage: (pct) => set({ wasiyyahPercentage: Math.max(0, Math.min(33.33, pct)) }),
