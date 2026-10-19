@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import { Calculator, GitFork, BookOpen, FileText, Globe2, Sparkles, GraduationCap, RotateCcw } from "lucide-react";
+import { Calculator, LayoutDashboard, GitFork, BookOpen, FileText, Globe2, Sparkles, GraduationCap, RotateCcw } from "lucide-react";
 import { useInheritanceStore, type ViewTab } from "@/store/useInheritanceStore";
 import { WirasatLogo } from "@/components/ui/WirasatLogo";
 
@@ -13,6 +13,7 @@ export function Navbar() {
   }, [language, fontScale]);
   const links = [
     ["wizard", Calculator, "Calculator", "حساب"],
+    ["dashboard", LayoutDashboard, "Dashboard", "ڈیش بورڈ"],
     ["tree", GitFork, "Family tree", "شجرۂ نسب"],
     ["galaxy", Sparkles, "Kinship Galaxy", "فلکِ قرابت"],
     ["visuals", FileText, "Visuals", "بصری اسٹوڈیو"],

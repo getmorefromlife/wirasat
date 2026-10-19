@@ -19,7 +19,7 @@ import {
 import { calculateInheritance } from "@/lib/fiqh-engine";
 import { SCENARIO_PRESETS } from "@/lib/scenarios";
 
-export type ViewTab = "wizard" | "tree" | "academy" | "matrix" | "visuals" | "galaxy" | "glossary";
+export type ViewTab = "wizard" | "dashboard" | "tree" | "academy" | "matrix" | "visuals" | "galaxy" | "glossary";
 
 export interface InheritanceState {
   // App UI Controls
