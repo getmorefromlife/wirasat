@@ -6,6 +6,7 @@ import { useInheritanceStore } from "@/store/useInheritanceStore";
 import { TOP_10_DESIGN_SYSTEMS, DesignSystemId } from "@/types/designs";
 import { WizardContainer } from "@/components/wizard/WizardContainer";
 import { FamilyTree } from "@/components/tree/FamilyTree";
+import { WirasatLogo } from "@/components/ui/WirasatLogo";
 import {
   Sparkles,
   Check,
@@ -40,13 +41,20 @@ export default function DesignsShowcasePage() {
       {/* Top Banner Navigation */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-[var(--theme-overlay)] border-b border-[var(--theme-border)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-xs sm:text-sm font-bold text-[var(--theme-gold)] hover:underline"
-          >
-            <ArrowLeft className="w-4 h-4 rtl:rotate-180" />
-            <span>{language === "ur" ? "← مرکزی ویب سائٹ پر واپس جائیں" : "← Back to Main Application"}</span>
-          </Link>
+          <div className="flex items-center gap-3.5">
+            <Link
+              href="/"
+              className="flex items-center gap-2 text-xs sm:text-sm font-bold text-[var(--theme-gold)] hover:underline"
+            >
+              <ArrowLeft className="w-4 h-4 rtl:rotate-180" />
+              <span>{language === "ur" ? "مرکزی ویب سائٹ" : "Back to App"}</span>
+            </Link>
+            <div className="h-4 w-[1px] bg-[var(--theme-border)] hidden sm:block" />
+            <Link href="/" className="hidden sm:flex items-center gap-2 hover:opacity-90 transition-opacity">
+              <WirasatLogo variant="icon" color="emerald" size="sm" />
+              <span className="font-serif font-bold text-sm text-[var(--theme-text-primary)]">Wirasat</span>
+            </Link>
+          </div>
 
           <div className="flex items-center gap-2 text-xs">
             <span className="hidden sm:inline text-[var(--theme-text-muted)]">

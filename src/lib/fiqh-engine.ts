@@ -19,7 +19,8 @@ import { MARJA_DATABASE } from "./marja-rules";
 export function calculateBalanceSheet(
   assets: EstateAssets,
   debts: EstateDebts,
-  deceased: DeceasedInfo
+  deceased: DeceasedInfo,
+  heirs?: HeirsInput
 ): BalanceSheetSummary {
   const grossEstate =
     (assets.cash || 0) +
@@ -31,7 +32,13 @@ export function calculateBalanceSheet(
     (assets.movableProperty || 0);
 
   const burialAndFuneral = debts.funeralExpenses || 0;
-  const debtsToPeople = (debts.securedDebts || 0) + (debts.unsecuredDebts || 0);
+  
+  // Pending Mahr (Mahr al-Mu'ajjal) owed to surviving permanent wives is treated as prior debt (Duyūn al-Nās)
+  const pendingMahrTotal = (heirs?.wives || []).reduce((sum, w) => {
+    return sum + (w.hasMahrPending && (w.pendingMahrAmount || 0) > 0 ? w.pendingMahrAmount : 0);
+  }, 0);
+
+  const debtsToPeople = (debts.securedDebts || 0) + (debts.unsecuredDebts || 0) + pendingMahrTotal;
   const debtsToAllah =
     (debts.unpaidKhums || 0) +
     (debts.unpaidZakat || 0) +
@@ -417,7 +424,7 @@ export function calculateInheritance(
   heirs: HeirsInput
 ): InheritanceCalculationResult {
   const marjaInfo = MARJA_DATABASE[deceased.marja];
-  const balanceSheet = calculateBalanceSheet(assets, debts, deceased);
+  const balanceSheet = calculateBalanceSheet(assets, debts, deceased, heirs);
   const { activeTier, excludedTiers } = determineActiveTier(heirs);
 
   const notes: string[] = [];
@@ -428,6 +435,10 @@ export function calculateInheritance(
   let rejectionOfTasibApplied = false;
   let motherHujubNuqsanApplied = false;
 
+  let spousalBreakdown: InheritanceCalculationResult["spousalBreakdown"] = undefined;
+  let eldestSonHabwahRecipient: InheritanceCalculationResult["eldestSonHabwahRecipient"] = null;
+  const excludedGrandchildren: NonNullable<InheritanceCalculationResult["excludedGrandchildren"]> = [];
+
   if (balanceSheet.isInsolvent) {
     notes.push(
       `The estate is commercially insolvent. Total liabilities (${balanceSheet.totalDebts.toLocaleString()} ${deceased.currency}) equal or exceed gross assets (${balanceSheet.grossEstate.toLocaleString()} ${deceased.currency}). No distribution to heirs can take place.`
@@ -436,7 +447,105 @@ export function calculateInheritance(
 
   const netEstate = balanceSheet.netDistributableEstate;
 
-  // 1. Eldest Son Habwah
+  // Normalize children and grandchildren structure
+  const unifiedChildrenList = (heirs.childrenList && heirs.childrenList.length > 0)
+    ? heirs.childrenList
+    : (heirs.namedDescendants && heirs.namedDescendants.length > 0)
+      ? heirs.namedDescendants
+          .filter((n) => n.relation === "SON" || n.relation === "DAUGHTER")
+          .map((n) => ({
+            id: n.id,
+            name: n.name,
+            gender: n.gender,
+            isAlive: n.isAlive,
+            motherId: (n as any).motherId || "wife-1",
+            birthOrderOrAge: (n as any).birthOrderOrAge ?? (n.habwahEligible ? 30 : 20),
+            daughterBranchEqualRatio: n.daughterBranchEqualRatio,
+            impediments: {
+              isKiller: !!n.impediments?.isKiller,
+              isNonMuslim: !!n.impediments?.isNonMuslim,
+              isLian: !!(n.impediments?.isLian || (n.impediments as any)?.["isLi’an"]),
+              "isLi’an": !!(n.impediments?.isLian || (n.impediments as any)?.["isLi’an"]),
+            },
+            children: (n.children || []).map((c) => ({
+              id: c.id,
+              name: c.name,
+              gender: c.gender,
+              isAlive: c.isAlive,
+              parentGender: n.gender,
+              parentChildId: n.id,
+            })),
+          }))
+      : [];
+
+  // Identify direct living children and all grandchildren
+  const livingDirectChildren = unifiedChildrenList.filter(
+    (c) => c.isAlive && !c.impediments?.isKiller && !c.impediments?.isNonMuslim
+  );
+  const livingSons = livingDirectChildren.filter((c) => c.gender === "MALE");
+  const livingDaughters = livingDirectChildren.filter((c) => c.gender === "FEMALE");
+
+  // Collect all grandchildren across branches
+  const allGrandchildrenAcrossBranches: Array<{
+    id: string;
+    name: string;
+    gender: "MALE" | "FEMALE";
+    parentName: string;
+    parentGender: "MALE" | "FEMALE";
+    isParentAlive: boolean;
+    isAlive: boolean;
+  }> = [];
+
+  unifiedChildrenList.forEach((parent) => {
+    (parent.children || []).forEach((gc) => {
+      allGrandchildrenAcrossBranches.push({
+        id: gc.id,
+        name: gc.name,
+        gender: gc.gender,
+        parentName: parent.name,
+        parentGender: parent.gender,
+        isParentAlive: parent.isAlive,
+        isAlive: gc.isAlive,
+      });
+    });
+  });
+
+  // Also include grandchildren from legacy namedDescendants if present
+  (heirs.namedDescendants || []).forEach((n) => {
+    if (n.relation === "GRANDCHILD") {
+      const parent = (heirs.namedDescendants || []).find((p) => p.id === n.parentId);
+      if (!allGrandchildrenAcrossBranches.some((g) => g.id === n.id)) {
+        allGrandchildrenAcrossBranches.push({
+          id: n.id,
+          name: n.name,
+          gender: n.gender,
+          parentName: parent ? parent.name : "Parent",
+          parentGender: parent ? parent.gender : "MALE",
+          isParentAlive: parent ? parent.isAlive : false,
+          isAlive: n.isAlive,
+        });
+      }
+    }
+  });
+
+  const directChildrenCount =
+    unifiedChildrenList.length > 0
+      ? livingDirectChildren.length
+      : (heirs.sonsCount || 0) + (heirs.daughtersCount || 0);
+
+  const hasDescendants =
+    directChildrenCount > 0 ||
+    allGrandchildrenAcrossBranches.some((gc) => gc.isAlive) ||
+    (heirs.deceasedSonsWithChildren &&
+      heirs.deceasedSonsWithChildren.some(
+        (c) => (c.sons || 0) > 0 || (c.daughters || 0) > 0
+      )) ||
+    (heirs.deceasedDaughtersWithChildren &&
+      heirs.deceasedDaughtersWithChildren.some(
+        (c) => (c.sons || 0) > 0 || (c.daughters || 0) > 0
+      ));
+
+  // 1. ABSOLUTE ELDEST SON ḤABWAH RESOLUTION (Across all wives)
   let habwahAwarded = {
     awarded: false,
     reason: "No eligible eldest son or estate insolvent.",
@@ -444,30 +553,56 @@ export function calculateInheritance(
     value: 0,
   };
 
-  if (
-    deceased.gender === "male" &&
-    deceased.hasEldestSon &&
-    deceased.eldestSonIsSaneAndNonAqq &&
-    netEstate > 0
-  ) {
-    const itemsList: string[] = [];
-    if (deceased.habwah.quran) itemsList.push("Personal Qur'an");
-    if (deceased.habwah.ring) itemsList.push("Personal Ring (Khātam)");
-    if (deceased.habwah.swordOrDefensiveWeapon)
-      itemsList.push("Personal Sword / Weapon");
-    if (deceased.habwah.clothes) itemsList.push("Personal Clothes");
+  if (deceased.gender === "male" && netEstate > 0) {
+    // Find the single absolute eldest living sane son across all marriages
+    let chosenEldestSon: typeof livingSons[0] | null = null;
+    if (livingSons.length > 0) {
+      const sortedSons = [...livingSons].sort((a, b) => {
+        const valA = a.birthOrderOrAge ?? 0;
+        const valB = b.birthOrderOrAge ?? 0;
+        return valB - valA; // Elder (higher age) first
+      });
+      chosenEldestSon = sortedSons[0];
+    }
 
-    habwahAwarded = {
-      awarded: true,
-      reason: `Awarded to eldest living son pursuant to ${marjaInfo.masalahHabwah}`,
-      items: itemsList,
-      value: deceased.habwah.estimatedValue || 0,
-    };
-    notes.push(
-      `Al-Ḥabwah: Eldest son is exclusively awarded the father's specific personal items (${itemsList.join(
-        ", "
-      )}).`
-    );
+    if (chosenEldestSon || (deceased.hasEldestSon && deceased.eldestSonIsSaneAndNonAqq)) {
+      const itemsList: string[] = [];
+      if (deceased.habwah.quran) itemsList.push("Personal Qur'an (مصحف شریف)");
+      if (deceased.habwah.ring) itemsList.push("Personal Ring (انگشتری / خاتم)");
+      if (deceased.habwah.swordOrDefensiveWeapon) itemsList.push("Personal Sword / Weapon (شمشیر / اسلحہ)");
+      if (deceased.habwah.clothes) itemsList.push("Personal Clothes (ملبوسات)");
+
+      const habwahVal = Math.min(deceased.habwah.estimatedValue || 0, netEstate);
+      const mother = (heirs.wives || []).find((w) => w.id === chosenEldestSon?.motherId);
+      const motherName = mother ? mother.name : (chosenEldestSon?.motherId || "First Wife");
+
+      habwahAwarded = {
+        awarded: true,
+        reason: chosenEldestSon
+          ? `Awarded to deceased father's absolute eldest son across all marriages: ${chosenEldestSon.name} (Mother: ${motherName}) pursuant to ${marjaInfo.masalahHabwah}.`
+          : `Awarded to eldest living son pursuant to ${marjaInfo.masalahHabwah}.`,
+        items: itemsList,
+        value: habwahVal,
+      };
+
+      if (chosenEldestSon) {
+        eldestSonHabwahRecipient = {
+          id: chosenEldestSon.id,
+          name: chosenEldestSon.name,
+          motherId: chosenEldestSon.motherId,
+          motherName: motherName,
+          birthOrderOrAge: chosenEldestSon.birthOrderOrAge,
+          items: itemsList,
+          value: habwahVal,
+        };
+      }
+
+      notes.push(
+        `Al-Ḥabwah: Father's 4 specific personal items (${itemsList.join(
+          ", "
+        )}) awarded to the absolute eldest son (${chosenEldestSon?.name || "Eldest Son"}).`
+      );
+    }
   }
 
   if (netEstate <= 0) {
@@ -484,46 +619,16 @@ export function calculateInheritance(
         explanation: marjaInfo.widowLandRulingEn,
       },
       habwahAwarded,
+      eldestSonHabwahRecipient,
+      spousalBreakdown,
+      excludedGrandchildren,
       heirShares: [],
       branchResults: [],
       notes,
     };
   }
 
-  // Check presence of children or descendants (including namedDescendants)
-  const namedLivingDirectChildren = (heirs.namedDescendants || []).filter(
-    (n) =>
-      (n.relation === "SON" || n.relation === "DAUGHTER") &&
-      n.isAlive &&
-      !n.impediments?.isKiller &&
-      !n.impediments?.isNonMuslim
-  );
-  const namedGrandchildrenList: PersonNode[] = [];
-  (heirs.namedDescendants || []).forEach((n) => {
-    if (n.relation === "GRANDCHILD") namedGrandchildrenList.push(n);
-    if (n.children && n.children.length > 0) {
-      n.children.forEach((c) => namedGrandchildrenList.push(c));
-    }
-  });
-
-  const directChildrenCount =
-    (heirs.sonsCount || 0) +
-    (heirs.daughtersCount || 0) +
-    namedLivingDirectChildren.length;
-
-  const hasDescendants =
-    directChildrenCount > 0 ||
-    namedGrandchildrenList.length > 0 ||
-    (heirs.deceasedSonsWithChildren &&
-      heirs.deceasedSonsWithChildren.some(
-        (c) => (c.sons || 0) > 0 || (c.daughters || 0) > 0
-      )) ||
-    (heirs.deceasedDaughtersWithChildren &&
-      heirs.deceasedDaughtersWithChildren.some(
-        (c) => (c.sons || 0) > 0 || (c.daughters || 0) > 0
-      ));
-
-  // 2. Spousal Shares (Zawj & Zawjah)
+  // 2. SPOUSAL SHARES (Zawj / Zawjāt)
   let spousePortionFraction = 0; // fraction of net estate
   let spouseTotalMoney = 0;
 
@@ -538,7 +643,11 @@ export function calculateInheritance(
     (assets.buildingsAndFixtures || 0) +
     (assets.movableProperty || 0);
 
-  if (heirs.spouseCount > 0) {
+  const totalWivesInProfile = (heirs.wives && heirs.wives.length > 0)
+    ? heirs.wives.filter((w) => w.isAlive !== false).length
+    : Math.min(4, Math.max(0, heirs.spouseCount || 0));
+
+  if (heirs.spouseCount > 0 || totalWivesInProfile > 0) {
     if (deceased.gender === "female") {
       // Husband (Zawj)
       const num = 1;
@@ -576,38 +685,71 @@ export function calculateInheritance(
         ],
       });
     } else {
-      // Wives (Zawjah)
+      // Wives (Zawjāt - Polygyny: 1 to 4 Wives)
       const num = 1;
       const den = hasDescendants ? 8 : 4;
       spousePortionFraction = 1 / den;
-      const wifeCount = Math.min(4, heirs.spouseCount);
+      
+      const activeWives = (heirs.wives && heirs.wives.length > 0)
+        ? heirs.wives.filter((w) => w.isAlive !== false)
+        : Array.from({ length: Math.min(4, Math.max(1, heirs.spouseCount || 1)) }, (_, i) => ({
+            id: `wife-${i + 1}`,
+            name: `Wife ${i + 1}`,
+            isAlive: true,
+            marriageType: "PERMANENT" as const,
+            hasMahrPending: false,
+            pendingMahrAmount: 0,
+          }));
 
-      let wifeMoney = 0;
+      const wifeCount = Math.max(1, Math.min(4, activeWives.length));
+
+      let totalWivesMoney = 0;
       let landPortion = 0;
       let buildingPortion = 0;
 
       if (marjaInfo.widowInheritsLandValue) {
-        // Sistani & Khamenei: Widow inherits from the monetary valuation of ALL land
-        wifeMoney = netEstate * spousePortionFraction;
+        // Sistani & Khamenei: Wives inherit from the monetary valuation of ALL land & buildings
+        totalWivesMoney = netEstate * spousePortionFraction;
         landPortion = totalLandValue * spousePortionFraction;
         buildingPortion = nonLandValue * spousePortionFraction;
       } else {
-        // Khoei, Makarem, Najafi: Widow inherits strictly from non-land assets
+        // Khoei, Makarem, Najafi: Wives inherit strictly from non-land assets
         const debtRatio =
           balanceSheet.grossEstate > 0
             ? (balanceSheet.totalDebts + balanceSheet.deductedWasiyyah) /
               balanceSheet.grossEstate
             : 0;
         const netNonLand = Math.max(0, nonLandValue * (1 - debtRatio));
-        wifeMoney = netNonLand * spousePortionFraction;
+        totalWivesMoney = netNonLand * spousePortionFraction;
         landPortion = 0;
-        buildingPortion = wifeMoney;
+        buildingPortion = totalWivesMoney;
         notes.push(
-          `Under ${marjaInfo.nameEn}, the widow receives her share (${num}/${den}) strictly from buildings, trees, and movable chattels (${buildingPortion.toLocaleString()} ${deceased.currency}), excluding the monetary value of open/agricultural land.`
+          `Under ${marjaInfo.nameEn}, wives receive their aggregate share (${num}/${den}) strictly from buildings, trees, and movable chattels (${buildingPortion.toLocaleString()} ${deceased.currency}), excluding the monetary value of land.`
         );
       }
 
-      spouseTotalMoney = wifeMoney;
+      spouseTotalMoney = totalWivesMoney;
+      const individualFractionDen = den * wifeCount;
+      const individualFractionStr = formatFraction(1, individualFractionDen).str;
+      const individualMoney = spouseTotalMoney / wifeCount;
+
+      // Construct detailed multi-wives spousal breakdown
+      spousalBreakdown = {
+        totalFraction: formatFraction(num, den).str,
+        totalAmount: spouseTotalMoney,
+        wifeCount,
+        wives: activeWives.map((w, idx) => ({
+          id: w.id || `wife-${idx + 1}`,
+          name: w.name || `Wife ${idx + 1}`,
+          fraction: individualFractionStr,
+          percentage: (1 / individualFractionDen) * 100,
+          amount: individualMoney,
+          landEntitlement: landPortion / wifeCount,
+          buildingsEntitlement: buildingPortion / wifeCount,
+          pendingMahrDeducted: w.hasMahrPending ? (w.pendingMahrAmount || 0) : 0,
+        })),
+      };
+
       const frac = formatFraction(num, den);
       heirShares.push({
         id: "wives",
@@ -619,7 +761,7 @@ export function calculateInheritance(
         fractionString: frac.str,
         percentage: (1 / den) * 100,
         totalMonetaryShare: spouseTotalMoney,
-        sharePerIndividual: spouseTotalMoney / wifeCount,
+        sharePerIndividual: individualMoney,
         landValueEntitlement: landPortion,
         movableAndBuildingEntitlement: buildingPortion,
         proof: {
@@ -633,10 +775,10 @@ export function calculateInheritance(
           hadithSource:
             "Wasa'il al-Shi'ah, Kitāb al-Mawārīth, Abwāb Mīrāth al-Azwāj",
           masalahReference: marjaInfo.masalahWidow,
-          ruleExplanation: `${marjaInfo.nameEn}: ${marjaInfo.widowLandRulingEn}`,
+          ruleExplanation: `${marjaInfo.nameEn}: ${marjaInfo.widowLandRulingEn}. Divided equally among all ${wifeCount} permanent wives.`,
         },
         notes: [
-          `Wife share divided equally between ${wifeCount} wife/wives.`,
+          `Prescribed spousal share (${num}/${den}) divided equally (Bi al-Sawiyyah) among ${wifeCount} wife/wives (${individualFractionStr} each).`,
           marjaInfo.widowInheritsLandValue
             ? "Inherits monetary valuation of land & structures."
             : "Inherits exclusively from valuation of buildings, trees, and movables (zero from land).",
@@ -647,6 +789,49 @@ export function calculateInheritance(
 
   // Remainder to distribute among active tier
   const distributableToBloodHeirs = Math.max(0, netEstate - spouseTotalMoney);
+
+  // 3. GOLDEN PROXIMITY RULE & GRANDCHILDREN AUDIT
+  if (livingDirectChildren.length > 0) {
+    // Al-Aqrab Yamna' al-Ab'ad (الأقرب يمنع الأبعد)
+    allGrandchildrenAcrossBranches
+      .filter((gc) => gc.isAlive)
+      .forEach((gc) => {
+        const isSonBranch = gc.parentGender === "MALE";
+        const isMaleGC = gc.gender === "MALE";
+        const kType: "POTA" | "POTI" | "NAWASA" | "NAWASI" = isSonBranch
+          ? isMaleGC ? "POTA" : "POTI"
+          : isMaleGC ? "NAWASA" : "NAWASI";
+
+        const kUr = isSonBranch
+          ? isMaleGC ? "پوتا (بیٹے کا بیٹا)" : "پوتی (بیٹے کی بیٹی)"
+          : isMaleGC ? "نواسہ (بیٹی کا بیٹا)" : "نواسی (بیٹی کی بیٹی)";
+
+        const kEn = isSonBranch
+          ? isMaleGC ? "Pota (Son's Son)" : "Poti (Son's Daughter)"
+          : isMaleGC ? "Nawasa (Daughter's Son)" : "Nawasi (Daughter's Daughter)";
+
+        const livingNames = livingDirectChildren.map((c) => c.name).join(", ");
+
+        excludedGrandchildren.push({
+          id: gc.id,
+          name: gc.name,
+          gender: gc.gender,
+          kinshipType: kType,
+          kinshipUr: kUr,
+          kinshipEn: kEn,
+          parentName: gc.parentName,
+          parentGender: gc.parentGender,
+          reasonEn: `Completely excluded by living direct child (${livingNames}) under the Golden Proximity Rule (Al-Aqrab Yamna‘ al-Ab‘ad).`,
+          reasonUr: `صلبی اولاد (${livingNames}) کی حیات کے سبب قاعدۂ اقربیت (الأقرب يمنع الأبعد) کے تحت قطعی محروم (حجبِ حرمان)۔`,
+        });
+      });
+
+    if (excludedGrandchildren.length > 0) {
+      notes.push(
+        `Al-Aqrab Yamna‘ al-Ab‘ad (الأقرب يمنع الأبعد): ${excludedGrandchildren.length} grandchild(ren) are barred from statutory inheritance by living direct children. Protect them via 1/3rd Waṣiyyah.`
+      );
+    }
+  }
 
   // 3. TIER 1 DISTRIBUTION
   if (activeTier === 1) {
@@ -1679,6 +1864,9 @@ export function calculateInheritance(
       explanation: marjaInfo.widowLandRulingEn,
     },
     habwahAwarded,
+    eldestSonHabwahRecipient,
+    spousalBreakdown,
+    excludedGrandchildren,
     heirShares,
     branchResults,
     notes,

@@ -9,6 +9,22 @@ export const SCENARIO_PRESETS: ScenarioPreset[] = [
       "A classic high-impact case illustrating the Marja difference on widow's land entitlement, followed by Radd distribution between Father and Daughter in a 1:3 ratio.",
     descriptionUr:
       "ایک بنیادی فقہی مثال جس میں اراضی پر بیوہ کے حق میں مراجع کا اختلاف اور باپ بیٹی کے مابین 1:3 کے تناسب سے رد کی تقسیم واضح ہوتی ہے۔",
+    storyUr:
+      "الحاج غلام حسین صاحب کی وفات ہوئی۔ پسماندگان میں ان کی بیوہ، ایک اکلوتی بیٹی اور ان کے ضعیف والد حیات ہیں، جبکہ والدہ پہلے ہی فوت ہو چکی تھیں۔ ترکے میں زرعی اراضی (۲ کروڑ)، رہائشی پلاٹ (۱.۵ کروڑ)، تجارتی پلاٹ (۱ کروڑ)، مکانات و عمارات (۲.۵ کروڑ) اور نقد رقم (۵۰ لاکھ روپے) موجود ہے۔ واجبات میں تدفین کے اخراجات، قرضہ جات، نا ادا شدہ خمس (۲۰ لاکھ)، حجِ بدل اور وصیت شامل ہیں۔",
+    storyEn:
+      "Al-Hajj Ghulam Hussain passed away leaving behind 1 Widow, 1 Daughter, and his aging Father; his mother passed away earlier. The gross estate includes agricultural land (20M PKR), residential land (15M), commercial land (10M), buildings/fixtures (25M), and liquid cash (5M). Outstanding obligations include funeral expenses, secured debts, unpaid Khums (2M), and a Wasiyyah.",
+    keyDilemmaUr:
+      "۱. بیوہ کا اراضی کی قیمت میں حق: کیا بیوہ زرعی و رہائشی زمین کی قیمت میں سے ۱/۸ لے گی؟ (سیستانی و خامنہ ای کے ہاں ہاں، خوئی کے ہاں صرف عمارت و اشجار سے)۔ ۲. بقیہ ترکہ (رد): بیوہ کو ۱/۸ دینے کے بعد بقیہ ترکے کے رد میں صرف بیٹی اور والد ۱:۳ کے تناسب سے شریک ہوں گے، بیوہ زائد مال میں شریک نہیں ہوگی۔",
+    keyDilemmaEn:
+      "1. Widow's Land Valuation: Does the widow receive 1/8 from the monetary valuation of agricultural & residential land? (Sistani: Yes, Khoei: No, buildings only). 2. Surplus Residue (Radd): After statutory shares (Widow 1/8, Daughter 1/2, Father 1/6), the surplus returns solely to the Daughter and Father in a 3:1 ratio.",
+    familyHighlights: {
+      deceasedLabelUr: "الحاج غلام حسین (مقلد: آیت اللہ سیستانی)",
+      deceasedLabelEn: "Al-Hajj Ghulam Hussain (Follower of Ayatollah Sistani)",
+      familySummaryUr: "۱ بیوہ • ۱ بیٹی • والد حیات (والدہ فوت شدہ)",
+      familySummaryEn: "1 Widow • 1 Daughter • Father Alive (Mother Deceased)",
+      propertySummaryUr: "کل ترکہ: ۸ کروڑ روپے | واجبات و دیون: ۱.۱۵ کروڑ روپے | خالص قابلِ تقسیم ترکہ: ۶.۸۵ کروڑ روپے",
+      propertySummaryEn: "Gross Estate: 80M PKR | Debts & Khums: 11.5M PKR | Net Estate: 68.5M PKR",
+    },
     deceased: {
       gender: "male",
       name: "Al-Hajj Ghulam Hussain",
@@ -47,6 +63,28 @@ export const SCENARIO_PRESETS: ScenarioPreset[] = [
     },
     heirs: {
       spouseCount: 1,
+      wives: [
+        {
+          id: "wife-1",
+          name: "Zahra (Widow / بیوہ)",
+          isAlive: true,
+          marriageType: "PERMANENT",
+          hasMahrPending: false,
+          pendingMahrAmount: 0,
+        },
+      ],
+      childrenList: [
+        {
+          id: "child-d1",
+          name: "Sakina (Daughter / بیٹی)",
+          gender: "FEMALE",
+          isAlive: true,
+          motherId: "wife-1",
+          birthOrderOrAge: 25,
+          impediments: { isKiller: false, isNonMuslim: false, isLian: false, "isLi’an": false },
+          children: [],
+        },
+      ],
       fatherAlive: true,
       fatherImpediment: false,
       motherAlive: false,
@@ -84,6 +122,22 @@ export const SCENARIO_PRESETS: ScenarioPreset[] = [
       "Shares mathematically sum to 15/12. Ja'fari Law rejects diluting everyone's share. Deficit is borne exclusively by daughters; Husband and Parents receive 100% full Quranic shares.",
     descriptionUr:
       "قرآنی حصص کا مجموعہ 15/12 بنتا ہے۔ فقہ جعفریہ میں عول باطل ہے۔ شوہر اور والدین کا پورا حصہ محفوظ رہتا ہے اور کمی صرف بیٹیوں کے حصے میں کی جاتی ہے۔",
+    storyUr:
+      "سیدہ کنیز فاطمہ صاحبہ کی وفات ہوئی۔ ورثاء میں ان کے شوہر، بوڑھے والدین (والد و والدہ دونوں حیات) اور دو سگی بیٹیاں شامل ہیں۔ اگر ان کے حصص کو جمع کیا جائے تو وہ ترکے سے متجاوز (۱۵/۱۲) ہو جاتے ہیں۔",
+    storyEn:
+      "Syeda Kaneez Fatima passed away leaving her Husband, both living parents (Father and Mother), and 2 biological Daughters. The prescribed Quranic shares mathematically sum to 15/12, which exceeds 100% of the estate.",
+    keyDilemmaUr:
+      "بطلانِ عول کا فقہی راز: عام عدالتوں میں سب کے حصص میں کٹوتی (عول) کر دی جاتی ہے جس سے شوہر اور والدین کو بھی نقصان ہوتا ہے۔ مگر مکتبِ اہلِ بیت (ع) کے مطابق قرآنی حصص میں شوہر (۱/۴) اور والدین (۱/۳) کا حصہ الٰہی حد ہے جس میں کمی نہیں ہو سکتی؛ لہٰذا ترکے کی تمام کمی صرف بیٹیوں کے حصے میں ڈالی جائے گی۔",
+    keyDilemmaEn:
+      "Repudiation of 'Awl: In non-Shia jurisprudence, all heirs' shares are proportionately reduced ('Awl). In Shia Ja'fari law, the Husband (1/4) and Parents (1/3) hold divine minimum protections; therefore, the entire deficit is borne exclusively by the daughters.",
+    familyHighlights: {
+      deceasedLabelUr: "سیدہ کنیز فاطمہ (خاتون، مقلد: آیت اللہ سیستانی)",
+      deceasedLabelEn: "Syeda Kaneez Fatima (Female, Follower of Ayatollah Sistani)",
+      familySummaryUr: "شوہر • والدین (والد و والدہ دونوں حیات) • ۲ بیٹیاں",
+      familySummaryEn: "Husband • Both Parents Alive • 2 Daughters",
+      propertySummaryUr: "کل خالص ترکہ: ۳.۵۵ لاکھ ڈالر (عول کا ابطال و تحفظِ حصۂ زوج و والدین)",
+      propertySummaryEn: "Net Estate: 355,000 USD (Refutation of 'Awl protects Husband & Parents)",
+    },
     deceased: {
       gender: "female",
       name: "Syeda Kaneez Fatima",
@@ -128,6 +182,26 @@ export const SCENARIO_PRESETS: ScenarioPreset[] = [
       motherImpediment: false,
       sonsCount: 0,
       daughtersCount: 2,
+      childrenList: [
+        {
+          id: "child-d1",
+          name: "Zainab (Daughter 1 / بڑی بیٹی)",
+          gender: "FEMALE",
+          isAlive: true,
+          birthOrderOrAge: 26,
+          impediments: { isKiller: false, isNonMuslim: false, isLian: false, "isLi’an": false },
+          children: [],
+        },
+        {
+          id: "child-d2",
+          name: "Kulsoom (Daughter 2 / دوسری بیٹی)",
+          gender: "FEMALE",
+          isAlive: true,
+          birthOrderOrAge: 24,
+          impediments: { isKiller: false, isNonMuslim: false, isLian: false, "isLi’an": false },
+          children: [],
+        },
+      ],
       deceasedSonsWithChildren: [],
       deceasedDaughtersWithChildren: [],
       paternalGrandfatherAlive: false,
@@ -159,6 +233,22 @@ export const SCENARIO_PRESETS: ScenarioPreset[] = [
       "Daughter takes 1/2, Mother takes 1/6. Surplus (1/3) is returned via Radd to Mother & Daughter. The paternal uncle receives 0 (Tier 1 excludes Tier 3, and Ta'sib is forbidden).",
     descriptionUr:
       "بیٹی کا 1/2 اور ماں کا 1/6۔ بچ جانے والا 1/3 حصہ عصبہ (چچا) کو نہیں ملتا بلکہ رد کے ذریعے ماں اور بیٹی میں تقسیم ہو جاتا ہے۔ چچا کلی طور پر محروم ہے۔",
+    storyUr:
+      "علی رضا خان صاحب کی وفات ہوئی۔ پسماندگان میں ان کی بوڑھی والدہ اور ایک اکلوتی بیٹی حیات ہیں۔ کوئی بیٹا نہیں ہے۔ متوفی کا ایک سگا چچا بھی موجود ہے جو قبائلی رواج کے تحت بقیہ ترکے پر قابض ہونے کا دعویٰ کرتا ہے۔",
+    storyEn:
+      "Ali Raza Khan passed away leaving behind his elderly Mother and 1 single Daughter. There are no sons. A paternal uncle survives and asserts tribal claims over the remaining property residue.",
+    keyDilemmaUr:
+      "ابطالِ تعصیب: دیگر مکاتب میں چچا کو عصبہ قرار دے کر بچا ہوا مال دے دیا جاتا ہے۔ لیکن فقہِ جعفریہ میں قرآن و سنت کے مطابق تعصیب باطل ہے۔ بیٹی اور والدہ (طبقہ اول) چچا (طبقہ سوم) کو مکمل محروم کر دیتے ہیں اور سارا زائد ترکہ رد کے ذریعے ماں اور بیٹی کو ۳:۱ سے ملتا ہے۔ چچا کا حصہ = صفر روپیہ!",
+    keyDilemmaEn:
+      "Repudiation of Ta'sīb: In Sunni jurisprudence, the paternal uncle inherits the residue as 'Asabah. In Shia Ja'fari Law, Ta'sib is strictly forbidden. The Mother and Daughter (Tier 1) block the Uncle (Tier 3) completely, and the residue returns to Mother and Daughter via Radd. Uncle gets 0 PKR!",
+    familyHighlights: {
+      deceasedLabelUr: "علی رضا خان (مرد، مقلد: آیت اللہ خوئی)",
+      deceasedLabelEn: "Ali Raza Khan (Male, Follower of Ayatollah Khoei)",
+      familySummaryUr: "والدہ حیات • ۱ بیٹی • ۱ چچا (طبقہ سوم - محروم)",
+      familySummaryEn: "Mother Alive • 1 Daughter • 1 Paternal Uncle (Tier 3 - Excluded)",
+      propertySummaryUr: "کل خالص ترکہ: ۶۰ لاکھ روپے (چچا کا حصہ = صفر)",
+      propertySummaryEn: "Net Estate: 6,000,000 PKR (Uncle's Share = 0 PKR)",
+    },
     deceased: {
       gender: "male",
       name: "Ali Raza Khan",
@@ -202,6 +292,17 @@ export const SCENARIO_PRESETS: ScenarioPreset[] = [
       motherImpediment: false,
       sonsCount: 0,
       daughtersCount: 1,
+      childrenList: [
+        {
+          id: "child-d1",
+          name: "Fatima (Daughter / بیٹی)",
+          gender: "FEMALE",
+          isAlive: true,
+          birthOrderOrAge: 22,
+          impediments: { isKiller: false, isNonMuslim: false, isLian: false, "isLi’an": false },
+          children: [],
+        },
+      ],
       deceasedSonsWithChildren: [],
       deceasedDaughtersWithChildren: [],
       paternalGrandfatherAlive: false,
@@ -233,6 +334,22 @@ export const SCENARIO_PRESETS: ScenarioPreset[] = [
       "Brothers receive 0 because parents are Tier 1, but they trigger Ḥujub al-Nuqṣān: Mother is strictly locked at 1/6 without Radd. The surplus returns solely to Father and Daughter (1:3 ratio).",
     descriptionUr:
       "بھائیوں کو کچھ نہیں ملتا کیونکہ طبقہ اول موجود ہے، لیکن وہ ماں کو رد سے محروم کر کے 1/6 پر محدود کر دیتے ہیں۔ زائد ترکہ والد اور بیٹی میں 1:3 کے تناسب سے تقسیم ہوتا ہے۔",
+    storyUr:
+      "ڈاکٹر محمد باقر صاحب کی وفات ہوئی۔ ورثاء میں ان کے والد، والدہ، ایک بیٹی اور دو سگے بھائی زندہ ہیں۔ چونکہ والدین اور بیٹی طبقۂ اول ہیں، اس لیے بھائیوں کو ترکے سے براہِ راست کچھ نہیں ملتا۔",
+    storyEn:
+      "Dr. Muhammad Baqir passed away leaving behind his Father, Mother, 1 Daughter, and 2 surviving biological Brothers. Since parents and daughter are Tier 1, the brothers inherit 0 PKR.",
+    keyDilemmaUr:
+      "حجبِ نقصان کا فقہی قاعدہ: سورۂ نساء (آیت ۱۱) کے تحت متوفی کے ۲ بھائی خود تو وارث نہیں بنتے، مگر وہ والدہ کے حصے کو ۱/۳ سے گھٹا کر ۱/۶ پر قید کر دیتے ہیں اور انہیں رد کے زائد ترکے سے بھی روک دیتے ہیں۔ لہٰذا سارا زائد ترکہ صرف والد اور بیٹی میں ۱:۳ سے تقسیم ہوتا ہے۔",
+    keyDilemmaEn:
+      "Ḥujub al-Nuqṣān: Under Quran 4:11, the 2 surviving brothers do not inherit, but their mere presence reduces the Mother's share from 1/3 to 1/6 and blocks her from participating in the surplus Radd. The entire surplus goes to the Father and Daughter (1:3 ratio).",
+    familyHighlights: {
+      deceasedLabelUr: "ڈاکٹر محمد باقر (مرد، مقلد: آیت اللہ سیستانی)",
+      deceasedLabelEn: "Dr. Muhammad Baqir (Male, Follower of Ayatollah Sistani)",
+      familySummaryUr: "والد حیات • والدہ حیات • ۱ بیٹی • ۲ بھائی (غیر وارث مگر حجب کا سبب)",
+      familySummaryEn: "Father Alive • Mother Alive • 1 Daughter • 2 Brothers (Non-heirs but cause Ḥujub)",
+      propertySummaryUr: "کل خالص ترکہ: ۲ کروڑ ۴۰ لاکھ روپے",
+      propertySummaryEn: "Net Estate: 24,000,000 PKR",
+    },
     deceased: {
       gender: "male",
       name: "Dr. Muhammad Baqir",
@@ -276,6 +393,17 @@ export const SCENARIO_PRESETS: ScenarioPreset[] = [
       motherImpediment: false,
       sonsCount: 0,
       daughtersCount: 1,
+      childrenList: [
+        {
+          id: "child-d1",
+          name: "Masuma (Daughter / بیٹی)",
+          gender: "FEMALE",
+          isAlive: true,
+          birthOrderOrAge: 20,
+          impediments: { isKiller: false, isNonMuslim: false, isLian: false, "isLi’an": false },
+          children: [],
+        },
+      ],
       deceasedSonsWithChildren: [],
       deceasedDaughtersWithChildren: [],
       paternalGrandfatherAlive: false,
@@ -290,6 +418,173 @@ export const SCENARIO_PRESETS: ScenarioPreset[] = [
       uterineSistersCount: 0,
       deceasedSiblingsChildren: [],
       motherBlockingBrothers: 2,
+      motherBlockingSisters: 0,
+      paternalUnclesCount: 0,
+      paternalAuntsCount: 0,
+      maternalUnclesCount: 0,
+      maternalAuntsCount: 0,
+      paternalCousinsCount: 0,
+      maternalCousinsCount: 0,
+    },
+  },
+  {
+    id: "multiple_wives_habwah_tanzil",
+    titleEn: "Multiple Wives (2 Wives), Eldest Son (Ḥabwah) & Grandchildren (Tanzīl)",
+    titleUr: "تعددِ ازواج (۲ بیویاں)، بڑا بیٹا (حَبْوہ) اور پوتوں پر قاعدۂ اقربیت",
+    descriptionEn:
+      "Deceased left 2 Wives (one with unpaid Mahr), 2 Sons, 1 Daughter, and orphaned grandchildren from a deceased daughter. Showcases equal spousal division, global Habwah resolution, and Grandchildren Proximity Rule exclusion.",
+    descriptionUr:
+      "مرحوم نے ۲ بیویاں (ایک کا مہر مؤجل باقی)، ۲ بیٹے، ۱ بیٹی، اور فوت شدہ بیٹی کے ۲ نواسے چھوڑے۔ بیویوں کی مساوی تقسیم، الولد الاکبر کا حبوہ، اور پوتوں/نواسوں کا قاعدۂ اقربیت کے تحت حجب نمایاں ہے۔",
+    storyUr:
+      "سید باقر علی رضوی صاحب کی وفات ہوئی۔ ان کی دو بیویاں (زوجہ اول زہرا اور زوجہ دوم مریم) حیات ہیں۔ زوجہ دوم کا ۵ لاکھ روپے مہر مؤجل ادا ہونا باقی تھا۔ متوفی کے تین سگے بچے حیات ہیں: علی (بڑا بیٹا، عمر ۲۸ سال - زوجہ اول سے)، حسن (دوسرا بیٹا، عمر ۲۴ سال - زوجہ دوم سے)، اور فاطمہ (بیٹی، عمر ۲۲ سال)۔ ان کی ایک مرحومہ بیٹی زینب فوت ہو چکی تھی جس کے دو یتیم بچے (نواسہ و نواسی) موجود ہیں۔",
+    storyEn:
+      "Syed Baqir Ali Rizvi passed away leaving 2 surviving wives (Zahra and Maryam). The 2nd wife had 500,000 PKR in unpaid Mahr. Surviving children: Ali (Eldest son, age 28, from 1st wife), Hassan (2nd son, age 24, from 2nd wife), and Fatima (Daughter, age 22). A deceased daughter Zainab left 2 orphaned grandchildren (Nawasa and Nawasi).",
+    keyDilemmaUr:
+      "۱. مہر کی ادائیگی: ۵ لاکھ مہر ترکے کی تقسیم سے قبل بطورِ دَین منہا ہوگا۔ ۲. بیویوں کی مساوی تقسیم: اولاد کی موجودگی میں ۱/۸ کا حصہ دونوں بیویوں میں بالسویہ (۱/۱۶، ۱/۱۶) برابر تقسیم ہوگا۔ ۳. حبوہ: تمام بیویوں کے بچوں میں سب سے بڑا باہوش بیٹا 'علی' ہے، لہٰذا والد کی ۴ ذاتی اشیاء حبوہ تنہا اسے ملیں گی۔ ۴. قاعدۂ اقربیت: چونکہ متوفی کی اپنی سگی اولاد زندہ ہے، اس لیے مرحومہ بیٹی کے بچے (نواسہ و نواسی) شرعاً ترکے سے مکمل محروم ہیں (الأقرب یمنع الأبعد)۔",
+    keyDilemmaEn:
+      "1. Unpaid Mahr: 500k PKR deducted as prior debt before estate division. 2. Equal Spousal Share: Total 1/8 divided equally (1/16 each) between both wives. 3. Habwah: Ali is the absolute eldest son across all marriages and receives the 4 personal items. 4. Proximity Shield: Because direct living children survive, the grandchildren from the deceased daughter are barred (Al-Aqrab Yamna' al-Ab'ad).",
+    familyHighlights: {
+      deceasedLabelUr: "سید باقر علی رضوی (مرد، مقلد: آیت اللہ سیستانی)",
+      deceasedLabelEn: "Syed Baqir Ali Rizvi (Male, Follower of Ayatollah Sistani)",
+      familySummaryUr: "۲ بیویاں (۵ لاکھ مہر) • ۲ بیٹے • ۱ بیٹی • ۲ نواسے (محروم)",
+      familySummaryEn: "2 Wives (500k Mahr) • 2 Sons • 1 Daughter • 2 Grandchildren (Excluded)",
+      propertySummaryUr: "کل ترکہ: ۲ کروڑ روپے | مہرِ مؤجل: ۵ لاکھ روپے | خالص ترکہ: ۱.۹۵ کروڑ روپے",
+      propertySummaryEn: "Gross Estate: 20M PKR | Unpaid Mahr Debt: 500k PKR | Net Estate: 19.5M PKR",
+    },
+    deceased: {
+      gender: "male",
+      name: "Syed Baqir Ali Rizvi",
+      currency: "PKR",
+      marja: "sistani",
+      hasEldestSon: true,
+      eldestSonIsSaneAndNonAqq: true,
+      habwah: {
+        quran: true,
+        ring: true,
+        swordOrDefensiveWeapon: true,
+        clothes: true,
+        estimatedValue: 250000,
+      },
+    },
+    assets: {
+      cash: 5000000,
+      bankAccounts: 5000000,
+      residentialLand: 5000000,
+      agriculturalLand: 0,
+      commercialLand: 0,
+      buildingsAndFixtures: 5000000,
+      movableProperty: 0,
+    },
+    debts: {
+      funeralExpenses: 0,
+      securedDebts: 0,
+      unsecuredDebts: 0,
+      unpaidKhums: 0,
+      unpaidZakat: 0,
+      unfulfilledHajj: 0,
+      kaffarat: 0,
+      wasiyyahAmount: 0,
+      wasiyyahApprovedExceedingOneThird: false,
+    },
+    heirs: {
+      spouseCount: 2,
+      wives: [
+        {
+          id: "wife-1",
+          name: "Zahra (First Wife / زوجہ اول)",
+          isAlive: true,
+          marriageType: "PERMANENT",
+          hasMahrPending: false,
+          pendingMahrAmount: 0,
+        },
+        {
+          id: "wife-2",
+          name: "Maryam (Second Wife / زوجہ دوم)",
+          isAlive: true,
+          marriageType: "PERMANENT",
+          hasMahrPending: true,
+          pendingMahrAmount: 500000,
+        },
+      ],
+      childrenList: [
+        {
+          id: "child-1",
+          name: "Ali (Eldest Son / الولد الأكبر)",
+          gender: "MALE",
+          isAlive: true,
+          motherId: "wife-1",
+          birthOrderOrAge: 28,
+          impediments: { isKiller: false, isNonMuslim: false, isLian: false, "isLi’an": false },
+          children: [],
+        },
+        {
+          id: "child-2",
+          name: "Hassan (Second Son / دوسرا بیٹا)",
+          gender: "MALE",
+          isAlive: true,
+          motherId: "wife-2",
+          birthOrderOrAge: 24,
+          impediments: { isKiller: false, isNonMuslim: false, isLian: false, "isLi’an": false },
+          children: [],
+        },
+        {
+          id: "child-3",
+          name: "Fatima (Daughter / بیٹی)",
+          gender: "FEMALE",
+          isAlive: true,
+          motherId: "wife-1",
+          birthOrderOrAge: 22,
+          impediments: { isKiller: false, isNonMuslim: false, isLian: false, "isLi’an": false },
+          children: [],
+        },
+        {
+          id: "child-4",
+          name: "Zainab (Deceased Daughter / مرحومہ بیٹی)",
+          gender: "FEMALE",
+          isAlive: false,
+          motherId: "wife-2",
+          birthOrderOrAge: 26,
+          impediments: { isKiller: false, isNonMuslim: false, isLian: false, "isLi’an": false },
+          children: [
+            {
+              id: "gc-1",
+              name: "Husayn (Nawasa / نواسہ)",
+              gender: "MALE",
+              isAlive: true,
+              parentGender: "FEMALE",
+              parentChildId: "child-4",
+            },
+            {
+              id: "gc-2",
+              name: "Kulsoom (Nawasi / نواسی)",
+              gender: "FEMALE",
+              isAlive: true,
+              parentGender: "FEMALE",
+              parentChildId: "child-4",
+            },
+          ],
+        },
+      ],
+      fatherAlive: false,
+      fatherImpediment: false,
+      motherAlive: false,
+      motherImpediment: false,
+      sonsCount: 2,
+      daughtersCount: 1,
+      deceasedSonsWithChildren: [],
+      deceasedDaughtersWithChildren: [],
+      paternalGrandfatherAlive: false,
+      paternalGrandmotherAlive: false,
+      maternalGrandfatherAlive: false,
+      maternalGrandmotherAlive: false,
+      fullBrothersCount: 0,
+      fullSistersCount: 0,
+      paternalBrothersCount: 0,
+      paternalSistersCount: 0,
+      uterineBrothersCount: 0,
+      uterineSistersCount: 0,
+      deceasedSiblingsChildren: [],
+      motherBlockingBrothers: 0,
       motherBlockingSisters: 0,
       paternalUnclesCount: 0,
       paternalAuntsCount: 0,

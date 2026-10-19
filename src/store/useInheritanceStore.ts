@@ -12,6 +12,9 @@ import {
   MarjaId,
   PersonNode,
   Theme,
+  WifeProfile,
+  ChildProfile,
+  GrandchildProfile,
 } from "@/types/fiqh";
 import { calculateInheritance } from "@/lib/fiqh-engine";
 import { SCENARIO_PRESETS } from "@/lib/scenarios";
@@ -25,8 +28,10 @@ export interface InheritanceState {
   fontScale: FontScale;
   fontStyle: FontStyle;
   activeView: ViewTab;
+  activeVisualParadigm: string;
   wizardStep: number;
   isSample: boolean;
+  activePresetId: string | null;
 
   // Domain Entities
   activeDesignSystem: import("@/types/designs").DesignSystemId;
@@ -42,6 +47,7 @@ export interface InheritanceState {
   setFontScale: (scale: FontScale) => void;
   setFontStyle: (style: FontStyle) => void;
   setActiveView: (view: ViewTab) => void;
+  setActiveVisualParadigm: (paradigm: string) => void;
   setWizardStep: (step: number) => void;
 
   updateDeceased: (partial: Partial<DeceasedInfo>) => void;
@@ -52,6 +58,21 @@ export interface InheritanceState {
   updateNamedDescendants: (nodes: PersonNode[]) => void;
   toggleChildSurvival: (id: string) => void;
   toggleDaughterBranchRatio: (parentId: string) => void;
+
+  // Multi-Wives Architecture Actions
+  setWifeCount: (count: number) => void;
+  updateWife: (id: string, partial: Partial<WifeProfile>) => void;
+  addWife: () => void;
+  removeWife: (id: string) => void;
+
+  // Dynamic Children & Grandchildren Lineage Actions
+  setChildrenList: (list: ChildProfile[]) => void;
+  addChild: (child?: Partial<ChildProfile>) => void;
+  updateChild: (id: string, partial: Partial<ChildProfile>) => void;
+  removeChild: (id: string) => void;
+  addGrandchild: (parentChildId: string, gc?: Partial<GrandchildProfile>) => void;
+  updateGrandchild: (parentChildId: string, gcId: string, partial: Partial<GrandchildProfile>) => void;
+  removeGrandchild: (parentChildId: string, gcId: string) => void;
 
   // Provenance Drawer State
   activeProvenanceKey: string | null;
@@ -75,6 +96,7 @@ export interface InheritanceState {
   openGlossaryTerm: (termId: string) => void;
 
   loadPreset: (presetId: string) => void;
+  setActivePresetId: (id: string | null) => void;
   resetAll: () => void;
   
   // Computed Engine Result
@@ -190,15 +212,96 @@ export const initialNamedDescendants: PersonNode[] = [
   },
 ];
 
+export const initialWives: WifeProfile[] = [
+  {
+    id: "wife-1",
+    name: "Zahra (First Wife / پہلی زوجہ)",
+    isAlive: true,
+    marriageType: "PERMANENT",
+    hasMahrPending: false,
+    pendingMahrAmount: 0,
+  },
+  {
+    id: "wife-2",
+    name: "Maryam (Second Wife / دوسری زوجہ)",
+    isAlive: true,
+    marriageType: "PERMANENT",
+    hasMahrPending: false,
+    pendingMahrAmount: 0,
+  },
+];
+
+export const initialChildrenList: ChildProfile[] = [
+  {
+    id: "child-1",
+    name: "Ali (Eldest Son across marriages)",
+    gender: "MALE",
+    isAlive: true,
+    motherId: "wife-1",
+    birthOrderOrAge: 28, // Absolute eldest son for Habwah
+    impediments: { isKiller: false, isNonMuslim: false, isLian: false, "isLi’an": false },
+    children: [],
+  },
+  {
+    id: "child-2",
+    name: "Hassan (Second Son)",
+    gender: "MALE",
+    isAlive: true,
+    motherId: "wife-2",
+    birthOrderOrAge: 24,
+    impediments: { isKiller: false, isNonMuslim: false, isLian: false, "isLi’an": false },
+    children: [],
+  },
+  {
+    id: "child-3",
+    name: "Fatima (Daughter)",
+    gender: "FEMALE",
+    isAlive: true,
+    motherId: "wife-1",
+    birthOrderOrAge: 22,
+    impediments: { isKiller: false, isNonMuslim: false, isLian: false, "isLi’an": false },
+    children: [],
+  },
+  {
+    id: "child-4",
+    name: "Zainab (Deceased Daughter)",
+    gender: "FEMALE",
+    isAlive: false, // Deceased: leaves grandchildren
+    motherId: "wife-2",
+    birthOrderOrAge: 26,
+    impediments: { isKiller: false, isNonMuslim: false, isLian: false, "isLi’an": false },
+    children: [
+      {
+        id: "gc-1",
+        name: "Husayn (Nawasa)",
+        gender: "MALE",
+        isAlive: true,
+        parentGender: "FEMALE",
+        parentChildId: "child-4",
+      },
+      {
+        id: "gc-2",
+        name: "Kulsoom (Nawasi)",
+        gender: "FEMALE",
+        isAlive: true,
+        parentGender: "FEMALE",
+        parentChildId: "child-4",
+      },
+    ],
+  },
+];
+
 const legacyHeirs: HeirsInput = {
+  wives: initialWives,
+  childrenList: initialChildrenList,
   namedDescendants: initialNamedDescendants,
-  spouseCount: 1,
+  spouseCount: 2,
   fatherAlive: true,
   fatherImpediment: false,
   motherAlive: true,
   motherImpediment: false,
-  sonsCount: 1,
-  daughtersCount: 2,
+  sonsCount: 2,
+  daughtersCount: 1,
   deceasedSonsWithChildren: [],
   deceasedDaughtersWithChildren: [],
   paternalGrandfatherAlive: false,
@@ -238,7 +341,22 @@ const initialDebts: EstateDebts = {
 } as EstateDebts;
 const initialHeirs: HeirsInput = {
   ...legacyHeirs,
-  spouseCount: 0, fatherAlive: false, motherAlive: false, sonsCount: 0, daughtersCount: 0,
+  spouseCount: 0,
+  wives: [
+    {
+      id: "wife-1",
+      name: "Wife 1 (زوجہ اول)",
+      isAlive: true,
+      marriageType: "PERMANENT",
+      hasMahrPending: false,
+      pendingMahrAmount: 0,
+    },
+  ],
+  childrenList: [],
+  fatherAlive: false,
+  motherAlive: false,
+  sonsCount: 0,
+  daughtersCount: 0,
 };
 
 export const useInheritanceStore = create<InheritanceState>()(
@@ -249,8 +367,10 @@ export const useInheritanceStore = create<InheritanceState>()(
       fontScale: "normal",
       fontStyle: "nastaliq",
       activeView: "wizard",
+      activeVisualParadigm: "tree_tanzil",
       wizardStep: 1,
       isSample: false,
+      activePresetId: null,
 
       // Provenance
       activeProvenanceKey: null,
@@ -302,6 +422,7 @@ export const useInheritanceStore = create<InheritanceState>()(
 
       setFontStyle: (style) => set({ fontStyle: style }),
       setActiveView: (view) => set({ activeView: view }),
+      setActiveVisualParadigm: (paradigm) => set({ activeVisualParadigm: paradigm }),
       setWizardStep: (step) => set({ wizardStep: step }),
 
       openProvenance: (key) => set({ activeProvenanceKey: key, isProvenanceOpen: true }),
@@ -360,6 +481,221 @@ export const useInheritanceStore = create<InheritanceState>()(
           return { heirs: { ...state.heirs, namedDescendants: updated } };
         }),
 
+      // Multi-Wives Management Actions
+      setWifeCount: (count) =>
+        set((state) => {
+          const current = state.heirs.wives || [];
+          const safeCount = Math.max(0, Math.min(4, count));
+          let newWives: WifeProfile[] = [...current];
+          if (safeCount > current.length) {
+            for (let i = current.length; i < safeCount; i++) {
+              newWives.push({
+                id: `wife-${i + 1}`,
+                name: `Wife ${i + 1}`,
+                isAlive: true,
+                marriageType: "PERMANENT",
+                hasMahrPending: false,
+                pendingMahrAmount: 0,
+              });
+            }
+          } else if (safeCount < current.length) {
+            newWives = newWives.slice(0, safeCount);
+          }
+          return {
+            heirs: {
+              ...state.heirs,
+              spouseCount: safeCount,
+              wives: newWives,
+            },
+          };
+        }),
+
+      updateWife: (id, partial) =>
+        set((state) => {
+          const wives = (state.heirs.wives || []).map((w) =>
+            w.id === id ? { ...w, ...partial } : w
+          );
+          return { heirs: { ...state.heirs, wives } };
+        }),
+
+      addWife: () =>
+        set((state) => {
+          const current = state.heirs.wives || [];
+          if (current.length >= 4) return state;
+          const nextIdx = current.length + 1;
+          const newWife: WifeProfile = {
+            id: `wife-${Date.now()}`,
+            name: `Wife ${nextIdx}`,
+            isAlive: true,
+            marriageType: "PERMANENT",
+            hasMahrPending: false,
+            pendingMahrAmount: 0,
+          };
+          const wives = [...current, newWife];
+          return {
+            heirs: {
+              ...state.heirs,
+              spouseCount: wives.length,
+              wives,
+            },
+          };
+        }),
+
+      removeWife: (id) =>
+        set((state) => {
+          const wives = (state.heirs.wives || []).filter((w) => w.id !== id);
+          return {
+            heirs: {
+              ...state.heirs,
+              spouseCount: wives.length,
+              wives,
+            },
+          };
+        }),
+
+      // Dynamic Children & Grandchildren Lineage Actions
+      setChildrenList: (childrenList) =>
+        set((state) => {
+          const sonsCount = childrenList.filter(
+            (c) => c.gender === "MALE" && c.isAlive && !c.impediments?.isKiller && !c.impediments?.isNonMuslim
+          ).length;
+          const daughtersCount = childrenList.filter(
+            (c) => c.gender === "FEMALE" && c.isAlive && !c.impediments?.isKiller && !c.impediments?.isNonMuslim
+          ).length;
+          return {
+            heirs: {
+              ...state.heirs,
+              childrenList,
+              sonsCount,
+              daughtersCount,
+            },
+          };
+        }),
+
+      addChild: (child) =>
+        set((state) => {
+          const current = state.heirs.childrenList || [];
+          const nextNum = current.length + 1;
+          const firstWifeId = state.heirs.wives?.[0]?.id || "wife-1";
+          const newChild: ChildProfile = {
+            id: `child-${Date.now()}`,
+            name: child?.gender === "FEMALE" ? `Daughter ${nextNum}` : `Son ${nextNum}`,
+            gender: "MALE",
+            isAlive: true,
+            motherId: firstWifeId,
+            birthOrderOrAge: 20,
+            impediments: { isKiller: false, isNonMuslim: false, isLian: false, "isLi’an": false },
+            children: [],
+            ...child,
+          };
+          const childrenList = [...current, newChild];
+          const sonsCount = childrenList.filter(
+            (c) => c.gender === "MALE" && c.isAlive && !c.impediments?.isKiller && !c.impediments?.isNonMuslim
+          ).length;
+          const daughtersCount = childrenList.filter(
+            (c) => c.gender === "FEMALE" && c.isAlive && !c.impediments?.isKiller && !c.impediments?.isNonMuslim
+          ).length;
+          return {
+            heirs: {
+              ...state.heirs,
+              childrenList,
+              sonsCount,
+              daughtersCount,
+            },
+          };
+        }),
+
+      updateChild: (id, partial) =>
+        set((state) => {
+          const childrenList = (state.heirs.childrenList || []).map((c) =>
+            c.id === id ? { ...c, ...partial } : c
+          );
+          const sonsCount = childrenList.filter(
+            (c) => c.gender === "MALE" && c.isAlive && !c.impediments?.isKiller && !c.impediments?.isNonMuslim
+          ).length;
+          const daughtersCount = childrenList.filter(
+            (c) => c.gender === "FEMALE" && c.isAlive && !c.impediments?.isKiller && !c.impediments?.isNonMuslim
+          ).length;
+          return {
+            heirs: {
+              ...state.heirs,
+              childrenList,
+              sonsCount,
+              daughtersCount,
+            },
+          };
+        }),
+
+      removeChild: (id) =>
+        set((state) => {
+          const childrenList = (state.heirs.childrenList || []).filter((c) => c.id !== id);
+          const sonsCount = childrenList.filter(
+            (c) => c.gender === "MALE" && c.isAlive && !c.impediments?.isKiller && !c.impediments?.isNonMuslim
+          ).length;
+          const daughtersCount = childrenList.filter(
+            (c) => c.gender === "FEMALE" && c.isAlive && !c.impediments?.isKiller && !c.impediments?.isNonMuslim
+          ).length;
+          return {
+            heirs: {
+              ...state.heirs,
+              childrenList,
+              sonsCount,
+              daughtersCount,
+            },
+          };
+        }),
+
+      addGrandchild: (parentChildId, gc) =>
+        set((state) => {
+          const childrenList = (state.heirs.childrenList || []).map((parent) => {
+            if (parent.id !== parentChildId) return parent;
+            const currentGC = parent.children || [];
+            const isSon = parent.gender === "MALE";
+            const gcGender = gc?.gender || "MALE";
+            const defaultName = isSon
+              ? gcGender === "MALE" ? "Pota (پوتا)" : "Poti (پوتی)"
+              : gcGender === "MALE" ? "Nawasa (نواسہ)" : "Nawasi (نواسی)";
+            const newGC: GrandchildProfile = {
+              id: `gc-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+              name: defaultName,
+              gender: gcGender,
+              isAlive: true,
+              parentGender: parent.gender,
+              parentChildId,
+              ...gc,
+            };
+            return {
+              ...parent,
+              children: [...currentGC, newGC],
+            };
+          });
+          return { heirs: { ...state.heirs, childrenList } };
+        }),
+
+      updateGrandchild: (parentChildId, gcId, partial) =>
+        set((state) => {
+          const childrenList = (state.heirs.childrenList || []).map((parent) => {
+            if (parent.id !== parentChildId) return parent;
+            const children = (parent.children || []).map((g) =>
+              g.id === gcId ? { ...g, ...partial } : g
+            );
+            return { ...parent, children };
+          });
+          return { heirs: { ...state.heirs, childrenList } };
+        }),
+
+      removeGrandchild: (parentChildId, gcId) =>
+        set((state) => {
+          const childrenList = (state.heirs.childrenList || []).map((parent) => {
+            if (parent.id !== parentChildId) return parent;
+            const children = (parent.children || []).filter((g) => g.id !== gcId);
+            return { ...parent, children };
+          });
+          return { heirs: { ...state.heirs, childrenList } };
+        }),
+
+      setActivePresetId: (id) => set({ activePresetId: id }),
+
       loadPreset: (presetId) => {
         const found = SCENARIO_PRESETS.find((p) => p.id === presetId);
         if (found) {
@@ -371,6 +707,7 @@ export const useInheritanceStore = create<InheritanceState>()(
             wizardStep: 5,
             activeView: "wizard",
             isSample: true,
+            activePresetId: presetId,
           });
         }
       },
@@ -383,6 +720,7 @@ export const useInheritanceStore = create<InheritanceState>()(
           heirs: initialHeirs,
           wizardStep: 1,
           isSample: false,
+          activePresetId: null,
         }),
 
       getCalculationResult: () => {

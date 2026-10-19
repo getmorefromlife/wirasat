@@ -7,6 +7,7 @@ import { PROVENANCE_TOPICS, QURANIC_AYAT, HADITH_PROOFS } from "@/lib/provenance
 import { GLOSSARY_ITEMS } from "@/lib/glossary-db";
 import { MARJA_DATABASE } from "@/lib/marja-rules";
 import { MarjaId } from "@/types/fiqh";
+import { WirasatLogo } from "@/components/ui/WirasatLogo";
 
 export function ProvenanceDrawer() {
   const {
@@ -52,8 +53,8 @@ export function ProvenanceDrawer() {
         {/* Drawer Header */}
         <div className="p-5 sm:p-6 bg-[#245642] text-white flex items-center justify-between border-b border-[#1b3f30] shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#172e22] border border-[#3d6e57] flex items-center justify-center shrink-0">
-              <Scale className="w-5 h-5 text-[#86efac]" />
+            <div className="w-10 h-10 rounded-xl bg-[#172e22] border border-[#3d6e57] flex items-center justify-center shrink-0 shadow-xs">
+              <WirasatLogo variant="icon" color="white" size="sm" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -163,7 +164,7 @@ export function ProvenanceDrawer() {
               </div>
 
               <span className="text-xs font-mono font-extrabold px-2.5 py-1 rounded-md bg-[#edf3e7] text-[#245642] border border-[#a5b69d]">
-                {activeRuling.bookEn} — Mas&apos;alah {activeRuling.masalahNumber}
+                {activeRuling.bookEn} — Mas’alah {activeRuling.masalahNumber}
               </span>
             </div>
 
@@ -293,33 +294,41 @@ export function ProvenanceDrawer() {
 
               return (
                 <div key={mId} className="rounded-2xl border border-[#d8e0d2] bg-white overflow-hidden shadow-xs">
-                  <button
+                  <div
                     onClick={() => setExpandedMarja(isExpanded ? null : mId)}
-                    className="w-full p-4 flex items-center justify-between text-start hover:bg-[#fafbf8] transition-colors"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        setExpandedMarja(isExpanded ? null : mId);
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    className="w-full p-4 flex items-center justify-between text-start hover:bg-[#fafbf8] transition-colors cursor-pointer select-none"
                   >
                     <div>
                       <span className="font-bold text-sm text-[#172e22] block">
                         {isUr ? mMeta.nameUr : mMeta.nameEn}
                       </span>
                       <span className="text-xs text-stone-500 font-mono">
-                        {mRuling.bookEn} — Mas&apos;alah {mRuling.masalahNumber}
+                        {mRuling.bookEn} — Mas’alah {mRuling.masalahNumber}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-2">
                       <button
+                        type="button"
                         onClick={(e) => {
                           e.stopPropagation();
                           setMarja(mId);
                         }}
-                        className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#edf3e7] hover:bg-[#245642] text-[#245642] hover:text-white transition-colors border border-[#a5b69d]"
+                        className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#edf3e7] hover:bg-[#245642] text-[#245642] hover:text-white transition-colors border border-[#a5b69d] cursor-pointer"
                         title="Set this Marja' as active for calculation"
                       >
                         {isUr ? "اس مرجع کا انتخاب کریں" : "Set Active"}
                       </button>
                       {isExpanded ? <ChevronUp className="w-4 h-4 text-stone-500" /> : <ChevronDown className="w-4 h-4 text-stone-500" />}
                     </div>
-                  </button>
+                  </div>
 
                   {isExpanded && (
                     <div className="p-4 border-t border-[#e5ebe0] bg-[#fafbf8] space-y-3">

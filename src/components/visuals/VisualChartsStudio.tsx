@@ -7,6 +7,7 @@ import { MARJA_DATABASE } from "@/lib/marja-rules";
 import { PersonNode, BranchCalculationResult } from "@/types/fiqh";
 import { EstatePlanningStudio } from "@/components/visuals/EstatePlanningStudio";
 import { KinshipGalaxy } from "@/components/visuals/KinshipGalaxy";
+import { SimpleDistributionInfographic } from "@/components/wizard/SimpleDistributionInfographic";
 import {
   GitFork,
   Disc,
@@ -36,6 +37,7 @@ import {
   Info,
   Check,
   RefreshCw,
+  Crown,
 } from "lucide-react";
 
 export type VisualParadigmId =
@@ -51,7 +53,8 @@ export type VisualParadigmId =
   | "timeline"
   | "matrix_grid"
   | "story_mode"
-  | "kinship_galaxy";
+  | "kinship_galaxy"
+  | "simple_infographic";
 
 interface ParadigmMeta {
   id: VisualParadigmId;
@@ -209,6 +212,17 @@ export const PARADIGMS: ParadigmMeta[] = [
     descEn: "Interactive celestial matrix shattering subcontinent customary myths (uncles vs daughters, in-laws, maternal parity).",
     descUr: "برصغیر کے خاندانی اوہام (چچاؤں کا دعویٰ، سسرال کا دخل، میکے کی محرومی) کا فلکیاتی و بصری ابطال۔",
   },
+  {
+    id: "simple_infographic",
+    number: 14,
+    titleEn: "At-A-Glance Visual Infographic & Pocket Calculator",
+    titleUr: "ایک تصویری آسان خلاصہ و جیبی کیلکولیٹر",
+    icon: Sparkles,
+    categoryEn: "Instant Simplicity",
+    categoryUr: "انتہائی آسان فہم خلاصہ",
+    descEn: "One-picture visual summary for everyday people without math complexity, plus interactive live pocket cash calculator.",
+    descUr: "عام فہم افراد کے لیے ایک تصویری خلاصہ، بغیر کسی الجھاؤ کے، مع متحرک جیبی کیش کیلکولیٹر۔",
+  },
 ];
 
 export const VisualChartsStudio: React.FC = () => {
@@ -222,9 +236,24 @@ export const VisualChartsStudio: React.FC = () => {
     toggleChildSurvival,
     toggleDaughterBranchRatio,
     openProvenance,
+    activeVisualParadigm,
+    setActiveVisualParadigm,
   } = useInheritanceStore();
 
-  const [activeParadigm, setActiveParadigm] = useState<VisualParadigmId>("tree_tanzil");
+  const [activeParadigm, setActiveParadigmState] = useState<VisualParadigmId>(
+    (activeVisualParadigm as VisualParadigmId) || "tree_tanzil"
+  );
+
+  React.useEffect(() => {
+    if (activeVisualParadigm && activeVisualParadigm !== activeParadigm) {
+      setActiveParadigmState(activeVisualParadigm as VisualParadigmId);
+    }
+  }, [activeVisualParadigm]);
+
+  const setActiveParadigm = (id: VisualParadigmId) => {
+    setActiveParadigmState(id);
+    setActiveVisualParadigm(id);
+  };
   const [selectedRelativeId, setSelectedRelativeId] = useState<string>("child-1");
 
   const result = getCalculationResult();
@@ -482,6 +511,10 @@ export const VisualChartsStudio: React.FC = () => {
 
           {activeParadigm === "kinship_galaxy" && (
             <KinshipGalaxy />
+          )}
+
+          {activeParadigm === "simple_infographic" && (
+            <SimpleDistributionInfographic calculationResult={result} />
           )}
         </div>
       </div>
@@ -822,6 +855,44 @@ function ConcentricRingsView({ result, isUr, currency, heirs }: any) {
         </div>
       </div>
 
+      {/* Universal Non-Excludable Heirs: Omnipresent Spousal Crown Card */}
+      <div className="rounded-2xl border-2 border-amber-600/30 bg-gradient-to-r from-amber-500/10 via-emerald-500/10 to-amber-500/10 p-5 shadow-sm bg-white">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-700">
+              <Crown className="w-4 h-4 text-amber-600" />
+              <span>
+                {isUr
+                  ? "حلقۂ فرضِ مستقل / أصحابِ سبب (زوجین)"
+                  : "Universal Non-Excludable Heirs (حلقۂ فرضِ مستقل / زوجین)"}
+              </span>
+            </div>
+            <h3 className="text-base font-bold text-stone-900 mt-1">
+              {isUr
+                ? "زوج اور زوجہ — نکاحی رشتہ (أصحاب السبب)"
+                : "Husband & Wife (زوج اور زوجہ) — The Matrimonial Bond (أصحاب السبب)"}
+            </h3>
+            <p className="text-xs text-stone-600 mt-1 max-w-2xl leading-relaxed font-medium">
+              {isUr
+                ? "زوجین (میاں بیوی) کسی بھی مدار یا طبقے میں محبوس نہیں ہیں۔ وہ ہر مدار کے ساتھ ہمیشہ بیک وقت وارث بنتے ہیں اور انہیں کوئی رشتہ دار محروم نہیں کر سکتا۔"
+                : "Spouses do not belong to Tier 1, 2, or 3. They inherit unconditionally alongside whichever tier is alive and are never blocked by any relative."}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3 bg-stone-100 p-3 rounded-xl border border-stone-200 text-xs shrink-0">
+            <div>
+              <div className="text-stone-500 font-semibold">{isUr ? "اولاد کے ساتھ:" : "With Children:"}</div>
+              <div className="font-bold text-emerald-700">{isUr ? "زوجہ ۱/۸ | شوہر ۱/۴" : "Wife 1/8 | Husband 1/4"}</div>
+            </div>
+            <div className="w-[1px] h-8 bg-stone-300"></div>
+            <div>
+              <div className="text-stone-500 font-semibold">{isUr ? "بغیر اولاد:" : "No Children:"}</div>
+              <div className="font-bold text-amber-700">{isUr ? "زوجہ ۱/۴ | شوہر ۱/۲" : "Wife 1/4 | Husband 1/2"}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Distinct Non-Colliding Tier Legend Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {tiersList.map((tier) => (
@@ -852,16 +923,19 @@ function ConcentricRingsView({ result, isUr, currency, heirs }: any) {
               </p>
             </div>
 
-            <div className="mt-4 pt-3 border-t border-stone-200 text-xs font-bold">
+            <div className="mt-4 pt-3 border-t border-stone-200 text-xs font-bold space-y-2">
               {tier.isActive ? (
-                <span className="text-[#245642]">
+                <span className="text-[#245642] block">
                   {isUr ? "اس مدار کے ورثاء میں ترکہ تقسیم ہو رہا ہے" : "Heirs in this orbit are inheriting the estate"}
                 </span>
               ) : (
-                <span className="text-stone-600 font-semibold">
+                <span className="text-stone-600 font-semibold block">
                   {isUr ? "حجبِ حرمان: اندرونی مدار کی وجہ سے محروم" : "Hajb al-Hirmān: Blocked by closer inner orbit"}
                 </span>
               )}
+              <div className="pt-2 border-t border-stone-200/80 text-[11px] text-amber-800 font-medium">
+                ℹ️ {isUr ? "زوجین اس طبقے کے ساتھ بیک وقت وارث بنتے ہیں۔" : "Spouses inherit simultaneously with this tier without being blocked."}
+              </div>
             </div>
           </div>
         ))}

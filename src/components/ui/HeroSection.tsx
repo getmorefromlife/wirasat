@@ -1,13 +1,21 @@
 "use client";
 import { ArrowRight, ArrowUpRight, ShieldCheck, LockKeyhole, Scale, GitFork, BookOpen, Check, Leaf } from "lucide-react";
 import { useInheritanceStore } from "@/store/useInheritanceStore";
+import { WirasatLogo } from "@/components/ui/WirasatLogo";
 export function HeroSection() {
  const { language, setActiveView } = useInheritanceStore();
  const ur = language === "ur";
  return <div className="home-intro">
  <section className="legacy-hero">
-  <div className="hero-copy"><div className="eyebrow"><span/> GUIDED BY FAITH. DESIGNED FOR CLARITY.</div>
-  <h1>
+  <div className="hero-copy">
+   <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#eef3e8] border border-[#d2dec7] mb-4 shadow-xs">
+     <WirasatLogo variant="icon" color="emerald" size="sm" />
+     <span className="text-[11px] font-bold tracking-wider text-[#245642] uppercase font-jakarta">
+       {ur ? "شِیعَہ وِرَاثَت — فقہِ اہلِ بیت (ع)" : "SHIA WIRASAT — JA'FARI INHERITANCE ENGINE"}
+     </span>
+   </div>
+   <div className="eyebrow"><span/> GUIDED BY FAITH. DESIGNED FOR CLARITY.</div>
+   <h1>
     {ur ? (
       <>
         <span>منصفانہ تقسیم،</span>

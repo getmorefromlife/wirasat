@@ -7,6 +7,15 @@ export const metadata: Metadata = {
   authors: [{ name: "Maulana Syed Imon Rizvi (مولانا سیّد آئمن رضوی)" }],
   creator: "Maulana Syed Imon Rizvi",
   keywords: ["Shia Inheritance", "Fiqh al-Mawarith", "Ja'fari Law", "Wirasat Shia", "میراث ثقلین", "Maulana Syed Imon Rizvi", "مولانا سید آئمن رضوی", "Sistani", "Khamenei", "Khoei"],
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/images/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [
+      { url: "/images/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+  },
 };
 
 export default function RootLayout({

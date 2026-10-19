@@ -155,6 +155,36 @@ export const GALAXY_NODES: GalaxyNodeDef[] = [
     fiqhExplanationEn: "Takes prescribed fraction (1/2 if single, 2/3 if multiple) PLUS 100% of the surplus via Radd under Buṭlān al-Ta‘ṣīb. Blocks uncles completely!",
     fiqhExplanationUr: "فرض کے علاوہ بطلانِ تعصیب کے تحت تمام زائد مال رد کے ذریعے بیٹیوں کو ملتا ہے۔ چچا و تایا مکمل محروم رہتے ہیں۔",
   },
+  {
+    id: "pota_poti",
+    relationKey: "pota_poti",
+    nameEn: "Pōtā / Pōtī (Son's Branch)",
+    nameUr: "پوتے و پوتیاں (اولادِ پسر)",
+    culturalSubcontinentTermUr: "پوتا / پوتی (پدری شاخ - ۲ حصے)",
+    x: 470,
+    y: 755,
+    category: "tier1_child",
+    tier: 1,
+    mythWarningEn: "PROXIMITY BARRIER: If ANY living direct child (son or daughter) exists, all grandchildren are barred (Al-Aqrab Yamna‘ al-Ab‘ad). Safeguard them via 1/3rd Waṣiyyah!",
+    mythWarningUr: "قاعدۂ اقربیت: میت کی ایک بھی سگی اولاد زندہ ہو تو پوتے شرعاً محروم ہیں۔ دادا پر لازم ہے کہ زندگی میں ۱/۳ وصیت یا ہبہ فرمائیں۔",
+    fiqhExplanationEn: "Tanzīl (Representation): Inherits ONLY when all direct children are deceased. Takes their deceased father's hypothetical share (divided 2:1 among brothers and sisters).",
+    fiqhExplanationUr: "قائم مقامی (تنزیل): تمام صلبی اولاد کے فوت ہونے کی صورت میں اپنے والد (بیٹے) کا حصہ لیتے ہیں، اور آپس میں ۲:۱ کے تناسب سے تقسیم کرتے ہیں۔",
+  },
+  {
+    id: "nawasa_nawasi",
+    relationKey: "nawasa_nawasi",
+    nameEn: "Nawāsā / Nawāsī (Daughter's Branch)",
+    nameUr: "نواسے و نواسیاں (اولادِ دختر)",
+    culturalSubcontinentTermUr: "نواسہ / نواسی (مادری شاخ - ۱ حصہ)",
+    x: 730,
+    y: 755,
+    category: "tier1_child",
+    tier: 1,
+    mythWarningEn: "PROXIMITY BARRIER: Excluded if any direct child survives. In Shia Fiqh, Nawasa represents the mother and takes 1 share, while Poti takes 2 shares!",
+    mythWarningUr: "حیرت انگیز فقہی عدل: نواسہ (لڑکا) ماں کے سبب ۱ حصہ لیتا ہے، جبکہ پوتی (لڑکی) باپ کے سبب ۲ حصے لیتی ہے (اعتبارِ اصل)۔",
+    fiqhExplanationEn: "Tanzīl (Representation): Takes the hypothetical share of their deceased mother. Under Sistani and Khoei (Ahwat Wujubi), divided 2:1 among themselves.",
+    fiqhExplanationUr: "قائم مقامی (تنزیل): اپنی مرحومہ ماں (بیٹی) کا حصہ لیتے ہیں۔ آیت اللہ سیستانی اور خوئی کے مطابق آپس میں ۲:۱ کے تناسب سے تقسیم کرتے ہیں۔",
+  },
 
   // 5. Upper-Right Galaxy: Dādhīāl (Paternal Line - Tier 2 & 3)
   {
@@ -584,7 +614,7 @@ export const MYTH_PRESETS: MythPreset[] = [
       maternalAuntsCount: 0,
     },
     highlightedNodeIds: ["daughters"],
-    blockedNodeIds: [],
+    blockedNodeIds: ["pota_poti", "nawasa_nawasi"],
     padlockedNodeIds: [],
     actionRecommendationUr: "فوری حل: دادا اپنی زندگی میں ۱/۳ وصیت یا ہبۂ حیات کے ذریعے یتیم پوتے کو محفوظ فرمائیں۔",
     actionRecommendationEn: "Sharia Solution: Grandfather must use 1/3rd Post-Mortem Wasiyyah or Inter-Vivos Gift to safeguard grandson.",
@@ -616,6 +646,34 @@ export const MYTH_PRESETS: MythPreset[] = [
     padlockedNodeIds: ["nonblood_adopted"],
     actionRecommendationUr: "قانونی تحفظ: پلے ہوئے بچے کو محرومی سے بچانے کے لیے فوری طور پر تحریری وصیت (۱/۳ تک) یا ہبہ کریں۔",
     actionRecommendationEn: "Legal Action: Execute a written 1/3rd Waṣiyyah or Hibat al-Ḥayāt immediately to protect the adopted child.",
+  },
+  {
+    id: "multiple_wives",
+    number: 6,
+    titleEn: "Multiple Wives (2 to 4 Zawjāt)",
+    titleUr: "تعددِ ازواج (۲ تا ۴ بیویاں اور مساوی تقسیم)",
+    subtitleEn: "Equal division (Bi al-Sawiyyah) of the 1/8th or 1/4th spousal share among all surviving wives.",
+    subtitleUr: "تمام زندہ بیویاں ۱/۸ (یا اولاد نہ ہونے پر ۱/۴) کو آپس میں بالکل برابر بانٹتی ہیں۔",
+    bannerUr: "فقہ جعفریہ: بیویاں اپنے ۱/۸ یا ۱/۴ کے مجموعی حصے کو آپس میں برابر برابر (بالسویہ) تقسیم کرتی ہیں۔",
+    bannerEn: "Equal Division (Bi al-Sawiyyah): All valid permanent wives divide their 1/8th or 1/4th statutory share equally.",
+    setup: {
+      deceasedGender: "male",
+      estateValue: 16000000,
+      spouseCount: 2,
+      sonsCount: 1,
+      daughtersCount: 1,
+      fatherAlive: false,
+      motherAlive: false,
+      paternalUnclesCount: 0,
+      maternalUnclesCount: 0,
+      paternalAuntsCount: 0,
+      maternalAuntsCount: 0,
+    },
+    highlightedNodeIds: ["spouse", "sons", "daughters"],
+    blockedNodeIds: ["pota_poti", "nawasa_nawasi"],
+    padlockedNodeIds: [],
+    actionRecommendationUr: "تمام بیویوں کا حصہ مساوی ہے، کسی پرانی یا نئی بیوی میں ترکے کی تقسیم میں کوئی فرق نہیں ہے۔",
+    actionRecommendationEn: "All permanent wives share equally; senior or junior marriage status creates no difference in statutory inheritance.",
   },
 ];
 
@@ -719,6 +777,57 @@ export function KinshipGalaxy() {
   const netEstate = calculation.balanceSheet?.netDistributableEstate ?? 0;
   const currency = "PKR";
 
+  // Dynamic rendered nodes supporting multiple wives
+  const renderedGalaxyNodes = useMemo(() => {
+    const isMale = deceased.gender === "male";
+    const wifeProfiles = heirs.wives && heirs.wives.length > 0 ? heirs.wives : [];
+    const wifeCount = isMale ? (wifeProfiles.length > 1 ? wifeProfiles.length : Math.max(1, heirs.spouseCount || 1)) : 1;
+
+    // If male and > 1 wife, replace single "spouse" node with individual wife nodes along inner orbit
+    if (isMale && wifeCount > 1) {
+      const baseNodes = GALAXY_NODES.filter((n) => n.id !== "spouse");
+
+      // Generate positions along the lower arc of inner orbit (cx=600, cy=420, r=190)
+      const wifeAngleMap: Record<number, number[]> = {
+        2: [72, 108],
+        3: [60, 90, 120],
+        4: [50, 75, 105, 130],
+      };
+      const angles = wifeAngleMap[wifeCount] || [60, 80, 100, 120];
+
+      const wifeNodes: GalaxyNodeDef[] = Array.from({ length: wifeCount }).map((_, idx) => {
+        const profile = wifeProfiles[idx];
+        const angleDeg = angles[idx] ?? 90;
+        const rad = (angleDeg * Math.PI) / 180;
+        const x = Math.round(600 + 190 * Math.cos(rad));
+        const y = Math.round(420 + 190 * Math.sin(rad));
+
+        const wifeName = profile?.name ? profile.name : `Wife ${idx + 1}`;
+        const wifeId = profile?.id || `wife-${idx + 1}`;
+
+        return {
+          id: wifeId,
+          relationKey: "wife",
+          nameEn: wifeName,
+          nameUr: `زوجہ ${idx + 1}: ${wifeName}`,
+          culturalSubcontinentTermUr: `زوجہ ${idx + 1} (بالسویہ مساوی شریک)`,
+          x,
+          y,
+          category: "spouse" as GalaxyNodeCategory,
+          tier: 0,
+          mythWarningEn: "Equal division: In Shia Fiqh, all permanent wives share the 1/8th or 1/4th equally regardless of seniority.",
+          mythWarningUr: "مساوی تقسیم: تمام بیویاں ترکے میں بالکل برابر حصہ پاتی ہیں، کسی پرانی یا نئی بیوی میں تفریق نہیں ہے۔",
+          fiqhExplanationEn: "Non-excludable Quranic sharer. Takes equal fraction of the total spousal pool (Bi al-Sawiyyah).",
+          fiqhExplanationUr: "غیر محجوب قرآنی وارث۔ تمام بیویاں ۱/۸ یا ۱/۴ کے حصۂ زوجات میں بالسویہ بالکل برابر شریک ہیں۔",
+        };
+      });
+
+      return [...baseNodes, ...wifeNodes];
+    }
+
+    return GALAXY_NODES;
+  }, [deceased.gender, heirs.wives, heirs.spouseCount]);
+
   // Compute 4-state visual physics for all nodes
   const nodeStatusMap = useMemo(() => {
     const map: Record<
@@ -732,7 +841,7 @@ export function KinshipGalaxy() {
       }
     > = {};
 
-    GALAXY_NODES.forEach((node) => {
+    renderedGalaxyNodes.forEach((node) => {
       // 1. Deceased
       if (node.id === "deceased") {
         map[node.id] = {
@@ -756,7 +865,78 @@ export function KinshipGalaxy() {
         return;
       }
 
-      // 3. Match against engine heirShares
+      // 3. Multi-Wife Individual Nodes
+      if (node.id.startsWith("wife-") || (node.category === "spouse" && node.id !== "spouse")) {
+        const wifeIdx = heirs.wives?.findIndex((w) => w.id === node.id) ?? -1;
+        const wifeDetail = calculation.spousalBreakdown?.wives[wifeIdx >= 0 ? wifeIdx : 0];
+        const spousalShare = calculation.heirShares.find((h) => h.id.includes("wife") || h.id === "wives");
+
+        if (spousalShare && spousalShare.totalMonetaryShare > 0) {
+          const frac = wifeDetail?.fraction || (spousalShare.fractionString ? `${spousalShare.fractionString}/${calculation.spousalBreakdown?.wifeCount || 2}` : "1/16");
+          const amt = wifeDetail?.amount || Math.round(spousalShare.totalMonetaryShare / (calculation.spousalBreakdown?.wifeCount || 2));
+          map[node.id] = {
+            state: "active",
+            shareFraction: frac,
+            shareAmount: Math.round(amt),
+            percentage: (amt / (netEstate || 1)) * 100,
+          };
+        } else {
+          map[node.id] = {
+            state: "absent",
+            shareFraction: "—",
+            shareAmount: 0,
+            percentage: 0,
+          };
+        }
+        return;
+      }
+
+      // 4. Grandchildren Nodes (Pota/Poti & Nawasa/Nawasi)
+      if (node.id === "pota_poti" || node.id === "nawasa_nawasi") {
+        const hasDirectChildren =
+          (heirs.childrenList && heirs.childrenList.some((c) => c.isAlive)) ||
+          heirs.sonsCount > 0 ||
+          heirs.daughtersCount > 0;
+
+        if (hasDirectChildren) {
+          // Blocked by Golden Proximity Rule
+          map[node.id] = {
+            state: "blocked",
+            shareFraction: "0",
+            shareAmount: 0,
+            percentage: 0,
+            blockingReason: isUr
+              ? "قاعدۂ اقربیت فعال: متوفی کی سگی صلبی اولاد (بیٹا یا بیٹی) زندہ ہونے کے سبب پوتے اور نواسے شرعاً مکمل محروم ہیں (الأقرب یمنع الأبعد)۔"
+              : "Golden Proximity Rule Active: Living direct child blocks grandchildren from statutory inheritance (Al-Aqrab Yamna‘ al-Ab‘ad).",
+          };
+          return;
+        }
+
+        // If direct children are deceased, check Tanzil share in calculation
+        const isPota = node.id === "pota_poti";
+        const tanzilShare = calculation.heirShares.find(
+          (h) => isPota ? (h.id === "grandsons" || h.id.includes("pota")) : (h.id.includes("nawasa") || h.id.includes("daughterBranch"))
+        );
+
+        if (tanzilShare && tanzilShare.totalMonetaryShare > 0) {
+          map[node.id] = {
+            state: "active",
+            shareFraction: tanzilShare.fractionString,
+            shareAmount: Math.round(tanzilShare.totalMonetaryShare),
+            percentage: tanzilShare.percentage,
+          };
+        } else {
+          map[node.id] = {
+            state: "absent",
+            shareFraction: "—",
+            shareAmount: 0,
+            percentage: 0,
+          };
+        }
+        return;
+      }
+
+      // 5. Match standard nodes against engine heirShares
       const match = calculation.heirShares.find((h) => {
         if (node.id === "spouse") return h.id === "wife" || h.id === "wives" || h.id === "husband";
         if (node.id === "father") return h.id === "father";
@@ -816,12 +996,12 @@ export function KinshipGalaxy() {
     });
 
     return map;
-  }, [calculation, heirs, isUr, netEstate]);
+  }, [calculation, heirs, isUr, netEstate, renderedGalaxyNodes]);
 
   // Selected Node Object
   const selectedNode = useMemo(
-    () => GALAXY_NODES.find((n) => n.id === selectedNodeId) || GALAXY_NODES[0],
-    [selectedNodeId]
+    () => renderedGalaxyNodes.find((n) => n.id === selectedNodeId) || renderedGalaxyNodes[0],
+    [renderedGalaxyNodes, selectedNodeId]
   );
   const selectedStatus = nodeStatusMap[selectedNode.id] || {
     state: "absent",
@@ -1104,8 +1284,30 @@ export function KinshipGalaxy() {
                 </text>
               </g>
 
+              {/* Genealogical Descent Branch Lines (Sons -> Pota/Poti & Daughters -> Nawasa/Nawasi) */}
+              <line
+                x1="470"
+                y1="650"
+                x2="470"
+                y2="755"
+                stroke="#64748b"
+                strokeWidth="2"
+                strokeDasharray="4 4"
+                strokeOpacity="0.7"
+              />
+              <line
+                x1="730"
+                y1="650"
+                x2="730"
+                y2="755"
+                stroke="#64748b"
+                strokeWidth="2"
+                strokeDasharray="4 4"
+                strokeOpacity="0.7"
+              />
+
               {/* 3. CONNECTING LASER BEAMS TO ACTIVE HEIRS */}
-              {GALAXY_NODES.map((node) => {
+              {renderedGalaxyNodes.map((node) => {
                 if (node.id === "deceased") return null;
                 const status = nodeStatusMap[node.id];
                 if (!status || status.state !== "active") return null;
@@ -1128,7 +1330,7 @@ export function KinshipGalaxy() {
               })}
 
               {/* 4. BLOCKED TIER CRIMSON SLASH LINES */}
-              {GALAXY_NODES.map((node) => {
+              {renderedGalaxyNodes.map((node) => {
                 const status = nodeStatusMap[node.id];
                 if (!status || status.state !== "blocked") return null;
 
@@ -1149,7 +1351,7 @@ export function KinshipGalaxy() {
               })}
 
               {/* 5. RENDER ALL RELATIVE NODES WITH PROTECTIVE LABEL BACKDROP CAPSULES */}
-              {GALAXY_NODES.map((node) => {
+              {renderedGalaxyNodes.map((node) => {
                 const status = nodeStatusMap[node.id] || { state: "absent", shareFraction: "0", shareAmount: 0 };
                 const isSelected = selectedNodeId === node.id;
                 const isHovered = hoveredNodeId === node.id;

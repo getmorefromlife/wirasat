@@ -83,7 +83,54 @@ export interface BranchCalculationResult {
   exclusionReason?: string;
 }
 
+export interface WifeProfile {
+  id: string;
+  name: string;
+  isAlive: boolean;
+  marriageType: 'PERMANENT'; // Only Nikah Da'im inherits
+  hasMahrPending: boolean;
+  pendingMahrAmount: number; // Treated as debt (Duyūn) deducted before net estate
+}
+
+export interface GrandchildProfile {
+  id: string;
+  name: string;
+  gender: 'MALE' | 'FEMALE';
+  isAlive: boolean;
+  parentGender: 'MALE' | 'FEMALE'; // 'MALE' = Pota/Poti (Son's child); 'FEMALE' = Nawasa/Nawasi (Daughter's child)
+  parentChildId: string;
+  impediments?: {
+    isKiller: boolean;
+    isNonMuslim: boolean;
+    isLian?: boolean;
+    "isLi’an"?: boolean;
+  };
+}
+
+export interface ChildProfile {
+  id: string;
+  name: string;
+  gender: 'MALE' | 'FEMALE';
+  isAlive: boolean;
+  motherId?: string; // Links to specific WifeProfile id (or 'wife-1', 'wife-2', etc.)
+  birthOrderOrAge?: number; // Used to compute absolute eldest son for Habwah
+  daughterBranchEqualRatio?: boolean; // For daughters: 1:1 vs 2:1 ratio toggle
+  impediments: {
+    isKiller: boolean;
+    isNonMuslim: boolean;
+    isLian?: boolean;
+    "isLi’an"?: boolean;
+  };
+  children?: GrandchildProfile[]; // Offspring if this child is deceased
+}
+
 export interface HeirsInput {
+  // Dynamic multi-wives structure (up to 4 wives)
+  wives?: WifeProfile[];
+  
+  // Dynamic children structure with maternal link and grandchildren
+  childrenList?: ChildProfile[];
+
   // Named multi-generational descendants (Tanzīl representation)
   namedDescendants?: PersonNode[];
 
@@ -193,6 +240,42 @@ export interface InheritanceCalculationResult {
     items: string[];
     value: number;
   };
+  eldestSonHabwahRecipient?: {
+    id: string;
+    name: string;
+    motherName?: string;
+    motherId?: string;
+    birthOrderOrAge?: number;
+    items: string[];
+    value: number;
+  } | null;
+  spousalBreakdown?: {
+    totalFraction: string;
+    totalAmount: number;
+    wifeCount: number;
+    wives: Array<{
+      id: string;
+      name: string;
+      fraction: string;
+      percentage: number;
+      amount: number;
+      landEntitlement: number;
+      buildingsEntitlement: number;
+      pendingMahrDeducted: number;
+    }>;
+  };
+  excludedGrandchildren?: Array<{
+    id: string;
+    name: string;
+    gender: 'MALE' | 'FEMALE';
+    kinshipType: 'POTA' | 'POTI' | 'NAWASA' | 'NAWASI';
+    kinshipUr: string;
+    kinshipEn: string;
+    parentName: string;
+    parentGender: 'MALE' | 'FEMALE';
+    reasonEn: string;
+    reasonUr: string;
+  }>;
   heirShares: HeirShareResult[];
   branchResults?: BranchCalculationResult[];
   notes: string[];
@@ -204,6 +287,18 @@ export interface ScenarioPreset {
   titleUr: string;
   descriptionEn: string;
   descriptionUr: string;
+  storyEn?: string;
+  storyUr?: string;
+  keyDilemmaEn?: string;
+  keyDilemmaUr?: string;
+  familyHighlights?: {
+    deceasedLabelUr: string;
+    deceasedLabelEn: string;
+    familySummaryUr: string;
+    familySummaryEn: string;
+    propertySummaryUr: string;
+    propertySummaryEn: string;
+  };
   deceased: DeceasedInfo;
   assets: EstateAssets;
   debts: EstateDebts;

@@ -19,7 +19,9 @@ import {
   Compass,
   FileCheck,
   Award,
+  BookOpen,
 } from "lucide-react";
+import { ScenarioCaseStoryCard } from "./ScenarioCaseStoryCard";
 
 export const WizardContainer: React.FC = () => {
   const {
@@ -29,6 +31,7 @@ export const WizardContainer: React.FC = () => {
     resetAll,
     loadPreset,
     isSample,
+    activePresetId,
   } = useInheritanceStore();
 
   const t = TRANSLATIONS[language];
@@ -71,31 +74,40 @@ export const WizardContainer: React.FC = () => {
           <div className="relative">
             <button
               onClick={() => setShowPresetDropdown(!showPresetDropdown)}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[var(--theme-gold)]/10 hover:bg-[var(--theme-gold)]/20 border border-[var(--theme-gold)]/40 text-sm font-bold text-[var(--theme-gold)] transition-all shadow-sm"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[var(--theme-gold)]/10 hover:bg-[var(--theme-gold)]/20 border border-[var(--theme-gold)]/40 text-sm font-bold text-[var(--theme-gold)] transition-all shadow-sm cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5 text-[var(--theme-gold)]" />
-              <span>{t.btnLoadPreset}</span>
+              <span>{language === "ur" ? "نمونۂ کیسز دیکھیں (۵ کیسز)" : "Browse 5 Sample Scenarios"}</span>
             </button>
 
             {showPresetDropdown && (
-              <div className="absolute top-full end-0 mt-2 w-[min(24rem,calc(100vw-3rem))] rounded-2xl sacred-card p-3 z-50 space-y-1.5 shadow-2xl border border-[var(--theme-gold)]/50">
-                <div className="flex items-center justify-between px-2 py-1 text-sm font-bold uppercase tracking-wider text-[var(--theme-gold)] border-b border-[var(--theme-border)]/60 pb-1.5 mb-1">
-                  <span>Classic Fiqh Scenarios</span>
-                  <span className="text-sm text-[var(--theme-text-muted)]">Click to Load</span>
+              <div className="absolute top-full end-0 mt-2 w-[min(28rem,calc(100vw-3rem))] rounded-2xl sacred-card p-3 z-50 space-y-2 shadow-2xl border border-[var(--theme-gold)]/50 bg-white">
+                <div className="flex items-center justify-between px-2 py-1 text-xs font-bold uppercase tracking-wider text-[var(--theme-gold)] border-b border-[var(--theme-border)]/60 pb-1.5 mb-1">
+                  <span>{language === "ur" ? "۵ حقیقی فقہی مثالیں (Real Fiqh Cases)" : "5 Real-World Shia Inheritance Cases"}</span>
+                  <span className="text-[11px] text-[var(--theme-text-muted)]">{language === "ur" ? "کلک کر کے لوڈ کریں" : "Click to Load"}</span>
                 </div>
-                {SCENARIO_PRESETS.map((p) => (
+                {SCENARIO_PRESETS.map((p, idx) => (
                   <button
                     key={p.id}
                     onClick={() => {
                       loadPreset(p.id);
                       setShowPresetDropdown(false);
                     }}
-                    className="w-full text-start p-2.5 rounded-xl hover:bg-[var(--theme-card-hover)] hover:border hover:border-[var(--theme-gold)]/40 transition-all text-sm space-y-0.5 border border-transparent"
+                    className={`w-full text-start p-3 rounded-xl transition-all text-xs space-y-1 border cursor-pointer ${
+                      activePresetId === p.id
+                        ? "bg-[#edf3e7] border-[#245642]"
+                        : "hover:bg-stone-50 border-stone-200"
+                    }`}
                   >
-                    <span className="font-bold text-[var(--theme-text-primary)] block">
-                      {language === "ur" ? p.titleUr : p.titleEn}
-                    </span>
-                    <span className="text-sm text-[var(--theme-text-muted)] line-clamp-2 leading-relaxed">
+                    <div className="flex items-center gap-2">
+                      <span className="w-4 h-4 rounded-full bg-[#245642] text-white flex items-center justify-center text-[10px] font-mono shrink-0">
+                        {idx + 1}
+                      </span>
+                      <span className="font-bold text-[#172e22] block text-sm">
+                        {language === "ur" ? p.titleUr : p.titleEn}
+                      </span>
+                    </div>
+                    <span className="text-stone-600 line-clamp-2 leading-relaxed block font-nastaliq leading-[2.2]">
                       {language === "ur" ? p.descriptionUr : p.descriptionEn}
                     </span>
                   </button>
@@ -107,7 +119,7 @@ export const WizardContainer: React.FC = () => {
           {/* Reset All */}
           <button
             onClick={resetAll}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[var(--theme-bg)] hover:bg-red-500/10 border border-[var(--theme-border)] hover:border-red-500/40 text-sm font-semibold text-[var(--theme-text-muted)] hover:text-red-400 transition-all"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[var(--theme-bg)] hover:bg-red-500/10 border border-[var(--theme-border)] hover:border-red-500/40 text-sm font-semibold text-[var(--theme-text-muted)] hover:text-red-400 transition-all cursor-pointer"
             title={t.btnReset}
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -116,15 +128,43 @@ export const WizardContainer: React.FC = () => {
         </div>
       </div>
 
-      <div className="sample-intro" role="status">
-        <div>
-          <strong>{language === "ur" ? (isSample ? "آپ ایک نمونہ دیکھ رہے ہیں" : "اپنا حساب صفر سے شروع کریں") : (isSample ? "You’re exploring a sample" : "A fresh start for your calculation")}</strong>
-          <p>{language === "ur" ? (isSample ? "یہ صرف سمجھنے کے لیے فرضی اعداد ہیں۔ مراحل دیکھیں یا نیا حساب شروع کریں۔" : "تمام رقوم اور ورثاء کی تعداد صفر ہیں۔ سمجھنے کے لیے ایک نمونہ دیکھ سکتے ہیں۔") : (isSample ? "These are example figures. Explore each step, or start fresh with your own details." : "Amounts and heir counts start at zero. Try a sample to see how the calculation works.")}</p>
+      {/* Prominent Case Story Card if Sample is Active */}
+      {isSample || activePresetId ? (
+        <ScenarioCaseStoryCard />
+      ) : (
+        /* Fresh Start Banner with Quick Sample Links */
+        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#fafcf8] to-[#edf3e7] border border-[#c4d4be] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
+          <div className="flex items-start gap-3">
+            <div className="w-9 h-9 rounded-xl bg-[#245642] text-white flex items-center justify-center shrink-0 mt-0.5">
+              <Sparkles className="w-4 h-4 text-amber-300" />
+            </div>
+            <div>
+              <strong className="text-sm sm:text-base font-bold text-[#172e22] block">
+                {language === "ur" ? "سمجھنے کے لیے ۵ حقیقی فقہی کیسز دیکھیں" : "Explore 5 Real-World Shia Inheritance Cases"}
+              </strong>
+              <p className="text-xs text-[#52735a] font-nastaliq leading-[2.2] mt-0.5">
+                {language === "ur"
+                  ? "اگر آپ براہ راست فرضی مثال دیکھ کر سمجھنا چاہتے ہیں تو نیچے دیے گئے ۵ نمونہ کیسز میں سے کسی ایک کا انتخاب فرمائیں۔"
+                  : "Select any of our 5 real-world cases to see how Ja'fari inheritance law resolves complex family scenarios."}
+              </p>
+            </div>
+          </div>
+
+          {/* Quick Case Pills */}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {SCENARIO_PRESETS.slice(0, 3).map((p, idx) => (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => loadPreset(p.id)}
+                className="px-3 py-1.5 rounded-xl bg-white hover:bg-[#245642] text-[#245642] hover:text-white border border-[#245642] text-xs font-bold transition-all shadow-2xs cursor-pointer"
+              >
+                {language === "ur" ? `کیس ${idx + 1}` : `Case ${idx + 1}`}
+              </button>
+            ))}
+          </div>
         </div>
-        <button type="button" onClick={() => isSample ? resetAll() : loadPreset(SCENARIO_PRESETS[0].id)}>
-          {language === "ur" ? (isSample ? "نیا حساب شروع کریں" : "نمونہ دیکھیں") : (isSample ? "Start my calculation" : "Try a sample")}
-        </button>
-      </div>
+      )}
 
       {/* Illuminated Stepper Progress Journey */}
       <div className="wizard-steps grid grid-cols-5 gap-2 sm:gap-3">
