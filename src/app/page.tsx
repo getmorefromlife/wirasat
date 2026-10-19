@@ -31,8 +31,8 @@ export default function Home() {
       {/* Global Wasiyyah (Testamentary Wills) Guide Drawer */}
       <WasiyyahGuideDrawer />
 
-      {/* Hero Section Banner */}
-      {activeView === "wizard" && <HeroSection />}
+      {/* Landing Page Hero View */}
+      {activeView === "home" && <HeroSection />}
 
       {/* Dynamic View Mount */}
       <main className="flex-1 w-full transition-opacity duration-300 relative z-10">

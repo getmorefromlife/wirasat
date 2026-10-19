@@ -48,7 +48,7 @@ import {
 } from "@/lib/wasiyyah-db";
 
 export function WasiyyahView() {
-  const { language, setLanguage, activeWasiyyahSection, deceased, getCalculationResult, setActiveView } =
+  const { language, setLanguage, activeWasiyyahSection, deceased, getCalculationResult, setActiveView, setWizardStep } =
     useInheritanceStore();
   const [internalLang, setInternalLang] = useState<"en" | "ur">(language);
   const [expandedInvalidSignId, setExpandedInvalidSignId] = useState<number | null>(1);
@@ -117,7 +117,7 @@ export function WasiyyahView() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-[#245642]">
             <button
-              onClick={() => setActiveView("wizard")}
+              onClick={() => setActiveView("home")}
               className="text-stone-500 hover:text-[#245642] transition-colors cursor-pointer"
             >
               {isUr ? "مرکزی صفحہ" : "Home"}
@@ -1407,7 +1407,10 @@ export function WasiyyahView() {
 
           <button
             type="button"
-            onClick={() => setActiveView("wizard")}
+            onClick={() => {
+              setWizardStep(1);
+              setActiveView("wizard");
+            }}
             className="px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-amber-950 font-black text-sm transition-all shadow-lg cursor-pointer flex items-center gap-2 shrink-0 hover:scale-105"
           >
             <span>{isUr ? "حسابِ وراثت لانچ کریں" : "Launch Inheritance Calculator"}</span>

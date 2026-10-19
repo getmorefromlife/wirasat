@@ -37,6 +37,7 @@ export const WizardContainer: React.FC = () => {
     loadPreset,
     isSample,
     activePresetId,
+    setActiveView,
   } = useInheritanceStore();
 
   const t = TRANSLATIONS[language];
@@ -66,6 +67,33 @@ export const WizardContainer: React.FC = () => {
 
   return (
     <div id="calculator-workspace" className="calculator-workspace max-w-5xl mx-auto px-4 py-8 space-y-6 scroll-mt-6">
+      {/* Top Breadcrumb: Return to Home */}
+      <div className="flex items-center justify-between gap-3 pb-2 border-b border-stone-200">
+        <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-[#245642]">
+          <button
+            type="button"
+            onClick={() => setActiveView("home")}
+            className="text-stone-500 hover:text-[#245642] transition-colors cursor-pointer flex items-center gap-1"
+          >
+            <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
+            <span>{language === "ur" ? "مرکزی صفحہ پر واپسی" : "Back to Home"}</span>
+          </button>
+          <span className="text-stone-300">/</span>
+          <span className="text-[#245642] font-extrabold flex items-center gap-1.5">
+            <Compass className="w-4 h-4 text-[#245642]" />
+            <span>
+              {language === "ur"
+                ? "حسابِ وراثت (مرحلہ وار رہنمائی)"
+                : "Inheritance Calculator (Step-by-Step)"}
+            </span>
+          </span>
+        </div>
+
+        <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-[#edf3e7] text-[#245642] border border-[#c4d4be]">
+          {language === "ur" ? `مرحلہ ${wizardStep} از ۵` : `Step ${wizardStep} of 5`}
+        </span>
+      </div>
+
       {/* Dual Mode Switcher: 5-Step Guided Wizard vs All-in-One Dashboard */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-2 rounded-2xl bg-[#edf3e7] border border-[#c4d4be] shadow-xs">
         <div className="flex items-center gap-2 px-2 text-xs font-bold text-[#245642]">

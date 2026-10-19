@@ -3,7 +3,7 @@ import { ArrowRight, ArrowUpRight, ShieldCheck, LockKeyhole, Scale, GitFork, Boo
 import { useInheritanceStore } from "@/store/useInheritanceStore";
 import { WirasatLogo } from "@/components/ui/WirasatLogo";
 export function HeroSection() {
- const { language, setActiveView } = useInheritanceStore();
+ const { language, setActiveView, setWizardStep } = useInheritanceStore();
  const ur = language === "ur";
  return <div className="home-intro">
  <section className="legacy-hero">
@@ -18,9 +18,9 @@ export function HeroSection() {
    <h1>
     {ur ? (
       <>
-        <span>منصفانہ تقسیم،</span>
+        <span className="font-nastaliq leading-[2.3]">منصفانہ تقسیم،</span>
         <br />
-        <span className="hero-subline">ایک پائیدار میراث۔</span>
+        <span className="hero-subline font-nastaliq leading-[2.3]">ایک پائیدار میراث۔</span>
       </>
     ) : (
       <>
@@ -30,8 +30,23 @@ export function HeroSection() {
       </>
     )}
   </h1>
-  <p>{ur ? "فقہ جعفریہ کی روشنی میں ترکے کی تقسیم کو سمجھیں۔ اپنے خاندان کے لیے وضاحت اور اطمینان حاصل کریں۔" : "Navigate inheritance with confidence and care. A thoughtful way to understand each rightful share, guided by Ja’fari jurisprudence."}</p>
-  <div className="hero-actions"><button className="primary-button" onClick={() => (document.getElementById("calculator-workspace") || document.getElementById("calculator"))?.scrollIntoView({behavior:"smooth", block:"start"})}>{ur ? "حساب شروع کریں" : "Begin your calculation"}<ArrowRight size={17}/></button><button className="text-button" onClick={() => setActiveView("academy")}>{ur ? "مزید جانیں" : "Explore the principles"}<ArrowUpRight size={16}/></button></div>
+  <p className={ur ? "font-nastaliq leading-[2.2]" : ""}>{ur ? "فقہ جعفریہ کی روشنی میں ترکے کی تقسیم کو سمجھیں۔ اپنے خاندان کے لیے وضاحت اور اطمینان حاصل کریں۔" : "Navigate inheritance with confidence and care. A thoughtful way to understand each rightful share, guided by Ja’fari jurisprudence."}</p>
+  <div className="hero-actions">
+    <button
+      className="primary-button cursor-pointer"
+      onClick={() => {
+        setWizardStep(1);
+        setActiveView("wizard");
+      }}
+    >
+      {ur ? "حساب شروع کریں" : "Begin your calculation"}
+      <ArrowRight size={17}/>
+    </button>
+    <button className="text-button cursor-pointer" onClick={() => setActiveView("academy")}>
+      {ur ? "مزید جانیں" : "Explore the principles"}
+      <ArrowUpRight size={16}/>
+    </button>
+  </div>
   <div className="hero-assurances"><span><LockKeyhole size={14}/>{ur ? "مکمل رازداری" : "Private by design"}</span><span><Check size={15}/>{ur ? "بغیر رجسٹریشن" : "No sign-up needed"}</span><span><GlobeIcon/>{ur ? "اردو اور انگریزی" : "English & Urdu"}</span></div>
   </div>
   <div className="hero-art" aria-label="Decorative tree representing a lasting family legacy"><div className="arch arch-outer"/><div className="arch arch-inner"/><div className="art-orbit orbit-one"/><div className="art-orbit orbit-two"/><div className="tree-illustration"><svg viewBox="0 0 400 390" fill="none" aria-hidden="true"><path d="M201 340V155M201 289L120 208M201 251L282 170M201 210L150 159M201 320L294 227" stroke="#b9a97c" strokeWidth="3"/>{[[200,109,42],[145,153,35],[258,139,41],[109,201,38],[170,208,36],[291,192,36],[250,236,40],[135,262,31],[307,244,29],[203,169,43]].map(([x,y,r],i)=><circle key={i} cx={x} cy={y} r={r} fill={i%3===0?"#8d9b73":i%3===1?"#bdc5a0":"#617b5b"} fillOpacity=".85"/>)}<path d="M161 340H241" stroke="#b9a97c" strokeWidth="2"/></svg></div><span className="art-star star-one">✦</span><span className="art-star star-two">✧</span><div className="art-caption">{ur ? "ایمان کی بنیاد • خاندان کا تسلسل" : "Rooted in faith. Connected by family."}</div><div className="floating-note"><span className="note-icon"><Scale size={19}/></span><span>{ur ? "ہر حق کا ایک مقصد ہے" : "Every share has a purpose."}<small>{ur ? "ہر خاندان کو شفافیت کی ضرورت ہے" : "Every family deserves clarity."}</small></span></div></div>

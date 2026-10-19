@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import { Calculator, LayoutDashboard, Scroll, GitFork, BookOpen, FileText, Globe2, Sparkles, GraduationCap, RotateCcw } from "lucide-react";
+import { Home, Calculator, LayoutDashboard, Scroll, GitFork, BookOpen, FileText, Globe2, Sparkles, GraduationCap, RotateCcw } from "lucide-react";
 import { useInheritanceStore, type ViewTab } from "@/store/useInheritanceStore";
 import { WirasatLogo } from "@/components/ui/WirasatLogo";
 
@@ -12,6 +12,7 @@ export function Navbar() {
     document.documentElement.setAttribute("data-font-scale", fontScale);
   }, [language, fontScale]);
   const links = [
+    ["home", Home, "Home", "مرکزی صفحہ"],
     ["wizard", Calculator, "Calculator", "حسابِ وراثت"],
     ["dashboard", LayoutDashboard, "Dashboard", "ڈیش بورڈ"],
     ["wasiyyah", Scroll, "Waṣiyyah (Will)", "وصیت"],
@@ -21,9 +22,9 @@ export function Navbar() {
     ["glossary", BookOpen, "Glossary", "فرہنگ / لغت"],
   ] as const;
   return <header className="site-header">
-    <div className="topline"><span>{language === "ur" ? "علمی کاوش: مولانا سیّد آئمن رضوی" : "A project by Maulana Syed Imon Rizvi"}</span><span className="font-naskh">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</span><span><Sparkles size={12}/> {language === "ur" ? "عدل و انصاف کی میراث" : "A Legacy of Fairness"}</span></div>
-    <div className="navigation"><button className="brand hover:opacity-95 transition-opacity" onClick={() => setActiveView("wizard")} aria-label="Wirasat home"><WirasatLogo variant="navbar" color="emerald" language={language} /></button>
-    <nav aria-label="Main navigation">{links.map(([view, Icon, en, ur]) => <button key={view} onClick={() => setActiveView(view as ViewTab)} aria-current={activeView === view ? "page" : undefined} className={activeView === view ? "nav-item selected" : "nav-item"}><Icon size={16}/>{language === "ur" ? ur : en}</button>)}</nav>
+    <div className="topline"><span>{language === "ur" ? "علمی کاوش: مولانا سیّد آئمن رضوی" : "A project by Maulana Syed Imon Rizvi"}</span><span className="font-arabic font-bold text-amber-900 dark:text-amber-200">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</span><span><Sparkles size={12}/> {language === "ur" ? "عدل و انصاف کی میراث" : "A Legacy of Fairness"}</span></div>
+    <div className="navigation"><button className="brand hover:opacity-95 transition-opacity cursor-pointer" onClick={() => setActiveView("home")} aria-label="Wirasat home"><WirasatLogo variant="navbar" color="emerald" language={language} /></button>
+    <nav aria-label="Main navigation">{links.map(([view, Icon, en, ur]) => <button key={view} onClick={() => setActiveView(view as ViewTab)} aria-current={activeView === view ? "page" : undefined} className={activeView === view ? "nav-item selected cursor-pointer" : "nav-item cursor-pointer"}><Icon size={16}/>{language === "ur" ? <span className="font-nastaliq leading-[2.2]">{ur}</span> : en}</button>)}</nav>
     <div className="nav-actions">
       <button
         onClick={() => {
