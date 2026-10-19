@@ -37,6 +37,7 @@ import {
   Info,
   Check,
   RefreshCw,
+  RotateCcw,
   Crown,
 } from "lucide-react";
 
@@ -225,6 +226,123 @@ export const PARADIGMS: ParadigmMeta[] = [
   },
 ];
 
+const PARADIGM_THEMES: Record<
+  VisualParadigmId,
+  {
+    bg: string;
+    border: string;
+    badgeBg: string;
+    badgeText: string;
+    iconColor: string;
+  }
+> = {
+  // Family 1: Kinship & Lineage (Sage / Celadon)
+  tree_tanzil: {
+    bg: "bg-[#f4f7f2] dark:bg-[#13281e]",
+    border: "border-[#cad9c5] dark:border-[#224434]",
+    badgeBg: "bg-[#e5eee2] dark:bg-[#1b3a2a]",
+    badgeText: "text-[#2e4d3a] dark:text-emerald-300",
+    iconColor: "text-[#2e5c3e] dark:text-emerald-400",
+  },
+  rings: {
+    bg: "bg-[#f4f7f2] dark:bg-[#13281e]",
+    border: "border-[#cad9c5] dark:border-[#224434]",
+    badgeBg: "bg-[#e5eee2] dark:bg-[#1b3a2a]",
+    badgeText: "text-[#2e4d3a] dark:text-emerald-300",
+    iconColor: "text-[#2e5c3e] dark:text-emerald-400",
+  },
+  lanes: {
+    bg: "bg-[#f4f7f2] dark:bg-[#13281e]",
+    border: "border-[#cad9c5] dark:border-[#224434]",
+    badgeBg: "bg-[#e5eee2] dark:bg-[#1b3a2a]",
+    badgeText: "text-[#2e4d3a] dark:text-emerald-300",
+    iconColor: "text-[#2e5c3e] dark:text-emerald-400",
+  },
+  radial: {
+    bg: "bg-[#f4f7f2] dark:bg-[#13281e]",
+    border: "border-[#cad9c5] dark:border-[#224434]",
+    badgeBg: "bg-[#e5eee2] dark:bg-[#1b3a2a]",
+    badgeText: "text-[#2e4d3a] dark:text-emerald-300",
+    iconColor: "text-[#2e5c3e] dark:text-emerald-400",
+  },
+
+  // Family 2: Balance Sheet & Flow (Warm Amber Gold Alabaster)
+  sankey_flow: {
+    bg: "bg-[#faf6ee] dark:bg-[#251e14]",
+    border: "border-[#eadebe] dark:border-[#40341e]",
+    badgeBg: "bg-[#f2e7cc] dark:bg-[#3d3119]",
+    badgeText: "text-[#694e1d] dark:text-amber-300",
+    iconColor: "text-[#8a6825] dark:text-amber-400",
+  },
+  share_wheel: {
+    bg: "bg-[#faf6ee] dark:bg-[#251e14]",
+    border: "border-[#eadebe] dark:border-[#40341e]",
+    badgeBg: "bg-[#f2e7cc] dark:bg-[#3d3119]",
+    badgeText: "text-[#694e1d] dark:text-amber-300",
+    iconColor: "text-[#8a6825] dark:text-amber-400",
+  },
+  snapshots: {
+    bg: "bg-[#faf6ee] dark:bg-[#251e14]",
+    border: "border-[#eadebe] dark:border-[#40341e]",
+    badgeBg: "bg-[#f2e7cc] dark:bg-[#3d3119]",
+    badgeText: "text-[#694e1d] dark:text-amber-300",
+    iconColor: "text-[#8a6825] dark:text-amber-400",
+  },
+  timeline: {
+    bg: "bg-[#faf6ee] dark:bg-[#251e14]",
+    border: "border-[#eadebe] dark:border-[#40341e]",
+    badgeBg: "bg-[#f2e7cc] dark:bg-[#3d3119]",
+    badgeText: "text-[#694e1d] dark:text-amber-300",
+    iconColor: "text-[#8a6825] dark:text-amber-400",
+  },
+
+  // Family 3: Jurisprudential Logic & Auditing (Scholarly Slate)
+  cards: {
+    bg: "bg-[#f3f5f8] dark:bg-[#14202c]",
+    border: "border-[#cbd7e3] dark:border-[#233547]",
+    badgeBg: "bg-[#e0e8f0] dark:bg-[#1b2b3a]",
+    badgeText: "text-[#2d465e] dark:text-sky-300",
+    iconColor: "text-[#2b4c6e] dark:text-sky-400",
+  },
+  decision_path: {
+    bg: "bg-[#f3f5f8] dark:bg-[#14202c]",
+    border: "border-[#cbd7e3] dark:border-[#233547]",
+    badgeBg: "bg-[#e0e8f0] dark:bg-[#1b2b3a]",
+    badgeText: "text-[#2d465e] dark:text-sky-300",
+    iconColor: "text-[#2b4c6e] dark:text-sky-400",
+  },
+  matrix_grid: {
+    bg: "bg-[#f3f5f8] dark:bg-[#14202c]",
+    border: "border-[#cbd7e3] dark:border-[#233547]",
+    badgeBg: "bg-[#e0e8f0] dark:bg-[#1b2b3a]",
+    badgeText: "text-[#2d465e] dark:text-sky-300",
+    iconColor: "text-[#2b4c6e] dark:text-sky-400",
+  },
+
+  // Family 4: Story, Galaxy & Everyday Simplicity (Warm Terracotta Rose Sand)
+  story_mode: {
+    bg: "bg-[#fbf4f2] dark:bg-[#281916]",
+    border: "border-[#ebd3cd] dark:border-[#462923]",
+    badgeBg: "bg-[#f5e1dc] dark:bg-[#3c221e]",
+    badgeText: "text-[#703b30] dark:text-rose-300",
+    iconColor: "text-[#8c493c] dark:text-rose-400",
+  },
+  kinship_galaxy: {
+    bg: "bg-[#fbf4f2] dark:bg-[#281916]",
+    border: "border-[#ebd3cd] dark:border-[#462923]",
+    badgeBg: "bg-[#f5e1dc] dark:bg-[#3c221e]",
+    badgeText: "text-[#703b30] dark:text-rose-300",
+    iconColor: "text-[#8c493c] dark:text-rose-400",
+  },
+  simple_infographic: {
+    bg: "bg-[#fbf4f2] dark:bg-[#281916]",
+    border: "border-[#ebd3cd] dark:border-[#462923]",
+    badgeBg: "bg-[#f5e1dc] dark:bg-[#3c221e]",
+    badgeText: "text-[#703b30] dark:text-rose-300",
+    iconColor: "text-[#8c493c] dark:text-rose-400",
+  },
+};
+
 export const VisualChartsStudio: React.FC = () => {
   const {
     language,
@@ -238,6 +356,8 @@ export const VisualChartsStudio: React.FC = () => {
     openProvenance,
     activeVisualParadigm,
     setActiveVisualParadigm,
+    resetAll,
+    loadPreset,
   } = useInheritanceStore();
 
   const [activeParadigm, setActiveParadigmState] = useState<VisualParadigmId>(
@@ -369,44 +489,78 @@ export const VisualChartsStudio: React.FC = () => {
           </div>
         </div>
 
-        {/* 12-Paradigm Navigation Selector */}
+        {/* 14-Paradigm Navigation Selector */}
         <div className="mt-8 pt-6 border-t border-[var(--theme-border)]">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-extrabold text-[#3a5243] uppercase tracking-wider">
-              {isUr ? "بارہ بصری نمونہ جات منتخب کریں:" : "Select Visual Architecture Paradigm:"}
-            </span>
-            <span className="text-xs text-[#245642] font-extrabold bg-[#edf3e7] px-2.5 py-0.5 rounded-full border border-[#b7c9a5]">
-              {currentMeta.number}/12: {isUr ? currentMeta.titleUr : currentMeta.titleEn}
-            </span>
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <span className="text-xs sm:text-sm font-extrabold text-[#245642] dark:text-emerald-300 uppercase tracking-wider">
+                {isUr ? "۱۴ بصری خاکے و خاکۂ نسب منتخب کریں:" : "Select Visual Architecture Paradigm:"}
+              </span>
+              <span className="text-xs text-[#245642] dark:text-emerald-300 font-extrabold bg-[#edf3e7] dark:bg-[#132c21] px-3 py-1 rounded-full border border-[#a5b69d]/60">
+                {currentMeta.number}/14: {isUr ? currentMeta.titleUr : currentMeta.titleEn}
+              </span>
+            </div>
+
+            {/* Quick 1-Click Clean Slate Reset All */}
+            <button
+              type="button"
+              onClick={resetAll}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 text-xs font-semibold text-stone-600 dark:text-stone-300 hover:text-red-600 hover:border-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all cursor-pointer shadow-2xs"
+              title={isUr ? "تمام ترکہ اور ورثاء کو صاف کر کے نیا کیس شروع کریں" : "Reset all data to zero and start fresh"}
+            >
+              <RotateCcw size={13} className="text-stone-500 hover:text-red-500 transition-colors" />
+              <span>{isUr ? "تمام ڈیٹا ری سیٹ کریں" : "Reset All to Zero"}</span>
+            </button>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
             {PARADIGMS.map((p) => {
               const Icon = p.icon;
               const isSelected = activeParadigm === p.id;
+              const theme = PARADIGM_THEMES[p.id];
+
               return (
                 <button
                   key={p.id}
+                  type="button"
                   onClick={() => setActiveParadigm(p.id)}
-                  className={`p-3 rounded-xl border text-start transition-all flex flex-col gap-1.5 relative ${
+                  className={`p-3.5 sm:p-4 rounded-2xl border text-start transition-all flex flex-col justify-between gap-2.5 min-h-[115px] relative cursor-pointer ${
                     isSelected
-                      ? "bg-[#245642] border-[#173e30] text-white shadow-md"
-                      : "bg-white border-[#d8e0d2] text-[#243d32] hover:border-[#245642] hover:bg-[#fafbf8]"
+                      ? "bg-[#245642] dark:bg-emerald-950 border-2 border-emerald-500 text-white shadow-lg shadow-emerald-950/20 ring-2 ring-emerald-500/30 scale-[1.02]"
+                      : `${theme.bg} ${theme.border} hover:border-[#245642] hover:shadow-sm`
                   }`}
                 >
                   <div className="flex items-center justify-between w-full">
-                    <Icon size={17} className={isSelected ? "text-emerald-300" : "text-[#527449]"} />
-                    <span className={`text-[10px] font-mono font-extrabold px-1.5 py-0.5 rounded ${
-                      isSelected ? "bg-white/20 text-white" : "bg-[#f1f4ed] text-[#465c49]"
-                    }`}>
+                    <Icon size={19} className={isSelected ? "text-emerald-300" : theme.iconColor} />
+                    <span
+                      className={`text-xs font-mono font-bold px-2 py-0.5 rounded-md ${
+                        isSelected
+                          ? "bg-white/20 text-white"
+                          : `${theme.badgeBg} ${theme.badgeText}`
+                      }`}
+                    >
                       #{p.number}
                     </span>
                   </div>
-                  <div className={`text-xs font-extrabold leading-snug line-clamp-1 py-0.5 ${isSelected ? "text-white" : "text-[#1d3526]"}`}>
-                    {isUr ? p.titleUr : p.titleEn}
-                  </div>
-                  <div className={`text-[10px] line-clamp-1 ${isSelected ? "text-white/80" : "text-[#596851]"}`}>
-                    {isUr ? p.categoryUr : p.categoryEn}
+
+                  <div className="space-y-1">
+                    <div
+                      className={`font-bold leading-snug line-clamp-2 ${
+                        isUr
+                          ? "font-nastaliq text-[15px] sm:text-[16px] leading-[2.3] pb-1"
+                          : "text-xs sm:text-sm font-cinzel tracking-tight"
+                      } ${isSelected ? "text-white" : "text-stone-900 dark:text-stone-100"}`}
+                    >
+                      {isUr ? p.titleUr : p.titleEn}
+                    </div>
+
+                    <div
+                      className={`text-[11px] sm:text-xs font-medium line-clamp-1 ${
+                        isSelected ? "text-emerald-100" : "text-stone-600 dark:text-stone-400"
+                      }`}
+                    >
+                      {isUr ? p.categoryUr : p.categoryEn}
+                    </div>
                   </div>
                 </button>
               );
@@ -452,6 +606,7 @@ export const VisualChartsStudio: React.FC = () => {
               result={result}
               isUr={isUr}
               currency={currency}
+              deceased={deceased}
               selectedId={selectedRelativeId}
               onSelect={setSelectedRelativeId}
               onToggleChild={toggleChildSurvival}
@@ -490,7 +645,7 @@ export const VisualChartsStudio: React.FC = () => {
           )}
 
           {activeParadigm === "share_wheel" && (
-            <ShareWheelView result={result} isUr={isUr} currency={currency} heirs={heirs} />
+            <ShareWheelView result={result} isUr={isUr} currency={currency} heirs={heirs} loadPreset={loadPreset} />
           )}
 
           {activeParadigm === "snapshots" && (
@@ -530,6 +685,7 @@ function TreeTanzilView({
   result,
   isUr,
   currency,
+  deceased,
   selectedId,
   onSelect,
   onToggleChild,
@@ -539,17 +695,58 @@ function TreeTanzilView({
   result: any;
   isUr: boolean;
   currency: string;
+  deceased?: any;
   selectedId: string;
   onSelect: (id: string) => void;
   onToggleChild: (id: string) => void;
   onToggleRatio: (id: string) => void;
 }) {
-  const namedDescendants: PersonNode[] = heirs.namedDescendants || [];
+  const namedDescendants: PersonNode[] = (heirs.childrenList && heirs.childrenList.length > 0)
+    ? heirs.childrenList.map((c: any) => ({
+        id: c.id,
+        name: c.name || (c.gender === "MALE" ? (isUr ? "بیٹا" : "Son") : (isUr ? "بیٹی" : "Daughter")),
+        gender: c.gender,
+        isAlive: c.isAlive,
+        relation: c.gender === "MALE" ? "SON" : "DAUGHTER",
+        daughterBranchEqualRatio: c.daughterBranchEqualRatio,
+        children: (c.children || []).map((gc: any) => ({
+          id: gc.id,
+          name: gc.name || (gc.gender === "MALE" ? (isUr ? "پوتا / نواسا" : "Grandson") : (isUr ? "پوتی / نواسی" : "Granddaughter")),
+          gender: gc.gender,
+          isAlive: gc.isAlive,
+          relation: "GRANDCHILD",
+          parentId: c.id,
+        })),
+      }))
+    : (heirs.namedDescendants && heirs.namedDescendants.length > 0)
+      ? heirs.namedDescendants
+      : [];
+
   const branchResults = result.branchResults || [];
   const livingDirectChildren = namedDescendants.filter(
     (n) => (n.relation === "SON" || n.relation === "DAUGHTER") && n.isAlive
   );
   const isGrandchildrenExcluded = livingDirectChildren.length > 0;
+
+  if (namedDescendants.length === 0) {
+    return (
+      <div className="p-8 sm:p-12 rounded-3xl bg-[#fafbf8] border-2 border-dashed border-[#b7c9a5] text-center space-y-4 shadow-xs">
+        <div className="w-14 h-14 rounded-2xl bg-[#edf3e7] text-[#245642] border border-[#a5b69d] flex items-center justify-center mx-auto shadow-2xs">
+          <GitFork className="w-7 h-7 text-[#245642]" />
+        </div>
+        <div className="space-y-1.5 max-w-md mx-auto">
+          <h4 className="font-extrabold text-base sm:text-lg text-[#172e22]">
+            {isUr ? "کوئی صلبی اولاد یا پوتے/نواسے درج نہیں ہیں" : "No Children or Grandchildren Registered"}
+          </h4>
+          <p className="text-xs sm:text-sm text-stone-600 font-medium leading-relaxed">
+            {isUr
+              ? "شجرۂ تنزیل و اقربیت کو متحرک دیکھنے کے لیے وزرڈ کے مرحلہ ۴ (ورثاء) میں اولاد اور پوتوں کا اندراج فرمائیں، یا اوپر ٹول بار سے کوئی نمونہ کیس (Preset) لوڈ کریں۔"
+              : "To explore Tanzīl (representation) and proximity blocking in action, enter children & grandchildren in Step 4 (Relatives), or load a scenario preset from the toolbar above."}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -594,7 +791,9 @@ function TreeTanzilView({
             <div className="text-xs uppercase font-extrabold text-emerald-200">
               {isUr ? "مورث / متوفی" : "Deceased Subject (Muwarith)"}
             </div>
-            <strong className="text-lg block mt-1 font-serif text-white">Marhūm Syed Muhammad</strong>
+            <strong className="text-lg block mt-1 font-serif text-white">
+              {deceased?.name || (isUr ? "مرحوم (متوفی)" : "The Deceased (Marhūm)")}
+            </strong>
             <div className="text-xs text-white/90 font-medium mt-1">
               {isUr ? "کل ترکہ بعد از دیون:" : "Net Distributable Estate:"} {result.balanceSheet.netDistributableEstate.toLocaleString()} {currency}
             </div>
@@ -1094,6 +1293,21 @@ function EstateFlowPipelineView({ result, isUr, currency, debts, assets }: any) 
    5. HOUSEHOLD CARDS VIEW
    ========================================================================= */
 function HouseholdCardsView({ result, isUr, currency, heirs, onToggleChild }: any) {
+  if (!result.heirShares || result.heirShares.length === 0) {
+    return (
+      <div className="p-8 sm:p-12 rounded-3xl bg-[#fafbf8] border-2 border-dashed border-[#b7c9a5] text-center space-y-3">
+        <h4 className="font-extrabold text-base text-[#172e22]">
+          {isUr ? "کوئی حصہ دار ورثاء موجود نہیں ہیں" : "No Heir Shares Calculated"}
+        </h4>
+        <p className="text-xs sm:text-sm text-stone-600 font-medium max-w-md mx-auto">
+          {isUr
+            ? "وزرڈ کے مراحل میں ترکے کی مالیت اور ورثاء کا اندراج فرمائیں تاکہ تمام کارڈز متحرک ہو سکیں۔"
+            : "Enter estate assets and family relatives in the Calculator Wizard to see household share cards."}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {result.heirShares.map((share: any) => (
@@ -1134,9 +1348,49 @@ function HouseholdCardsView({ result, isUr, currency, heirs, onToggleChild }: an
    6. RADIAL KINSHIP MAP VIEW
    ========================================================================= */
 function RadialKinshipView({ result, isUr, currency }: any) {
+  const shares = result.heirShares || [];
+  const hasShares = shares.length > 0;
+
+  if (!hasShares) {
+    return (
+      <div className="p-8 sm:p-12 rounded-3xl bg-[#fafbf8] border-2 border-dashed border-[#b7c9a5] text-center space-y-3">
+        <h4 className="font-extrabold text-base text-[#172e22]">
+          {isUr ? "شعاعی نقشے کے لیے فی الوقت کوئی ورثاء درج نہیں ہیں" : "No Heir Nodes in Radial Orbit"}
+        </h4>
+        <p className="text-xs sm:text-sm text-stone-600 font-medium max-w-md mx-auto">
+          {isUr
+            ? "مرکزی متوفی کے گرد قرابتی رشتوں اور حصص کا مداری خاکہ دیکھنے کے لیے وزرڈ میں ورثاء کا اندراج فرمائیں۔"
+            : "Enter heirs in the Calculator Wizard to see their kinship nodes and fractional shares radiating from the central deceased."}
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="p-8 rounded-2xl bg-[#fafbf8] border border-[#d8e0d2] flex flex-col items-center justify-center min-h-[440px]">
+    <div className="p-8 rounded-3xl bg-[#fafbf8] border border-[#d8e0d2] flex flex-col items-center justify-center min-h-[440px]">
       <div className="relative w-80 h-80 sm:w-96 sm:h-96 flex items-center justify-center">
+        {/* SVG Orbital Track & Connecting Spokes */}
+        <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
+          <circle cx="50%" cy="50%" r="135" fill="none" stroke="#b7c9a5" strokeWidth="1.5" strokeDasharray="4 4" />
+          {shares.map((_: any, idx: number) => {
+            const total = shares.length;
+            const angle = (idx / total) * 2 * Math.PI;
+            const radius = 135;
+            return (
+              <line
+                key={idx}
+                x1="50%"
+                y1="50%"
+                x2={`calc(50% + ${Math.cos(angle) * radius}px)`}
+                y2={`calc(50% + ${Math.sin(angle) * radius}px)`}
+                stroke="#c5d3bc"
+                strokeWidth="1.5"
+                strokeDasharray="2 3"
+              />
+            );
+          })}
+        </svg>
+
         {/* Hub */}
         <div className="w-24 h-24 rounded-full bg-[#245642] text-white border-4 border-[#173e30] flex flex-col items-center justify-center text-center p-2 z-20 shadow-xl">
           <span className="text-[10px] uppercase font-extrabold text-emerald-200">{isUr ? "میت" : "Deceased"}</span>
@@ -1144,8 +1398,8 @@ function RadialKinshipView({ result, isUr, currency }: any) {
         </div>
 
         {/* Orbiting Heir Nodes */}
-        {result.heirShares.map((h: any, idx: number) => {
-          const total = result.heirShares.length || 1;
+        {shares.map((h: any, idx: number) => {
+          const total = shares.length;
           const angle = (idx / total) * 2 * Math.PI;
           const radius = 135; // px
           const x = Math.cos(angle) * radius;
@@ -1155,10 +1409,11 @@ function RadialKinshipView({ result, isUr, currency }: any) {
             <div
               key={h.id}
               style={{ transform: `translate(${x}px, ${y}px)` }}
-              className="absolute z-10 p-2.5 rounded-xl bg-white border border-[#245642] shadow-sm text-center w-28"
+              className="absolute z-10 p-2.5 rounded-xl bg-white border border-[#245642] shadow-sm text-center w-28 hover:scale-105 transition-transform"
             >
               <span className="text-[10px] font-extrabold block truncate text-[#172e22]">{h.relationKey}</span>
-              <span className="text-xs font-extrabold text-[#245642] block">{h.fractionString}</span>
+              <span className="text-xs font-extrabold text-[#245642] block font-mono">{h.fractionString}</span>
+              <span className="text-[9px] text-stone-500 font-bold block">{h.percentage}%</span>
             </div>
           );
         })}
@@ -1171,8 +1426,11 @@ function RadialKinshipView({ result, isUr, currency }: any) {
    7. DECISION PATH FLOWCHART VIEW
    ========================================================================= */
 function DecisionPathView({ result, isUr, currency, heirs, openProvenance }: any) {
-  const namedDescendants = heirs.namedDescendants || [];
-  const livingDirectChildren = namedDescendants.filter((n: any) => (n.relation === "SON" || n.relation === "DAUGHTER") && n.isAlive);
+  const namedDescendants: any[] = (heirs.childrenList && heirs.childrenList.length > 0)
+    ? heirs.childrenList
+    : (heirs.namedDescendants || []);
+  const hasDescendants = namedDescendants.length > 0;
+  const livingDirectChildren = namedDescendants.filter((n: any) => (n.relation === "SON" || n.relation === "DAUGHTER" || n.gender) && n.isAlive);
   const isGrandchildrenExcluded = livingDirectChildren.length > 0;
 
   const steps = [
@@ -1187,19 +1445,27 @@ function DecisionPathView({ result, isUr, currency, heirs, openProvenance }: any
       topicKey: "PROXIMITY_TIER1_VS_GRANDCHILDREN",
       qEn: "Step 2: Check Active Class (Hajb al-Hirmān)",
       qUr: "مرحلہ ۲: فعال طبقے کی تعیین",
-      resEn: `Class #${result.activeTier} is active. Outer classes permanently blocked.`,
-      resUr: `طبقہ نمبر ${result.activeTier} فعال ہے۔ بیرونی طبقات محجوب۔`,
+      resEn: result.activeTier
+        ? `Class #${result.activeTier} is active. Outer classes permanently blocked.`
+        : (isUr ? "ترکے میں فی الوقت کوئی شرعی وارث درج نہیں ہے۔" : "No legal blood heirs recorded in current case."),
+      resUr: result.activeTier
+        ? `طبقہ نمبر ${result.activeTier} فعال ہے۔ بیرونی طبقات محجوب۔`
+        : "ترکے میں فی الوقت کوئی شرعی وارث درج نہیں ہے۔",
     },
     {
       topicKey: "TANZIL_REPRESENTATION",
       qEn: "Step 3: Golden Proximity Check (Al-Aqrab Yamna‘ al-Ab‘ad)",
       qUr: "مرحلہ ۳: قاعدۂ اقربیت کی جانچ",
-      resEn: isGrandchildrenExcluded
-        ? `Living direct child (${livingDirectChildren.map((c: any) => c.name).join(", ")}) blocks all grandchildren.`
-        : `No living direct children. Grandchildren inherit via Tanzīl (representation).`,
-      resUr: isGrandchildrenExcluded
-        ? `صلبی اولاد کی موجودگی کی وجہ سے تمام پوتے اور نواسے محروم ہیں۔`
-        : `کوئی صلبی اولاد زندہ نہیں، لہٰذا پوتے اور نواسے تنزیل کے تحت وارث بنتے ہیں۔`,
+      resEn: !hasDescendants
+        ? "No direct children or grandchildren registered in current case."
+        : isGrandchildrenExcluded
+          ? `Living direct child (${livingDirectChildren.map((c: any) => c.name).join(", ")}) blocks all grandchildren.`
+          : `No living direct children. Grandchildren inherit via Tanzīl (representation).`,
+      resUr: !hasDescendants
+        ? "ترکے میں کوئی صلبی اولاد یا پوتے/نواسے درج نہیں ہیں۔"
+        : isGrandchildrenExcluded
+          ? "صلبی اولاد کی موجودگی کی وجہ سے تمام پوتے اور نواسے محروم ہیں۔"
+          : "کوئی صلبی اولاد زندہ نہیں، لہٰذا پوتے اور نواسے تنزیل کے تحت وارث بنتے ہیں۔",
     },
     {
       topicKey: "BUTLAN_AL_AWL",
@@ -1241,27 +1507,309 @@ function DecisionPathView({ result, isUr, currency, heirs, openProvenance }: any
 }
 
 /* =========================================================================
-   8. SHARE WHEEL VIEW
+   8. SHARE WHEEL VIEW (Interactive SVG Donut Wheel Chart + Synchronized Legend)
    ========================================================================= */
-function ShareWheelView({ result, isUr, currency }: any) {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-      <div className="p-8 rounded-2xl bg-[#fafbf8] border border-[#d8e0d2] flex flex-col items-center justify-center min-h-[320px]">
-        <PieChart size={64} className="text-[#245642] mb-4 animate-pulse" />
-        <h4 className="text-sm font-extrabold text-[#172e22]">{isUr ? "تقسیمِ ترکہ کا ہندسی تناسب" : "Proportional Estate Distribution"}</h4>
-        <span className="text-xs text-stone-600 mt-1 font-semibold">{result.heirShares.length} {isUr ? "وارثین کے گروہ" : "Heir Groups"}</span>
-      </div>
+const WHEEL_PALETTE = [
+  { fill: "#1b4d3e", text: "text-[#1b4d3e]", bg: "bg-[#edf4ee]", border: "border-[#1b4d3e]" }, // Rich Forest Emerald
+  { fill: "#c27803", text: "text-[#c27803]", bg: "bg-[#fef9ee]", border: "border-[#c27803]" }, // Warm Amber Gold
+  { fill: "#0369a1", text: "text-[#0369a1]", bg: "bg-[#f0f9ff]", border: "border-[#0369a1]" }, // Cobalt Azure
+  { fill: "#6d28d9", text: "text-[#6d28d9]", bg: "bg-[#f5f3ff]", border: "border-[#6d28d9]" }, // Regal Violet
+  { fill: "#0f766e", text: "text-[#0f766e]", bg: "bg-[#f0fdfa]", border: "border-[#0f766e]" }, // Deep Teal
+  { fill: "#b45309", text: "text-[#b45309]", bg: "bg-[#fffbeb]", border: "border-[#b45309]" }, // Terracotta Ochre
+  { fill: "#475569", text: "text-[#475569]", bg: "bg-[#f8fafc]", border: "border-[#475569]" }, // Steel Slate
+  { fill: "#be123c", text: "text-[#be123c]", bg: "bg-[#fff1f2]", border: "border-[#be123c]" }, // Crimson Garnet
+];
 
-      <div className="space-y-2">
-        {result.heirShares.map((h: any) => (
-          <div key={h.id} className="p-3.5 rounded-xl bg-white border border-[#d8e0d2] flex items-center justify-between text-xs shadow-2xs">
-            <span className="font-bold text-[#172e22]">{h.relationKey}</span>
-            <div className="text-end">
-              <span className="font-extrabold text-[#245642] block">{h.fractionString} ({h.percentage}%)</span>
-              <span className="text-[10px] text-stone-600 font-semibold">{h.totalMonetaryShare.toLocaleString()} {currency}</span>
+function ShareWheelView({ result, isUr, currency, loadPreset }: any) {
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const shares = result.heirShares || [];
+  const hasShares = shares.length > 0 && result.balanceSheet.netDistributableEstate > 0;
+
+  if (!hasShares) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center p-8 sm:p-12 rounded-3xl bg-[#fafbf8] border-2 border-dashed border-[#b7c9a5] shadow-xs">
+        {/* Visual Empty Donut SVG */}
+        <div className="flex flex-col items-center justify-center">
+          <div className="relative w-72 h-72 flex items-center justify-center">
+            <svg viewBox="0 0 320 320" className="w-full h-full">
+              {/* Outer dashed ring */}
+              <circle cx="160" cy="160" r="125" fill="none" stroke="#b7c9a5" strokeWidth="2.5" strokeDasharray="6 6" />
+              {/* Inner dashed ring */}
+              <circle cx="160" cy="160" r="75" fill="none" stroke="#d8e0d2" strokeWidth="2" strokeDasharray="4 4" />
+              {/* Center Hub */}
+              <circle cx="160" cy="160" r="70" fill="#ffffff" stroke="#b7c9a5" strokeWidth="1.5" />
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4 pointer-events-none">
+              <PieChart size={32} className="text-[#245642] mb-1.5 opacity-60" />
+              <span className="text-xs font-bold text-[#172e22]">
+                {isUr ? "چرخۂ حصص خالی ہے" : "Share Wheel Empty"}
+              </span>
+              <span className="text-[10px] text-stone-500 font-medium mt-0.5">
+                0 {currency}
+              </span>
             </div>
           </div>
-        ))}
+        </div>
+
+        {/* Guidance and 1-Click Preset */}
+        <div className="space-y-4 text-start">
+          <div className="space-y-2">
+            <span className="text-xs uppercase font-extrabold tracking-wider px-3 py-1 rounded-full bg-[#edf3e7] text-[#245642] border border-[#a5b69d] inline-block">
+              {isUr ? "ہندسی تقسیم کا رصدگاہ" : "Proportional Geometry Studio"}
+            </span>
+            <h4 className="text-lg sm:text-xl font-bold font-cinzel text-[#172e22]">
+              {isUr ? "فی الوقت کوئی ورثاء یا ترکہ موجود نہیں ہے" : "No Heir Shares or Distributable Assets Available"}
+            </h4>
+            <p className="text-xs sm:text-sm text-stone-600 font-medium leading-relaxed">
+              {isUr
+                ? "چرخۂ حصص ہر وارث اور قرابت دار کے شرعی حصے کو قرآنی تناسب (۱/۸، ۱/۶، ۱/۳، ۲/۳ وغیرہ) کے مطابق ایک خوبصورت متحرک دائرے میں پیش کرتا ہے۔ اس منظر کو متحرک دیکھنے کے لیے وزرڈ میں ترکہ و ورثاء شامل فرمائیں یا نمونہ کیس لوڈ کریں۔"
+                : "The Share Wheel converts Qur'anic fractional shares into an interactive proportional donut chart with live slice inspection. Enter estate assets & heirs in the Calculator Wizard, or load a preset scenario below to see it in action."}
+            </p>
+          </div>
+
+          <div className="pt-2 flex items-center gap-3">
+            {loadPreset && (
+              <button
+                type="button"
+                onClick={() => loadPreset("scenario-1")}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#245642] hover:bg-[#1a3f30] text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
+              >
+                <Sparkles size={14} className="text-emerald-300" />
+                <span>{isUr ? "نمونہ کیس لوڈ کریں (Preset 1)" : "Load Sample Case (Preset 1)"}</span>
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Calculate Slices
+  const totalPercentage = shares.reduce((sum: number, h: any) => sum + (h.percentage || 0), 0) || 100;
+  let cumulativeAngle = -Math.PI / 2; // Start from top (12 o'clock)
+
+  const slices = shares.map((h: any, idx: number) => {
+    const fraction = (h.percentage || 0) / totalPercentage;
+    const angleDelta = fraction * 2 * Math.PI;
+    const startAngle = cumulativeAngle;
+    const endAngle = cumulativeAngle + angleDelta;
+    cumulativeAngle = endAngle;
+
+    const isHovered = hoveredIdx === idx;
+    const color = WHEEL_PALETTE[idx % WHEEL_PALETTE.length];
+
+    if (shares.length === 1 || fraction >= 0.999) {
+      return {
+        h,
+        idx,
+        color,
+        isHovered,
+        isFullCircle: true,
+        fraction,
+      };
+    }
+
+    const gap = shares.length > 1 ? 0.025 : 0;
+    const adjStart = startAngle + gap / 2;
+    const adjEnd = endAngle - gap / 2;
+
+    const outerR = isHovered ? 134 : 126;
+    const innerR = isHovered ? 72 : 78;
+
+    const x1 = 160 + outerR * Math.cos(adjStart);
+    const y1 = 160 + outerR * Math.sin(adjStart);
+    const x2 = 160 + outerR * Math.cos(adjEnd);
+    const y2 = 160 + outerR * Math.sin(adjEnd);
+    const x3 = 160 + innerR * Math.cos(adjEnd);
+    const y3 = 160 + innerR * Math.sin(adjEnd);
+    const x4 = 160 + innerR * Math.cos(adjStart);
+    const y4 = 160 + innerR * Math.sin(adjStart);
+
+    const largeArc = (adjEnd - adjStart) > Math.PI ? 1 : 0;
+    const pathD = `M ${x1} ${y1} A ${outerR} ${outerR} 0 ${largeArc} 1 ${x2} ${y2} L ${x3} ${y3} A ${innerR} ${innerR} 0 ${largeArc} 0 ${x4} ${y4} Z`;
+
+    return {
+      h,
+      idx,
+      color,
+      pathD,
+      isHovered,
+      fraction,
+    };
+  });
+
+  const activeHeir = hoveredIdx !== null ? shares[hoveredIdx] : null;
+  const activeColor = hoveredIdx !== null ? WHEEL_PALETTE[hoveredIdx % WHEEL_PALETTE.length] : null;
+
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center p-6 sm:p-8 rounded-3xl bg-[#fafbf8] border border-[#d8e0d2] shadow-xs">
+        {/* Left Side: Interactive SVG Donut Wheel */}
+        <div className="lg:col-span-5 flex flex-col items-center justify-center">
+          <div className="relative w-72 h-72 sm:w-80 sm:h-80 flex items-center justify-center">
+            <svg viewBox="0 0 320 320" className="w-full h-full select-none overflow-visible">
+              <defs>
+                <filter id="sliceShadow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="4" stdDeviation="4" floodOpacity="0.25" />
+                </filter>
+              </defs>
+
+              {/* Decorative Subtle Background Track */}
+              <circle cx="160" cy="160" r="126" fill="none" stroke="#e8ece5" strokeWidth="48" />
+
+              {/* Slices */}
+              {slices.map((slice: any) => {
+                if (slice.isFullCircle) {
+                  return (
+                    <path
+                      key={slice.idx}
+                      d="M 160 34 A 126 126 0 1 0 160 286 A 126 126 0 1 0 160 34 M 160 82 A 78 78 0 1 1 160 238 A 78 78 0 1 1 160 82 Z"
+                      fill={slice.color.fill}
+                      fillRule="evenodd"
+                      className="transition-all duration-200 cursor-pointer"
+                      filter={slice.isHovered ? "url(#sliceShadow)" : "none"}
+                      onMouseEnter={() => setHoveredIdx(slice.idx)}
+                      onMouseLeave={() => setHoveredIdx(null)}
+                    />
+                  );
+                }
+
+                return (
+                  <path
+                    key={slice.idx}
+                    d={slice.pathD}
+                    fill={slice.color.fill}
+                    className="transition-all duration-200 cursor-pointer"
+                    opacity={hoveredIdx !== null && !slice.isHovered ? 0.45 : 1}
+                    filter={slice.isHovered ? "url(#sliceShadow)" : "none"}
+                    stroke="#ffffff"
+                    strokeWidth={slice.isHovered ? 2.5 : 1}
+                    onMouseEnter={() => setHoveredIdx(slice.idx)}
+                    onMouseLeave={() => setHoveredIdx(null)}
+                  />
+                );
+              })}
+
+              {/* Central Hole Mask Circle */}
+              <circle cx="160" cy="160" r="74" fill="#ffffff" stroke="#d8e0d2" strokeWidth="1.5" />
+            </svg>
+
+            {/* Dynamic Interactive Center Hub Overlay */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-3 pointer-events-none">
+              {activeHeir ? (
+                <div className="space-y-0.5 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="flex items-center justify-center gap-1.5">
+                    <span
+                      className="w-2.5 h-2.5 rounded-full inline-block"
+                      style={{ backgroundColor: activeColor?.fill }}
+                    />
+                    <span className="text-[11px] font-extrabold text-[#172e22] truncate max-w-[120px]">
+                      {activeHeir.relationKey}
+                    </span>
+                  </div>
+                  <div className="text-xl font-extrabold text-[#245642] font-mono leading-tight">
+                    {activeHeir.fractionString}
+                  </div>
+                  <div className="text-xs font-bold text-stone-600">
+                    {activeHeir.percentage}%
+                  </div>
+                  <div className="text-[10px] font-extrabold text-[#172e22] pt-0.5 truncate max-w-[130px]">
+                    {activeHeir.totalMonetaryShare.toLocaleString()} {currency}
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-0.5">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-stone-500 block">
+                    {isUr ? "خالص ترکہ" : "Net Distributable"}
+                  </span>
+                  <strong className="text-base sm:text-lg font-bold text-[#172e22] block leading-tight">
+                    {result.balanceSheet.netDistributableEstate.toLocaleString()}
+                  </strong>
+                  <span className="text-[10px] text-stone-600 font-medium block">
+                    {currency}
+                  </span>
+                  <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#edf3e7] text-[#245642] inline-block mt-1">
+                    {shares.length} {isUr ? "گروہِ ورثاء" : "Heir Groups"}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <span className="text-[11px] text-stone-500 font-medium mt-3">
+            {isUr ? "حصہ دیکھنے کے لیے دائرے پر اشارہ (Hover) کریں" : "Hover over a slice to inspect details"}
+          </span>
+        </div>
+
+        {/* Right Side: Synchronized Heir Share Cards */}
+        <div className="lg:col-span-7 space-y-2.5">
+          <div className="flex items-center justify-between pb-2 border-b border-[#d8e0d2]">
+            <h4 className="text-xs font-extrabold uppercase tracking-wider text-[#245642]">
+              {isUr ? "تناسبی حصص کی فہرستِ ورثاء" : "Proportional Breakdown by Heir"}
+            </h4>
+            <span className="text-xs text-stone-500 font-medium">
+              {shares.length} {isUr ? "حصہ دار" : "Total shares"}
+            </span>
+          </div>
+
+          <div className="space-y-2 max-h-[380px] overflow-y-auto pr-1">
+            {shares.map((h: any, idx: number) => {
+              const isHovered = hoveredIdx === idx;
+              const color = WHEEL_PALETTE[idx % WHEEL_PALETTE.length];
+
+              return (
+                <div
+                  key={h.id}
+                  onMouseEnter={() => setHoveredIdx(idx)}
+                  onMouseLeave={() => setHoveredIdx(null)}
+                  className={`p-3.5 sm:p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                    isHovered
+                      ? "bg-white border-[#245642] ring-2 ring-[#245642]/20 shadow-md scale-[1.01]"
+                      : "bg-white border-[#d8e0d2] hover:border-[#b7c9a5] shadow-2xs"
+                  }`}
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div
+                      className="w-4 h-4 rounded-full flex-shrink-0 shadow-2xs ring-2 ring-white"
+                      style={{ backgroundColor: color.fill }}
+                    />
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <strong className="text-sm font-bold text-[#172e22] truncate">
+                          {h.relationKey}
+                        </strong>
+                        {h.count > 1 && (
+                          <span className="text-[10px] font-bold px-2 py-0.2 rounded-full bg-stone-100 text-stone-700">
+                            {h.count} {isUr ? "افراد" : "heirs"}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-xs text-stone-600 font-medium block truncate">
+                        {h.count > 1
+                          ? `${isUr ? "فی کس:" : "Per heir:"} ${h.sharePerIndividual.toLocaleString()} ${currency}`
+                          : (isUr ? "منفرد حصہ دار" : "Individual share")}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="text-end flex-shrink-0">
+                    <div className="flex items-center gap-1.5 justify-end">
+                      <span className="text-xs font-mono font-extrabold px-2 py-0.5 rounded bg-[#edf3e7] text-[#245642] border border-[#b7c9a5]">
+                        {h.fractionString}
+                      </span>
+                      <span className="text-xs font-bold text-stone-700">
+                        {h.percentage}%
+                      </span>
+                    </div>
+                    <strong className="text-sm font-extrabold text-[#172e22] block mt-1">
+                      {h.totalMonetaryShare.toLocaleString()} {currency}
+                    </strong>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -1358,24 +1906,34 @@ function InheritanceMatrixGridView({ result, isUr, currency, deceased, openProve
           </tr>
         </thead>
         <tbody className="divide-y divide-stone-200">
-          {result.heirShares.map((h: any) => (
-            <tr key={h.id} className="hover:bg-[#fafbf8] transition-colors">
-              <td className="py-3 px-3.5 font-bold text-[#172e22]">{h.relationKey}</td>
-              <td className="py-3 px-3.5 font-medium">{h.count}</td>
-              <td className="py-3 px-3.5 font-extrabold text-[#245642]">{h.fractionString}</td>
-              <td className="py-3 px-3.5 font-semibold">{h.percentage}%</td>
-              <td className="py-3 px-3.5 font-bold text-[#172e22]">{h.totalMonetaryShare.toLocaleString()} {currency}</td>
-              <td className="py-3 px-3.5 text-stone-600 font-medium">
-                <button
-                  onClick={() => openProvenance(getTopicForHeir(h))}
-                  className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-[#edf3e7] hover:bg-[#245642] text-[#245642] hover:text-white transition-colors font-bold text-[11px] border border-[#a5b69d]"
-                >
-                  <Scale className="w-3 h-3" />
-                  <span>{h.proof.quranReference || (isUr ? "شرعی فتویٰ" : "View Ruling")}</span>
-                </button>
+          {result.heirShares.length === 0 ? (
+            <tr>
+              <td colSpan={6} className="py-8 text-center text-xs text-stone-500 font-medium bg-stone-50/50">
+                {isUr
+                  ? "فی الوقت کوئی ورثاء درج نہیں ہیں۔ براہِ کرم وزرڈ میں ورثاء کا اندراج فرمائیں۔"
+                  : "No heir shares calculated. Please record heirs in the Calculator Wizard."}
               </td>
             </tr>
-          ))}
+          ) : (
+            result.heirShares.map((h: any) => (
+              <tr key={h.id} className="hover:bg-[#fafbf8] transition-colors">
+                <td className="py-3 px-3.5 font-bold text-[#172e22]">{h.relationKey}</td>
+                <td className="py-3 px-3.5 font-medium">{h.count}</td>
+                <td className="py-3 px-3.5 font-extrabold text-[#245642]">{h.fractionString}</td>
+                <td className="py-3 px-3.5 font-semibold">{h.percentage}%</td>
+                <td className="py-3 px-3.5 font-bold text-[#172e22]">{h.totalMonetaryShare.toLocaleString()} {currency}</td>
+                <td className="py-3 px-3.5 text-stone-600 font-medium">
+                  <button
+                    onClick={() => openProvenance(getTopicForHeir(h))}
+                    className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-[#edf3e7] hover:bg-[#245642] text-[#245642] hover:text-white transition-colors font-bold text-[11px] border border-[#a5b69d]"
+                  >
+                    <Scale className="w-3 h-3" />
+                    <span>{h.proof.quranReference || (isUr ? "شرعی فتویٰ" : "View Ruling")}</span>
+                  </button>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>

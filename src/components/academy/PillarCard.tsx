@@ -50,15 +50,18 @@ export const PillarCard: React.FC<PillarCardProps> = ({ pillar, language }) => {
         </div>
 
         <div>
-          <h3 className="text-xl sm:text-2xl font-bold font-cinzel text-[#0A2118] dark:text-[#F0FDF4] tracking-tight">
-            {pillar.titleEn}
-          </h3>
-          <h4
-            className="text-lg sm:text-xl font-normal text-[#173e30] dark:text-emerald-200 mt-2 font-naskh leading-[2.2]"
-            dir="rtl"
-          >
-            {pillar.titleUr}
-          </h4>
+          {isUr ? (
+            <h3
+              className="text-xl sm:text-2xl font-normal text-[#173e30] dark:text-emerald-200 font-nastaliq leading-[2.2]"
+              dir="rtl"
+            >
+              {pillar.titleUr}
+            </h3>
+          ) : (
+            <h3 className="text-xl sm:text-2xl font-bold font-cinzel text-[#0A2118] dark:text-[#F0FDF4] tracking-tight">
+              {pillar.titleEn}
+            </h3>
+          )}
           <p className="text-xs text-stone-600 dark:text-stone-300 font-medium mt-1">
             {isUr ? pillar.subtitleUr : pillar.subtitleEn}
           </p>
@@ -71,7 +74,7 @@ export const PillarCard: React.FC<PillarCardProps> = ({ pillar, language }) => {
           <div className="flex items-center gap-2">
             <Scale className="w-5 h-5 text-[#245642] dark:text-emerald-400" />
             <h4 className="text-sm font-bold uppercase tracking-wider text-[#0A2118] dark:text-emerald-300">
-              {isUr ? "خلاصۂ حکمِ شرعی (Executive Juridical Brief)" : "Executive Juridical Brief (خلاصۂ حکم)"}
+              {isUr ? "خلاصۂ حکمِ شرعی" : "Executive Juridical Brief"}
             </h4>
           </div>
           <span className="text-[11px] font-bold text-amber-900 dark:text-amber-300 bg-amber-100 dark:bg-amber-950/70 border border-amber-300 dark:border-amber-700 px-2.5 py-0.5 rounded-full">
@@ -79,16 +82,18 @@ export const PillarCard: React.FC<PillarCardProps> = ({ pillar, language }) => {
           </span>
         </div>
 
-        <p className="text-sm leading-relaxed text-[#0F172A] dark:text-stone-200 font-medium">
-          {pillar.executiveSummaryEn}
-        </p>
-
-        <p
-          className="text-sm leading-[2.3] text-[#172e22] dark:text-emerald-100 font-naskh pt-2 border-t border-stone-200 dark:border-stone-800"
-          dir="rtl"
-        >
-          {pillar.executiveSummaryUr}
-        </p>
+        {isUr ? (
+          <p
+            className="text-sm sm:text-base leading-[2.3] text-[#172e22] dark:text-emerald-100 font-nastaliq"
+            dir="rtl"
+          >
+            {pillar.executiveSummaryUr}
+          </p>
+        ) : (
+          <p className="text-sm leading-relaxed text-[#0F172A] dark:text-stone-200 font-medium">
+            {pillar.executiveSummaryEn}
+          </p>
+        )}
       </section>
 
       {/* 3. INTERACTIVE JURIDICAL TOOL */}
@@ -159,7 +164,7 @@ export const PillarCard: React.FC<PillarCardProps> = ({ pillar, language }) => {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="font-bold uppercase tracking-wider text-[#245642] dark:text-emerald-400 text-xs">
-                    The Holy Qur’an (قرآنِ مجید)
+                    {isUr ? "قرآنِ مجید" : "The Holy Qur’an"}
                   </span>
                   <span className="text-xs font-semibold text-stone-500">
                     {pillar.scripturalPrecedents.quranicAyah.reference}
@@ -171,15 +176,18 @@ export const PillarCard: React.FC<PillarCardProps> = ({ pillar, language }) => {
                 >
                   {pillar.scripturalPrecedents.quranicAyah.arabic}
                 </div>
-                <p className="text-stone-700 dark:text-stone-300 italic">
-                  &ldquo;{pillar.scripturalPrecedents.quranicAyah.translationEn}&rdquo;
-                </p>
-                {pillar.scripturalPrecedents.quranicAyah.translationUr && (
-                  <p
-                    className="text-stone-800 dark:text-emerald-200 font-naskh leading-[2.2] text-right"
-                    dir="rtl"
-                  >
-                    {pillar.scripturalPrecedents.quranicAyah.translationUr}
+                {isUr ? (
+                  pillar.scripturalPrecedents.quranicAyah.translationUr && (
+                    <p
+                      className="text-stone-800 dark:text-emerald-200 font-nastaliq leading-[2.2] text-right"
+                      dir="rtl"
+                    >
+                      {pillar.scripturalPrecedents.quranicAyah.translationUr}
+                    </p>
+                  )
+                ) : (
+                  <p className="text-stone-700 dark:text-stone-300 italic">
+                    &ldquo;{pillar.scripturalPrecedents.quranicAyah.translationEn}&rdquo;
                   </p>
                 )}
               </div>
@@ -190,7 +198,7 @@ export const PillarCard: React.FC<PillarCardProps> = ({ pillar, language }) => {
               <div className="pt-5 space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="font-bold uppercase tracking-wider text-[#245642] dark:text-emerald-400 text-xs">
-                    Sunnah of the Ahl al-Bayt (ع)
+                    {isUr ? "سنّت و احادیثِ معصومین (ع)" : "Sunnah of the Ahl al-Bayt (ع)"}
                   </span>
                   <span className="text-xs font-semibold text-stone-500">
                     {pillar.scripturalPrecedents.hadithProof.source}
@@ -211,12 +219,12 @@ export const PillarCard: React.FC<PillarCardProps> = ({ pillar, language }) => {
             {/* Maraji Rulings */}
             <div className="pt-5 space-y-3">
               <span className="font-bold uppercase tracking-wider text-[#245642] dark:text-emerald-400 text-xs block">
-                Contemporary Marāji‘ Rulings (فتاویٰ مراجعِ عظام)
+                {isUr ? "فتاویٰ مراجعِ عظام" : "Contemporary Marāji‘ Rulings"}
               </span>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div className="p-3.5 rounded-xl bg-white dark:bg-[#0c1814] border border-stone-200 dark:border-stone-800 space-y-1">
                   <span className="font-bold text-xs text-[#0A2118] dark:text-emerald-300 block">
-                    Grand Ayatollah Sayyid Ali al-Sistani:
+                    {isUr ? "حضرت آیۃ اللہ العظمیٰ سید علی سیستانی:" : "Grand Ayatollah Sayyid Ali al-Sistani:"}
                   </span>
                   <p className="text-xs text-stone-700 dark:text-stone-300 leading-relaxed font-medium">
                     {pillar.scripturalPrecedents.marjaRulings.sistani}
@@ -225,7 +233,7 @@ export const PillarCard: React.FC<PillarCardProps> = ({ pillar, language }) => {
 
                 <div className="p-3.5 rounded-xl bg-white dark:bg-[#0c1814] border border-stone-200 dark:border-stone-800 space-y-1">
                   <span className="font-bold text-xs text-[#0A2118] dark:text-emerald-300 block">
-                    Grand Ayatollah Sayyid Abu al-Qasim al-Khoei:
+                    {isUr ? "حضرت آیۃ اللہ العظمیٰ سید ابو القاسم خوئیؒ:" : "Grand Ayatollah Sayyid Abu al-Qasim al-Khoei:"}
                   </span>
                   <p className="text-xs text-stone-700 dark:text-stone-300 leading-relaxed font-medium">
                     {pillar.scripturalPrecedents.marjaRulings.khoei || "Minhāj al-Ṣāliḥīn: Classical rulings align with Ja'fari statutory distribution."}
@@ -244,7 +252,7 @@ export const PillarCard: React.FC<PillarCardProps> = ({ pillar, language }) => {
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
               <h4 className="font-bold text-sm uppercase tracking-wider text-[#0A2118] dark:text-emerald-200 font-cinzel">
-                {pillar.caseStudy.title || (isUr ? "عملی فقہی مثال و تجزیہ" : "Practical Real-World Case Study")}
+                {isUr ? "عملی فقہی مثال و تجزیہ" : (pillar.caseStudy.title || "Practical Real-World Case Study")}
               </h4>
             </div>
             <span className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">
@@ -257,7 +265,7 @@ export const PillarCard: React.FC<PillarCardProps> = ({ pillar, language }) => {
             <div className="p-4 rounded-xl bg-[#FAF8F5] dark:bg-[#13251e] border border-stone-200 dark:border-stone-800 space-y-1.5">
               <span className="text-xs font-bold uppercase tracking-wider text-[#245642] dark:text-emerald-400 flex items-center gap-1.5">
                 <FileText className="w-3.5 h-3.5" />
-                {isUr ? "صورتِ مسئلہ (Estate Scenario)" : "Estate Scenario"}
+                {isUr ? "صورتِ مسئلہ" : "Estate Scenario"}
               </span>
               <p className="text-stone-800 dark:text-stone-200 font-medium">
                 {pillar.caseStudy.scenario}
@@ -269,7 +277,7 @@ export const PillarCard: React.FC<PillarCardProps> = ({ pillar, language }) => {
               <div className="space-y-2.5 pt-1">
                 <span className="text-xs font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 flex items-center gap-1.5">
                   <Scale className="w-3.5 h-3.5 text-[#245642] dark:text-emerald-400" />
-                  {isUr ? "مرحلہ وار شرعی حل (Step-by-Step Resolution)" : "Step-by-Step Juridical Resolution"}
+                  {isUr ? "مرحلہ وار شرعی حل" : "Step-by-Step Juridical Resolution"}
                 </span>
                 <div className="space-y-2">
                   {pillar.caseStudy.steps.map((step, sIdx) => (

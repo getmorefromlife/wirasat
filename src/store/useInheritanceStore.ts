@@ -342,21 +342,17 @@ const initialDebts: EstateDebts = {
 const initialHeirs: HeirsInput = {
   ...legacyHeirs,
   spouseCount: 0,
-  wives: [
-    {
-      id: "wife-1",
-      name: "Wife 1 (زوجہ اول)",
-      isAlive: true,
-      marriageType: "PERMANENT",
-      hasMahrPending: false,
-      pendingMahrAmount: 0,
-    },
-  ],
+  wives: [],
   childrenList: [],
+  namedDescendants: [],
   fatherAlive: false,
+  fatherImpediment: false,
   motherAlive: false,
+  motherImpediment: false,
   sonsCount: 0,
   daughtersCount: 0,
+  deceasedSonsWithChildren: [],
+  deceasedDaughtersWithChildren: [],
 };
 
 export const useInheritanceStore = create<InheritanceState>()(
@@ -456,20 +452,24 @@ export const useInheritanceStore = create<InheritanceState>()(
 
       toggleChildSurvival: (id) =>
         set((state) => {
-          const list = state.heirs.namedDescendants || initialNamedDescendants;
-          const updated = list.map((node) => {
+          const namedList = (state.heirs.namedDescendants || []).map((node) => {
             if (node.id === id) {
               return { ...node, isAlive: !node.isAlive };
             }
             return node;
           });
-          return { heirs: { ...state.heirs, namedDescendants: updated } };
+          const childrenList = (state.heirs.childrenList || []).map((child) => {
+            if (child.id === id) {
+              return { ...child, isAlive: !child.isAlive };
+            }
+            return child;
+          });
+          return { heirs: { ...state.heirs, namedDescendants: namedList, childrenList } };
         }),
 
       toggleDaughterBranchRatio: (parentId) =>
         set((state) => {
-          const list = state.heirs.namedDescendants || initialNamedDescendants;
-          const updated = list.map((node) => {
+          const namedList = (state.heirs.namedDescendants || []).map((node) => {
             if (node.id === parentId) {
               return {
                 ...node,
@@ -478,7 +478,16 @@ export const useInheritanceStore = create<InheritanceState>()(
             }
             return node;
           });
-          return { heirs: { ...state.heirs, namedDescendants: updated } };
+          const childrenList = (state.heirs.childrenList || []).map((child) => {
+            if (child.id === parentId) {
+              return {
+                ...child,
+                daughterBranchEqualRatio: !child.daughterBranchEqualRatio,
+              };
+            }
+            return child;
+          });
+          return { heirs: { ...state.heirs, namedDescendants: namedList, childrenList } };
         }),
 
       // Multi-Wives Management Actions
@@ -730,18 +739,31 @@ export const useInheritanceStore = create<InheritanceState>()(
     }),
     {
       name: "mirath-thaqalayn-storage",
-      version: 1,
-      migrate: (persisted) => {
-        const saved = persisted as Pick<InheritanceState, "language" | "theme" | "activeDesignSystem" | "fontScale" | "fontStyle" | "deceased" | "assets" | "debts" | "heirs"> & { isSample?: boolean };
-        // Clear only the former untouched demo; preserve users' own saved work.
-        const isLegacyDemo = saved.deceased?.name === legacyDeceased.name &&
-          JSON.stringify(saved.assets) === JSON.stringify(legacyAssets) &&
-          JSON.stringify(saved.debts) === JSON.stringify(legacyDebts) &&
-          JSON.stringify(saved.heirs) === JSON.stringify(legacyHeirs) &&
-          JSON.stringify({ ...saved.deceased, dateOfDeath: "" }) === JSON.stringify({ ...legacyDeceased, dateOfDeath: "" });
-        return isLegacyDemo
-          ? { ...saved, deceased: initialDeceased, assets: initialAssets, debts: initialDebts, heirs: initialHeirs, isSample: false }
-          : { ...saved, isSample: saved.isSample ?? false };
+      version: 2,
+      migrate: (persisted, version) => {
+        const saved = persisted as any;
+        // Purge legacy demo states (Ali/Hasan/Zainab, legacy deceased, or unversioned demo)
+        const hasLegacyGhostDescendants = saved?.heirs?.namedDescendants?.some((n: any) =>
+          n?.name?.includes("Ali") || n?.name?.includes("Fatima") || n?.name?.includes("Zaynab")
+        );
+        const isLegacyDemo =
+          version < 2 &&
+          (saved?.isSample ||
+            saved?.deceased?.name === legacyDeceased.name ||
+            hasLegacyGhostDescendants ||
+            JSON.stringify(saved?.assets) === JSON.stringify(legacyAssets));
+
+        if (isLegacyDemo) {
+          return {
+            ...saved,
+            deceased: initialDeceased,
+            assets: initialAssets,
+            debts: initialDebts,
+            heirs: initialHeirs,
+            isSample: false,
+          };
+        }
+        return { ...saved, isSample: saved?.isSample ?? false };
       },
       partialize: (state) => ({
         isSample: state.isSample,

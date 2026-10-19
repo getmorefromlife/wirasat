@@ -101,11 +101,11 @@ export const Step5Results: React.FC = () => {
         {/* Quick Action Buttons */}
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setActiveView("matrix")}
+            onClick={() => setActiveView("galaxy")}
             className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl sacred-card text-sm font-bold text-[var(--theme-gold)] hover:border-[var(--theme-gold)] transition-all shadow-sm"
           >
-            <Scale className="w-3.5 h-3.5" />
-            <span>{t.btnQuickMatrix}</span>
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>{language === "ur" ? "فلکِ قرابت دیکھیں" : "Kinship Galaxy"}</span>
           </button>
 
           <button

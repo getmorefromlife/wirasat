@@ -180,10 +180,10 @@ export const AcademyView: React.FC = () => {
           <div className="p-6 sm:p-8 rounded-2xl bg-[#FAF8F5] dark:bg-[#0B1713] border-2 border-emerald-600/40 shadow-xl space-y-4 text-stone-900 dark:text-stone-100">
             <div className="flex items-center justify-between border-b border-[#245642]/20 pb-3">
               <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">
-                Foundational Distinction #1
+                {isUr ? "بنیادی فقہی امتیاز #1" : "Foundational Distinction #1"}
               </span>
               <span className="text-xs sm:text-sm font-naskh text-emerald-900 dark:text-emerald-200 px-3 py-1 rounded-lg bg-emerald-100 dark:bg-emerald-950 border border-emerald-300 dark:border-emerald-700 font-bold">
-                بطلان التعصيب (Repudiation of Ta‘ṣīb)
+                {isUr ? "بطلانِ تعصیب" : "بطلان التعصيب (Repudiation of Ta‘ṣīb)"}
               </span>
             </div>
 
@@ -198,12 +198,25 @@ export const AcademyView: React.FC = () => {
                 <h4 className="font-bold text-[#245642] dark:text-emerald-300 text-xs uppercase tracking-wider">
                   {isUr ? "تاریخی پس منظر و تعصبِ جاہلیت" : "Historical Context & Pre-Islamic Relapse"}
                 </h4>
-                <p>
-                  In pre-Islamic Arabia, women and female children were barred from inheriting property because they did not ride horses or fight in tribal warfare. The Holy Qur’an abolished this misogyny, declaring in Surah Al-Nisā’ (4:7) that women have a determined share.
-                </p>
-                <p>
-                  After the Holy Prophet (sawa), non-Ja&apos;fari jurists revived agnatic preference under the concept of <em>Ta‘ṣīb</em>—decreeing that if a deceased leaves only a daughter, she takes half, and the remaining half is surrendered to distant male agnates (paternal uncles or cousins).
-                </p>
+                {isUr ? (
+                  <>
+                    <p className="font-nastaliq text-sm sm:text-base leading-[2.3] text-stone-800 dark:text-stone-200">
+                      عرب جاہلیت کے دور میں خواتین اور بچیوں کو وراثت سے یکسر محروم رکھا جاتا تھا کیونکہ وہ تلوار نہیں چلا سکتی تھیں اور قبائلی جنگوں میں حصہ نہیں لیتی تھیں۔ قرآنِ حکیم نے سورۂ نساء (آیت 7) نازل فرما کر اس ظلم کا خاتمہ کیا اور خواتین کے متعین حصے مقرر فرمائے۔
+                    </p>
+                    <p className="font-nastaliq text-sm sm:text-base leading-[2.3] text-stone-800 dark:text-stone-200">
+                      لیکن بعد میں غیر جعفری مکاتبِ فکر نے &apos;تعصیب&apos; کا تصور قائم کیا—جس کی رو سے اگر متوفی کی صرف ایک بیٹی ہو تو اسے نصف ترکہ دیا جاتا ہے اور باقی نصف مال دور کے غیر وارث مردوں (جیسے چچا یا تایا کے بیٹوں) کو سونپ دیا جاتا ہے۔ فقہِ جعفری اس کی سختی سے نفی کرتی ہے۔
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p>
+                      In pre-Islamic Arabia, women and female children were barred from inheriting property because they did not ride horses or fight in tribal warfare. The Holy Qur’an abolished this misogyny, declaring in Surah Al-Nisā’ (4:7) that women have a determined share.
+                    </p>
+                    <p>
+                      After the Holy Prophet (sawa), non-Ja&apos;fari jurists revived agnatic preference under the concept of <em>Ta‘ṣīb</em>—decreeing that if a deceased leaves only a daughter, she takes half, and the remaining half is surrendered to distant male agnates (paternal uncles or cousins).
+                    </p>
+                  </>
+                )}
               </div>
 
               <div className="space-y-3 p-4 rounded-xl bg-white dark:bg-[#0f1f1a] border border-stone-200 dark:border-stone-800">
@@ -214,11 +227,19 @@ export const AcademyView: React.FC = () => {
                   وَأُولُو الْأَرْحَامِ بَعْضُهُمْ أَوْلَىٰ بِبَعْضٍ فِي كِتَابِ اللَّهِ
                 </p>
                 <p className="italic text-stone-600 dark:text-stone-400">
-                  &ldquo;And those of blood relations are nearer to one another in the decree of Allah.&rdquo; (33:6)
+                  {isUr
+                    ? "”اور اللہ کی کتاب میں رشتہ دار آپس میں ایک دوسرے کے زیادہ حقدار ہیں۔“ (الاحزاب: 6)"
+                    : "“And those of blood relations are nearer to one another in the decree of Allah.” (33:6)"}
                 </p>
-                <p>
-                  Imam Ja&apos;far al-Sadiq (as) declared: <em>&ldquo;When a daughter survives, no agnate (casiqah) inherits anything with her.&rdquo;</em> The surplus returns (<em>Radd</em>) directly to the daughter, completely shutting out distant uncles.
-                </p>
+                {isUr ? (
+                  <p className="font-nastaliq text-sm sm:text-base leading-[2.3] text-stone-800 dark:text-stone-200">
+                    امام جعفر صادق (ع) نے صراحت فرمائی: <em>&ldquo;بیٹی کی موجودگی میں کوئی عصبہ کسی چیز کا حقدار نہیں ہوتا۔&rdquo;</em> ترکے کا زائد حصہ &apos;ردّ&apos; کے تحت براہ راست بیٹی کو ملتا ہے اور دور کے چچا یا عصبہ مکمل طور پر محروم رہتے ہیں۔
+                  </p>
+                ) : (
+                  <p>
+                    Imam Ja&apos;far al-Sadiq (as) declared: <em>&ldquo;When a daughter survives, no agnate (casiqah) inherits anything with her.&rdquo;</em> The surplus returns (<em>Radd</em>) directly to the daughter, completely shutting out distant uncles.
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -227,10 +248,10 @@ export const AcademyView: React.FC = () => {
           <div className="p-6 sm:p-8 rounded-2xl bg-[#FAF8F5] dark:bg-[#0B1713] border-2 border-amber-600/40 shadow-xl space-y-4 text-stone-900 dark:text-stone-100">
             <div className="flex items-center justify-between border-b border-amber-600/20 pb-3">
               <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300">
-                Foundational Distinction #2
+                {isUr ? "بنیادی فقہی امتیاز #2" : "Foundational Distinction #2"}
               </span>
               <span className="text-xs sm:text-sm font-naskh text-amber-900 dark:text-amber-200 px-3 py-1 rounded-lg bg-amber-100 dark:bg-amber-950 border border-amber-300 dark:border-amber-700 font-bold">
-                بطلان العول (Repudiation of ‘Awl)
+                {isUr ? "بطلانِ عول" : "بطلان العول (Repudiation of ‘Awl)"}
               </span>
             </div>
 
@@ -245,12 +266,25 @@ export const AcademyView: React.FC = () => {
                 <h4 className="font-bold text-amber-800 dark:text-amber-300 text-xs uppercase tracking-wider">
                   {isUr ? "مسئلہ عول کی پیدائش" : "The Origin of the Deficit"}
                 </h4>
-                <p>
-                  When a deceased woman leaves behind a Husband (1/4 = 3/12), Parents (1/6 + 1/6 = 4/12), and Two Daughters (2/3 = 8/12), the mathematical sum equals <strong>15/12</strong>, exceeding the estate.
-                </p>
-                <p>
-                  In other schools, the denominator is artificially inflated from 12 to 15 (called <em>‘Awl</em>), penalizing every single heir equally—including the husband and parents whose Quranic allocations are fixed without qualification.
-                </p>
+                {isUr ? (
+                  <>
+                    <p className="font-nastaliq text-sm sm:text-base leading-[2.3] text-stone-800 dark:text-stone-200">
+                      جب کوئی خاتون وفات پائے اور پسماندگان میں شوہر (1/4 = 3/12)، والدین (1/6 + 1/6 = 4/12)، اور دو بیٹیاں (2/3 = 8/12) ہوں، تو مجموعی حصص <strong>15/12</strong> ہو جاتے ہیں جو کل ترکے سے تجاوز کر جاتے ہیں۔
+                    </p>
+                    <p className="font-nastaliq text-sm sm:text-base leading-[2.3] text-stone-800 dark:text-stone-200">
+                      دیگر مکاتب میں مخرج کو 12 سے بڑھا کر 15 کر دیا جاتا ہے (جسے &apos;عول&apos; کہا جاتا ہے)، جس سے تمام ورثاء—بشمول شوہر اور والدین—کے قرآنی حصص میں زبردستی کٹوتی ہو جاتی ہے۔
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p>
+                      When a deceased woman leaves behind a Husband (1/4 = 3/12), Parents (1/6 + 1/6 = 4/12), and Two Daughters (2/3 = 8/12), the mathematical sum equals <strong>15/12</strong>, exceeding the estate.
+                    </p>
+                    <p>
+                      In other schools, the denominator is artificially inflated from 12 to 15 (called <em>‘Awl</em>), penalizing every single heir equally—including the husband and parents whose Quranic allocations are fixed without qualification.
+                    </p>
+                  </>
+                )}
               </div>
 
               <div className="space-y-3 p-4 rounded-xl bg-white dark:bg-[#0f1f1a] border border-stone-200 dark:border-stone-800">
@@ -261,11 +295,19 @@ export const AcademyView: React.FC = () => {
                   إنَّ الَّذِي أَحْصَىٰ رَمْلَ عَالِجٍ لَيَعْلَمُ أَنَّ السِّهَامَ لَا تَعُولُ
                 </p>
                 <p className="italic text-stone-600 dark:text-stone-400">
-                  &ldquo;Verily He who counted the sands of ‘Alij knows that the shares ordained by Allah do not experience ‘Awl.&rdquo; (Wasā'il al-Shī'ah, Vol 26)
+                  {isUr
+                    ? "”یقیناً وہ ذات جس نے عالج کے ریت کے ذروں کو شمار کیا ہے وہ جانتی ہے کہ فرائض (حصص) میں کبھی عول (خسارہ) نہیں ہوتا۔“ (وسائل الشیعہ، ج 26)"
+                    : "“Verily He who counted the sands of ‘Alij knows that the shares ordained by Allah do not experience ‘Awl.” (Wasā'il al-Shī'ah, Vol 26)"}
                 </p>
-                <p>
-                  Imam Ali (as) established that Allah ordained inviolable shares that can never drop (husband, wife, parents). Therefore, any mathematical deficit is absorbed strictly by the daughters or paternal sisters, leaving the spouse and parents completely whole.
-                </p>
+                {isUr ? (
+                  <p className="font-nastaliq text-sm sm:text-base leading-[2.3] text-stone-800 dark:text-stone-200">
+                    امیر المومنین حضرت علی (ع) نے واضح فرمایا کہ اللہ تعالیٰ نے جن ورثاء کے حصص غیر متبدل رکھے ہیں (جیسے شوہر، بیوی، اور والدین)، ان میں کبھی کمی نہیں ہو سکتی۔ خسارہ صرف بیٹیوں یا بہنوں پر ڈالا جاتا ہے کیونکہ قرآنی قاعدے کے تحت ان کے حصے لچکدار ہیں۔
+                  </p>
+                ) : (
+                  <p>
+                    Imam Ali (as) established that Allah ordained inviolable shares that can never drop (husband, wife, parents). Therefore, any mathematical deficit is absorbed strictly by the daughters or paternal sisters, leaving the spouse and parents completely whole.
+                  </p>
+                )}
               </div>
             </div>
           </div>

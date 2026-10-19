@@ -304,18 +304,28 @@ export function GlossaryView() {
                       )}
                     </div>
 
-                    {/* Urdu Calligraphic Title + English Subtitle */}
+                    {/* Term Title */}
                     <div className="pt-1">
                       <h2 className="text-xl sm:text-2xl font-bold text-[#172e22] flex flex-wrap items-baseline gap-3">
-                        <span className="font-nastaliq leading-[2.2] text-[#245642] text-2xl sm:text-3xl">
-                          {item.termUrdu}
-                        </span>
-                        <span className="text-base sm:text-lg font-medium text-stone-500 font-cinzel">
-                          — {item.termEnglish}
-                        </span>
-                        <span className="text-sm font-naskh text-stone-400 font-normal">
-                          ({item.termArabic})
-                        </span>
+                        {isUr ? (
+                          <>
+                            <span className="font-nastaliq leading-[2.2] text-[#245642] text-2xl sm:text-3xl">
+                              {item.termUrdu}
+                            </span>
+                            <span className="text-sm font-naskh text-stone-400 font-normal">
+                              ({item.termArabic})
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="text-xl sm:text-2xl font-bold text-[#172e22] font-cinzel">
+                              {item.termEnglish}
+                            </span>
+                            <span className="text-xs sm:text-sm font-mono text-[#52735a] font-normal">
+                              ({item.termArabic} • {item.transliteration})
+                            </span>
+                          </>
+                        )}
                       </h2>
                     </div>
 
@@ -364,29 +374,33 @@ export function GlossaryView() {
                       <span>{isUr ? "تفصیلی شرعی وضاحت و مبانی" : "Detailed Jurisprudential Exposition"}</span>
                     </div>
 
-                    <div className="space-y-3 text-sm sm:text-base leading-relaxed text-[#172e22]">
-                      <p className="font-nastaliq text-base sm:text-lg leading-[2.3] text-[#172e22] text-justify">
-                        {item.detailedExplanationUr}
-                      </p>
-                      <p className="text-stone-700 text-xs sm:text-sm font-normal pt-2 border-t border-stone-100">
-                        <strong>English Translation:</strong> {item.detailedExplanationEn}
-                      </p>
+                    <div className="text-sm sm:text-base leading-relaxed text-[#172e22]">
+                      {isUr ? (
+                        <p className="font-nastaliq text-base sm:text-lg leading-[2.3] text-[#172e22] text-justify">
+                          {item.detailedExplanationUr}
+                        </p>
+                      ) : (
+                        <p className="text-stone-800 text-sm sm:text-base leading-relaxed font-normal">
+                          {item.detailedExplanationEn}
+                        </p>
+                      )}
                     </div>
                   </div>
 
                   {/* Real-Life Practical Scenario */}
-                  {item.exampleScenarioUr && (
+                  {((isUr && item.exampleScenarioUr) || (!isUr && item.exampleScenarioEn)) && (
                     <div className="p-5 rounded-2xl bg-[#f5f8f2] border border-[#c3d5bb] space-y-2.5">
                       <div className="flex items-center gap-2 text-xs font-extrabold text-[#245642] uppercase tracking-wider">
                         <Sparkles className="w-4 h-4 text-[#245642]" />
                         <span>{isUr ? "عملی خاندانی مثال و تطبیق" : "Practical Real-Life Family Scenario"}</span>
                       </div>
-                      <p className="text-sm sm:text-base font-nastaliq leading-[2.2] text-[#172e22]">
-                        {item.exampleScenarioUr}
-                      </p>
-                      {item.exampleScenarioEn && (
-                        <p className="text-xs sm:text-sm text-stone-600 font-medium pt-2 border-t border-[#d8e0d2]/60">
-                          <strong>English Context:</strong> {item.exampleScenarioEn}
+                      {isUr ? (
+                        <p className="text-sm sm:text-base font-nastaliq leading-[2.2] text-[#172e22]">
+                          {item.exampleScenarioUr}
+                        </p>
+                      ) : (
+                        <p className="text-xs sm:text-sm text-stone-800 font-medium leading-relaxed">
+                          {item.exampleScenarioEn}
                         </p>
                       )}
                     </div>

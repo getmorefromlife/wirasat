@@ -115,6 +115,12 @@ export function determineActiveTier(heirs: HeirsInput): {
       (n.children && n.children.some((c) => c.isAlive))
   );
 
+  const hasChildrenListTier1 = (heirs.childrenList || []).some(
+    (c) =>
+      (c.isAlive && !c.impediments?.isKiller && !c.impediments?.isNonMuslim) ||
+      (c.children && c.children.some((gc) => gc.isAlive))
+  );
+
   const hasTier1 =
     (heirs.fatherAlive && !heirs.fatherImpediment) ||
     (heirs.motherAlive && !heirs.motherImpediment) ||
@@ -126,7 +132,8 @@ export function determineActiveTier(heirs: HeirsInput): {
       heirs.deceasedDaughtersWithChildren.some(
         (c) => c.sons > 0 || c.daughters > 0
       )) ||
-    hasNamedTier1;
+    hasNamedTier1 ||
+    hasChildrenListTier1;
 
   if (hasTier1) {
     return { activeTier: 1, excludedTiers: [2, 3] };
