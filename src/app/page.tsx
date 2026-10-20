@@ -18,6 +18,7 @@ import { useInheritanceStore } from "@/store/useInheritanceStore";
 import { OnePageDashboard } from "@/components/dashboard/OnePageDashboard";
 
 import { MobileCalculator } from "@/components/mobile/MobileCalculator";
+import { KinshipWhiteboard } from "@/components/visuals/KinshipWhiteboard";
 
 export default function Home() {
   const { activeView, setActiveView, language } = useInheritanceStore();
@@ -79,6 +80,7 @@ export default function Home() {
           {activeView === "academy" && <AcademyView />}
           {activeView === "matrix" && <MarjaMatrixView />}
           {activeView === "visuals" && <VisualChartsStudio />}
+          {activeView === "whiteboard" && <KinshipWhiteboard />}
           {activeView === "galaxy" && <div className="max-w-7xl mx-auto px-4 py-6"><KinshipGalaxy /></div>}
           {activeView === "glossary" && <GlossaryView />}
         </main>

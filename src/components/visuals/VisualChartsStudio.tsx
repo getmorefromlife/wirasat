@@ -8,6 +8,7 @@ import { PersonNode, BranchCalculationResult } from "@/types/fiqh";
 import { EstatePlanningStudio } from "@/components/visuals/EstatePlanningStudio";
 import { KinshipGalaxy } from "@/components/visuals/KinshipGalaxy";
 import { SimpleDistributionInfographic } from "@/components/wizard/SimpleDistributionInfographic";
+import { KinshipWhiteboard } from "@/components/visuals/KinshipWhiteboard";
 import { WasiyyahLink } from "@/components/wasiyyah/WasiyyahLink";
 import {
   GitFork,
@@ -56,7 +57,8 @@ export type VisualParadigmId =
   | "matrix_grid"
   | "story_mode"
   | "kinship_galaxy"
-  | "simple_infographic";
+  | "simple_infographic"
+  | "kinship_whiteboard";
 
 interface ParadigmMeta {
   id: VisualParadigmId;
@@ -225,6 +227,17 @@ export const PARADIGMS: ParadigmMeta[] = [
     descEn: "One-picture visual summary for everyday people without math complexity, plus interactive live pocket cash calculator.",
     descUr: "عام فہم افراد کے لیے ایک تصویری خلاصہ، بغیر کسی الجھاؤ کے، مع متحرک جیبی کیش کیلکولیٹر۔",
   },
+  {
+    id: "kinship_whiteboard",
+    number: 15,
+    titleEn: "Kinship Whiteboard Studio",
+    titleUr: "اسٹوڈیو کنبہ وائٹ بورڈ",
+    icon: Workflow,
+    categoryEn: "Generative Sandbox Canvas",
+    categoryUr: "تَخْطِيطُ الْعَائِلَة — متحرک کینوس",
+    descEn: "Figma/Miro-style interactive kinship canvas. Add family nodes with '+' handles, simulate predeceased children, and test catastrophic accidents.",
+    descUr: "فگما اسٹائل متحرک کنبہ کینوس۔ پلس بٹن سے نئے رشتہ دار جوڑیں، متوفی اولاد کی تنزیل دیکھیں اور الغرقیٰ و الھدمیٰ کا تخمینہ لگائیں۔",
+  },
 ];
 
 const PARADIGM_THEMES: Record<
@@ -341,6 +354,13 @@ const PARADIGM_THEMES: Record<
     badgeBg: "bg-[#f5e1dc] dark:bg-[#3c221e]",
     badgeText: "text-[#703b30] dark:text-rose-300",
     iconColor: "text-[#8c493c] dark:text-rose-400",
+  },
+  kinship_whiteboard: {
+    bg: "bg-[#f4f7f2] dark:bg-[#13281e]",
+    border: "border-[#cad9c5] dark:border-[#224434]",
+    badgeBg: "bg-[#e5eee2] dark:bg-[#1b3a2a]",
+    badgeText: "text-[#2e4d3a] dark:text-emerald-300",
+    iconColor: "text-[#245642] dark:text-emerald-400",
   },
 };
 
@@ -671,6 +691,10 @@ export const VisualChartsStudio: React.FC = () => {
 
           {activeParadigm === "simple_infographic" && (
             <SimpleDistributionInfographic calculationResult={result} />
+          )}
+
+          {activeParadigm === "kinship_whiteboard" && (
+            <KinshipWhiteboard />
           )}
         </div>
       </div>
