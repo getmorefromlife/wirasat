@@ -17,42 +17,75 @@ import { Footer } from "@/components/layout/Footer";
 import { useInheritanceStore } from "@/store/useInheritanceStore";
 import { OnePageDashboard } from "@/components/dashboard/OnePageDashboard";
 
+import { MobileCalculator } from "@/components/mobile/MobileCalculator";
+
 export default function Home() {
-  const { activeView, language } = useInheritanceStore();
+  const { activeView, setActiveView, language } = useInheritanceStore();
+  const [forceDesktopOnMobile, setForceDesktopOnMobile] = React.useState(false);
+
+  // Check if current view is a calculator/landing view
+  const isCalculatorView = activeView === "home" || activeView === "wizard" || activeView === "dashboard";
 
   return (
-    <div className="min-h-screen flex flex-col justify-between selection:bg-[var(--theme-gold)]/30 selection:text-[var(--theme-gold-light)] relative">
-      {/* Top Sacred Navigation */}
-      <Navbar />
+    <>
+      {/* 1. Mobile-First SadaPay-Inspired Experience (< 768px) */}
+      {!forceDesktopOnMobile && isCalculatorView && (
+        <div className="block md:hidden">
+          <MobileCalculator onSwitchToDesktopMode={() => setForceDesktopOnMobile(true)} />
+        </div>
+      )}
 
-      {/* Global Scholarly Provenance & Fatwa Drawer */}
-      <ProvenanceDrawer />
-
-      {/* Global Wasiyyah (Testamentary Wills) Guide Drawer */}
-      <WasiyyahGuideDrawer />
-
-      {/* Landing Page Hero View */}
-      {activeView === "home" && <HeroSection />}
-
-      {/* Dynamic View Mount */}
-      <main className="flex-1 w-full transition-opacity duration-300 relative z-10">
-        {activeView === "wizard" && <WizardContainer />}
-        {activeView === "dashboard" && (
-          <div className="max-w-5xl mx-auto px-4 py-8">
-            <OnePageDashboard />
+      {/* 2. Desktop & Full Scholarly Views (>= 768px or forced/secondary views) */}
+      <div
+        className={`min-h-screen flex flex-col justify-between selection:bg-[var(--theme-gold)]/30 selection:text-[var(--theme-gold-light)] relative ${
+          !forceDesktopOnMobile && isCalculatorView ? "hidden md:flex" : "flex"
+        }`}
+      >
+        {/* Mobile View Return Banner (when force desktop is active) */}
+        {forceDesktopOnMobile && (
+          <div className="md:hidden bg-[#245642] text-white px-4 py-2 text-xs flex items-center justify-between font-bold z-50">
+            <span>{language === "ur" ? "ڈیسک ٹاپ موڈ فعال ہے" : "Desktop View Active"}</span>
+            <button
+              onClick={() => setForceDesktopOnMobile(false)}
+              className="px-2.5 py-1 rounded-md bg-white/20 hover:bg-white/30 text-white cursor-pointer"
+            >
+              {language === "ur" ? "سادہ موبائل موڈ پر واپس جائیں" : "Back to Mobile Mode"}
+            </button>
           </div>
         )}
-        {activeView === "wasiyyah" && <WasiyyahView />}
-        {activeView === "tree" && <FamilyTree />}
-        {activeView === "academy" && <AcademyView />}
-        {activeView === "matrix" && <MarjaMatrixView />}
-        {activeView === "visuals" && <VisualChartsStudio />}
-        {activeView === "galaxy" && <div className="max-w-7xl mx-auto px-4 py-6"><KinshipGalaxy /></div>}
-        {activeView === "glossary" && <GlossaryView />}
-      </main>
 
-      {/* Sacred Footer with Scholarly Disclaimer */}
-      <Footer />
-    </div>
+        {/* Top Sacred Navigation */}
+        <Navbar />
+
+        {/* Global Scholarly Provenance & Fatwa Drawer */}
+        <ProvenanceDrawer />
+
+        {/* Global Wasiyyah (Testamentary Wills) Guide Drawer */}
+        <WasiyyahGuideDrawer />
+
+        {/* Landing Page Hero View */}
+        {activeView === "home" && <HeroSection />}
+
+        {/* Dynamic View Mount */}
+        <main className="flex-1 w-full transition-opacity duration-300 relative z-10">
+          {activeView === "wizard" && <WizardContainer />}
+          {activeView === "dashboard" && (
+            <div className="max-w-5xl mx-auto px-4 py-8">
+              <OnePageDashboard />
+            </div>
+          )}
+          {activeView === "wasiyyah" && <WasiyyahView />}
+          {activeView === "tree" && <FamilyTree />}
+          {activeView === "academy" && <AcademyView />}
+          {activeView === "matrix" && <MarjaMatrixView />}
+          {activeView === "visuals" && <VisualChartsStudio />}
+          {activeView === "galaxy" && <div className="max-w-7xl mx-auto px-4 py-6"><KinshipGalaxy /></div>}
+          {activeView === "glossary" && <GlossaryView />}
+        </main>
+
+        {/* Sacred Footer with Scholarly Disclaimer */}
+        <Footer />
+      </div>
+    </>
   );
 }
