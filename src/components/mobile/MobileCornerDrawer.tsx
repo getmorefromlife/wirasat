@@ -45,80 +45,80 @@ export const MobileCornerDrawer: React.FC<MobileCornerDrawerProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex justify-end bg-black/70 backdrop-blur-xs transition-opacity animate-in fade-in duration-200">
       {/* Backdrop tap to close */}
       <div className="flex-1" onClick={onClose} aria-hidden="true" />
 
       {/* Drawer Content */}
       <div
-        className={`w-[85vw] max-w-sm h-full bg-[#fbfdfa] text-stone-800 flex flex-col justify-between shadow-2xl border-s border-[#c9d8be] overflow-y-auto animate-in slide-in-from-right duration-300 ${
+        className={`w-[88vw] max-w-md h-full bg-[#fbfdfa] text-stone-900 flex flex-col justify-between shadow-2xl border-s-2 border-[#b4caa9] overflow-y-auto animate-in slide-in-from-right duration-300 ${
           isUr ? "font-nastaliq" : "font-sans"
         }`}
         dir={isUr ? "rtl" : "ltr"}
       >
         {/* Header */}
-        <div className="p-5 border-b border-stone-200 bg-white flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#245642] text-white flex items-center justify-center font-bold text-sm shadow-xs font-sans">
+        <div className="p-5 border-b-2 border-stone-200 bg-white flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-[#1b4332] text-white flex items-center justify-center font-black text-lg shadow-xs font-sans">
               و
             </div>
             <div>
-              <h3 className="font-bold text-base text-[#1b4332] leading-tight">
+              <h3 className="font-black text-lg sm:text-xl text-[#122e23] leading-tight">
                 {isUr ? "علمی و فقہی مینو" : "Scholarly Hub"}
               </h3>
-              <p className="text-[11px] text-stone-500 font-sans">
+              <p className="text-xs font-bold text-stone-600 font-sans mt-0.5">
                 {isUr ? "وراثت اسلامی رہنمائی" : "Islamic Inheritance Tools"}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="w-9 h-9 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center transition-colors cursor-pointer"
+            className="w-10 h-10 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 flex items-center justify-center transition-colors cursor-pointer border border-stone-300"
             aria-label="Close menu"
           >
-            <X size={18} />
+            <X size={20} className="stroke-[2.5]" />
           </button>
         </div>
 
         {/* Links list */}
-        <div className="flex-1 p-4 space-y-2">
+        <div className="flex-1 p-4 sm:p-5 space-y-3 font-sans">
           {/* Language Toggle Pill */}
           <button
             onClick={() => setLanguage(language === "en" ? "ur" : "en")}
-            className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#edf3e7] border border-[#cbd8c5] text-[#245642] font-bold text-sm hover:bg-[#e4ede0] transition-colors cursor-pointer"
+            className="w-full flex items-center justify-between p-4 rounded-2xl bg-[#edf3e7] border-2 border-[#b4caa9] text-[#1b4332] font-black text-sm sm:text-base hover:bg-[#e1ebd9] transition-colors cursor-pointer"
           >
-            <div className="flex items-center gap-2.5 font-sans">
-              <Globe2 size={18} className="text-[#245642]" />
+            <div className="flex items-center gap-3 font-sans">
+              <Globe2 size={22} className="text-[#1b4332] stroke-[2.5]" />
               <span>{isUr ? "Switch to English" : "اردو زبان منتخب کریں"}</span>
             </div>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-white text-[#245642] font-semibold font-sans">
+            <span className="text-xs sm:text-sm px-3 py-1 rounded-full bg-white text-[#1b4332] font-black font-sans shadow-xs border border-[#b4caa9]">
               {language === "ur" ? "اردو" : "EN"}
             </span>
           </button>
 
-          <div className="pt-2 pb-1 text-[11px] font-bold uppercase tracking-wider text-stone-500 px-2 font-sans">
+          <div className="pt-2 pb-1 text-xs sm:text-sm font-black uppercase tracking-wider text-stone-700 px-2 font-sans">
             {isUr ? "علمی و تربیتی سیکشن" : "Learning & Exploration"}
           </div>
 
           {/* Academy */}
           <button
             onClick={() => navigateTo("academy")}
-            className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-white border border-stone-200 hover:border-[#245642]/40 hover:bg-[#edf3e7]/50 transition-all text-left rtl:text-right shadow-2xs cursor-pointer group"
+            className="w-full flex items-center justify-between p-4 rounded-2xl bg-white border-2 border-stone-200 hover:border-[#1b4332] hover:bg-[#edf3e7]/50 transition-all text-left rtl:text-right shadow-xs cursor-pointer group"
           >
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-900 flex items-center justify-center shrink-0">
-                <GraduationCap size={18} />
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center shrink-0 border border-amber-200">
+                <GraduationCap size={22} className="stroke-[2.5]" />
               </div>
               <div>
-                <div className="font-bold text-sm text-stone-900 group-hover:text-[#245642]">
+                <div className="font-black text-base sm:text-lg text-stone-950 group-hover:text-[#1b4332]">
                   {isUr ? "وراثت اکیڈمی" : "Inheritance Academy"}
                 </div>
-                <div className="text-[11px] text-stone-500 font-sans">
+                <div className="text-xs sm:text-sm text-stone-600 font-medium font-sans">
                   {isUr ? "مکمل فقہی کورس اور اسباق" : "Complete fiqh curriculum & course"}
                 </div>
               </div>
             </div>
-            <ChevronRight size={16} className="text-stone-400 rtl:rotate-180" />
+            <ChevronRight size={20} className="text-stone-400 rtl:rotate-180 stroke-[2.5]" />
           </button>
 
           {/* Wasiyyah Guide */}
@@ -127,85 +127,85 @@ export const MobileCornerDrawer: React.FC<MobileCornerDrawerProps> = ({
               onClose();
               openWasiyyahGuide();
             }}
-            className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-white border border-stone-200 hover:border-[#245642]/40 hover:bg-[#edf3e7]/50 transition-all text-left rtl:text-right shadow-2xs cursor-pointer group"
+            className="w-full flex items-center justify-between p-4 rounded-2xl bg-white border-2 border-stone-200 hover:border-[#1b4332] hover:bg-[#edf3e7]/50 transition-all text-left rtl:text-right shadow-xs cursor-pointer group"
           >
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-900 flex items-center justify-center shrink-0">
-                <Scroll size={18} />
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-2xl bg-emerald-100 text-emerald-900 flex items-center justify-center shrink-0 border border-emerald-200">
+                <Scroll size={22} className="stroke-[2.5]" />
               </div>
               <div>
-                <div className="font-bold text-sm text-stone-900 group-hover:text-[#245642]">
+                <div className="font-black text-base sm:text-lg text-stone-950 group-hover:text-[#1b4332]">
                   {isUr ? "وصیت (Will) لکھنے کی گائیڈ" : "Wasiyyah Writing Guide"}
                 </div>
-                <div className="text-[11px] text-stone-500 font-sans">
+                <div className="text-xs sm:text-sm text-stone-600 font-medium font-sans">
                   {isUr ? "شرعی و قانونی رہنما اصول" : "Sharia rules on 1/3 testament"}
                 </div>
               </div>
             </div>
-            <ChevronRight size={16} className="text-stone-400 rtl:rotate-180" />
+            <ChevronRight size={20} className="text-stone-400 rtl:rotate-180 stroke-[2.5]" />
           </button>
 
           {/* Family Tree */}
           <button
             onClick={() => navigateTo("tree")}
-            className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-white border border-stone-200 hover:border-[#245642]/40 hover:bg-[#edf3e7]/50 transition-all text-left rtl:text-right shadow-2xs cursor-pointer group"
+            className="w-full flex items-center justify-between p-4 rounded-2xl bg-white border-2 border-stone-200 hover:border-[#1b4332] hover:bg-[#edf3e7]/50 transition-all text-left rtl:text-right shadow-xs cursor-pointer group"
           >
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-sky-100 text-sky-900 flex items-center justify-center shrink-0">
-                <GitFork size={18} />
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-2xl bg-sky-100 text-sky-900 flex items-center justify-center shrink-0 border border-sky-200">
+                <GitFork size={22} className="stroke-[2.5]" />
               </div>
               <div>
-                <div className="font-bold text-sm text-stone-900 group-hover:text-[#245642]">
+                <div className="font-black text-base sm:text-lg text-stone-950 group-hover:text-[#1b4332]">
                   {isUr ? "شجرۂ نسب (Family Tree)" : "Family Tree Visualizer"}
                 </div>
-                <div className="text-[11px] text-stone-500 font-sans">
+                <div className="text-xs sm:text-sm text-stone-600 font-medium font-sans">
                   {isUr ? "خاندانی طبقات کی بصری تصویر" : "Kinship tiers and tree"}
                 </div>
               </div>
             </div>
-            <ChevronRight size={16} className="text-stone-400 rtl:rotate-180" />
+            <ChevronRight size={20} className="text-stone-400 rtl:rotate-180 stroke-[2.5]" />
           </button>
 
           {/* Glossary */}
           <button
             onClick={() => navigateTo("glossary")}
-            className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-white border border-stone-200 hover:border-[#245642]/40 hover:bg-[#edf3e7]/50 transition-all text-left rtl:text-right shadow-2xs cursor-pointer group"
+            className="w-full flex items-center justify-between p-4 rounded-2xl bg-white border-2 border-stone-200 hover:border-[#1b4332] hover:bg-[#edf3e7]/50 transition-all text-left rtl:text-right shadow-xs cursor-pointer group"
           >
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-purple-100 text-purple-900 flex items-center justify-center shrink-0">
-                <BookOpen size={18} />
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-2xl bg-purple-100 text-purple-900 flex items-center justify-center shrink-0 border border-purple-200">
+                <BookOpen size={22} className="stroke-[2.5]" />
               </div>
               <div>
-                <div className="font-bold text-sm text-stone-900 group-hover:text-[#245642]">
+                <div className="font-black text-base sm:text-lg text-stone-950 group-hover:text-[#1b4332]">
                   {isUr ? "فقہی فرہنگ و لغت" : "Jurisprudential Lexicon"}
                 </div>
-                <div className="text-[11px] text-stone-500 font-sans">
+                <div className="text-xs sm:text-sm text-stone-600 font-medium font-sans">
                   {isUr ? "حجب، تعصیب، عول کی اصطلاحات" : "Glossary of classical terms"}
                 </div>
               </div>
             </div>
-            <ChevronRight size={16} className="text-stone-400 rtl:rotate-180" />
+            <ChevronRight size={20} className="text-stone-400 rtl:rotate-180 stroke-[2.5]" />
           </button>
 
           {/* Comparative Matrix */}
           <button
             onClick={() => navigateTo("matrix")}
-            className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-white border border-stone-200 hover:border-[#245642]/40 hover:bg-[#edf3e7]/50 transition-all text-left rtl:text-right shadow-2xs cursor-pointer group"
+            className="w-full flex items-center justify-between p-4 rounded-2xl bg-white border-2 border-stone-200 hover:border-[#1b4332] hover:bg-[#edf3e7]/50 transition-all text-left rtl:text-right shadow-xs cursor-pointer group"
           >
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-rose-100 text-rose-900 flex items-center justify-center shrink-0">
-                <Scale size={18} />
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-2xl bg-rose-100 text-rose-900 flex items-center justify-center shrink-0 border border-rose-200">
+                <Scale size={22} className="stroke-[2.5]" />
               </div>
               <div>
-                <div className="font-bold text-sm text-stone-900 group-hover:text-[#245642]">
+                <div className="font-black text-base sm:text-lg text-stone-950 group-hover:text-[#1b4332]">
                   {isUr ? "مراجع کا تقابلی میٹرکس" : "Marja‘ Comparison Matrix"}
                 </div>
-                <div className="text-[11px] text-stone-500 font-sans">
+                <div className="text-xs sm:text-sm text-stone-600 font-medium font-sans">
                   {isUr ? "سیستانی، خامنہ ای، خوئی فتاویٰ" : "Side-by-side scholarly differences"}
                 </div>
               </div>
             </div>
-            <ChevronRight size={16} className="text-stone-400 rtl:rotate-180" />
+            <ChevronRight size={20} className="text-stone-400 rtl:rotate-180 stroke-[2.5]" />
           </button>
 
           {/* Desktop Mode Switch */}
@@ -215,41 +215,41 @@ export const MobileCornerDrawer: React.FC<MobileCornerDrawerProps> = ({
                 onClose();
                 onSwitchToDesktopMode();
               }}
-              className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-stone-100 border border-stone-300 hover:bg-stone-200 transition-all text-left rtl:text-right shadow-2xs cursor-pointer group mt-3"
+              className="w-full flex items-center justify-between p-4 rounded-2xl bg-stone-100 border-2 border-stone-300 hover:bg-stone-200 transition-all text-left rtl:text-right shadow-xs cursor-pointer group mt-3"
             >
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-stone-800 text-white flex items-center justify-center shrink-0">
-                  <Monitor size={18} />
+              <div className="flex items-center gap-3.5">
+                <div className="w-11 h-11 rounded-2xl bg-stone-900 text-white flex items-center justify-center shrink-0">
+                  <Monitor size={22} className="stroke-[2.5]" />
                 </div>
                 <div>
-                  <div className="font-bold text-sm text-stone-900">
+                  <div className="font-black text-base sm:text-lg text-stone-950">
                     {isUr ? "مکمل ڈیسک ٹاپ موڈ" : "Full Desktop Mode"}
                   </div>
-                  <div className="text-[11px] text-stone-500 font-sans">
+                  <div className="text-xs sm:text-sm text-stone-600 font-medium font-sans">
                     {isUr ? "کلاسک 5 مرحلہ وار ویو دیکھیں" : "Switch to multi-step wizard"}
                   </div>
                 </div>
               </div>
-              <ChevronRight size={16} className="text-stone-400 rtl:rotate-180" />
+              <ChevronRight size={20} className="text-stone-400 rtl:rotate-180 stroke-[2.5]" />
             </button>
           )}
         </div>
 
         {/* Footer Actions */}
-        <div className="p-4 border-t border-stone-200 bg-white space-y-3 font-sans">
+        <div className="p-5 border-t-2 border-stone-200 bg-white space-y-3 font-sans">
           <button
             onClick={() => {
               resetAll();
               onClose();
             }}
-            className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs transition-colors cursor-pointer"
+            className="w-full flex items-center justify-center gap-2.5 py-4 px-4 rounded-2xl border-2 border-rose-300 bg-rose-50 hover:bg-rose-100 text-rose-800 font-black text-sm transition-colors cursor-pointer"
           >
-            <RotateCcw size={14} />
+            <RotateCcw size={16} className="stroke-[2.5]" />
             <span>{isUr ? "تمام ڈیٹا صاف کریں (ریسیٹ)" : "Reset Calculator Data"}</span>
           </button>
 
-          <div className="flex items-center justify-center gap-1.5 text-[11px] text-stone-500 text-center">
-            <ShieldCheck size={14} className="text-[#245642]" />
+          <div className="flex items-center justify-center gap-2 text-xs sm:text-sm font-bold text-stone-600 text-center">
+            <ShieldCheck size={16} className="text-[#1b4332] stroke-[2.5]" />
             <span>
               {isUr
                 ? "مولانا سیّد آئمن رضوی کی علمی کاوش"

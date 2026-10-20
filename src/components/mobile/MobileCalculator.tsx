@@ -14,12 +14,8 @@ import {
   ChevronDown,
   ChevronUp,
   User,
-  Users,
-  Shield,
   Heart,
-  HelpCircle,
   RotateCcw,
-  SlidersHorizontal,
 } from "lucide-react";
 
 interface MobileCalculatorProps {
@@ -77,7 +73,6 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
 
   const handleTotalEstateChange = (value: number) => {
     const val = isNaN(value) || value < 0 ? 0 : value;
-    // Set into cash and reset other asset items for simple single-amount calculation
     updateAssets({
       cash: val,
       bankAccounts: 0,
@@ -101,113 +96,124 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
 
   return (
     <div
-      className={`min-h-screen bg-[#f7f9f5] text-stone-900 pb-28 ${
+      className={`min-h-screen bg-[#f5f8f2] text-stone-950 pb-32 ${
         isUr ? "font-nastaliq" : "font-sans"
       }`}
       dir={isUr ? "rtl" : "ltr"}
     >
-      {/* 1. App Bar */}
-      <header className="sticky top-0 z-30 bg-[#fbfdfa]/90 backdrop-blur-md border-b border-[#d8e4d2] px-4 py-3 flex items-center justify-between shadow-2xs">
-        <div className="flex items-center gap-2">
+      {/* 1. High-Legibility App Bar */}
+      <header className="sticky top-0 z-30 bg-[#ffffff]/95 backdrop-blur-md border-b-2 border-[#c6d7be] px-4 py-3 flex items-center justify-between shadow-xs">
+        <div className="flex items-center gap-2 scale-105 origin-left rtl:origin-right">
           <WirasatLogo variant="navbar" color="emerald" language={language} />
         </div>
 
-        <div className="flex items-center gap-2 font-sans">
+        <div className="flex items-center gap-2.5 font-sans">
           {/* Quick Reset */}
           <button
             onClick={resetAll}
-            className="p-2 rounded-xl text-stone-500 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
-            title={isUr ? "ریسیٹ کریں" : "Reset"}
+            className="p-2.5 rounded-xl text-stone-700 hover:text-rose-700 hover:bg-rose-100 transition-colors cursor-pointer border border-stone-200"
+            title={isUr ? "تمام ڈیٹا صاف کریں" : "Reset Data"}
             aria-label="Reset"
           >
-            <RotateCcw size={16} />
+            <RotateCcw size={18} />
           </button>
 
           {/* Corner Menu Button (Hub) */}
           <button
             onClick={() => setIsMenuOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#edf3e7] hover:bg-[#e1ebd9] text-[#245642] font-bold text-xs border border-[#c4d4be] shadow-2xs transition-transform active:scale-95 cursor-pointer"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#edf3e7] hover:bg-[#dcead5] text-[#1b4332] font-black text-sm border-2 border-[#a7c29c] shadow-xs transition-transform active:scale-95 cursor-pointer"
             aria-label="Open Hub Menu"
           >
-            <Menu size={16} />
-            <span className={isUr ? "font-nastaliq leading-[2.2]" : ""}>
-              {isUr ? "مینو" : "Hub"}
+            <Menu size={18} className="stroke-[2.5]" />
+            <span className={isUr ? "font-nastaliq text-base leading-none pt-0.5" : "font-bold text-sm"}>
+              {isUr ? "مینو" : "Menu"}
             </span>
           </button>
         </div>
       </header>
 
       {/* 2. Main Content Container */}
-      <main className="max-w-md mx-auto px-4 py-4 space-y-4">
-        {/* Marja Selector Pills (SadaPay style) */}
-        <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#edf3e7] border border-[#c8d8c2] shadow-2xs">
-          {marjaOptions.map((m) => {
-            const isSelected = deceased.marja === m.id;
-            return (
-              <button
-                key={m.id}
-                onClick={() => setMarja(m.id)}
-                className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  isSelected
-                    ? "bg-[#245642] text-white shadow-xs scale-101"
-                    : "text-[#245642] hover:bg-white/60"
-                }`}
-              >
-                {isUr ? m.labelUr : m.labelEn}
-              </button>
-            );
-          })}
+      <main className="max-w-lg mx-auto px-4 py-5 space-y-5">
+        {/* Large Marja Selector Pills */}
+        <div>
+          <label className="block text-xs sm:text-sm font-extrabold uppercase tracking-wider text-stone-700 mb-1.5 px-1 font-sans">
+            {isUr ? "مرجعِ تقلید کا انتخاب:" : "Select Marja‘ Ruling:"}
+          </label>
+          <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-[#e4ede0] border-2 border-[#b8ccb0] shadow-xs">
+            {marjaOptions.map((m) => {
+              const isSelected = deceased.marja === m.id;
+              return (
+                <button
+                  key={m.id}
+                  onClick={() => setMarja(m.id)}
+                  className={`flex-1 py-3 px-2 rounded-xl text-sm sm:text-base font-extrabold transition-all cursor-pointer ${
+                    isSelected
+                      ? "bg-[#1b4332] text-white shadow-md scale-102 border-2 border-[#0e271c]"
+                      : "text-[#1b4332] hover:bg-white/80 font-bold"
+                  }`}
+                >
+                  <span className={isUr ? "font-nastaliq leading-[2]" : ""}>
+                    {isUr ? m.labelUr : m.labelEn}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Deceased Gender Switcher */}
-        <div className="p-3 rounded-2xl bg-white border border-stone-200 shadow-2xs flex items-center justify-between">
-          <span className="text-xs font-bold text-stone-600">
+        {/* Deceased Gender Switcher (Large & High Contrast) */}
+        <div className="p-4 rounded-3xl bg-white border-2 border-stone-200 shadow-xs flex items-center justify-between">
+          <span className="text-sm sm:text-base font-black text-stone-900">
             {isUr ? "مرحوم / مرحومہ کی جنس:" : "Deceased Gender:"}
           </span>
-          <div className="flex gap-1.5">
+          <div className="flex gap-2">
             <button
               onClick={() => updateDeceased({ gender: "male" })}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              className={`px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-black transition-all cursor-pointer ${
                 deceased.gender === "male"
-                  ? "bg-[#245642] text-white shadow-2xs"
-                  : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                  ? "bg-[#1b4332] text-white shadow-sm border-2 border-[#0e271c]"
+                  : "bg-stone-100 text-stone-700 hover:bg-stone-200 border-2 border-transparent"
               }`}
             >
-              {isUr ? "مرحوم (مرد)" : "Male (Husband)"}
+              <span className={isUr ? "font-nastaliq text-sm leading-[2]" : ""}>
+                {isUr ? "مرحوم (مرد)" : "Male"}
+              </span>
             </button>
             <button
               onClick={() => updateDeceased({ gender: "female" })}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              className={`px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-black transition-all cursor-pointer ${
                 deceased.gender === "female"
-                  ? "bg-[#245642] text-white shadow-2xs"
-                  : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                  ? "bg-[#1b4332] text-white shadow-sm border-2 border-[#0e271c]"
+                  : "bg-stone-100 text-stone-700 hover:bg-stone-200 border-2 border-transparent"
               }`}
             >
-              {isUr ? "مرحومہ (عورت)" : "Female (Wife)"}
+              <span className={isUr ? "font-nastaliq text-sm leading-[2]" : ""}>
+                {isUr ? "مرحومہ (عورت)" : "Female"}
+              </span>
             </button>
           </div>
         </div>
 
-        {/* 3. Hero Estate Balance Card (SadaPay aesthetic) */}
-        <div className="p-5 rounded-3xl bg-linear-to-b from-[#1b4332] to-[#122e23] text-white shadow-lg space-y-4 relative overflow-hidden">
-          {/* Subtle Islamic Geometric Accent */}
-          <div className="absolute -top-12 -right-12 w-36 h-36 rounded-full bg-emerald-500/10 blur-xl pointer-events-none" />
+        {/* 3. Hero Estate Balance Card (Extra Large & Punchy) */}
+        <div className="p-6 rounded-3xl bg-linear-to-b from-[#153a2b] to-[#0c241b] text-white shadow-xl space-y-5 relative overflow-hidden border-2 border-[#245642]">
+          {/* Subtle Background Glow */}
+          <div className="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-emerald-400/10 blur-2xl pointer-events-none" />
 
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-200/80 font-sans">
-              {isUr ? "کل ترکہ کی مالیت" : "Total Estate Value"}
+            <span className="text-sm sm:text-base font-black uppercase tracking-wider text-emerald-200 font-sans">
+              {isUr ? "کل ترکہ کی رقم (مالیت)" : "Total Estate Value"}
             </span>
-            <div className="flex items-center gap-1">
-              <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-800/80 border border-emerald-700/60 text-emerald-200 font-bold font-sans">
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs sm:text-sm px-3 py-1 rounded-full bg-emerald-900 border border-emerald-600 text-emerald-100 font-black font-sans shadow-xs">
                 {currency}
               </span>
             </div>
           </div>
 
-          {/* Big Amount Input */}
-          <div className="space-y-1">
-            <div className="flex items-baseline gap-2">
-              <span className="text-xl sm:text-2xl font-bold text-emerald-400 font-sans">
+          {/* Massive Amount Input */}
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2.5 bg-black/20 p-3 rounded-2xl border border-white/10">
+              <span className="text-2xl sm:text-3xl font-black text-emerald-300 font-sans">
                 {currency === "PKR" ? "₨" : "$"}
               </span>
               <input
@@ -215,15 +221,17 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                 value={totalGrossAssets || ""}
                 onChange={(e) => handleTotalEstateChange(parseFloat(e.target.value) || 0)}
                 placeholder="0"
-                className="w-full bg-transparent text-3xl sm:text-4xl font-extrabold text-white placeholder-emerald-700/60 outline-hidden font-sans"
+                className="w-full bg-transparent text-3xl sm:text-5xl font-black text-white placeholder-emerald-700/60 outline-hidden font-sans tracking-tight"
               />
             </div>
-            <div className="text-[11px] text-emerald-300/70 font-sans">
-              {isUr ? "حساب کے لیے رقم درج کریں یا نیچے دیے گئے بٹنز دبائیں" : "Tap number to edit or use quick chips below"}
+            <div className="text-xs sm:text-sm text-emerald-100 font-medium font-sans px-1">
+              {isUr
+                ? "رقم پر ٹیپ کر کے تبدیل کریں یا نیچے بٹنز دبائیں"
+                : "Tap number to edit or tap quick addition chips below"}
             </div>
           </div>
 
-          {/* Quick Chip Buttons */}
+          {/* Large Quick Addition Chips */}
           <div className="flex flex-wrap gap-2 pt-1 font-sans">
             {[
               { label: "+100k", val: 100000 },
@@ -235,7 +243,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
               <button
                 key={chip.label}
                 onClick={() => addQuickAmount(chip.val)}
-                className="px-2.5 py-1 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold border border-white/10 transition-transform active:scale-95 cursor-pointer"
+                className="px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs sm:text-sm font-black border-2 border-white/20 transition-transform active:scale-95 cursor-pointer shadow-xs"
               >
                 {chip.label}
               </button>
@@ -243,20 +251,22 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
           </div>
 
           {/* Quick Debts/Wasiyyah Toggle */}
-          <div className="pt-2 border-t border-emerald-800/60 font-sans">
+          <div className="pt-3 border-t-2 border-emerald-800/80 font-sans">
             <button
               onClick={() => setShowDebtsAccordion(!showDebtsAccordion)}
-              className="w-full flex items-center justify-between text-xs text-emerald-200/90 font-bold hover:text-white cursor-pointer"
+              className="w-full flex items-center justify-between text-xs sm:text-sm text-emerald-200 font-black hover:text-white cursor-pointer py-1"
             >
-              <span>{isUr ? "قرضہ، کفن و دفن یا وصیت وضع کریں" : "Deduct Debts, Funeral & Will"}</span>
-              {showDebtsAccordion ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+              <span>
+                {isUr ? "قرضہ، کفن و دفن یا وصیت وضع کریں" : "Deduct Debts, Funeral & Will"}
+              </span>
+              {showDebtsAccordion ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
             </button>
 
             {showDebtsAccordion && (
-              <div className="pt-3 space-y-2 animate-in fade-in duration-200">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-[11px] text-emerald-200">
-                    {isUr ? "قرضہ جات (واجب الادا):" : "Debts:"}
+              <div className="pt-3 space-y-3 animate-in fade-in duration-200">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-xs sm:text-sm text-emerald-100 font-bold">
+                    {isUr ? "قرضہ جات (واجب الادا):" : "Outstanding Debts:"}
                   </span>
                   <input
                     type="number"
@@ -265,12 +275,12 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                       updateDebts({ unsecuredDebts: parseFloat(e.target.value) || 0 })
                     }
                     placeholder="0"
-                    className="w-32 bg-emerald-950/60 border border-emerald-700/60 rounded-lg px-2 py-1 text-right text-xs text-white outline-hidden"
+                    className="w-36 bg-emerald-950/80 border-2 border-emerald-600 rounded-xl px-3 py-1.5 text-right text-sm font-bold text-white outline-hidden"
                   />
                 </div>
 
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-[11px] text-emerald-200">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-xs sm:text-sm text-emerald-100 font-bold">
                     {isUr ? "وصیت (زیادہ سے زیادہ 1/3):" : "Wasiyyah (Max 1/3):"}
                   </span>
                   <input
@@ -280,7 +290,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                       updateDebts({ wasiyyahAmount: parseFloat(e.target.value) || 0 })
                     }
                     placeholder="0"
-                    className="w-32 bg-emerald-950/60 border border-emerald-700/60 rounded-lg px-2 py-1 text-right text-xs text-white outline-hidden"
+                    className="w-36 bg-emerald-950/80 border-2 border-emerald-600 rounded-xl px-3 py-1.5 text-right text-sm font-bold text-white outline-hidden"
                   />
                 </div>
               </div>
@@ -288,101 +298,103 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
           </div>
         </div>
 
-        {/* 4. Tactile Heir Counters (SadaPay Style Cards) */}
-        <div className="space-y-3 font-sans">
+        {/* 4. Large Tactile Heir Counters (Big 56px Buttons for Low Vision) */}
+        <div className="space-y-4 font-sans">
           <div className="flex items-center justify-between px-1">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-stone-500">
+            <h2 className="text-sm sm:text-base font-black uppercase tracking-wider text-stone-800">
               {isUr ? "زندہ وارثین کا اندراج" : "Select Surviving Heirs"}
             </h2>
-            <span className="text-[11px] font-semibold text-[#245642]">
-              {isUr ? "بڑے بٹنز سے تعداد منتخب کریں" : "Tap + / − to set counts"}
+            <span className="text-xs sm:text-sm font-bold text-[#1b4332]">
+              {isUr ? "بڑے بٹنز سے تعداد مقرر کریں" : "Tap large + / − buttons"}
             </span>
           </div>
 
           {/* SPOUSE CARD */}
           {deceased.gender === "male" ? (
             /* Wives Counter */
-            <div className="p-4 rounded-3xl bg-white border border-stone-200 shadow-2xs flex items-center justify-between">
+            <div className="p-5 rounded-3xl bg-white border-2 border-stone-200 shadow-sm flex items-center justify-between">
               <div>
-                <div className="flex items-center gap-1.5 font-bold text-sm text-stone-900">
-                  <Heart size={15} className="text-rose-500 fill-rose-500" />
-                  <span className={isUr ? "font-nastaliq" : ""}>
-                    {isUr ? "بیوہ / بیویاں (Wives)" : "Surviving Wives"}
+                <div className="flex items-center gap-2 font-black text-base sm:text-lg text-stone-950">
+                  <Heart size={20} className="text-rose-500 fill-rose-500 shrink-0" />
+                  <span className={isUr ? "font-nastaliq text-xl" : ""}>
+                    {isUr ? "بیوہ / بیویاں" : "Surviving Wives"}
                   </span>
                 </div>
-                <p className="text-[11px] text-stone-500 mt-0.5">
-                  {isUr ? "زیادہ سے زیادہ 4 بیویاں" : "Max 4 concurrent wives"}
+                <p className="text-xs sm:text-sm font-semibold text-stone-600 mt-1">
+                  {isUr ? "زیادہ سے زیادہ ۴ بیویاں" : "Maximum 4 wives"}
                 </p>
               </div>
 
-              {/* Large Tactile +/- Pill */}
+              {/* Huge 56px Tactile Buttons */}
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setWifeCount(Math.max(0, (heirs.spouseCount || 0) - 1))}
                   disabled={(heirs.spouseCount || 0) === 0}
-                  className="w-11 h-11 rounded-full bg-stone-100 hover:bg-stone-200 disabled:opacity-30 disabled:pointer-events-none text-stone-800 flex items-center justify-center font-bold text-lg transition-transform active:scale-90 cursor-pointer shadow-2xs"
+                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-stone-100 hover:bg-stone-200 disabled:opacity-25 disabled:pointer-events-none text-stone-900 border-2 border-stone-300 flex items-center justify-center font-black text-2xl transition-transform active:scale-90 cursor-pointer shadow-xs"
                   aria-label="Decrease wives"
                 >
-                  <Minus size={18} />
+                  <Minus size={24} className="stroke-[3]" />
                 </button>
-                <span className="w-6 text-center font-black text-xl text-stone-900">
+                <span className="w-8 text-center font-black text-2xl sm:text-3xl text-stone-950">
                   {heirs.spouseCount || 0}
                 </span>
                 <button
                   onClick={() => setWifeCount(Math.min(4, (heirs.spouseCount || 0) + 1))}
                   disabled={(heirs.spouseCount || 0) === 4}
-                  className="w-11 h-11 rounded-full bg-[#245642] hover:bg-[#1b4332] disabled:opacity-30 disabled:pointer-events-none text-white flex items-center justify-center font-bold text-lg transition-transform active:scale-90 cursor-pointer shadow-xs"
+                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#1b4332] hover:bg-[#122e23] disabled:opacity-25 disabled:pointer-events-none text-white border-2 border-[#0e271c] flex items-center justify-center font-black text-2xl transition-transform active:scale-90 cursor-pointer shadow-md"
                   aria-label="Increase wives"
                 >
-                  <Plus size={18} />
+                  <Plus size={24} className="stroke-[3]" />
                 </button>
               </div>
             </div>
           ) : (
             /* Husband Toggle */
-            <div className="p-4 rounded-3xl bg-white border border-stone-200 shadow-2xs flex items-center justify-between">
+            <div className="p-5 rounded-3xl bg-white border-2 border-stone-200 shadow-sm flex items-center justify-between">
               <div>
-                <div className="flex items-center gap-1.5 font-bold text-sm text-stone-900">
-                  <Heart size={15} className="text-sky-500 fill-sky-500" />
-                  <span className={isUr ? "font-nastaliq" : ""}>
-                    {isUr ? "شوہر (Husband)" : "Surviving Husband"}
+                <div className="flex items-center gap-2 font-black text-base sm:text-lg text-stone-950">
+                  <Heart size={20} className="text-sky-600 fill-sky-600 shrink-0" />
+                  <span className={isUr ? "font-nastaliq text-xl" : ""}>
+                    {isUr ? "شوہر (زوج)" : "Surviving Husband"}
                   </span>
                 </div>
-                <p className="text-[11px] text-stone-500 mt-0.5">
-                  {isUr ? "مرحومہ کا شوہر زندہ ہے؟" : "Is husband currently alive?"}
+                <p className="text-xs sm:text-sm font-semibold text-stone-600 mt-1">
+                  {isUr ? "مرحومہ کا شوہر زندہ ہے؟" : "Is husband alive?"}
                 </p>
               </div>
 
               <button
                 onClick={() => updateHeirs({ spouseCount: heirs.spouseCount === 1 ? 0 : 1 })}
-                className={`px-5 py-2.5 rounded-2xl font-bold text-xs transition-all cursor-pointer ${
+                className={`px-6 py-3.5 rounded-2xl font-black text-sm sm:text-base transition-all cursor-pointer ${
                   heirs.spouseCount === 1
-                    ? "bg-[#245642] text-white shadow-xs"
-                    : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                    ? "bg-[#1b4332] text-white shadow-md border-2 border-[#0e271c]"
+                    : "bg-stone-100 text-stone-700 hover:bg-stone-200 border-2 border-stone-300"
                 }`}
               >
-                {heirs.spouseCount === 1
-                  ? isUr
-                    ? "ہاں (زندہ ہے)"
-                    : "Yes (Alive)"
-                  : isUr
-                  ? "نہیں"
-                  : "No"}
+                <span className={isUr ? "font-nastaliq leading-[2]" : ""}>
+                  {heirs.spouseCount === 1
+                    ? isUr
+                      ? "ہاں (زندہ ہے)"
+                      : "Yes (Alive)"
+                    : isUr
+                    ? "نہیں"
+                    : "No"}
+                </span>
               </button>
             </div>
           )}
 
           {/* SONS CARD */}
-          <div className="p-4 rounded-3xl bg-white border border-stone-200 shadow-2xs flex items-center justify-between">
+          <div className="p-5 rounded-3xl bg-white border-2 border-stone-200 shadow-sm flex items-center justify-between">
             <div>
-              <div className="flex items-center gap-1.5 font-bold text-sm text-stone-900">
-                <User size={15} className="text-[#245642]" />
-                <span className={isUr ? "font-nastaliq" : ""}>
-                  {isUr ? "بیٹے (Sons)" : "Sons"}
+              <div className="flex items-center gap-2 font-black text-base sm:text-lg text-stone-950">
+                <User size={20} className="text-[#1b4332] stroke-[2.5]" />
+                <span className={isUr ? "font-nastaliq text-xl" : ""}>
+                  {isUr ? "بیٹے (ابناء)" : "Sons"}
                 </span>
               </div>
-              <p className="text-[11px] text-stone-500 mt-0.5">
-                {isUr ? "بیٹے کا حصہ بیٹی سے دوگنا ہوتا ہے" : "2:1 residuary ratio"}
+              <p className="text-xs sm:text-sm font-semibold text-stone-600 mt-1">
+                {isUr ? "بیٹے کا حصہ ۲ گنا ہے" : "2:1 residuary ratio"}
               </p>
             </div>
 
@@ -392,37 +404,37 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                   updateHeirs({ sonsCount: Math.max(0, (heirs.sonsCount || 0) - 1) })
                 }
                 disabled={(heirs.sonsCount || 0) === 0}
-                className="w-11 h-11 rounded-full bg-stone-100 hover:bg-stone-200 disabled:opacity-30 disabled:pointer-events-none text-stone-800 flex items-center justify-center font-bold text-lg transition-transform active:scale-90 cursor-pointer shadow-2xs"
+                className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-stone-100 hover:bg-stone-200 disabled:opacity-25 disabled:pointer-events-none text-stone-900 border-2 border-stone-300 flex items-center justify-center font-black text-2xl transition-transform active:scale-90 cursor-pointer shadow-xs"
                 aria-label="Decrease sons"
               >
-                <Minus size={18} />
+                <Minus size={24} className="stroke-[3]" />
               </button>
-              <span className="w-6 text-center font-black text-xl text-stone-900">
+              <span className="w-8 text-center font-black text-2xl sm:text-3xl text-stone-950">
                 {heirs.sonsCount || 0}
               </span>
               <button
                 onClick={() =>
                   updateHeirs({ sonsCount: (heirs.sonsCount || 0) + 1 })
                 }
-                className="w-11 h-11 rounded-full bg-[#245642] hover:bg-[#1b4332] text-white flex items-center justify-center font-bold text-lg transition-transform active:scale-90 cursor-pointer shadow-xs"
+                className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#1b4332] hover:bg-[#122e23] text-white border-2 border-[#0e271c] flex items-center justify-center font-black text-2xl transition-transform active:scale-90 cursor-pointer shadow-md"
                 aria-label="Increase sons"
               >
-                <Plus size={18} />
+                <Plus size={24} className="stroke-[3]" />
               </button>
             </div>
           </div>
 
           {/* DAUGHTERS CARD */}
-          <div className="p-4 rounded-3xl bg-white border border-stone-200 shadow-2xs flex items-center justify-between">
+          <div className="p-5 rounded-3xl bg-white border-2 border-stone-200 shadow-sm flex items-center justify-between">
             <div>
-              <div className="flex items-center gap-1.5 font-bold text-sm text-stone-900">
-                <User size={15} className="text-amber-700" />
-                <span className={isUr ? "font-nastaliq" : ""}>
-                  {isUr ? "بیٹیاں (Daughters)" : "Daughters"}
+              <div className="flex items-center gap-2 font-black text-base sm:text-lg text-stone-950">
+                <User size={20} className="text-amber-800 stroke-[2.5]" />
+                <span className={isUr ? "font-nastaliq text-xl" : ""}>
+                  {isUr ? "بیٹیاں (بنات)" : "Daughters"}
                 </span>
               </div>
-              <p className="text-[11px] text-stone-500 mt-0.5">
-                {isUr ? "صرف بیٹیاں ہوں تو فرض مع رد" : "Prescribed share + Radd"}
+              <p className="text-xs sm:text-sm font-semibold text-stone-600 mt-1">
+                {isUr ? "فرض مع رد کا حصہ" : "Prescribed share + Radd"}
               </p>
             </div>
 
@@ -434,12 +446,12 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                   })
                 }
                 disabled={(heirs.daughtersCount || 0) === 0}
-                className="w-11 h-11 rounded-full bg-stone-100 hover:bg-stone-200 disabled:opacity-30 disabled:pointer-events-none text-stone-800 flex items-center justify-center font-bold text-lg transition-transform active:scale-90 cursor-pointer shadow-2xs"
+                className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-stone-100 hover:bg-stone-200 disabled:opacity-25 disabled:pointer-events-none text-stone-900 border-2 border-stone-300 flex items-center justify-center font-black text-2xl transition-transform active:scale-90 cursor-pointer shadow-xs"
                 aria-label="Decrease daughters"
               >
-                <Minus size={18} />
+                <Minus size={24} className="stroke-[3]" />
               </button>
-              <span className="w-6 text-center font-black text-xl text-stone-900">
+              <span className="w-8 text-center font-black text-2xl sm:text-3xl text-stone-950">
                 {heirs.daughtersCount || 0}
               </span>
               <button
@@ -448,114 +460,118 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                     daughtersCount: (heirs.daughtersCount || 0) + 1,
                   })
                 }
-                className="w-11 h-11 rounded-full bg-[#245642] hover:bg-[#1b4332] text-white flex items-center justify-center font-bold text-lg transition-transform active:scale-90 cursor-pointer shadow-xs"
+                className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#1b4332] hover:bg-[#122e23] text-white border-2 border-[#0e271c] flex items-center justify-center font-black text-2xl transition-transform active:scale-90 cursor-pointer shadow-md"
                 aria-label="Increase daughters"
               >
-                <Plus size={18} />
+                <Plus size={24} className="stroke-[3]" />
               </button>
             </div>
           </div>
 
-          {/* PARENTS CARDS */}
-          <div className="grid grid-cols-2 gap-3">
+          {/* PARENTS CARDS (Large Chunky Badges) */}
+          <div className="grid grid-cols-2 gap-3.5">
             {/* Father */}
-            <div className="p-4 rounded-3xl bg-white border border-stone-200 shadow-2xs flex flex-col justify-between space-y-3">
+            <div className="p-4 sm:p-5 rounded-3xl bg-white border-2 border-stone-200 shadow-sm flex flex-col justify-between space-y-3">
               <div>
-                <span className={`font-bold text-sm text-stone-900 ${isUr ? "font-nastaliq" : ""}`}>
-                  {isUr ? "والد (Father)" : "Father"}
+                <span className={`font-black text-base sm:text-lg text-stone-950 ${isUr ? "font-nastaliq text-xl" : ""}`}>
+                  {isUr ? "والد محترم" : "Father"}
                 </span>
-                <p className="text-[11px] text-stone-500">
+                <p className="text-xs sm:text-sm font-semibold text-stone-600 mt-0.5">
                   {isUr ? "حیات ہیں؟" : "Living?"}
                 </p>
               </div>
 
               <button
                 onClick={() => updateHeirs({ fatherAlive: !heirs.fatherAlive })}
-                className={`w-full py-2.5 rounded-2xl font-bold text-xs transition-all cursor-pointer ${
+                className={`w-full py-3.5 rounded-2xl font-black text-sm sm:text-base transition-all cursor-pointer ${
                   heirs.fatherAlive
-                    ? "bg-[#245642] text-white shadow-xs"
-                    : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                    ? "bg-[#1b4332] text-white shadow-md border-2 border-[#0e271c]"
+                    : "bg-stone-100 text-stone-700 hover:bg-stone-200 border-2 border-stone-300"
                 }`}
               >
-                {heirs.fatherAlive
-                  ? isUr
-                    ? "زندہ ہیں"
-                    : "Alive"
-                  : isUr
-                  ? "وفات پا چکے"
-                  : "Deceased"}
+                <span className={isUr ? "font-nastaliq leading-[2]" : ""}>
+                  {heirs.fatherAlive
+                    ? isUr
+                      ? "زندہ ہیں"
+                      : "Alive"
+                    : isUr
+                    ? "وفات پا چکے"
+                    : "Deceased"}
+                </span>
               </button>
             </div>
 
             {/* Mother */}
-            <div className="p-4 rounded-3xl bg-white border border-stone-200 shadow-2xs flex flex-col justify-between space-y-3">
+            <div className="p-4 sm:p-5 rounded-3xl bg-white border-2 border-stone-200 shadow-sm flex flex-col justify-between space-y-3">
               <div>
-                <span className={`font-bold text-sm text-stone-900 ${isUr ? "font-nastaliq" : ""}`}>
-                  {isUr ? "والدہ (Mother)" : "Mother"}
+                <span className={`font-black text-base sm:text-lg text-stone-950 ${isUr ? "font-nastaliq text-xl" : ""}`}>
+                  {isUr ? "والدہ ماجدہ" : "Mother"}
                 </span>
-                <p className="text-[11px] text-stone-500">
+                <p className="text-xs sm:text-sm font-semibold text-stone-600 mt-0.5">
                   {isUr ? "حیات ہیں؟" : "Living?"}
                 </p>
               </div>
 
               <button
                 onClick={() => updateHeirs({ motherAlive: !heirs.motherAlive })}
-                className={`w-full py-2.5 rounded-2xl font-bold text-xs transition-all cursor-pointer ${
+                className={`w-full py-3.5 rounded-2xl font-black text-sm sm:text-base transition-all cursor-pointer ${
                   heirs.motherAlive
-                    ? "bg-[#245642] text-white shadow-xs"
-                    : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                    ? "bg-[#1b4332] text-white shadow-md border-2 border-[#0e271c]"
+                    : "bg-stone-100 text-stone-700 hover:bg-stone-200 border-2 border-stone-300"
                 }`}
               >
-                {heirs.motherAlive
-                  ? isUr
-                    ? "زندہ ہیں"
-                    : "Alive"
-                  : isUr
-                  ? "وفات پا چکیں"
-                  : "Deceased"}
+                <span className={isUr ? "font-nastaliq leading-[2]" : ""}>
+                  {heirs.motherAlive
+                    ? isUr
+                      ? "زندہ ہیں"
+                      : "Alive"
+                    : isUr
+                    ? "وفات پا چکیں"
+                    : "Deceased"}
+                </span>
               </button>
             </div>
           </div>
 
           {/* Collapsible: Tier 2 & Tier 3 Heirs */}
-          <div className="pt-1">
+          <div className="pt-2">
             <button
               onClick={() => setShowAdvancedHeirs(!showAdvancedHeirs)}
-              className="w-full flex items-center justify-between p-3 rounded-2xl bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-bold transition-colors cursor-pointer"
+              className="w-full flex items-center justify-between p-4 rounded-2xl bg-stone-200/80 hover:bg-stone-300 text-stone-900 text-sm font-black border-2 border-stone-300 transition-colors cursor-pointer"
             >
               <span>
                 {isUr
                   ? "مزید رشتہ دار شامل کریں (دادا، دادی، بہن، بھائی، چچا)"
                   : "Add Grandparents, Siblings, or Uncles"}
               </span>
-              {showAdvancedHeirs ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+              {showAdvancedHeirs ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
             </button>
 
             {showAdvancedHeirs && (
-              <div className="mt-2 p-4 rounded-3xl bg-white border border-stone-200 shadow-2xs space-y-3 animate-in fade-in duration-200">
-                <div className="text-[11px] text-stone-500 leading-relaxed">
+              <div className="mt-2.5 p-5 rounded-3xl bg-white border-2 border-stone-200 shadow-sm space-y-4 animate-in fade-in duration-200">
+                <div className="text-xs sm:text-sm text-stone-700 font-medium leading-relaxed bg-[#edf3e7] p-3 rounded-xl border border-[#c4d4be]">
                   {isUr
-                    ? "نوٹ: فقہِ جعفریہ کے مطابق جب تک طبقۂ اول (اولاد یا والدین) موجود ہوں، طبقۂ دوم (دادا، دادی، بہن، بھائی) شرعاً محجوب (محروم) رہتے ہیں۔"
-                    : "Note: In Ja'fari fiqh, Tier 1 heirs (children/parents) completely exclude Tier 2 (grandparents/siblings)."}
+                    ? "اہم نوٹ: فقہِ جعفریہ کے قطعی اصول کے مطابق جب تک طبقۂ اول (اولاد یا والدین) میں سے کوئی بھی ایک فرد موجود ہو، طبقۂ دوم (دادا، دادی، بہن، بھائی) شرعاً مکمل محجوب (محروم) رہتا ہے۔"
+                    : "Crucial Rule: In Ja'fari jurisprudence, if any Tier 1 heir (child or parent) survives, all Tier 2 heirs (grandparents/siblings) are strictly excluded."}
                 </div>
 
-                {/* Sibling counters */}
+                {/* Sibling counters with larger buttons */}
                 <div className="flex items-center justify-between pt-1">
-                  <span className="text-xs font-bold text-stone-700">
+                  <span className="text-sm sm:text-base font-black text-stone-900">
                     {isUr ? "حقیقی بھائی (Full Brothers)" : "Full Brothers"}
                   </span>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     <button
                       onClick={() =>
                         updateHeirs({
                           fullBrothersCount: Math.max(0, (heirs.fullBrothersCount || 0) - 1),
                         })
                       }
-                      className="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 flex items-center justify-center font-bold text-sm cursor-pointer"
+                      className="w-12 h-12 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-900 border-2 border-stone-300 flex items-center justify-center font-bold text-lg cursor-pointer"
                     >
-                      <Minus size={14} />
+                      <Minus size={18} />
                     </button>
-                    <span className="w-5 text-center font-bold text-sm">
+                    <span className="w-6 text-center font-black text-xl text-stone-900">
                       {heirs.fullBrothersCount || 0}
                     </span>
                     <button
@@ -564,29 +580,29 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                           fullBrothersCount: (heirs.fullBrothersCount || 0) + 1,
                         })
                       }
-                      className="w-8 h-8 rounded-full bg-[#245642] text-white flex items-center justify-center font-bold text-sm cursor-pointer"
+                      className="w-12 h-12 rounded-xl bg-[#1b4332] text-white flex items-center justify-center font-bold text-lg cursor-pointer"
                     >
-                      <Plus size={14} />
+                      <Plus size={18} />
                     </button>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-stone-700">
+                  <span className="text-sm sm:text-base font-black text-stone-900">
                     {isUr ? "حقیقی بہنیں (Full Sisters)" : "Full Sisters"}
                   </span>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     <button
                       onClick={() =>
                         updateHeirs({
                           fullSistersCount: Math.max(0, (heirs.fullSistersCount || 0) - 1),
                         })
                       }
-                      className="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 flex items-center justify-center font-bold text-sm cursor-pointer"
+                      className="w-12 h-12 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-900 border-2 border-stone-300 flex items-center justify-center font-bold text-lg cursor-pointer"
                     >
-                      <Minus size={14} />
+                      <Minus size={18} />
                     </button>
-                    <span className="w-5 text-center font-bold text-sm">
+                    <span className="w-6 text-center font-black text-xl text-stone-900">
                       {heirs.fullSistersCount || 0}
                     </span>
                     <button
@@ -595,9 +611,9 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                           fullSistersCount: (heirs.fullSistersCount || 0) + 1,
                         })
                       }
-                      className="w-8 h-8 rounded-full bg-[#245642] text-white flex items-center justify-center font-bold text-sm cursor-pointer"
+                      className="w-12 h-12 rounded-xl bg-[#1b4332] text-white flex items-center justify-center font-bold text-lg cursor-pointer"
                     >
-                      <Plus size={14} />
+                      <Plus size={18} />
                     </button>
                   </div>
                 </div>
@@ -607,27 +623,27 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
         </div>
       </main>
 
-      {/* 5. Sticky Bottom Action Bar (SadaPay Style Floating CTA) */}
-      <div className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#c8d8c2] p-3 shadow-2xl font-sans">
-        <div className="max-w-md mx-auto flex items-center justify-between gap-3">
+      {/* 5. Sticky Bottom Action Bar (Large, High Contrast, Chunky CTA) */}
+      <div className="fixed bottom-0 inset-x-0 z-40 bg-white border-t-3 border-[#b4caa9] p-4 shadow-2xl font-sans">
+        <div className="max-w-lg mx-auto flex items-center justify-between gap-4">
           {/* Quick status */}
-          <div>
-            <div className="flex items-center gap-1.5 text-xs font-black text-[#173e30]">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <div className="shrink-0">
+            <div className="flex items-center gap-2 text-sm sm:text-base font-black text-[#0f2c20]">
+              <span className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" />
               <span>{totalPercentage.toFixed(0)}% {isUr ? "تقسیم" : "Distributed"}</span>
             </div>
-            <div className="text-xs text-stone-500 font-semibold mt-0.5">
+            <div className="text-sm sm:text-base text-stone-800 font-extrabold mt-0.5">
               <span>{currency} {formatNumber(netEstate)}</span>
             </div>
           </div>
 
-          {/* Big Action Pill Button */}
+          {/* Big Chunky Action Pill Button */}
           <button
             onClick={() => setIsResultSheetOpen(true)}
-            className="flex-1 py-3.5 px-5 rounded-2xl bg-[#245642] hover:bg-[#1b4332] text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-md transition-transform active:scale-98 cursor-pointer"
+            className="flex-1 py-4 px-6 rounded-2xl bg-[#1b4332] hover:bg-[#122e23] text-white font-black text-base sm:text-lg flex items-center justify-center gap-2.5 shadow-lg border-2 border-[#0e271c] transition-transform active:scale-98 cursor-pointer"
           >
-            <Sparkles size={16} className="text-emerald-300" />
-            <span className={isUr ? "font-nastaliq text-base" : ""}>
+            <Sparkles size={20} className="text-emerald-300 shrink-0" />
+            <span className={isUr ? "font-nastaliq text-lg sm:text-xl leading-none pt-1" : "leading-none"}>
               {isUr ? "حساب کی تفصیل دیکھیں" : "View Breakdown"}
             </span>
           </button>
