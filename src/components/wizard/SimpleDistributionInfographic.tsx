@@ -176,10 +176,10 @@ export const SimpleDistributionInfographic: React.FC<Props> = ({
                 type="number"
                 min={0}
                 step={100000}
-                value={customEstateAmount}
+                value={customEstateAmount || ""}
                 onChange={(e) => setCustomEstateAmount(Math.max(0, Number(e.target.value) || 0))}
                 className="w-full px-4 py-2.5 rounded-xl border border-amber-300 bg-white font-mono font-bold text-base text-amber-950 focus:outline-hidden focus:ring-2 focus:ring-amber-500 text-start"
-                placeholder="Enter custom amount..."
+                placeholder="0"
               />
               <span className="absolute end-3 top-2.5 text-xs font-bold text-amber-700 pointer-events-none">
                 {currency}

@@ -107,7 +107,7 @@ export function WasiyyahView() {
 
   return (
     <div
-      className="w-full min-h-screen bg-[#faf8f5] text-[#0f172a] pb-28 selection:bg-amber-500/20"
+      className={`w-full min-h-screen bg-[#faf8f5] text-[#0f172a] pb-28 selection:bg-amber-500/20 ${isUr ? "font-nastaliq" : ""}`}
       dir={isUr ? "rtl" : "ltr"}
     >
       {/* =========================================================================
@@ -118,12 +118,12 @@ export function WasiyyahView() {
           <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-[#245642]">
             <button
               onClick={() => setActiveView("home")}
-              className="text-stone-500 hover:text-[#245642] transition-colors cursor-pointer"
+              className={`text-stone-500 hover:text-[#245642] transition-colors cursor-pointer ${isUr ? "font-nastaliq leading-[2]" : ""}`}
             >
               {isUr ? "مرکزی صفحہ" : "Home"}
             </button>
             <span className="text-stone-300">/</span>
-            <span className="text-[#245642] font-extrabold flex items-center gap-1.5">
+            <span className={`text-[#245642] font-extrabold flex items-center gap-1.5 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
               <Scroll className="w-4 h-4 text-[#b45309]" />
               <span>{isUr ? "کتاب الوصایا (وصیت پورٹل)" : "Kitāb al-Waṣāyā • Sharia Will Portal"}</span>
             </span>
@@ -134,7 +134,7 @@ export function WasiyyahView() {
             <button
               type="button"
               onClick={() => setInternalLang(isUr ? "en" : "ur")}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#edf3e7] text-[#245642] text-xs font-bold border border-[#c4d4be] hover:bg-[#dce5d4] transition-all cursor-pointer shadow-2xs"
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#edf3e7] text-[#245642] text-xs font-bold border border-[#c4d4be] hover:bg-[#dce5d4] transition-all cursor-pointer shadow-2xs ${isUr ? "font-nastaliq leading-[2]" : ""}`}
             >
               <Globe2 className="w-3.5 h-3.5" />
               <span>{isUr ? "English View" : "اردو منظر"}</span>
@@ -144,7 +144,7 @@ export function WasiyyahView() {
             <button
               type="button"
               onClick={() => window.print()}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white text-stone-700 text-xs font-bold border border-stone-200 hover:bg-stone-50 shadow-2xs transition-all cursor-pointer"
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white text-stone-700 text-xs font-bold border border-stone-200 hover:bg-stone-50 shadow-2xs transition-all cursor-pointer ${isUr ? "font-nastaliq leading-[2]" : ""}`}
               title={isUr ? "مکمل مقالہ پرنٹ کریں" : "Print Complete Treatise"}
             >
               <Printer className="w-3.5 h-3.5" />
@@ -159,7 +159,7 @@ export function WasiyyahView() {
             <button
               key={sec.id}
               onClick={() => scrollToSection(sec.id)}
-              className="px-3 py-1 rounded-lg text-xs font-bold whitespace-nowrap bg-stone-100 hover:bg-[#245642] text-stone-700 hover:text-white transition-all cursor-pointer border border-stone-200"
+              className={`px-3 py-1 rounded-lg text-xs font-bold whitespace-nowrap bg-stone-100 hover:bg-[#245642] text-stone-700 hover:text-white transition-all cursor-pointer border border-stone-200 ${isUr ? "font-nastaliq leading-[2]" : ""}`}
             >
               {isUr ? sec.labelUr : sec.labelEn}
             </button>
@@ -179,37 +179,60 @@ export function WasiyyahView() {
             {/* Top Seal Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#fef3c7] text-[#78350f] text-xs font-black uppercase tracking-wider shadow-sm border border-amber-300 mx-auto">
               <Scroll className="w-4 h-4 text-[#b45309]" />
-              <span className="font-serif">
+              <span className={isUr ? "font-nastaliq leading-[2]" : "font-serif"}>
                 {isUr ? "دلیل الوصية الشرعية في فقه أهل البيت علیہم السلام" : "Kitāb al-Waṣāyā • Ja‘farī Testamentary Jurisprudence"}
               </span>
             </div>
 
             <div className="space-y-3">
-              <h1 className="text-2xl sm:text-4xl md:text-5xl font-black font-serif tracking-tight leading-tight">
+              <h1 className={`text-2xl sm:text-4xl md:text-5xl font-black ${isUr ? "font-nastaliq leading-[2.1] sm:leading-[1.9] py-2" : "font-serif tracking-tight leading-tight"}`}>
                 {isUr
                   ? "احکامِ وصیت: جامع شرعی و بصری انسائیکلوپیڈیا"
                   : "The Comprehensive Sharia Will & Testamentary Guide"}
               </h1>
-              <p className="text-base sm:text-lg text-emerald-100 font-medium font-nastaliq leading-[2.3] max-w-3xl mx-auto">
+              <p className="text-base sm:text-lg text-emerald-100 font-medium font-nastaliq leading-[2.4] max-w-3xl mx-auto">
                 {isUr
                   ? "اسلامی قانونِ تصفیہ میں وصیت اور ادائے دیون وراثت کی تقسیم سے مقدم ہے — انسان کا آخری شرعی و اخلاقی اختیار۔"
                   : "In Islamic liquidation, testamentary bequests and debt clearance strictly precede statutory inheritance."}
               </p>
             </div>
 
-            {/* Sacred Quranic Inscription Banner */}
-            <div className="max-w-3xl mx-auto p-5 sm:p-6 rounded-2xl bg-black/30 backdrop-blur-xs border border-emerald-400/30 text-emerald-50 space-y-3 shadow-inner">
-              <div className="text-center font-arabic text-2xl sm:text-4xl font-bold tracking-wide text-amber-300 py-1">
+            {/* Sacred Quranic Inscription Banner - Symmetrically Centered with Ornate Islamic Frame */}
+            <div className="max-w-3xl mx-auto p-6 sm:p-8 rounded-3xl bg-black/40 backdrop-blur-md border-2 border-amber-400/40 text-emerald-50 space-y-4 shadow-2xl relative overflow-hidden text-center">
+              {/* Subtle Ambient Radial Radiance */}
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-400/10 via-transparent to-transparent pointer-events-none" />
+
+              {/* Centered Sacred Badge */}
+              <div className="inline-flex items-center justify-center gap-2 px-4 py-1 rounded-full bg-amber-400/15 border border-amber-400/30 text-amber-300 text-xs font-bold mx-auto">
+                <Scroll className="w-3.5 h-3.5 text-amber-400" />
+                <span className={isUr ? "font-nastaliq leading-[2]" : ""}>
+                  {isUr ? "قرآنِ کریم • فرمانِ الٰہی" : "The Holy Qur'an • Divine Decree"}
+                </span>
+              </div>
+
+              {/* Centered Arabic Ayah */}
+              <div className="text-center font-arabic text-2xl sm:text-4xl md:text-5xl font-bold tracking-wide text-amber-300 py-2 leading-[2] sm:leading-[2.2] drop-shadow-md">
                 مِن بَعْدِ وَصِيَّةٍ يُوصِي بِهَا أَوْ دَيْنٍ ۗ
               </div>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs sm:text-sm text-emerald-200/90 font-medium gap-2 border-t border-emerald-500/20 pt-2.5">
-                <span className="font-nastaliq leading-[2.2] text-center sm:text-start flex-1">
-                  {isUr
-                    ? "«وراثت کی تقسیم اس وصیت کے نفاذ اور قرض کی ادائیگی کے بعد ہوگی جو میت نے کی ہو۔» (سورۃ النساء: ۱۱)"
-                    : "“After payment of any bequest the deceased may have bequeathed, or debts.” (Surah an-Nisā’ 4:11)"}
-                </span>
-                <span className="text-[11px] font-mono font-bold text-amber-300 shrink-0 mx-auto sm:mx-0">
-                  Surah 4:11
+
+              {/* Centered Ornate Golden Divider */}
+              <div className="flex items-center justify-center gap-3 max-w-xs mx-auto py-1 text-amber-400/60 text-xs">
+                <div className="h-px w-16 bg-gradient-to-r from-transparent to-amber-400/50" />
+                <span>۞</span>
+                <div className="h-px w-16 bg-gradient-to-l from-transparent to-amber-400/50" />
+              </div>
+
+              {/* Centered Translation */}
+              <p className="text-center font-nastaliq text-sm sm:text-base md:text-lg leading-[2.5] text-emerald-100 max-w-2xl mx-auto">
+                {isUr
+                  ? "«وراثت کی تقسیم اس وصیت کے نفاذ اور قرض کی ادائیگی کے بعد ہوگی جو میت نے کی ہو۔»"
+                  : "“After payment of any bequest the deceased may have bequeathed, or debts.”"}
+              </p>
+
+              {/* Centered Citation Badge */}
+              <div className="flex items-center justify-center pt-1">
+                <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-950/80 border border-emerald-400/40 text-[11px] sm:text-xs font-mono font-bold text-amber-300 shadow-inner">
+                  {isUr ? "سورۃ النساء: آیت ۱۱" : "Surah an-Nisā’ 4:11"}
                 </span>
               </div>
             </div>
@@ -226,7 +249,7 @@ export function WasiyyahView() {
                 ۱
               </div>
               <div>
-                <h2 className="text-xl sm:text-2xl font-black font-serif text-[#172e22]">
+                <h2 className={`text-xl sm:text-2xl font-black text-[#172e22] ${isUr ? "font-nastaliq leading-[2] py-1" : "font-serif"}`}>
                   {isUr ? "وصیت کی ۲ بنیادی اقسام: تملیکیہ بمقابلہ عہدیہ" : "The 2 Foundational Categories: Dual Split Architecture"}
                 </h2>
                 <p className="text-xs text-[#52735a] font-medium font-nastaliq leading-[2.2]">
@@ -236,7 +259,7 @@ export function WasiyyahView() {
                 </p>
               </div>
             </div>
-            <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#edf3e7] text-[#245642] border border-[#c4d4be]">
+            <span className={`text-xs font-bold px-3 py-1 rounded-full bg-[#edf3e7] text-[#245642] border border-[#c4d4be] ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
               {isUr ? "شرعی تقسیمِ احکام" : "Two Structural Types"}
             </span>
           </div>
@@ -255,7 +278,7 @@ export function WasiyyahView() {
                     <span className="text-[11px] font-black uppercase tracking-wider text-emerald-800 block">
                       {isUr ? "نوعِ اول: مالی تصرف" : "Category 1 • Proprietary Bequest"}
                     </span>
-                    <h3 className="font-serif font-black text-xl text-[#172e22] mt-0.5">
+                    <h3 className={`font-black text-xl text-[#172e22] mt-0.5 ${isUr ? "font-nastaliq leading-[2]" : "font-serif"}`}>
                       {isUr ? "وصیتِ تملیکیہ (مال و منافع کی منتقلی)" : "Waṣiyyah Tamlīkiyyah (Possessory Bequest)"}
                     </h3>
                   </div>
@@ -263,13 +286,13 @@ export function WasiyyahView() {
 
                 {/* Badges */}
                 <div className="flex flex-wrap gap-1.5 pt-1">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-900 border border-emerald-300">
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-900 border border-emerald-300 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "ملکیت کی منتقلی" : "Ownership Transfer"}
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-900 border border-emerald-300">
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-900 border border-emerald-300 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "بعد از وفات نفاذ" : "Post-Mortem Execution"}
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-900 border border-emerald-300">
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-900 border border-emerald-300 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "اختیاری یا خیراتی" : "Optional / Charitable"}
                   </span>
                 </div>
@@ -316,7 +339,7 @@ export function WasiyyahView() {
                     <span className="text-[11px] font-black uppercase tracking-wider text-blue-800 block">
                       {isUr ? "نوعِ دوم: انتظامی ذمہ داری" : "Category 2 • Fiduciary Mandate"}
                     </span>
-                    <h3 className="font-serif font-black text-xl text-[#0f172a] mt-0.5">
+                    <h3 className={`font-black text-xl text-[#0f172a] mt-0.5 ${isUr ? "font-nastaliq leading-[2]" : "font-serif"}`}>
                       {isUr ? "وصیتِ عہدیہ (انتظامی امور و سرپرستی)" : "Waṣiyyah ‘Ahdiyyah (Fiduciary Appointment)"}
                     </h3>
                   </div>
@@ -324,13 +347,13 @@ export function WasiyyahView() {
 
                 {/* Badges */}
                 <div className="flex flex-wrap gap-1.5 pt-1">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-900 border border-blue-300">
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-900 border border-blue-300 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "امانت و ذمہ داری" : "Fiduciary Duty"}
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-900 border border-blue-300">
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-900 border border-blue-300 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "شرعی سرپرستی" : "Legal Guardianship"}
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-900 border border-blue-300">
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-900 border border-blue-300 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "قرض و تکفین کا انتظام" : "Debt Administration"}
                   </span>
                 </div>
@@ -366,16 +389,16 @@ export function WasiyyahView() {
             </div>
           </div>
 
-          {/* Elegant Hadith Callout Banner */}
-          <div className="p-5 rounded-2xl bg-[#fffdfa] border-2 border-amber-400/60 shadow-xs flex flex-col sm:flex-row items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-amber-100 border border-amber-300 text-amber-800 flex items-center justify-center shrink-0 shadow-xs">
+          {/* Elegant Centered Hadith Callout Banner */}
+          <div className="p-6 rounded-3xl bg-[#fffdfa] border-2 border-amber-400/60 shadow-md flex flex-col items-center gap-3 text-center">
+            <div className="w-12 h-12 rounded-2xl bg-amber-100 border border-amber-300 text-amber-800 flex items-center justify-center shrink-0 shadow-xs text-xl">
               📜
             </div>
-            <div className="space-y-1 text-center sm:text-start flex-1">
-              <span className="text-[11px] font-bold text-[#b45309] uppercase tracking-wider block">
+            <div className="space-y-2 max-w-2xl mx-auto">
+              <span className={`text-xs font-bold text-[#b45309] uppercase tracking-wider block ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                 {isUr ? "فرمانِ رسولِ اکرم صلی اللہ علیہ و آلہ و سلم (وسائل الشیعہ)" : "Hadith of the Holy Prophet (SAWW) • Wasā'il al-Shī'ah"}
               </span>
-              <p className="text-xs sm:text-sm text-stone-800 font-nastaliq leading-[2.2]">
+              <p className="text-sm sm:text-base text-stone-800 font-nastaliq leading-[2.4]">
                 {isUr
                   ? "«کسی بھی مسلمان کے لیے یہ شائستہ نہیں کہ وہ ایک رات بھی اس حال میں سوئے کہ اس کی وصیت اس کے سرہانے موجود نہ ہو۔»"
                   : "“It is not fitting for a Muslim individual to sleep a single night except that their written will is placed under their pillow.”"}
@@ -394,7 +417,7 @@ export function WasiyyahView() {
                 ۲
               </div>
               <div>
-                <h2 className="text-xl sm:text-2xl font-black font-serif text-[#172e22]">
+                <h2 className={`text-xl sm:text-2xl font-black text-[#172e22] ${isUr ? "font-nastaliq leading-[2] py-1" : "font-serif"}`}>
                   {isUr ? "الٰہی حد: ایک تہائی (ثلث) کا اٹل شرعی ضابطہ" : "The Divine Ceiling: Rule of the One-Third (Al-Thuluth)"}
                 </h2>
                 <p className="text-xs text-[#52735a] font-medium font-nastaliq leading-[2.2]">
@@ -425,13 +448,13 @@ export function WasiyyahView() {
                   <span className="text-xs font-extrabold uppercase text-[#b45309] tracking-wider block">
                     {isUr ? "متحرک تخمینہ کار و بصری تناسب" : "Interactive Bequest Simulator"}
                   </span>
-                  <h4 className="text-base sm:text-lg font-black text-[#172e22]">
+                  <h4 className={`text-base sm:text-lg font-black text-[#172e22] ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "کل ترکے میں وصیت کا فیصد منتخب کریں:" : "Adjust Bequest Share Against Net Distributable Estate:"}
                   </h4>
                 </div>
 
                 <div className="text-start sm:text-end">
-                  <span className="text-xs text-stone-500 font-bold block uppercase">
+                  <span className={`text-xs text-stone-500 font-bold block uppercase ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "خالص ترکہ (قرض کی ادائیگی کے بعد)" : "Net Distributable Estate"}
                   </span>
                   <span className="font-mono font-black text-xl text-[#245642]">
@@ -443,7 +466,7 @@ export function WasiyyahView() {
               {/* Slider Input */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs font-bold text-[#78350f]">
-                  <span>{isUr ? "وصیت کا تناسب:" : "Bequest Ratio:"}</span>
+                  <span className={isUr ? "font-nastaliq leading-[2]" : ""}>{isUr ? "وصیت کا تناسب:" : "Bequest Ratio:"}</span>
                   <span className="font-mono text-lg font-black text-[#b45309]">
                     {sliderPct.toFixed(1)}% ({willAmount.toLocaleString()} {currency})
                   </span>
@@ -470,10 +493,10 @@ export function WasiyyahView() {
               {/* Dual Visual Bar Dial */}
               <div className="space-y-2 pt-2">
                 <div className="flex items-center justify-between text-xs font-bold">
-                  <span className="text-[#b45309]">
+                  <span className={`text-[#b45309] ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "وصیت شدہ حصہ (اختیاری)" : "Discretionary Will Portion"} ({sliderPct.toFixed(1)}%)
                   </span>
-                  <span className="text-[#245642]">
+                  <span className={`text-[#245642] ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "شرعی قرآنی ورثاء کے حقوق" : "Sacred Statutory Heirs' Shares"} ({(100 - sliderPct).toFixed(1)}%)
                   </span>
                 </div>
@@ -524,7 +547,7 @@ export function WasiyyahView() {
                 <div className="p-4 rounded-2xl bg-amber-50 border-2 border-amber-500 text-amber-950 space-y-2 animate-in fade-in">
                   <div className="flex items-center gap-2 font-bold text-sm text-[#9a3412]">
                     <AlertTriangle className="w-5 h-5 text-[#ea580c] shrink-0" />
-                    <span>
+                    <span className={isUr ? "font-nastaliq leading-[2]" : ""}>
                       {isUr
                         ? "شرعی حکم: ۱/۳ سے زائد حصہ ورثاء کی بعد از وفات رضامندی پر موقوف ہے"
                         : "Legal Status: Excess Beyond 1/3rd Suspended on Heirs’ Post-Mortem Consent (Mawqūf)"}
@@ -556,7 +579,7 @@ export function WasiyyahView() {
                 ۳
               </div>
               <div>
-                <h2 className="text-xl sm:text-2xl font-black font-serif text-[#172e22]">
+                <h2 className={`text-xl sm:text-2xl font-black text-[#172e22] ${isUr ? "font-nastaliq leading-[2] py-1" : "font-serif"}`}>
                   {isUr ? "وصیت کے ۵ شرعی درجات (الاحکام الخمسہ)" : "The 5 Legal Classifications (Al-Aḥkām al-Khamsah)"}
                 </h2>
                 <p className="text-xs text-[#52735a] font-medium font-nastaliq leading-[2.2]">
@@ -566,7 +589,7 @@ export function WasiyyahView() {
                 </p>
               </div>
             </div>
-            <span className="text-xs text-stone-500 font-bold uppercase tracking-wider">
+            <span className={`text-xs text-stone-500 font-bold uppercase tracking-wider ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
               {isUr ? "واجب تا حرام" : "5 Distinct Cards"}
             </span>
           </div>
@@ -588,7 +611,7 @@ export function WasiyyahView() {
                     {/* Header with Badge */}
                     <div className="flex items-center justify-between">
                       <span
-                        className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-white"
+                        className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-white ${isUr ? "font-nastaliq leading-[2]" : ""}`}
                         style={{ backgroundColor: c.colorHex }}
                       >
                         {c.id === "wajib"
@@ -604,7 +627,7 @@ export function WasiyyahView() {
                       <span className="font-arabic font-bold text-lg text-stone-800">{c.nameUr}</span>
                     </div>
 
-                    <h3 className="font-black text-lg text-stone-900">
+                    <h3 className={`font-black text-lg text-stone-900 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                       {isUr ? c.nameUr : c.nameEn}
                     </h3>
 
@@ -616,7 +639,7 @@ export function WasiyyahView() {
                     <button
                       type="button"
                       onClick={() => setExpandedClassificationId(isExpanded ? null : c.id)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border transition-colors cursor-pointer"
+                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border transition-colors cursor-pointer ${isUr ? "font-nastaliq leading-[2]" : ""}`}
                       style={{ borderColor: c.borderHex, color: c.colorHex, backgroundColor: c.bgHex }}
                     >
                       <Sparkles className="w-3 h-3" />
@@ -626,7 +649,7 @@ export function WasiyyahView() {
 
                     {isExpanded && (
                       <div className="p-3.5 rounded-2xl bg-stone-50 border border-stone-200 text-xs text-stone-800 space-y-1.5 animate-in fade-in">
-                        <span className="font-bold text-[10px] uppercase text-stone-500 block">
+                        <span className={`font-bold text-[10px] uppercase text-stone-500 block ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                           {isUr ? "عملی فقہی مثالیں:" : "Concrete Sharia Cases:"}
                         </span>
                         <ul className="space-y-1 font-nastaliq leading-[2.2]">
@@ -641,7 +664,7 @@ export function WasiyyahView() {
                     )}
                   </div>
 
-                  <div className="px-6 py-3 bg-stone-50 border-t border-stone-100 text-[11px] font-bold text-stone-500 flex items-center justify-between">
+                  <div className={`px-6 py-3 bg-stone-50 border-t border-stone-100 text-[11px] font-bold text-stone-500 flex items-center justify-between ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     <span>{c.examplesEn.length} {isUr ? "معروف شرعی مثالیں" : "Categorized Scenarios"}</span>
                     <span className="font-mono text-stone-400">Class: {c.id}</span>
                   </div>
@@ -661,7 +684,7 @@ export function WasiyyahView() {
                 ۴
               </div>
               <div>
-                <h2 className="text-xl sm:text-2xl font-black font-serif text-[#172e22]">
+                <h2 className={`text-xl sm:text-2xl font-black text-[#172e22] ${isUr ? "font-nastaliq leading-[2] py-1" : "font-serif"}`}>
                   {isUr ? "وصیت کے ۴ ارکان اور اہلیت کا ۴ چوکور جدول" : "The 4 Pillars of a Valid Will: 4-Quadrant Validity Grid"}
                 </h2>
                 <p className="text-xs text-[#52735a] font-medium font-nastaliq leading-[2.2]">
@@ -671,7 +694,7 @@ export function WasiyyahView() {
                 </p>
               </div>
             </div>
-            <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#edf3e7] text-[#245642] border border-[#c4d4be]">
+            <span className={`text-xs font-bold px-3 py-1 rounded-full bg-[#edf3e7] text-[#245642] border border-[#c4d4be] ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
               {isUr ? "ارکانِ اربعہ" : "4-Quadrant Grid"}
             </span>
           </div>
@@ -689,25 +712,25 @@ export function WasiyyahView() {
                 </div>
 
                 <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-emerald-700 block">
+                  <span className={`text-[10px] font-black uppercase tracking-wider text-emerald-700 block ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "رکن اول: وصیت کرنے والا" : "Pillar 1 • The Testator"}
                   </span>
-                  <h3 className="font-serif font-black text-xl text-[#172e22]">
+                  <h3 className={`font-black text-xl text-[#172e22] ${isUr ? "font-nastaliq leading-[2]" : "font-serif"}`}>
                     {isUr ? "الموصی (وصیت کنندہ کی اہلیت)" : "Al-Mūṣī (The Testator)"}
                   </h3>
                 </div>
 
                 <div className="flex flex-wrap gap-1.5 pt-1">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-900 border border-emerald-200">
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-900 border border-emerald-200 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "بلوغ (Mature)" : "Mature (Bāligh)"}
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-900 border border-emerald-200">
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-900 border border-emerald-200 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "عقل (Sane)" : "Sane (‘Āqil)"}
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-900 border border-emerald-200">
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-900 border border-emerald-200 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "اختیار (Free Will)" : "Free Will (Ikhtiyār)"}
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-900 border border-emerald-200">
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-900 border border-emerald-200 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "رشد (Financial Discretion)" : "Sound Mind (Rushd)"}
                   </span>
                 </div>
@@ -721,7 +744,7 @@ export function WasiyyahView() {
 
               {/* Alert on post-suicide rule */}
               <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-300 text-xs text-amber-950 space-y-1 font-medium">
-                <span className="font-bold flex items-center gap-1.5 text-amber-900">
+                <span className={`font-bold flex items-center gap-1.5 text-amber-900 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                   <AlertTriangle className="w-3.5 h-3.5 text-amber-700" />
                   {isUr ? "خودکشی کے اقدام کا شرعی حکم:" : "Post-Suicide Lethal Act Rule:"}
                 </span>
@@ -744,22 +767,22 @@ export function WasiyyahView() {
                 </div>
 
                 <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-blue-700 block">
+                  <span className={`text-[10px] font-black uppercase tracking-wider text-blue-700 block ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "رکن دوم: وصیت کا حقدار" : "Pillar 2 • The Beneficiary"}
                   </span>
-                  <h3 className="font-serif font-black text-xl text-[#0f172a]">
+                  <h3 className={`font-black text-xl text-[#0f172a] ${isUr ? "font-nastaliq leading-[2]" : "font-serif"}`}>
                     {isUr ? "الموصى له (وصیت پانے والا)" : "Al-Mūṣā Lahū (The Beneficiary)"}
                   </h3>
                 </div>
 
                 <div className="flex flex-wrap gap-1.5 pt-1">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-50 text-blue-900 border border-blue-200">
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-50 text-blue-900 border border-blue-200 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "وجود کا ہونا" : "Must Legally Exist"}
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-50 text-blue-900 border border-blue-200">
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-50 text-blue-900 border border-blue-200 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "ماں کے پیٹ کا بچہ (جنین)" : "Unborn Fetus (if born alive)"}
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-50 text-blue-900 border border-blue-200">
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-50 text-blue-900 border border-blue-200 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "مالک بننے کا اہل" : "Capable of Ownership"}
                   </span>
                 </div>
@@ -772,10 +795,12 @@ export function WasiyyahView() {
               </div>
 
               <div className="p-3.5 rounded-2xl bg-blue-50 border border-blue-200 text-xs text-blue-950 font-medium">
-                <strong>{isUr ? "ملکیت کی اہلیت:" : "Capacity to Own:"}</strong>{" "}
-                {isUr
-                  ? "کسی غیر جاندار چیز یا جانور کے نام ذاتی وصیت باطل ہے، البتہ ان کی دیکھ بھال کے لیے رقم مختص کی جا سکتی ہے۔"
-                  : "A bequest cannot be made directly in an animal's name, though funds may be allocated for its ongoing humane care."}
+                <strong className={isUr ? "font-nastaliq leading-[2]" : ""}>{isUr ? "ملکیت کی اہلیت:" : "Capacity to Own:"}</strong>{" "}
+                <span className={isUr ? "font-nastaliq leading-[2]" : ""}>
+                  {isUr
+                    ? "کسی غیر جاندار چیز یا جانور کے نام ذاتی وصیت باطل ہے، البتہ ان کی دیکھ بھال کے لیے رقم مختص کی جا سکتی ہے۔"
+                    : "A bequest cannot be made directly in an animal's name, though funds may be allocated for its ongoing humane care."}
+                </span>
               </div>
             </div>
 
@@ -790,22 +815,22 @@ export function WasiyyahView() {
                 </div>
 
                 <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 block">
+                  <span className={`text-[10px] font-black uppercase tracking-wider text-amber-700 block ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "رکن سوم: وصیت کیا گیا مال" : "Pillar 3 • Bequeathed Asset"}
                   </span>
-                  <h3 className="font-serif font-black text-xl text-[#78350f]">
+                  <h3 className={`font-black text-xl text-[#78350f] ${isUr ? "font-nastaliq leading-[2]" : "font-serif"}`}>
                     {isUr ? "الموصى به (وصیت شدہ مال یا حق)" : "Al-Mūṣā Bihī (The Bequeathed Asset)"}
                   </h3>
                 </div>
 
                 <div className="flex flex-wrap gap-1.5 pt-1">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-900 border border-amber-200">
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-900 border border-amber-200 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "مالِ حلال و مباح" : "Lawful Value (Ḥalāl)"}
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-900 border border-amber-200">
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-900 border border-amber-200 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "قابلِ منتقلی" : "Transferable"}
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-900 border border-amber-200">
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-900 border border-amber-200 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "ذاتی ملکیت" : "Owned by Testator"}
                   </span>
                 </div>
@@ -818,10 +843,12 @@ export function WasiyyahView() {
               </div>
 
               <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-950 font-medium">
-                <strong>{isUr ? "قرض معاف کرنا:" : "Debt Cancellation:"}</strong>{" "}
-                {isUr
-                  ? "اگر مقروض کو وصیت کے ذریعے اس کا قرضہ معاف کر دیا جائے تو یہ بھی وصیتِ تملیکیہ شمار ہوگی۔"
-                  : "Forgiving a debt owed to the testator is a legally recognized and enforceable possessory bequest."}
+                <strong className={isUr ? "font-nastaliq leading-[2]" : ""}>{isUr ? "قرض معاف کرنا:" : "Debt Cancellation:"}</strong>{" "}
+                <span className={isUr ? "font-nastaliq leading-[2]" : ""}>
+                  {isUr
+                    ? "اگر مقروض کو وصیت کے ذریعے اس کا قرضہ معاف کر دیا جائے تو یہ بھی وصیتِ تملیکیہ شمار ہوگی۔"
+                    : "Forgiving a debt owed to the testator is a legally recognized and enforceable possessory bequest."}
+                </span>
               </div>
             </div>
 
@@ -836,22 +863,22 @@ export function WasiyyahView() {
                 </div>
 
                 <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-indigo-700 block">
+                  <span className={`text-[10px] font-black uppercase tracking-wider text-indigo-700 block ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "رکن چہارم: ایجاب و قبول کا صیغہ" : "Pillar 4 • Offer & Acceptance"}
                   </span>
-                  <h3 className="font-serif font-black text-xl text-indigo-950">
+                  <h3 className={`font-black text-xl text-indigo-950 ${isUr ? "font-nastaliq leading-[2]" : "font-serif"}`}>
                     {isUr ? "الصيغة (ایجاب و قبول کی شرائط)" : "Al-Ṣīghah (Offer & Acceptance)"}
                   </h3>
                 </div>
 
                 <div className="flex flex-wrap gap-1.5 pt-1">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-50 text-indigo-900 border border-indigo-200">
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-50 text-indigo-900 border border-indigo-200 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "زبانی یا تحریری" : "Verbal or Written"}
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-50 text-indigo-900 border border-indigo-200">
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-50 text-indigo-900 border border-indigo-200 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "واضح اشارہ (معذور کے لیے)" : "Definitive Gesture"}
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-50 text-indigo-900 border border-indigo-200">
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-50 text-indigo-900 border border-indigo-200 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "قبول و رد کے ضوابط" : "Acceptance (Qabūl) Rules"}
                   </span>
                 </div>
@@ -864,10 +891,12 @@ export function WasiyyahView() {
               </div>
 
               <div className="p-3.5 rounded-2xl bg-indigo-50 border border-indigo-200 text-xs text-indigo-950 font-medium">
-                <strong>{isUr ? "رد کا حکم (Rejection):" : "Rejection Rule (Radd):"}</strong>{" "}
-                {isUr
-                  ? "اگر جس کے لیے وصیت کی گئی ہو وہ مرنے کے بعد وصیت ٹھکرا دے تو مال واپس اصل ترکے میں آ کر تمام ورثاء میں تقسیم ہوگا۔"
-                  : "If the beneficiary explicitly rejects the bequest after the testator's demise, the gift reverts to the general estate for blood heirs."}
+                <strong className={isUr ? "font-nastaliq leading-[2]" : ""}>{isUr ? "رد کا حکم (Rejection):" : "Rejection Rule (Radd):"}</strong>{" "}
+                <span className={isUr ? "font-nastaliq leading-[2]" : ""}>
+                  {isUr
+                    ? "اگر جس کے لیے وصیت کی گئی ہو وہ مرنے کے بعد وصیت ٹھکرا دے تو مال واپس اصل ترکے میں آ کر تمام ورثاء میں تقسیم ہوگا۔"
+                    : "If the beneficiary explicitly rejects the bequest after the testator's demise, the gift reverts to the general estate for blood heirs."}
+                </span>
               </div>
             </div>
           </div>
@@ -883,7 +912,7 @@ export function WasiyyahView() {
                 ۵
               </div>
               <div>
-                <h2 className="text-xl sm:text-2xl font-black font-serif text-[#172e22]">
+                <h2 className={`text-xl sm:text-2xl font-black text-[#172e22] ${isUr ? "font-nastaliq leading-[2] py-1" : "font-serif"}`}>
                   {isUr ? "وارث کے حق میں وصیت: شیعہ و سنی فقہی امتیاز" : "Can an Heir Receive a Will? The Shia-Sunni Landmark Principle"}
                 </h2>
                 <p className="text-xs text-[#52735a] font-medium font-nastaliq leading-[2.2]">
@@ -893,7 +922,7 @@ export function WasiyyahView() {
                 </p>
               </div>
             </div>
-            <span className="text-xs font-bold px-3 py-1 rounded-full bg-amber-100 text-[#b45309] border border-amber-300">
+            <span className={`text-xs font-bold px-3 py-1 rounded-full bg-amber-100 text-[#b45309] border border-amber-300 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
               🏆 Landmark Shia Doctrine
             </span>
           </div>
@@ -907,10 +936,10 @@ export function WasiyyahView() {
                   <Trophy className="w-6 h-6 text-amber-300" />
                 </div>
                 <div>
-                  <span className="text-xs font-black uppercase tracking-wider text-[#245642] block">
+                  <span className={`text-xs font-black uppercase tracking-wider text-[#245642] block ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "فقہِ جعفریہ کا امتیازِ خاص" : "Landmark Principle of Ja‘farī Jurisprudence"}
                   </span>
-                  <h3 className="font-serif font-black text-xl sm:text-2xl text-[#172e22]">
+                  <h3 className={`font-black text-xl sm:text-2xl text-[#172e22] ${isUr ? "font-nastaliq leading-[2]" : "font-serif"}`}>
                     {isUr ? "وارث کے حق میں وصیت کا مطلق شرعی جواز" : "Absolute Validity of Testamentary Bequests to Legal Heirs"}
                   </h3>
                 </div>
@@ -931,7 +960,7 @@ export function WasiyyahView() {
                   <span className="w-6 h-6 rounded-full bg-red-600 text-white font-bold text-xs flex items-center justify-center shrink-0">
                     ✕
                   </span>
-                  <span className="font-extrabold text-sm text-red-950 uppercase tracking-wider">
+                  <span className={`font-extrabold text-sm text-red-950 uppercase tracking-wider ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "اہلِ سنت فقہی مکاتب کا نظریہ:" : "Sunni Jurisprudential Position:"}
                   </span>
                 </div>
@@ -951,11 +980,11 @@ export function WasiyyahView() {
                   <span className="w-6 h-6 rounded-full bg-emerald-700 text-white font-bold text-xs flex items-center justify-center shrink-0">
                     ✓
                   </span>
-                  <span className="font-extrabold text-sm text-emerald-950 uppercase tracking-wider">
+                  <span className={`font-extrabold text-sm text-emerald-950 uppercase tracking-wider ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                     {isUr ? "فقہِ جعفریہ (مکتبِ اہلِ بیتؑ) کا صریح فتویٰ:" : "Ja‘farī (Shia) Divine Ruling:"}
                   </span>
                 </div>
-                <div className="font-serif font-black text-base text-emerald-900 border-s-3 border-emerald-600 ps-2 py-0.5">
+                <div className={`font-black text-base text-emerald-900 border-s-3 border-emerald-600 ps-2 py-0.5 ${isUr ? "font-nastaliq leading-[2]" : "font-serif"}`}>
                   {isUr ? "۱/۳ کے اندر وارث کے لیے وصیت سو فیصد جائز اور نافذ ہے" : "100% Valid & Executable up to 1/3rd"}
                 </div>
                 <p className="text-xs sm:text-sm text-emerald-950 leading-relaxed font-nastaliq leading-[2.2] font-semibold">
@@ -966,22 +995,44 @@ export function WasiyyahView() {
               </div>
             </div>
 
-            {/* Sacred Ayah Calligraphy Box */}
-            <div className="p-6 rounded-2xl bg-emerald-950 text-white space-y-3 shadow-inner">
-              <div className="flex items-center justify-between border-b border-emerald-800 pb-2">
-                <span className="text-xs font-extrabold uppercase tracking-wider text-amber-300">
-                  {isUr ? "قرآنِ حکیم کی صریح نسائی و والدینی وصیت" : "Surah Al-Baqarah • Ayah 180"}
+            {/* Sacred Ayah Calligraphy Box - Symmetrically Centered with Majestic Frame */}
+            <div className="p-6 sm:p-8 md:p-10 rounded-3xl bg-linear-to-b from-[#062419] via-[#041d14] to-[#02130c] text-white border-2 border-amber-400/40 space-y-4 shadow-2xl relative overflow-hidden text-center">
+              {/* Subtle Ambient Radial Radiance */}
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-400/10 via-transparent to-transparent pointer-events-none" />
+
+              {/* Centered Sacred Badge */}
+              <div className="inline-flex items-center justify-center gap-2 px-4 py-1.5 rounded-full bg-amber-400/15 border border-amber-400/30 text-amber-300 text-xs font-bold tracking-wide mx-auto">
+                <Scroll className="w-3.5 h-3.5 text-amber-400" />
+                <span className={isUr ? "font-nastaliq leading-[2]" : ""}>
+                  {isUr ? "آیتِ وصیت • قرآنِ حکیم" : "Ayah al-Waṣiyyah • The Holy Qur'an"}
                 </span>
-                <span className="font-mono text-xs text-emerald-300">Quran 2:180</span>
               </div>
-              <p className="font-arabic text-xl sm:text-2xl text-center text-amber-200 py-1 font-bold">
+
+              {/* Centered Arabic Ayah */}
+              <p className="font-arabic text-xl sm:text-2xl md:text-3xl text-center text-amber-200 py-2 font-bold leading-[2.2] sm:leading-[2.5] max-w-4xl mx-auto drop-shadow-md">
                 كُتِبَ عَلَيْكُمْ إِذَا حَضَرَ أَحَدَكُمُ الْمَوْتُ إِن تَرَكَ خَيْرًا الْوَصِيَّةُ لِلْوَالِدَيْنِ وَالأَقْرَبِينَ بِالْمَعْرُوفِ ۖ حَقًّا عَلَى الْمُتَّقِينَ
               </p>
-              <p className="text-xs sm:text-sm text-emerald-100 text-center font-medium font-nastaliq leading-[2.2]">
+
+              {/* Centered Ornate Golden Divider */}
+              <div className="flex items-center justify-center gap-3 max-w-xs mx-auto py-1 text-amber-400/60 text-xs">
+                <div className="h-px w-16 bg-gradient-to-r from-transparent to-amber-400/50" />
+                <span>۞</span>
+                <div className="h-px w-16 bg-gradient-to-l from-transparent to-amber-400/50" />
+              </div>
+
+              {/* Centered Translation */}
+              <p className="text-xs sm:text-base text-emerald-100 text-center font-medium font-nastaliq leading-[2.5] max-w-3xl mx-auto">
                 {isUr
                   ? "«تم پر فرض کیا گیا ہے کہ جب تم میں سے کسی کے سامنے موت حاضر ہو جائے، اگر وہ مال چھوڑ رہا ہو، تو اپنے والدین اور قریبی رشتہ داروں کے لیے شائستہ طور پر وصیت کرے۔ یہ پرہیزگاروں پر حق ہے۔»"
                   : "“Prescribed for you when death approaches any of you, if he leaves wealth, that he make a bequest to parents and near relatives fairly: a duty upon the righteous.”"}
               </p>
+
+              {/* Centered Citation Badge */}
+              <div className="flex items-center justify-center pt-1">
+                <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-black/50 border border-emerald-500/40 text-[11px] sm:text-xs font-mono font-bold text-amber-300 shadow-inner">
+                  {isUr ? "سورۃ البقرۃ: آیت ۱۸۰" : "Surah Al-Baqarah 2:180"}
+                </span>
+              </div>
             </div>
           </div>
         </section>
@@ -996,7 +1047,7 @@ export function WasiyyahView() {
                 ۶
               </div>
               <div>
-                <h2 className="text-xl sm:text-2xl font-black font-serif text-[#172e22]">
+                <h2 className={`text-xl sm:text-2xl font-black text-[#172e22] ${isUr ? "font-nastaliq leading-[2] py-1" : "font-serif"}`}>
                   {isUr ? "تصفیاتی سیڑھی: وصیتوں کی شرعی ترتیب و اولویت" : "The 3-Tier Visual Liquidation Stack (The Priority Ladder)"}
                 </h2>
                 <p className="text-xs text-[#52735a] font-medium font-nastaliq leading-[2.2]">
@@ -1006,7 +1057,7 @@ export function WasiyyahView() {
                 </p>
               </div>
             </div>
-            <span className="text-xs font-bold px-3 py-1 rounded-full bg-indigo-100 text-indigo-900 border border-indigo-300">
+            <span className={`text-xs font-bold px-3 py-1 rounded-full bg-indigo-100 text-indigo-900 border border-indigo-300 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
               {isUr ? "۳ درجاتِ ترجیح" : "3-Tier Ladder"}
             </span>
           </div>
@@ -1021,12 +1072,12 @@ export function WasiyyahView() {
                 </div>
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-red-600 text-white">
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-red-600 text-white ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                       Top Priority • واجبِ مالی
                     </span>
                     <span className="text-xs font-mono font-bold text-red-900">100% of Gross Capital (أصل المال)</span>
                   </div>
-                  <h3 className="font-serif font-black text-lg text-red-950">
+                  <h3 className={`font-black text-lg text-red-950 ${isUr ? "font-nastaliq leading-[2]" : "font-serif"}`}>
                     {isUr ? "۱. واجباتِ مالیہ (قرضے، مہر، خمس، زکوٰۃ، حج)" : "Level 1: Financial Dues (Wājib Mālī)"}
                   </h3>
                   <p className="text-xs sm:text-sm text-red-900 leading-relaxed font-nastaliq leading-[2.2]">
@@ -1056,12 +1107,12 @@ export function WasiyyahView() {
                 </div>
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-600 text-white">
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-600 text-white ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                       Middle Priority • واجبِ بدنی
                     </span>
                     <span className="text-xs font-mono font-bold text-amber-900">Extracted Strictly from 1/3rd (ثلث)</span>
                   </div>
-                  <h3 className="font-serif font-black text-lg text-amber-950">
+                  <h3 className={`font-black text-lg text-amber-950 ${isUr ? "font-nastaliq leading-[2]" : "font-serif"}`}>
                     {isUr ? "۲. واجباتِ بدنیہ (قضا نمازیں و روزے)" : "Level 2: Bodily Obligations (Wājib Badanī)"}
                   </h3>
                   <p className="text-xs sm:text-sm text-amber-900 leading-relaxed font-nastaliq leading-[2.2]">
@@ -1091,12 +1142,12 @@ export function WasiyyahView() {
                 </div>
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-700 text-white">
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-700 text-white ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                       Final Priority • تبرعی خیرات
                     </span>
                     <span className="text-xs font-mono font-bold text-emerald-900">Remaining Balance of 1/3rd</span>
                   </div>
-                  <h3 className="font-serif font-black text-lg text-emerald-950">
+                  <h3 className={`font-black text-lg text-emerald-950 ${isUr ? "font-nastaliq leading-[2]" : "font-serif"}`}>
                     {isUr ? "۳. تبرعی وصیتیں (اختیاری خیرات، مساجد، تحائف)" : "Level 3: Voluntary Charity (Tabarru‘ī)"}
                   </h3>
                   <p className="text-xs sm:text-sm text-emerald-900 leading-relaxed font-nastaliq leading-[2.2]">
@@ -1125,7 +1176,7 @@ export function WasiyyahView() {
                 ۷
               </div>
               <div>
-                <h2 className="text-xl sm:text-2xl font-black font-serif text-[#172e22]">
+                <h2 className={`text-xl sm:text-2xl font-black text-[#172e22] ${isUr ? "font-nastaliq leading-[2] py-1" : "font-serif"}`}>
                   {isUr ? "تاحیات آزادی: وصیت بدلنے یا منسوخ کرنے کے ۳ طریقے" : "Lifetime Freedom: 3 Ways to Change or Revoke Your Will"}
                 </h2>
                 <p className="text-xs text-[#52735a] font-medium font-nastaliq leading-[2.2]">
@@ -1135,7 +1186,7 @@ export function WasiyyahView() {
                 </p>
               </div>
             </div>
-            <span className="text-xs font-bold px-3 py-1 rounded-full bg-stone-100 text-stone-800 border border-stone-300">
+            <span className={`text-xs font-bold px-3 py-1 rounded-full bg-stone-100 text-stone-800 border border-stone-300 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
               {isUr ? "عقدِ جائز" : "Revocable by Law"}
             </span>
           </div>
@@ -1147,7 +1198,7 @@ export function WasiyyahView() {
                 <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-black text-sm">
                   ۱
                 </div>
-                <h3 className="font-serif font-black text-lg text-stone-900">
+                <h3 className={`font-black text-lg text-stone-900 ${isUr ? "font-nastaliq leading-[2]" : "font-serif"}`}>
                   {isUr ? "۱. رجوعِ صریح (زبانی یا تحریری)" : "1. Explicit Revocation"}
                 </h3>
                 <p className="text-xs sm:text-sm text-stone-700 leading-relaxed font-nastaliq leading-[2.2]">
@@ -1165,7 +1216,7 @@ export function WasiyyahView() {
                 <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center font-black text-sm">
                   ۲
                 </div>
-                <h3 className="font-serif font-black text-lg text-stone-900">
+                <h3 className={`font-black text-lg text-stone-900 ${isUr ? "font-nastaliq leading-[2]" : "font-serif"}`}>
                   {isUr ? "۲. رجوعِ فعلی (عملی تصرف)" : "2. Practical Disposal"}
                 </h3>
                 <p className="text-xs sm:text-sm text-stone-700 leading-relaxed font-nastaliq leading-[2.2]">
@@ -1183,7 +1234,7 @@ export function WasiyyahView() {
                 <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-black text-sm">
                   ۳
                 </div>
-                <h3 className="font-serif font-black text-lg text-stone-900">
+                <h3 className={`font-black text-lg text-stone-900 ${isUr ? "font-nastaliq leading-[2]" : "font-serif"}`}>
                   {isUr ? "۳. متاخر (نئی) وصیت کا اصول" : "3. Newer Dated Will"}
                 </h3>
                 <p className="text-xs sm:text-sm text-stone-700 leading-relaxed font-nastaliq leading-[2.2]">
@@ -1207,7 +1258,7 @@ export function WasiyyahView() {
                 ۸
               </div>
               <div>
-                <h2 className="text-xl sm:text-2xl font-black font-serif text-[#172e22]">
+                <h2 className={`text-xl sm:text-2xl font-black text-[#172e22] ${isUr ? "font-nastaliq leading-[2] py-1" : "font-serif"}`}>
                   {isUr ? "باطل وصیت کی ۸ علامات: تشخیصی ریڈ فلیگ میٹرکس" : "The 8 Signs of an Invalid Will: 2-Column Diagnostic Red-Flag Matrix"}
                 </h2>
                 <p className="text-xs text-[#52735a] font-medium font-nastaliq leading-[2.2]">
@@ -1217,7 +1268,7 @@ export function WasiyyahView() {
                 </p>
               </div>
             </div>
-            <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-red-100 text-red-900 border border-red-300">
+            <span className={`text-xs font-mono font-bold px-3 py-1 rounded-full bg-red-100 text-red-900 border border-red-300 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
               8 Diagnostic Red Flags
             </span>
           </div>
@@ -1243,10 +1294,10 @@ export function WasiyyahView() {
                         {sign.id}
                       </div>
                       <div>
-                        <span className="text-[10px] font-black uppercase tracking-wider text-red-600 block">
+                        <span className={`text-[10px] font-black uppercase tracking-wider text-red-600 block ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                           ⚠️ Invalidating Ground #{sign.id}
                         </span>
-                        <h4 className="font-extrabold text-sm sm:text-base text-stone-900">
+                        <h4 className={`font-extrabold text-sm sm:text-base text-stone-900 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                           {isUr ? sign.titleUr : sign.titleEn}
                         </h4>
                       </div>
@@ -1266,7 +1317,7 @@ export function WasiyyahView() {
                       <div className="p-3.5 rounded-xl bg-white border border-red-300 text-red-950 font-semibold flex items-start gap-2 shadow-2xs">
                         <AlertTriangle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
                         <div>
-                          <strong className="text-red-900 block mb-0.5">
+                          <strong className={`text-red-900 block mb-0.5 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
                             {isUr ? "شرعی علاج و قانونی تدارک:" : "Sharia Remedy & Legal Consequence:"}
                           </strong>
                           <span className="font-nastaliq leading-[2.2] text-stone-800">
@@ -1292,7 +1343,7 @@ export function WasiyyahView() {
                 ۹
               </div>
               <div>
-                <h2 className="text-xl sm:text-2xl font-black font-serif text-[#172e22]">
+                <h2 className={`text-xl sm:text-2xl font-black text-[#172e22] ${isUr ? "font-nastaliq leading-[2] py-1" : "font-serif"}`}>
                   {isUr ? "وصی و شرعی سرپرست: فیڈوشری کمانڈ کارڈ" : "The Executor (Al-Waṣī) & Guardianship: Fiduciary Command Card"}
                 </h2>
                 <p className="text-xs text-[#52735a] font-medium font-nastaliq leading-[2.2]">
@@ -1302,7 +1353,7 @@ export function WasiyyahView() {
                 </p>
               </div>
             </div>
-            <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#edf3e7] text-[#245642] border border-[#c4d4be]">
+            <span className={`text-xs font-bold px-3 py-1 rounded-full bg-[#edf3e7] text-[#245642] border border-[#c4d4be] ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
               {isUr ? "۳ ذیلی پینلز" : "3-Panel Command Card"}
             </span>
           </div>
@@ -1315,7 +1366,7 @@ export function WasiyyahView() {
                 <div className="w-10 h-10 rounded-xl bg-emerald-100 text-[#245642] flex items-center justify-center font-black text-sm">
                   <UserCheck className="w-5 h-5" />
                 </div>
-                <h3 className="font-serif font-black text-lg text-[#172e22]">
+                <h3 className={`font-black text-lg text-[#172e22] ${isUr ? "font-nastaliq leading-[2]" : "font-serif"}`}>
                   {isUr ? "۱. وصی کی لازمی شرائط" : "1. Executor Qualifications"}
                 </h3>
                 <ul className="space-y-2 text-xs text-stone-700 font-nastaliq leading-[2.2]">
@@ -1335,10 +1386,12 @@ export function WasiyyahView() {
               </div>
 
               <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-950 font-medium">
-                <strong>{isUr ? "برطرفی کا اختیار:" : "Removal Power:"}</strong>{" "}
-                {isUr
-                  ? "اگر وصی بددیانت نکلے تو حاکمِ شرع (مجتہد) اسے برطرف کر سکتا ہے۔"
-                  : "If proven corrupt, the Shia religious judge (Ḥākim al-Shar‘ī) possesses the power of removal."}
+                <strong className={isUr ? "font-nastaliq leading-[2]" : ""}>{isUr ? "برطرفی کا اختیار:" : "Removal Power:"}</strong>{" "}
+                <span className={isUr ? "font-nastaliq leading-[2]" : ""}>
+                  {isUr
+                    ? "اگر وصی بددیانت نکلے تو حاکمِ شرع (مجتہد) اسے برطرف کر سکتا ہے۔"
+                    : "If proven corrupt, the Shia religious judge (Ḥākim al-Shar‘ī) possesses the power of removal."}
+                </span>
               </div>
             </div>
 
@@ -1348,7 +1401,7 @@ export function WasiyyahView() {
                 <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-black text-sm">
                   <Lock className="w-5 h-5" />
                 </div>
-                <h3 className="font-serif font-black text-lg text-amber-950">
+                <h3 className={`font-black text-lg text-amber-950 ${isUr ? "font-nastaliq leading-[2]" : "font-serif"}`}>
                   {isUr ? "۲. دستبرداری کے شرعی قواعد" : "2. The Declining Rules"}
                 </h3>
                 <p className="text-xs text-stone-700 leading-relaxed font-nastaliq leading-[2.3]">
@@ -1359,8 +1412,10 @@ export function WasiyyahView() {
               </div>
 
               <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-950 font-medium">
-                <strong>{isUr ? "استثناء:" : "Sole Exception:"}</strong>{" "}
-                {isUr ? "سوائے ناقابلِ برداشت حرج و مشقت کے۔" : "Unless execution causes intolerable hardship (Ḥaraj)."}
+                <strong className={isUr ? "font-nastaliq leading-[2]" : ""}>{isUr ? "استثناء:" : "Sole Exception:"}</strong>{" "}
+                <span className={isUr ? "font-nastaliq leading-[2]" : ""}>
+                  {isUr ? "سوائے ناقابلِ برداشت حرج و مشقت کے۔" : "Unless execution causes intolerable hardship (Ḥaraj)."}
+                </span>
               </div>
             </div>
 
@@ -1370,7 +1425,7 @@ export function WasiyyahView() {
                 <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-900 flex items-center justify-center font-black text-sm">
                   <Users className="w-5 h-5" />
                 </div>
-                <h3 className="font-serif font-black text-lg text-indigo-950">
+                <h3 className={`font-black text-lg text-indigo-950 ${isUr ? "font-nastaliq leading-[2]" : "font-serif"}`}>
                   {isUr ? "۳. ایک سے زائد اوصیاء کا حکم" : "3. Multiple Executors"}
                 </h3>
                 <div className="space-y-2 text-xs text-stone-700 font-nastaliq leading-[2.2]">
@@ -1395,7 +1450,7 @@ export function WasiyyahView() {
             ========================================================================= */}
         <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-[#245642] to-[#164e3a] text-white flex flex-col sm:flex-row items-center justify-between gap-5 shadow-xl">
           <div className="space-y-1 text-center sm:text-start">
-            <h3 className="font-serif font-black text-xl sm:text-2xl">
+            <h3 className={`font-black text-xl sm:text-2xl ${isUr ? "font-nastaliq leading-[2]" : "font-serif"}`}>
               {isUr ? "اب شرعی وراثت کا اگلا مرحلہ حساب کریں" : "Ready to Calculate Statutory Blood Inheritance?"}
             </h3>
             <p className="text-xs sm:text-sm text-emerald-200 font-nastaliq leading-[2.2]">
@@ -1411,7 +1466,7 @@ export function WasiyyahView() {
               setWizardStep(1);
               setActiveView("wizard");
             }}
-            className="px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-amber-950 font-black text-sm transition-all shadow-lg cursor-pointer flex items-center gap-2 shrink-0 hover:scale-105"
+            className={`px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-amber-950 font-black text-sm transition-all shadow-lg cursor-pointer flex items-center gap-2 shrink-0 hover:scale-105 ${isUr ? "font-nastaliq leading-[2]" : ""}`}
           >
             <span>{isUr ? "حسابِ وراثت لانچ کریں" : "Launch Inheritance Calculator"}</span>
             <ArrowRight className="w-4 h-4" />

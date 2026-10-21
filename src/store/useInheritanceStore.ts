@@ -124,29 +124,29 @@ const legacyDeceased: DeceasedInfo = {
     ring: true,
     swordOrDefensiveWeapon: true,
     clothes: true,
-    estimatedValue: 150000,
+    estimatedValue: 0,
   },
 };
 
 const legacyAssets: EstateAssets = {
-  cash: 1500000,
-  bankAccounts: 2500000,
-  residentialLand: 12000000,
-  commercialLand: 5000000,
-  agriculturalLand: 8000000,
-  buildingsAndFixtures: 15000000,
-  movableProperty: 2000000,
+  cash: 0,
+  bankAccounts: 0,
+  residentialLand: 0,
+  commercialLand: 0,
+  agriculturalLand: 0,
+  buildingsAndFixtures: 0,
+  movableProperty: 0,
 };
 
 const legacyDebts: EstateDebts = {
-  funeralExpenses: 250000,
-  securedDebts: 500000,
-  unsecuredDebts: 750000,
-  unpaidKhums: 600000,
+  funeralExpenses: 0,
+  securedDebts: 0,
+  unsecuredDebts: 0,
+  unpaidKhums: 0,
   unpaidZakat: 0,
-  unfulfilledHajj: 800000,
-  kaffarat: 50000,
-  wasiyyahAmount: 2000000,
+  unfulfilledHajj: 0,
+  kaffarat: 0,
+  wasiyyahAmount: 0,
   wasiyyahApprovedExceedingOneThird: false,
 };
 
@@ -757,21 +757,11 @@ export const useInheritanceStore = create<InheritanceState>()(
     }),
     {
       name: "mirath-thaqalayn-storage",
-      version: 2,
+      version: 4,
       migrate: (persisted, version) => {
         const saved = persisted as any;
-        // Purge legacy demo states (Ali/Hasan/Zainab, legacy deceased, or unversioned demo)
-        const hasLegacyGhostDescendants = saved?.heirs?.namedDescendants?.some((n: any) =>
-          n?.name?.includes("Ali") || n?.name?.includes("Fatima") || n?.name?.includes("Zaynab")
-        );
-        const isLegacyDemo =
-          version < 2 &&
-          (saved?.isSample ||
-            saved?.deceased?.name === legacyDeceased.name ||
-            hasLegacyGhostDescendants ||
-            JSON.stringify(saved?.assets) === JSON.stringify(legacyAssets));
-
-        if (isLegacyDemo) {
+        // Purge any stale legacy cached demo numbers if upgrading or uninitialized
+        if (version < 4 || saved?.assets?.cash === 1500000) {
           return {
             ...saved,
             deceased: initialDeceased,
@@ -779,6 +769,7 @@ export const useInheritanceStore = create<InheritanceState>()(
             debts: initialDebts,
             heirs: initialHeirs,
             isSample: false,
+            activePresetId: null,
           };
         }
         return { ...saved, isSample: saved?.isSample ?? false };

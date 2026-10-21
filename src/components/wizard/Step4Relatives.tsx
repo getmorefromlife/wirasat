@@ -189,7 +189,7 @@ export const Step4Relatives: React.FC = () => {
                           onChange={(e) =>
                             updateWife(wife.id, {
                               hasMahrPending: e.target.checked,
-                              pendingMahrAmount: e.target.checked ? (wife.pendingMahrAmount || 100000) : 0,
+                              pendingMahrAmount: e.target.checked ? (wife.pendingMahrAmount || 0) : 0,
                             })
                           }
                           className="rounded text-[var(--theme-gold)] w-4 h-4"
@@ -202,7 +202,8 @@ export const Step4Relatives: React.FC = () => {
                             <input
                               type="number"
                               min="0"
-                              value={wife.pendingMahrAmount || 0}
+                              value={wife.pendingMahrAmount || ""}
+                              placeholder="0"
                               onChange={(e) =>
                                 updateWife(wife.id, {
                                   pendingMahrAmount: Math.max(0, parseInt(e.target.value) || 0),
@@ -446,14 +447,14 @@ export const Step4Relatives: React.FC = () => {
                         </label>
                         <input
                           type="number"
-                          value={child.birthOrderOrAge ?? 20}
+                          value={child.birthOrderOrAge || ""}
+                          placeholder="e.g. 28"
                           onChange={(e) =>
                             updateChild(child.id, {
                               birthOrderOrAge: parseInt(e.target.value) || 0,
                             })
                           }
                           className="w-full sacred-input px-2.5 py-1.5 text-xs font-mono font-bold"
-                          placeholder="e.g. 28"
                         />
                       </div>
                     </div>
@@ -592,7 +593,8 @@ export const Step4Relatives: React.FC = () => {
                 <input
                   type="number"
                   min="0"
-                  value={heirs.motherBlockingBrothers || 0}
+                  value={heirs.motherBlockingBrothers || ""}
+                  placeholder="0"
                   onChange={(e) =>
                     updateHeirs({
                       motherBlockingBrothers: parseInt(e.target.value) || 0,
@@ -609,7 +611,8 @@ export const Step4Relatives: React.FC = () => {
                 <input
                   type="number"
                   min="0"
-                  value={heirs.motherBlockingSisters || 0}
+                  value={heirs.motherBlockingSisters || ""}
+                  placeholder="0"
                   onChange={(e) =>
                     updateHeirs({
                       motherBlockingSisters: parseInt(e.target.value) || 0,
@@ -715,7 +718,8 @@ export const Step4Relatives: React.FC = () => {
                 <input
                   type="number"
                   min="0"
-                  value={heirs.fullBrothersCount || 0}
+                  value={heirs.fullBrothersCount || ""}
+                  placeholder="0"
                   onChange={(e) =>
                     updateHeirs({ fullBrothersCount: parseInt(e.target.value) || 0 })
                   }
@@ -730,7 +734,8 @@ export const Step4Relatives: React.FC = () => {
                 <input
                   type="number"
                   min="0"
-                  value={heirs.fullSistersCount || 0}
+                  value={heirs.fullSistersCount || ""}
+                  placeholder="0"
                   onChange={(e) =>
                     updateHeirs({ fullSistersCount: parseInt(e.target.value) || 0 })
                   }
@@ -745,7 +750,8 @@ export const Step4Relatives: React.FC = () => {
                 <input
                   type="number"
                   min="0"
-                  value={heirs.uterineBrothersCount || 0}
+                  value={heirs.uterineBrothersCount || ""}
+                  placeholder="0"
                   onChange={(e) =>
                     updateHeirs({ uterineBrothersCount: parseInt(e.target.value) || 0 })
                   }
@@ -800,7 +806,8 @@ export const Step4Relatives: React.FC = () => {
               <input
                 type="number"
                 min="0"
-                value={heirs.paternalUnclesCount || 0}
+                value={heirs.paternalUnclesCount || ""}
+                placeholder="0"
                 onChange={(e) =>
                   updateHeirs({ paternalUnclesCount: parseInt(e.target.value) || 0 })
                 }
@@ -815,7 +822,8 @@ export const Step4Relatives: React.FC = () => {
               <input
                 type="number"
                 min="0"
-                value={heirs.paternalAuntsCount || 0}
+                value={heirs.paternalAuntsCount || ""}
+                placeholder="0"
                 onChange={(e) =>
                   updateHeirs({ paternalAuntsCount: parseInt(e.target.value) || 0 })
                 }
@@ -830,7 +838,8 @@ export const Step4Relatives: React.FC = () => {
               <input
                 type="number"
                 min="0"
-                value={heirs.maternalUnclesCount || 0}
+                value={heirs.maternalUnclesCount || ""}
+                placeholder="0"
                 onChange={(e) =>
                   updateHeirs({ maternalUnclesCount: parseInt(e.target.value) || 0 })
                 }
@@ -845,7 +854,8 @@ export const Step4Relatives: React.FC = () => {
               <input
                 type="number"
                 min="0"
-                value={heirs.paternalCousinsCount || 0}
+                value={heirs.paternalCousinsCount || ""}
+                placeholder="0"
                 onChange={(e) =>
                   updateHeirs({ paternalCousinsCount: parseInt(e.target.value) || 0 })
                 }

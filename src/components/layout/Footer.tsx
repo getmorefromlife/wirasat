@@ -44,8 +44,8 @@ export const Footer: React.FC = () => {
                 <ShieldAlert className="w-5 h-5 text-[#245642] dark:text-emerald-400 shrink-0" />
                 <h4 className="text-sm sm:text-base font-bold font-cinzel text-[#0A2118] dark:text-[#F0FDF4]">
                   {isUr
-                    ? "شرعی و تکنیکی اعلامیہ | Scholarly & AI Limitations Disclaimer"
-                    : "Scholarly & AI Limitations Disclaimer | شرعی و تکنیکی اعلامیہ"}
+                    ? "شرعی و تکنیکی اعلامیہ"
+                    : "Scholarly & AI Limitations Disclaimer"}
                 </h4>
               </div>
               <span className="text-[11px] font-bold text-amber-800 dark:text-amber-400 bg-amber-100 dark:bg-amber-950/60 px-2.5 py-0.5 rounded-full border border-amber-300 dark:border-amber-700">
@@ -53,25 +53,19 @@ export const Footer: React.FC = () => {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs leading-relaxed text-stone-700 dark:text-stone-300">
-              <div className="space-y-1">
-                <strong className="text-stone-900 dark:text-white font-bold block">
-                  English Notice:
-                </strong>
+            {isUr ? (
+              <div className="space-y-2 text-right font-nastaliq leading-[2.2] text-sm sm:text-base text-stone-800 dark:text-stone-200" dir="rtl">
+                <p>
+                  وراثت ایک تعلیمی و تحقیقی اقدام ہے جس کی بنیاد اور ابتدا <strong>مولانا سیّد آئمن رضوی</strong> (فاضل حوزہ علمیہ قم) نے رکھی ہے تاکہ فقہِ جعفریہ کے احکامِ مواریث کو جدید تکنیکی اور عام فہم قالب میں پیش کیا جا سکے۔ یہ حسابی نتائج مراجعِ عظام کے فتاویٰ کے حتمی عدالتی فیصلے کا متبادل نہیں ہیں۔ حسابی و فقہی صحت اور حتمی توثیق کے لیے مختلف علمی اداروں، حوزاتِ علمیہ اور مراجعِ عظام و علمائے کرام کے دفاتر سے مسلسل رابطہ اور تبادلہ خیال کا عمل جاری ہے۔ ترکے کی تقسیم سے قبل مستند علمائے کرام اور وکلاءِ مراجع سے تصدیق شرعاً لازم ہے۔
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-2 text-left text-xs sm:text-sm leading-relaxed text-stone-700 dark:text-stone-300" dir="ltr">
                 <p>
                   Wirasat is an educational research initiative conceived and initiated by <strong>Maulana Syed Imon Rizvi</strong> (Graduate, Islamic Seminary of Qom) to translate classical Ja‘farī inheritance jurisprudence into accessible digital models. Calculations utilize automated algorithmic logic under continuous scholarly review. The project is actively engaged in ongoing consultation and review with traditional seminaries (<em>Ḥawzāt</em>) and the representative offices (<em>Dafātir</em>) of esteemed Marāji‘ and scholars for formal verification. This platform is not a substitute for formal judicial decrees or personal consultation with authorized representatives (Wukalā’).
                 </p>
               </div>
-
-              <div className="space-y-1 text-right font-naskh leading-[2.2]" dir="rtl">
-                <strong className="text-stone-900 dark:text-white font-bold block font-sans">
-                  اردو اعلامیہ:
-                </strong>
-                <p className="text-stone-800 dark:text-stone-200">
-                  وراثت ایک تعلیمی و تحقیقی اقدام ہے جس کی بنیاد اور ابتدا <strong>مولانا سیّد آئمن رضوی</strong> (فاضل حوزہ علمیہ قم) نے رکھی ہے تاکہ فقہِ جعفریہ کے احکامِ مواریث کو جدید تکنیکی اور عام فہم قالب میں پیش کیا جا سکے۔ یہ حسابی نتائج مراجعِ عظام کے فتاویٰ کے حتمی عدالتی فیصلے کا متبادل نہیں ہیں۔ حسابی و فقہی صحت اور حتمی توثیق کے لیے مختلف علمی اداروں، حوزاتِ علمیہ اور مراجعِ عظام و علمائے کرام کے دفاتر سے مسلسل رابطہ اور تبادلہ خیال کا عمل جاری ہے۔ ترکے کی تقسیم سے قبل مستند علمائے کرام اور وکلاءِ مراجع سے تصدیق شرعاً لازم ہے۔
-                </p>
-              </div>
-            </div>
+            )}
 
             <div className="pt-2 flex justify-center sm:justify-end">
               <button
@@ -82,8 +76,8 @@ export const Footer: React.FC = () => {
                 <Scale className="w-4 h-4 text-emerald-300" />
                 <span>
                   {isUr
-                    ? "مکمل اعلامیہ و شرعی حدود ملاحظہ فرمائیں | Read Full Disclaimer"
-                    : "Read Full Disclaimer & AI Statement | مکمل اعلامیہ ملاحظہ فرمائیں"}
+                    ? "مکمل اعلامیہ و شرعی حدود ملاحظہ فرمائیں"
+                    : "Read Full Disclaimer & AI Statement"}
                 </span>
                 <ChevronRight className="w-3.5 h-3.5 text-emerald-300" />
               </button>
@@ -92,14 +86,19 @@ export const Footer: React.FC = () => {
 
           {/* 3. Author & Scholarly Direction */}
           <div className="text-center pt-2 text-xs sm:text-sm font-medium text-[#245642] dark:text-emerald-300">
-            <span>A Project by </span>
-            <span className="font-extrabold text-[#172e22] dark:text-emerald-100">
-              Maulana Syed Imon Rizvi
-            </span>
-            <span className="mx-2">•</span>
-            <span className="font-naskh font-bold text-[#172e22] dark:text-emerald-100">
-              مولانا سیّد آئمن رضوی کی علمی و تحقیقی کاوش
-            </span>
+            {isUr ? (
+              <span className="font-nastaliq text-sm sm:text-base font-bold text-[#172e22] dark:text-emerald-100">
+                علمی سرپرستی و تحقیق: مولانا سیّد آئمن رضوی (فاضل حوزہ علمیہ قم)
+              </span>
+            ) : (
+              <>
+                <span>A Project by </span>
+                <span className="font-extrabold text-[#172e22] dark:text-emerald-100">
+                  Maulana Syed Imon Rizvi
+                </span>
+                <span className="text-stone-500 dark:text-stone-400 font-normal"> (Graduate, Islamic Seminary of Qom)</span>
+              </>
+            )}
           </div>
 
           {/* 4. Bottom Copyright & Brand Bar */}

@@ -5,6 +5,7 @@ import {
   Plus,
   Minus,
   Maximize2,
+  Minimize2,
   RotateCcw,
   Download,
   Trash2,
@@ -27,6 +28,7 @@ import {
   Scale,
   Compass,
   Zap,
+  LayoutGrid,
 } from "lucide-react";
 import { useInheritanceStore } from "@/store/useInheritanceStore";
 import { calculateInheritance, calculateNamedTanzilBranches, calculateBalanceSheet } from "@/lib/fiqh-engine";
@@ -84,8 +86,8 @@ const INITIAL_NODES_CLEAN: WhiteboardNode[] = [
     gender: "MALE",
     relation: "DECEASED",
     isAlive: false,
-    x: 480,
-    y: 200,
+    x: 540,
+    y: 160,
   },
 ];
 
@@ -97,8 +99,8 @@ const INITIAL_NODES_4_CHILDREN: WhiteboardNode[] = [
     gender: "MALE",
     relation: "DECEASED",
     isAlive: false,
-    x: 480,
-    y: 180,
+    x: 540,
+    y: 160,
   },
   {
     id: "wife-1",
@@ -108,9 +110,9 @@ const INITIAL_NODES_4_CHILDREN: WhiteboardNode[] = [
     relation: "SPOUSE",
     isAlive: true,
     spouseOfId: "deceased-root",
-    unpaidMahr: 200000,
-    x: 740,
-    y: 180,
+    unpaidMahr: 0,
+    x: 820,
+    y: 160,
   },
   {
     id: "son-1",
@@ -120,8 +122,8 @@ const INITIAL_NODES_4_CHILDREN: WhiteboardNode[] = [
     relation: "SON",
     isAlive: true,
     parentId: "deceased-root",
-    x: 220,
-    y: 360,
+    x: 180,
+    y: 400,
   },
   {
     id: "son-2",
@@ -131,8 +133,8 @@ const INITIAL_NODES_4_CHILDREN: WhiteboardNode[] = [
     relation: "SON",
     isAlive: true,
     parentId: "deceased-root",
-    x: 400,
-    y: 360,
+    x: 420,
+    y: 400,
   },
   {
     id: "daughter-1",
@@ -142,8 +144,8 @@ const INITIAL_NODES_4_CHILDREN: WhiteboardNode[] = [
     relation: "DAUGHTER",
     isAlive: true,
     parentId: "deceased-root",
-    x: 580,
-    y: 360,
+    x: 660,
+    y: 400,
   },
   {
     id: "daughter-2",
@@ -153,8 +155,8 @@ const INITIAL_NODES_4_CHILDREN: WhiteboardNode[] = [
     relation: "DAUGHTER",
     isAlive: true,
     parentId: "deceased-root",
-    x: 760,
-    y: 360,
+    x: 900,
+    y: 400,
   },
   // Grandchildren (under son-1 and daughter-1)
   {
@@ -165,8 +167,8 @@ const INITIAL_NODES_4_CHILDREN: WhiteboardNode[] = [
     relation: "GRANDCHILD",
     isAlive: true,
     parentId: "son-1",
-    x: 220,
-    y: 520,
+    x: 180,
+    y: 640,
   },
   {
     id: "gc-2",
@@ -176,8 +178,8 @@ const INITIAL_NODES_4_CHILDREN: WhiteboardNode[] = [
     relation: "GRANDCHILD",
     isAlive: true,
     parentId: "daughter-1",
-    x: 580,
-    y: 520,
+    x: 660,
+    y: 640,
   },
 ];
 
@@ -190,7 +192,7 @@ const INITIAL_NODES_ORPHANED_TANZIL: WhiteboardNode[] = [
     relation: "DECEASED",
     isAlive: false,
     x: 480,
-    y: 180,
+    y: 160,
   },
   {
     id: "son-predeceased",
@@ -200,8 +202,8 @@ const INITIAL_NODES_ORPHANED_TANZIL: WhiteboardNode[] = [
     relation: "SON",
     isAlive: false, // Predeceased!
     parentId: "deceased-root",
-    x: 320,
-    y: 350,
+    x: 300,
+    y: 400,
   },
   {
     id: "daughter-predeceased",
@@ -211,8 +213,8 @@ const INITIAL_NODES_ORPHANED_TANZIL: WhiteboardNode[] = [
     relation: "DAUGHTER",
     isAlive: false, // Predeceased!
     parentId: "deceased-root",
-    x: 640,
-    y: 350,
+    x: 680,
+    y: 400,
   },
   // Grandchildren
   {
@@ -223,8 +225,8 @@ const INITIAL_NODES_ORPHANED_TANZIL: WhiteboardNode[] = [
     relation: "GRANDCHILD",
     isAlive: true,
     parentId: "son-predeceased",
-    x: 240,
-    y: 520,
+    x: 200,
+    y: 640,
   },
   {
     id: "gc-poti-1",
@@ -235,7 +237,7 @@ const INITIAL_NODES_ORPHANED_TANZIL: WhiteboardNode[] = [
     isAlive: true,
     parentId: "son-predeceased",
     x: 400,
-    y: 520,
+    y: 640,
   },
   {
     id: "gc-nawasa-1",
@@ -245,8 +247,8 @@ const INITIAL_NODES_ORPHANED_TANZIL: WhiteboardNode[] = [
     relation: "GRANDCHILD",
     isAlive: true,
     parentId: "daughter-predeceased",
-    x: 640,
-    y: 520,
+    x: 680,
+    y: 640,
   },
 ];
 
@@ -258,8 +260,8 @@ const INITIAL_NODES_SIMULTANEOUS_ACCIDENT: WhiteboardNode[] = [
     gender: "MALE",
     relation: "DECEASED",
     isAlive: false,
-    x: 360,
-    y: 220,
+    x: 380,
+    y: 180,
   },
   {
     id: "son-victim-b",
@@ -269,8 +271,8 @@ const INITIAL_NODES_SIMULTANEOUS_ACCIDENT: WhiteboardNode[] = [
     relation: "SON",
     isAlive: false,
     parentId: "deceased-root",
-    x: 640,
-    y: 220,
+    x: 700,
+    y: 180,
   },
   {
     id: "mother-survivor",
@@ -280,8 +282,8 @@ const INITIAL_NODES_SIMULTANEOUS_ACCIDENT: WhiteboardNode[] = [
     relation: "MOTHER",
     isAlive: true,
     parentId: "deceased-root",
-    x: 200,
-    y: 380,
+    x: 240,
+    y: 420,
   },
   {
     id: "daughter-survivor",
@@ -291,8 +293,8 @@ const INITIAL_NODES_SIMULTANEOUS_ACCIDENT: WhiteboardNode[] = [
     relation: "DAUGHTER",
     isAlive: true,
     parentId: "deceased-root",
-    x: 800,
-    y: 380,
+    x: 820,
+    y: 420,
   },
 ];
 
@@ -301,7 +303,7 @@ const INITIAL_NODES_SIMULTANEOUS_ACCIDENT: WhiteboardNode[] = [
    ========================================================================= */
 
 export function KinshipWhiteboard() {
-  const { language, assets, debts, updateAssets, updateDebts } = useInheritanceStore();
+  const { language, assets, debts, updateAssets, updateDebts, updateHeirs } = useInheritanceStore();
   const isUr = language === "ur";
 
   // Canvas Viewport State
@@ -316,8 +318,23 @@ export function KinshipWhiteboard() {
   const [draggingNodeId, setDraggingNodeId] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
-  // Estate Amount on Canvas
-  const [canvasEstateGross, setCanvasEstateGross] = useState<number>(10000000); // 10 Million PKR baseline
+  // Estate Amount on Canvas (defaults to empty/0 or user's integrated assets.cash)
+  const [canvasEstateGross, setCanvasEstateGross] = useState<number>(assets.cash || 0);
+
+  // Free Sandbox Supposition Mode
+  const [sandboxMode, setSandboxMode] = useState<boolean>(true);
+  const [syncSuccess, setSyncSuccess] = useState<boolean>(false);
+
+  // Sync canvasEstateGross with assets.cash if updated from other views and not detached
+  useEffect(() => {
+    if (!sandboxMode) {
+      setCanvasEstateGross(assets.cash || 0);
+    }
+  }, [assets.cash, sandboxMode]);
+
+  // Full HD Immersive Mode & Container Ref
+  const [isFullHD, setIsFullHD] = useState<boolean>(false);
+  const studioContainerRef = useRef<HTMLDivElement>(null);
 
   // Catastrophe Simulation Modal
   const [showAccidentModal, setShowAccidentModal] = useState<boolean>(false);
@@ -328,21 +345,125 @@ export function KinshipWhiteboard() {
   // Canvas Reference for export
   const canvasRef = useRef<HTMLDivElement>(null);
 
+  // Toggle Full HD with native fullscreen + CSS fallback
+  const toggleFullHD = async () => {
+    const nextState = !isFullHD;
+    setIsFullHD(nextState);
+
+    try {
+      if (nextState) {
+        if (studioContainerRef.current?.requestFullscreen) {
+          await studioContainerRef.current.requestFullscreen();
+        } else if ((studioContainerRef.current as any)?.webkitRequestFullscreen) {
+          await (studioContainerRef.current as any).webkitRequestFullscreen();
+        }
+      } else {
+        if (document.fullscreenElement) {
+          await document.exitFullscreen();
+        } else if ((document as any).webkitFullscreenElement) {
+          await (document as any).webkitExitFullscreen();
+        }
+      }
+    } catch {
+      // Gracefully fall back to CSS fixed fullscreen if browser denies permission
+    }
+  };
+
+  // Sync state with native browser fullscreen and handle Esc key
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      const isNative = Boolean(
+        document.fullscreenElement || (document as any).webkitFullscreenElement
+      );
+      setIsFullHD(isNative);
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (showAccidentModal) {
+          setShowAccidentModal(false);
+          return;
+        }
+        if (isFullHD) {
+          setIsFullHD(false);
+          if (document.fullscreenElement) {
+            document.exitFullscreen().catch(() => {});
+          } else if ((document as any).webkitFullscreenElement) {
+            (document as any).webkitExitFullscreen().catch(() => {});
+          }
+        }
+      }
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isFullHD, showAccidentModal]);
+
+  // Lock body scroll in Full HD mode to prevent double scrollbars / jumping
+  useEffect(() => {
+    if (isFullHD) {
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prevOverflow;
+      };
+    }
+  }, [isFullHD]);
+
+  // Smooth canvas trackpad pinch-to-zoom & two-finger pan / mouse wheel listener
+  useEffect(() => {
+    const canvasEl = canvasRef.current;
+    if (!canvasEl) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      if (e.ctrlKey || e.metaKey) {
+        // Pinch-to-zoom or Ctrl+wheel zoom
+        const zoomDelta = e.deltaY < 0 ? 0.08 : -0.08;
+        setZoom((z) => Math.min(2.0, Math.max(0.4, Number((z + zoomDelta).toFixed(2)))));
+      } else {
+        // Two-finger trackpad panning or mouse wheel pan
+        setPan((p) => ({
+          x: p.x - e.deltaX,
+          y: p.y - e.deltaY,
+        }));
+      }
+    };
+
+    canvasEl.addEventListener("wheel", handleWheel, { passive: false });
+    return () => {
+      canvasEl.removeEventListener("wheel", handleWheel);
+    };
+  }, []);
+
   /* -------------------------------------------------------------------------
      NODE POSITION DRAGGING & PANNING HANDLERS
      ------------------------------------------------------------------------- */
 
   const handleCanvasMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    // If clicking background, start pan
-    if ((e.target as HTMLElement).classList.contains("whiteboard-grid-surface")) {
+    // If clicking background or canvas surface, start pan
+    const target = e.target as HTMLElement;
+    if (
+      target.classList.contains("whiteboard-grid-surface") ||
+      target === canvasRef.current ||
+      target.tagName === "svg"
+    ) {
       setIsPanning(true);
       setPanStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
-      // Keep selectedNodeId and inspectorOpen preserved! Inspector only closes when 'X' is clicked.
     }
   };
 
-  const handleCanvasMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
+  // Window-level smooth panning and node dragging (works across all edges in Full HD)
+  useEffect(() => {
+    if (!isPanning && !draggingNodeId) return;
+
+    const handleWindowMouseMove = (e: MouseEvent) => {
       if (isPanning) {
         setPan({
           x: e.clientX - panStart.x,
@@ -362,14 +483,20 @@ export function KinshipWhiteboard() {
           })
         );
       }
-    },
-    [isPanning, panStart, draggingNodeId, pan.x, pan.y, zoom, dragOffset]
-  );
+    };
 
-  const handleCanvasMouseUp = () => {
-    setIsPanning(false);
-    setDraggingNodeId(null);
-  };
+    const handleWindowMouseUp = () => {
+      setIsPanning(false);
+      setDraggingNodeId(null);
+    };
+
+    window.addEventListener("mousemove", handleWindowMouseMove);
+    window.addEventListener("mouseup", handleWindowMouseUp);
+    return () => {
+      window.removeEventListener("mousemove", handleWindowMouseMove);
+      window.removeEventListener("mouseup", handleWindowMouseUp);
+    };
+  }, [isPanning, draggingNodeId, panStart, pan.x, pan.y, zoom, dragOffset]);
 
   const startNodeDrag = (e: React.MouseEvent, nodeId: string) => {
     e.stopPropagation();
@@ -420,7 +547,7 @@ export function KinshipWhiteboard() {
         relation: "SPOUSE",
         isAlive: true,
         spouseOfId: parent.id,
-        unpaidMahr: isWife ? 100000 : 0,
+        unpaidMahr: 0,
         x: parent.x + 180,
         y: parent.y,
       };
@@ -485,8 +612,12 @@ export function KinshipWhiteboard() {
     };
 
     // Synthesize Estate Assets & Debts
+    // Use nominal reference estate (24,000,000) when gross is 0 to ensure Quranic fractions calculate cleanly
+    const isGrossZero = canvasEstateGross <= 0;
+    const nominalGross = isGrossZero ? 24000000 : canvasEstateGross;
+
     const currentAssets: EstateAssets = {
-      cash: canvasEstateGross,
+      cash: nominalGross,
       bankAccounts: 0,
       residentialLand: 0,
       agriculturalLand: 0,
@@ -613,6 +744,8 @@ export function KinshipWhiteboard() {
       tanzilOutput,
       livingDirectCount,
       isTanzilActive: livingDirectCount === 0 && namedDescendants.some((c) => !c.isAlive && (c.children?.length || 0) > 0),
+      isGrossZero,
+      canvasEstateGross,
     };
   }, [nodes, canvasEstateGross, debts, isUr]);
 
@@ -674,66 +807,112 @@ export function KinshipWhiteboard() {
   }, [nodes, calculationData]);
 
   /* -------------------------------------------------------------------------
-     AUTO-ARRANGE ALGORITHM (HIERARCHICAL TREE RE-ALIGNMENT)
+     CLEAN HIERARCHICAL AUTO-ARRANGE ALGORITHM (SYMMETRICAL & BREATHING)
      ------------------------------------------------------------------------- */
 
   const handleAutoArrange = () => {
     const root = nodes.find((n) => n.relation === "DECEASED");
     if (!root) return;
 
-    const parents = nodes.filter((n) => n.relation === "FATHER" || n.relation === "MOTHER");
-    const spouses = nodes.filter((n) => n.relation === "SPOUSE");
-    const children = nodes.filter((n) => n.relation === "SON" || n.relation === "DAUGHTER");
-
     const newNodes = nodes.map((node) => ({ ...node }));
 
-    // Center root
-    const rootIdx = newNodes.findIndex((n) => n.id === root.id);
-    if (rootIdx !== -1) {
-      newNodes[rootIdx].x = 540;
-      newNodes[rootIdx].y = 200;
+    // 1. Generation 0: Parents (Top Row at y = 120)
+    const parents = newNodes.filter((n) => n.relation === "FATHER" || n.relation === "MOTHER");
+    const parentSpacing = 260;
+    const parentStartX = 580 - ((parents.length - 1) * parentSpacing) / 2;
+    parents.forEach((p, idx) => {
+      p.x = Math.round(parentStartX + idx * parentSpacing);
+      p.y = 120;
+    });
+
+    // 2. Generation 1: Root Deceased & Spouses (Center Row at y = 290)
+    const rootNode = newNodes.find((n) => n.id === root.id);
+    if (rootNode) {
+      rootNode.x = 580;
+      rootNode.y = 290;
     }
 
-    // Parents on top
-    parents.forEach((p, idx) => {
-      const idxNode = newNodes.findIndex((n) => n.id === p.id);
-      if (idxNode !== -1) {
-        newNodes[idxNode].x = 420 + idx * 240;
-        newNodes[idxNode].y = 60;
-      }
-    });
-
-    // Spouses to right
+    const spouses = newNodes.filter((n) => n.relation === "SPOUSE");
+    const spouseStartX = 840;
+    const spouseSpacing = 200;
     spouses.forEach((s, idx) => {
-      const idxNode = newNodes.findIndex((n) => n.id === s.id);
-      if (idxNode !== -1) {
-        newNodes[idxNode].x = 760 + idx * 160;
-        newNodes[idxNode].y = 200;
-      }
+      s.x = Math.round(spouseStartX + idx * spouseSpacing);
+      s.y = 290;
     });
 
-    // Children in row
-    const childSpacing = 160;
-    const startX = 540 - ((children.length - 1) * childSpacing) / 2;
-    children.forEach((c, idx) => {
-      const childX = startX + idx * childSpacing;
-      const childIdx = newNodes.findIndex((n) => n.id === c.id);
-      if (childIdx !== -1) {
-        newNodes[childIdx].x = childX;
-        newNodes[childIdx].y = 370;
-      }
+    // 3. Generation 2: Direct Children (Row at y = 500) & Generation 3: Grandchildren (Row at y = 720)
+    const children = newNodes.filter((n) => n.relation === "SON" || n.relation === "DAUGHTER");
 
-      // Grandchildren under this child
+    // Compute width required per child branch based on their grandchildren count
+    const branchWidths = children.map((c) => {
+      const gcs = newNodes.filter((g) => g.relation === "GRANDCHILD" && g.parentId === c.id);
+      return Math.max(220, gcs.length * 150);
+    });
+
+    const totalChildrenWidth = branchWidths.reduce((sum, w) => sum + w, 0);
+    let currentX = 580 - totalChildrenWidth / 2;
+
+    children.forEach((c, idx) => {
+      const bWidth = branchWidths[idx];
+      const childCenterX = currentX + bWidth / 2;
+      c.x = Math.round(childCenterX);
+      c.y = 500;
+
+      // Arrange grandchildren neatly beneath this child's column
       const grandchildren = newNodes.filter((g) => g.relation === "GRANDCHILD" && g.parentId === c.id);
-      const gcSpacing = 110;
-      const gcStartX = childX - ((grandchildren.length - 1) * gcSpacing) / 2;
+      const gcSpacing = 140;
+      const gcStartX = childCenterX - ((grandchildren.length - 1) * gcSpacing) / 2;
       grandchildren.forEach((gc, gcIdx) => {
-        gc.x = gcStartX + gcIdx * gcSpacing;
-        gc.y = 540;
+        gc.x = Math.round(gcStartX + gcIdx * gcSpacing);
+        gc.y = 720;
       });
+
+      currentX += bWidth;
     });
 
     setNodes(newNodes);
+  };
+
+  /* -------------------------------------------------------------------------
+     SYNC WHITEBOARD FAMILY INTO MAIN CALCULATOR WIZARD
+     ------------------------------------------------------------------------- */
+
+  const handleSyncToCalculator = () => {
+    const root = nodes.find((n) => n.relation === "DECEASED") || nodes[0];
+    const directChildren = nodes.filter(
+      (n) => (n.relation === "SON" || n.relation === "DAUGHTER") && (n.parentId === root.id || !n.parentId)
+    );
+    const sons = directChildren.filter((c) => c.relation === "SON" && c.isAlive);
+    const daughters = directChildren.filter((c) => c.relation === "DAUGHTER" && c.isAlive);
+    const fatherNode = nodes.find((n) => n.relation === "FATHER");
+    const motherNode = nodes.find((n) => n.relation === "MOTHER");
+
+    const wivesList: WifeProfile[] = nodes
+      .filter((n) => n.relation === "SPOUSE" && n.gender === "FEMALE")
+      .map((w) => ({
+        id: w.id,
+        name: isUr ? w.nameUr : w.nameEn,
+        isAlive: w.isAlive && !w.impediments?.isKiller && !w.impediments?.isNonMuslim,
+        marriageType: "PERMANENT",
+        hasMahrPending: (w.unpaidMahr || 0) > 0,
+        pendingMahrAmount: w.unpaidMahr || 0,
+      }));
+
+    updateHeirs({
+      wives: wivesList,
+      spouseCount: wivesList.filter((w) => w.isAlive).length,
+      fatherAlive: !!(fatherNode && fatherNode.isAlive),
+      motherAlive: !!(motherNode && motherNode.isAlive),
+      sonsCount: sons.length,
+      daughtersCount: daughters.length,
+    });
+
+    updateAssets({
+      cash: canvasEstateGross,
+    });
+
+    setSyncSuccess(true);
+    setTimeout(() => setSyncSuccess(false), 4000);
   };
 
   /* -------------------------------------------------------------------------
@@ -747,13 +926,30 @@ export function KinshipWhiteboard() {
         backgroundColor: "#FAF8F5",
         scale: 2,
         useCORS: true,
+        logging: false,
+        onclone: (clonedDoc) => {
+          // html2canvas does not support CSS oklch() color syntax; replace with hex fallbacks
+          const allElements = clonedDoc.querySelectorAll<HTMLElement>("*");
+          allElements.forEach((el) => {
+            const computed = window.getComputedStyle(el);
+            if (computed.backgroundColor?.includes("oklch")) {
+              el.style.backgroundColor = "#ffffff";
+            }
+            if (computed.color?.includes("oklch")) {
+              el.style.color = "#1c1917";
+            }
+            if (computed.borderColor?.includes("oklch")) {
+              el.style.borderColor = "#e7e5e4";
+            }
+          });
+        },
       });
       const link = document.createElement("a");
       link.download = `Wirasat-Family-Whiteboard-${Date.now()}.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
     } catch (err) {
-      console.error("Export failed:", err);
+      console.warn("PNG export fallback:", err);
     }
   };
 
@@ -798,6 +994,9 @@ export function KinshipWhiteboard() {
       return { text: isUr ? "اصلِ ترکہ (مورث)" : "Estate Origin", color: "bg-[#245642] text-white border-amber-400 font-black shadow-xs" };
     }
 
+    const isGrossZero = calculationData?.isGrossZero ?? true;
+    const gross = calculationData?.canvasEstateGross ?? 0;
+
     // Check Tanzīl grandchild
     if (node.relation === "GRANDCHILD") {
       if ((calculationData?.livingDirectCount || 0) > 0) {
@@ -808,8 +1007,9 @@ export function KinshipWhiteboard() {
       }
       const branchRes = calculationData?.tanzilOutput.branchResults.find((b) => b.person.id === node.id);
       if (branchRes) {
+        const money = isGrossZero ? 0 : branchRes.monetaryValue;
         return {
-          text: `${branchRes.finalFraction} (${Math.round(branchRes.monetaryValue).toLocaleString()} PKR)`,
+          text: `${branchRes.finalFraction} (${Math.round(money).toLocaleString()} PKR)`,
           color: "bg-emerald-600 text-white border-emerald-700 shadow-xs animate-pulse",
         };
       }
@@ -817,12 +1017,16 @@ export function KinshipWhiteboard() {
 
     // Check Spouse
     if (node.relation === "SPOUSE") {
-      const spouseShare = calculationData?.calcResult.heirShares.find((s) => s.relationKey === "wives" || s.relationKey === "husband");
+      const spouseShare = calculationData?.calcResult.heirShares.find(
+        (s) => s.relationKey === "wives" || s.relationKey === "wife" || s.relationKey === "husband"
+      );
       const mahrDeducted = node.unpaidMahr || 0;
       if (spouseShare) {
-        const amount = spouseShare.sharePerIndividual + mahrDeducted;
+        const money = isGrossZero
+          ? mahrDeducted
+          : ((spouseShare.percentage / 100) * gross) / Math.max(1, spouseShare.count) + mahrDeducted;
         return {
-          text: `${spouseShare.fractionString} (${Math.round(amount).toLocaleString()} PKR)`,
+          text: `${spouseShare.fractionString} (${Math.round(money).toLocaleString()} PKR)`,
           color: "bg-amber-700 text-white border-amber-800",
         };
       }
@@ -830,12 +1034,18 @@ export function KinshipWhiteboard() {
 
     // Check Sons/Daughters
     if (node.relation === "SON" || node.relation === "DAUGHTER") {
+      const isSon = node.relation === "SON";
       const directShare = calculationData?.calcResult.heirShares.find(
-        (s) => s.relationKey === (node.relation === "SON" ? "sons" : "daughters")
+        (s) =>
+          s.relationKey === (isSon ? "sons" : "daughters") ||
+          s.relationKey === (isSon ? "son" : "daughter")
       );
       if (directShare) {
+        const money = isGrossZero
+          ? 0
+          : ((directShare.percentage / 100) * gross) / Math.max(1, directShare.count);
         return {
-          text: `${directShare.fractionString} (${Math.round(directShare.sharePerIndividual).toLocaleString()} PKR)`,
+          text: `${directShare.fractionString} (${Math.round(money).toLocaleString()} PKR)`,
           color: "bg-[#245642] text-white border-[#1c4333]",
         };
       }
@@ -847,8 +1057,11 @@ export function KinshipWhiteboard() {
         (s) => s.relationKey === (node.relation === "FATHER" ? "father" : "mother")
       );
       if (parentShare) {
+        const money = isGrossZero
+          ? 0
+          : ((parentShare.percentage / 100) * gross) / Math.max(1, parentShare.count);
         return {
-          text: `${parentShare.fractionString} (${Math.round(parentShare.sharePerIndividual).toLocaleString()} PKR)`,
+          text: `${parentShare.fractionString} (${Math.round(money).toLocaleString()} PKR)`,
           color: "bg-emerald-800 text-white border-emerald-900",
         };
       }
@@ -858,128 +1071,200 @@ export function KinshipWhiteboard() {
   };
 
   return (
-    <div className="w-full flex flex-col bg-[#FAF8F5] dark:bg-[#0B1713] text-stone-800 dark:text-stone-100 min-h-[92vh] select-none">
+    <div
+      ref={studioContainerRef}
+      className={`w-full flex flex-col bg-[#FAF8F5] dark:bg-[#0B1713] text-stone-800 dark:text-stone-100 select-none ${
+        isFullHD
+          ? "fixed inset-0 z-[99999] w-screen h-screen overflow-hidden"
+          : "min-h-[92vh]"
+      }`}
+    >
       {/* -------------------------------------------------------------------
           TOP SACRED STUDIO HEADER & TOOLBAR
           ------------------------------------------------------------------- */}
-      <div className="border-b border-stone-200/80 dark:border-stone-800 bg-white/90 dark:bg-[#0E1E18]/90 backdrop-blur-md px-4 py-3 sticky top-0 z-30 flex flex-wrap items-center justify-between gap-3 shadow-2xs">
+      <div className="border-b border-stone-200/80 dark:border-stone-800 bg-white/95 dark:bg-[#0E1E18]/95 backdrop-blur-md px-3.5 py-2.5 sticky top-0 z-30 flex items-center justify-between gap-3 shadow-2xs overflow-x-auto select-none flex-nowrap min-w-0">
         {/* Left: Studio Title & Botanical Badge */}
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#245642] to-[#16382a] flex items-center justify-center text-amber-300 shadow-sm">
-            <Compass size={20} />
+        <div className="flex items-center gap-2.5 shrink-0">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#245642] to-[#16382a] flex items-center justify-center text-amber-300 shadow-sm shrink-0">
+            <Compass size={18} />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-base font-bold text-[#245642] dark:text-emerald-400 tracking-tight">
-                {isUr ? "تَخْطِيطُ الْعَائِلَة — اسٹوڈیو کنبہ وائٹ بورڈ" : "The Kinship Whiteboard Studio"}
+            <div className="flex items-center gap-1.5">
+              <h1 className="text-sm md:text-base font-bold text-[#245642] dark:text-emerald-400 tracking-tight whitespace-nowrap">
+                {isUr ? "اسٹوڈیو کنبہ وائٹ بورڈ" : "Kinship Whiteboard"}
               </h1>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700/50">
-                {isUr ? "جعفری فقہ لائیو" : "Live Ja‘fari Fiqh"}
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700/50 whitespace-nowrap">
+                {isUr ? "جعفری فقہ" : "Ja‘fari Fiqh"}
               </span>
             </div>
-            <p className="text-xs text-stone-500 dark:text-stone-400">
-              {isUr
-                ? "خاندان کے ارکان شامل کریں، وفات کی ترتیب تبدیل کریں اور تنزیل کے اثرات دیکھیں"
-                : "Figma-style interactive family canvas. Add nodes, simulate predeceased children & catastrophic accidents"}
-            </p>
           </div>
         </div>
 
-        {/* Center: Scenario Presets */}
-        <div className="flex items-center gap-2 bg-stone-100 dark:bg-stone-800/80 p-1.5 rounded-2xl border border-stone-200 dark:border-stone-700">
-          <button
-            onClick={() => {
-              setNodes(INITIAL_NODES_CLEAN);
-              setSelectedNodeId("deceased-root");
-            }}
-            className="px-3 py-1.5 text-xs md:text-sm font-semibold rounded-xl text-stone-700 dark:text-stone-300 hover:bg-white dark:hover:bg-stone-700 transition-colors cursor-pointer"
-            title="Clean Slate"
-          >
-            {isUr ? "نیا کینوس" : "Clean Slate"}
-          </button>
+        {/* Center: Scenario Presets & Sandbox Toggle */}
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Free Sandbox Supposition Mode Checkbox & Sync */}
+          <div className="flex items-center gap-2 px-2.5 py-1 rounded-xl bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 shadow-2xs">
+            <label className="flex items-center gap-1.5 text-xs font-bold text-amber-900 dark:text-amber-200 cursor-pointer select-none whitespace-nowrap">
+              <input
+                type="checkbox"
+                checked={sandboxMode}
+                onChange={(e) => setSandboxMode(e.target.checked)}
+                className="w-3.5 h-3.5 rounded text-[#245642] focus:ring-[#245642] cursor-pointer"
+              />
+              <span>{isUr ? "فرضی مشق (Sandbox)" : "Sandbox"}</span>
+            </label>
+            <button
+              onClick={handleSyncToCalculator}
+              className="px-2 py-0.5 rounded-lg bg-[#245642] hover:bg-[#1a3f30] text-white text-[11px] font-bold transition-all shadow-2xs cursor-pointer flex items-center gap-1 whitespace-nowrap"
+              title={isUr ? "اس خاندانی خاکے کو اصل کیلکولیٹر میں منتقل کریں" : "Sync this family into Main Calculator"}
+            >
+              {syncSuccess ? (
+                <>
+                  <Check size={12} className="text-emerald-300" />
+                  <span>{isUr ? "منتقل ہو گیا!" : "Synced!"}</span>
+                </>
+              ) : (
+                <>
+                  <Split size={12} />
+                  <span>{isUr ? "کیلکولیٹر سنک" : "Sync"}</span>
+                </>
+              )}
+            </button>
+          </div>
 
-          <button
-            onClick={() => {
-              setNodes(INITIAL_NODES_4_CHILDREN);
-              setSelectedNodeId("deceased-root");
-            }}
-            className="px-3.5 py-1.5 text-xs md:text-sm font-bold rounded-xl bg-white dark:bg-stone-700 text-[#245642] dark:text-emerald-300 shadow-xs transition-colors cursor-pointer"
-            title="The 4 Children & Grandchildren Mystery"
-          >
-            {isUr ? "چار اولادیں و پوتے" : "4 Children Mystery"}
-          </button>
+          <div className="flex items-center gap-1 bg-stone-100 dark:bg-stone-800/80 p-1 rounded-xl border border-stone-200 dark:border-stone-700 shrink-0">
+            <button
+              onClick={() => {
+                setNodes(INITIAL_NODES_CLEAN);
+                setSelectedNodeId("deceased-root");
+              }}
+              className="px-2.5 py-1 text-xs font-semibold rounded-lg text-stone-700 dark:text-stone-300 hover:bg-white dark:hover:bg-stone-700 transition-colors cursor-pointer whitespace-nowrap"
+              title="Clean Slate"
+            >
+              {isUr ? "خالی" : "Clean"}
+            </button>
 
-          <button
-            onClick={() => {
-              setNodes(INITIAL_NODES_ORPHANED_TANZIL);
-              setSelectedNodeId("son-predeceased");
-            }}
-            className="px-3 py-1.5 text-xs md:text-sm font-bold rounded-xl text-emerald-800 dark:text-emerald-300 hover:bg-white dark:hover:bg-stone-700 transition-colors cursor-pointer flex items-center gap-1.5"
-            title="Orphaned Grandchild Tanzil Representation"
-          >
-            <Sparkles size={14} className="text-amber-500" />
-            {isUr ? "تنزیل (یتیم پوتے)" : "Orphaned Tanzīl"}
-          </button>
+            <button
+              onClick={() => {
+                setNodes(INITIAL_NODES_4_CHILDREN);
+                setSelectedNodeId("deceased-root");
+              }}
+              className="px-2.5 py-1 text-xs font-bold rounded-lg bg-white dark:bg-stone-700 text-[#245642] dark:text-emerald-300 shadow-2xs transition-colors cursor-pointer whitespace-nowrap"
+              title="The 4 Children & Grandchildren Mystery"
+            >
+              {isUr ? "۴ اولادیں" : "4 Children"}
+            </button>
 
-          <button
-            onClick={() => {
-              setNodes(INITIAL_NODES_SIMULTANEOUS_ACCIDENT);
-              setSelectedNodeId("deceased-root");
-              setShowAccidentModal(true);
-            }}
-            className="px-3 py-1.5 text-xs md:text-sm font-bold rounded-xl text-rose-800 dark:text-rose-300 hover:bg-white dark:hover:bg-stone-700 transition-colors cursor-pointer flex items-center gap-1.5"
-            title="Simultaneous Catastrophe (Al-Gharqa wa al-Hadma)"
-          >
-            <Flame size={14} className="text-rose-500" />
-            {isUr ? "الغرقیٰ والھدمیٰ (حادثہ)" : "Catastrophe (Accident)"}
-          </button>
+            <button
+              onClick={() => {
+                setNodes(INITIAL_NODES_ORPHANED_TANZIL);
+                setSelectedNodeId("son-predeceased");
+              }}
+              className="px-2.5 py-1 text-xs font-bold rounded-lg text-emerald-800 dark:text-emerald-300 hover:bg-white dark:hover:bg-stone-700 transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap"
+              title="Orphaned Grandchild Tanzil Representation"
+            >
+              <Sparkles size={13} className="text-amber-500" />
+              <span>{isUr ? "تنزیل" : "Tanzīl"}</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setNodes(INITIAL_NODES_SIMULTANEOUS_ACCIDENT);
+                setSelectedNodeId("deceased-root");
+                setShowAccidentModal(true);
+              }}
+              className="px-2.5 py-1 text-xs font-bold rounded-lg text-rose-800 dark:text-rose-300 hover:bg-white dark:hover:bg-stone-700 transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap"
+              title="Simultaneous Catastrophe (Al-Gharqa wa al-Hadma)"
+            >
+              <Flame size={13} className="text-rose-500" />
+              <span>{isUr ? "الغرقیٰ" : "Accident"}</span>
+            </button>
+          </div>
         </div>
 
         {/* Right: Canvas Utilities & Zoom */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 shrink-0">
+          {/* Full HD Mode Toggle */}
+          <button
+            onClick={toggleFullHD}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold cursor-pointer transition-all shadow-2xs whitespace-nowrap ${
+              isFullHD
+                ? "bg-[#1b4d3e] text-white border-[#1b4d3e] shadow-md ring-2 ring-emerald-400/50"
+                : "border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-200 hover:bg-stone-50 dark:hover:bg-stone-700"
+            }`}
+            title={isUr ? "مکمل اسکرین فل ایچ ڈی اسٹوڈیو (باہر نکلنے کے لیے دوبارہ دبائیں یا Esc)" : "Toggle Full HD edge-to-edge canvas (or press Esc to exit)"}
+          >
+            {isFullHD ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+            <span>{isUr ? (isFullHD ? "عام اسکرین (Esc)" : "Full HD") : (isFullHD ? "Exit Full HD (Esc)" : "Full HD")}</span>
+          </button>
+
+          {/* Contextual Studio Reset Canvas Button */}
+          <button
+            onClick={() => {
+              if (window.confirm(isUr ? "کیا آپ خاندانی نقشہ صاف کر کے دوبارہ شروع کرنا چاہتے ہیں؟" : "Reset canvas to fresh starter family?")) {
+                setNodes(INITIAL_NODES_4_CHILDREN);
+                setSelectedNodeId("deceased-root");
+                setCanvasEstateGross(assets.cash || 0);
+              }
+            }}
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 hover:bg-rose-50 hover:border-rose-300 hover:text-rose-700 dark:hover:bg-rose-950/30 text-stone-600 dark:text-stone-300 text-xs font-bold cursor-pointer transition-colors shadow-2xs whitespace-nowrap"
+            title={isUr ? "خاندانی خاکہ صاف کریں" : "Reset Canvas"}
+          >
+            <RotateCcw size={13} />
+            <span>{isUr ? "نیا خاکہ" : "Reset"}</span>
+          </button>
+
           {/* Estate Input */}
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-xs font-medium">
-            <span className="text-stone-400 font-serif">PKR</span>
+          <div className="flex items-center gap-1 px-2 py-1 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-xs font-medium">
+            <span className="text-stone-400 font-serif text-[11px]">PKR</span>
             <input
               type="number"
-              value={canvasEstateGross}
-              onChange={(e) => setCanvasEstateGross(Math.max(0, Number(e.target.value)))}
-              className="w-24 bg-transparent text-xs font-bold text-stone-800 dark:text-stone-100 focus:outline-hidden"
+              value={canvasEstateGross || ""}
+              placeholder="0"
+              onChange={(e) => {
+                const val = Math.max(0, parseFloat(e.target.value) || 0);
+                setCanvasEstateGross(val);
+                if (!sandboxMode) {
+                  updateAssets({ cash: val });
+                }
+              }}
+              className="w-20 bg-transparent text-xs font-bold text-stone-800 dark:text-stone-100 focus:outline-hidden"
               step={100000}
             />
           </div>
 
-          <div className="h-5 w-px bg-stone-300 dark:bg-stone-700" />
+          <div className="h-4 w-px bg-stone-300 dark:bg-stone-700" />
 
           {/* Auto Arrange */}
           <button
             onClick={handleAutoArrange}
-            className="p-1.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 hover:bg-stone-50 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-200 cursor-pointer transition-colors"
-            title={isUr ? "خودکار ترتیب" : "Auto Arrange Tree"}
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-emerald-600/30 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-[#1b4d3e] dark:text-emerald-300 text-xs font-bold cursor-pointer transition-colors shadow-2xs whitespace-nowrap"
+            title={isUr ? "تمام رشتہ داروں کو صاف و منظم شجرے کی ترتیب میں لائیں" : "Neatly auto-arrange tree into balanced tiers"}
           >
-            <Sliders size={15} />
+            <LayoutGrid size={14} />
+            <span>{isUr ? "ترتیب" : "Arrange"}</span>
           </button>
 
           {/* Zoom Out */}
           <button
-            onClick={() => setZoom((z) => Math.max(0.5, z - 0.1))}
+            onClick={() => setZoom((z) => Math.max(0.4, Number((z - 0.1).toFixed(2))))}
             className="p-1.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 hover:bg-stone-50 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-200 cursor-pointer transition-colors"
             title="Zoom Out"
           >
-            <Minus size={15} />
+            <Minus size={14} />
           </button>
 
-          <span className="text-xs font-semibold w-9 text-center text-stone-600 dark:text-stone-400">
+          <span className="text-xs font-semibold w-8 text-center text-stone-600 dark:text-stone-400">
             {Math.round(zoom * 100)}%
           </span>
 
           {/* Zoom In */}
           <button
-            onClick={() => setZoom((z) => Math.min(1.8, z + 0.1))}
+            onClick={() => setZoom((z) => Math.min(2.0, Number((z + 0.1).toFixed(2))))}
             className="p-1.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 hover:bg-stone-50 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-200 cursor-pointer transition-colors"
             title="Zoom In"
           >
-            <Plus size={15} />
+            <Plus size={14} />
           </button>
 
           {/* Reset Zoom */}
@@ -991,36 +1276,47 @@ export function KinshipWhiteboard() {
             className="p-1.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 hover:bg-stone-50 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-200 cursor-pointer transition-colors"
             title="Reset View"
           >
-            <RotateCcw size={15} />
+            <RotateCcw size={14} />
+          </button>
+
+          {/* Inspector Toggle */}
+          <button
+            onClick={() => setInspectorOpen(!inspectorOpen)}
+            className={`p-1.5 rounded-lg border text-xs font-bold cursor-pointer transition-colors ${
+              inspectorOpen
+                ? "bg-[#245642] text-white border-[#245642]"
+                : "border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-200 hover:bg-stone-50"
+            }`}
+            title={isUr ? "تفصیلات کا پینل کھولیں/بند کریں" : "Toggle Inspector Panel"}
+          >
+            <Sliders size={14} />
           </button>
 
           {/* Snapshot PNG */}
           <button
             onClick={handleExportPNG}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#245642] hover:bg-[#1a3f30] text-white text-xs font-bold transition-all shadow-sm cursor-pointer ml-1"
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#245642] hover:bg-[#1a3f30] text-white text-xs font-bold transition-all shadow-sm cursor-pointer whitespace-nowrap"
+            title={isUr ? "تصویر محفوظ کریں" : "Export PNG"}
           >
-            <Download size={14} />
-            <span>{isUr ? "تصویر محفوظ کریں" : "Export PNG"}</span>
+            <Download size={13} />
+            <span>{isUr ? "تصویر" : "PNG"}</span>
           </button>
         </div>
       </div>
 
       {/* -------------------------------------------------------------------
-          MAIN CANVAS WORKSPACE (DOT MATRIX & NODES)
+          MAIN CANVAS WORKSPACE (NODES & CONNECTORS)
           ------------------------------------------------------------------- */}
-      <div className="flex-1 relative overflow-hidden flex">
-        {/* Canvas Surface with Alabaster Linen and Dot-Grid */}
+      <div className="flex-1 min-h-0 relative overflow-hidden flex">
+        {/* Canvas Surface with Alabaster Linen */}
         <div
           ref={canvasRef}
           onMouseDown={handleCanvasMouseDown}
-          onMouseMove={handleCanvasMouseMove}
-          onMouseUp={handleCanvasMouseUp}
-          className="whiteboard-grid-surface flex-1 h-[88vh] relative overflow-hidden cursor-grab active:cursor-grabbing select-none"
+          className={`whiteboard-grid-surface flex-1 relative overflow-hidden cursor-grab active:cursor-grabbing select-none ${
+            isFullHD ? "h-full" : "h-[88vh]"
+          }`}
           style={{
             backgroundColor: "#FAF8F5",
-            backgroundImage: "radial-gradient(#245642 0.75px, transparent 0.75px)",
-            backgroundSize: "24px 24px",
-            backgroundPosition: `${pan.x}px ${pan.y}px`,
           }}
         >
           {/* Zoomed & Panned Canvas Layer */}
@@ -1227,16 +1523,16 @@ export function KinshipWhiteboard() {
                     )}
                   </div>
 
-                  {/* Node Name & Kinship Label Below - Fully visible with zero clipping */}
-                  <div className="absolute top-[96px] left-1/2 -translate-x-1/2 text-center w-52 pointer-events-none px-2 py-1 overflow-visible">
+                  {/* Node Name & Kinship Label Below - Clean Direct Typography */}
+                  <div className="absolute top-[96px] left-1/2 -translate-x-1/2 text-center pointer-events-none z-20 min-w-[160px] max-w-[240px]">
                     <p
-                      className={`text-sm md:text-base font-bold font-nastaliq leading-[2.4] text-stone-900 dark:text-stone-100 drop-shadow-xs whitespace-normal ${
-                        isSelected ? "text-emerald-900 dark:text-emerald-200 font-black scale-105" : ""
+                      className={`text-sm md:text-base font-bold font-nastaliq leading-[2.4] text-stone-900 dark:text-stone-100 whitespace-normal ${
+                        isSelected ? "text-emerald-900 dark:text-emerald-200 font-black" : ""
                       }`}
                     >
                       {isUr ? (node.nameUr || node.relation) : (node.nameEn || node.relation)}
                     </p>
-                    <span className="inline-block text-xs font-bold px-2.5 py-0.5 rounded-full bg-stone-200/90 dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-stone-300 dark:border-stone-700 mt-0.5">
+                    <span className="inline-block text-[11px] font-bold px-2 py-0.5 rounded-full text-stone-600 dark:text-stone-300">
                       {node.relation}
                     </span>
                   </div>
@@ -1288,8 +1584,8 @@ export function KinshipWhiteboard() {
             })}
           </div>
 
-          {/* Bottom-Left Tanzīl Quick Status Ribbon */}
-          <div className="absolute bottom-4 left-4 z-20 bg-white/95 dark:bg-[#0E1E18]/95 backdrop-blur-md p-3 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-lg max-w-sm">
+          {/* Tanzīl Quick Status Ribbon - Positioned away from inspector in both LTR and RTL */}
+          <div className="absolute bottom-4 ltr:left-4 rtl:right-4 z-20 bg-white/95 dark:bg-[#0E1E18]/95 backdrop-blur-md p-3 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-lg max-w-sm">
             <div className="flex items-center gap-2 mb-1.5">
               <div
                 className={`w-3 h-3 rounded-full ${
@@ -1448,8 +1744,9 @@ export function KinshipWhiteboard() {
                   </label>
                   <input
                     type="number"
-                    value={selectedNode.unpaidMahr || 0}
-                    onChange={(e) => updateSelectedNode({ unpaidMahr: Math.max(0, Number(e.target.value)) })}
+                    value={selectedNode.unpaidMahr || ""}
+                    placeholder="0"
+                    onChange={(e) => updateSelectedNode({ unpaidMahr: Math.max(0, parseFloat(e.target.value) || 0) })}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-amber-400 bg-amber-50/70 dark:bg-amber-950/30 text-sm font-bold text-amber-900 dark:text-amber-100"
                     step={10000}
                   />
@@ -1525,7 +1822,7 @@ export function KinshipWhiteboard() {
           SIMULTANEOUS ACCIDENT SIMULATOR MODAL (الغرقیٰ والھدمیٰ)
           ------------------------------------------------------------------- */}
       {showAccidentModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[100000] bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white dark:bg-[#0E1E18] rounded-2xl max-w-3xl w-full border border-stone-200 dark:border-stone-700 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             {/* Modal Header */}
             <div className="p-4 bg-[#245642] text-white flex items-center justify-between">

@@ -154,17 +154,17 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
                 <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#245642] dark:text-emerald-400">
                   {isUr ? "علمی سرپرستی و بنیاد" : "Project Initiator & Scholarly Direction"}
                 </span>
-                <h4 className="text-base font-bold text-[#0A2118] dark:text-white">
-                  Maulana Syed Imon Rizvi • مولانا سیّد آئمن رضوی
+                <h4 className={`text-base font-bold text-[#0A2118] dark:text-white ${isUr ? "font-nastaliq" : ""}`}>
+                  {isUr ? "مولانا سیّد آئمن رضوی" : "Maulana Syed Imon Rizvi"}
                 </h4>
-                <p className="text-xs text-stone-600 dark:text-stone-300 font-medium">
+                <p className={`text-xs text-stone-600 dark:text-stone-300 font-medium ${isUr ? "font-nastaliq leading-relaxed" : ""}`}>
                   {isUr
-                    ? "فاضل حوزہ علمیہ قم (Islamic Seminary of Qom) — بانی و سرپرستِ تحقیق"
+                    ? "فاضل حوزہ علمیہ قم — بانی و سرپرستِ تحقیق"
                     : "Graduate, Islamic Seminary of Qom (Ḥawzah ‘Ilmiyyah Qom) — Project Initiator & Research Director"}
                 </p>
               </div>
             </div>
-            <span className="shrink-0 text-[11px] font-bold text-[#245642] dark:text-emerald-300 bg-[#edf3e7] dark:bg-[#132c21] border border-[#245642]/30 px-3 py-1.5 rounded-xl">
+            <span className={`shrink-0 text-[11px] font-bold text-[#245642] dark:text-emerald-300 bg-[#edf3e7] dark:bg-[#132c21] border border-[#245642]/30 px-3 py-1.5 rounded-xl ${isUr ? "font-nastaliq" : ""}`}>
               {isUr ? "حوزوی و فقہی جانچ پڑتال کا تسلسل" : "Rigorous Seminarian Benchmark"}
             </span>
           </div>
@@ -175,15 +175,15 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
             <article className="p-5 rounded-xl border-2 border-emerald-600/30 bg-white dark:bg-[#10221b] space-y-2.5 shadow-2xs">
               <div className="flex items-center gap-2.5 border-b border-stone-200 dark:border-stone-800 pb-2">
                 <BookOpen className="w-5 h-5 text-emerald-700 dark:text-emerald-400 shrink-0" />
-                <h4 className="text-sm sm:text-base font-bold text-[#0A2118] dark:text-emerald-200 font-cinzel">
+                <h4 className={`text-sm sm:text-base font-bold text-[#0A2118] dark:text-emerald-200 ${isUr ? "font-nastaliq" : "font-cinzel"}`}>
                   {isUr
-                    ? "۱. تعلیمی و تحقیقی نوعیت (Academic, Scholarly & Non-Binding Scope)"
-                    : "1. Academic, Scholarly & Non-Binding Scope (تعلیمی و تحقیقی نوعیت)"}
+                    ? "۱. تعلیمی و تحقیقی نوعیت"
+                    : "1. Academic, Scholarly & Non-Binding Scope"}
                 </h4>
               </div>
               <p
                 className={`text-xs sm:text-sm leading-relaxed text-stone-800 dark:text-stone-200 ${
-                  isUr ? "font-naskh leading-[2.2] text-right" : ""
+                  isUr ? "font-nastaliq leading-[2.2] text-sm sm:text-base text-right" : ""
                 }`}
                 dir={isUr ? "rtl" : "ltr"}
               >
@@ -197,15 +197,15 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
             <article className="p-5 rounded-xl border-2 border-blue-600/30 bg-white dark:bg-[#10221b] space-y-2.5 shadow-2xs">
               <div className="flex items-center gap-2.5 border-b border-stone-200 dark:border-stone-800 pb-2">
                 <Cpu className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0" />
-                <h4 className="text-sm sm:text-base font-bold text-[#0A2118] dark:text-blue-200 font-cinzel">
+                <h4 className={`text-sm sm:text-base font-bold text-[#0A2118] dark:text-blue-200 ${isUr ? "font-nastaliq" : "font-cinzel"}`}>
                   {isUr
-                    ? "۲. مصنوعی ذہانت اور مسلسل ادارہ جاتی تحقیق (AI Automation & Continuous Institutional Review)"
-                    : "2. AI Automation & Continuous Institutional Review (مصنوعی ذہانت اور مسلسل ادارہ جاتی تحقیق)"}
+                    ? "۲. خودکار الگورتھم اور مسلسل ادارہ جاتی تحقیق"
+                    : "2. Algorithmic Modeling & Continuous Institutional Review"}
                 </h4>
               </div>
               <p
                 className={`text-xs sm:text-sm leading-relaxed text-stone-800 dark:text-stone-200 ${
-                  isUr ? "font-naskh leading-[2.2] text-right" : ""
+                  isUr ? "font-nastaliq leading-[2.2] text-sm sm:text-base text-right" : ""
                 }`}
                 dir={isUr ? "rtl" : "ltr"}
               >
@@ -219,15 +219,15 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
             <article className="p-5 rounded-xl border-2 border-amber-600/30 bg-white dark:bg-[#10221b] space-y-2.5 shadow-2xs">
               <div className="flex items-center gap-2.5 border-b border-stone-200 dark:border-stone-800 pb-2">
                 <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
-                <h4 className="text-sm sm:text-base font-bold text-[#0A2118] dark:text-amber-200 font-cinzel">
+                <h4 className={`text-sm sm:text-base font-bold text-[#0A2118] dark:text-amber-200 ${isUr ? "font-nastaliq" : "font-cinzel"}`}>
                   {isUr
-                    ? "۳. عدمِ قانونی ذمہ داری (Absolute Limitation of Liability)"
-                    : "3. Absolute Limitation of Liability (عدمِ قانونی ذمہ داری)"}
+                    ? "۳. عدمِ قانونی ذمہ داری"
+                    : "3. Absolute Limitation of Liability"}
                 </h4>
               </div>
               <p
                 className={`text-xs sm:text-sm leading-relaxed text-stone-800 dark:text-stone-200 ${
-                  isUr ? "font-naskh leading-[2.2] text-right" : ""
+                  isUr ? "font-nastaliq leading-[2.2] text-sm sm:text-base text-right" : ""
                 }`}
                 dir={isUr ? "rtl" : "ltr"}
               >
@@ -241,15 +241,15 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
             <article className="p-5 rounded-xl border-2 border-purple-600/30 bg-white dark:bg-[#10221b] space-y-2.5 shadow-2xs">
               <div className="flex items-center gap-2.5 border-b border-stone-200 dark:border-stone-800 pb-2">
                 <ShieldAlert className="w-5 h-5 text-purple-600 dark:text-purple-400 shrink-0" />
-                <h4 className="text-sm sm:text-base font-bold text-[#0A2118] dark:text-purple-200 font-cinzel">
+                <h4 className={`text-sm sm:text-base font-bold text-[#0A2118] dark:text-purple-200 ${isUr ? "font-nastaliq" : "font-cinzel"}`}>
                   {isUr
-                    ? "۴. مستند علماء و وکلاء سے حتمی تصدیق کی ضرورت (Mandatory Human-in-the-Loop)"
-                    : "4. Mandatory Human-in-the-Loop & Verification by Wukalā' (مستند علماء و وکلاء سے حتمی تصدیق)"}
+                    ? "۴. مستند علماء و وکلاء سے حتمی شرعی تصدیق کی ضرورت"
+                    : "4. Mandatory Verification by Authorized Representatives (Wukalā’)"}
                 </h4>
               </div>
               <p
                 className={`text-xs sm:text-sm leading-relaxed text-stone-800 dark:text-stone-200 ${
-                  isUr ? "font-naskh leading-[2.2] text-right" : ""
+                  isUr ? "font-nastaliq leading-[2.2] text-sm sm:text-base text-right" : ""
                 }`}
                 dir={isUr ? "rtl" : "ltr"}
               >
@@ -263,7 +263,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
 
         {/* Modal Footer */}
         <footer className="px-5 sm:px-8 py-4 border-t border-[#245642]/20 bg-stone-50/90 dark:bg-[#0d1d17]/90 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-stone-600 dark:text-stone-300 font-medium text-center sm:text-left">
+          <p className={`text-xs text-stone-600 dark:text-stone-300 font-medium text-center sm:text-left ${isUr ? "font-nastaliq" : ""}`}>
             {isUr
               ? "علمی کاوش و بنیاد: مولانا سیّد آئمن رضوی • فاضل حوزہ علمیہ قم"
               : "Initiated by Maulana Syed Imon Rizvi • Graduate, Islamic Seminary of Qom"}
@@ -271,10 +271,10 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-[#245642] hover:bg-[#1a4031] text-white text-xs sm:text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2"
+            className={`w-full sm:w-auto px-6 py-2.5 rounded-xl bg-[#245642] hover:bg-[#1a4031] text-white text-xs sm:text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${isUr ? "font-nastaliq" : ""}`}
           >
             <CheckCircle2 className="w-4 h-4" />
-            <span>{isUr ? "میں نے پڑھ کر تسلیم کیا (I Understand)" : "I Understand & Acknowledge"}</span>
+            <span>{isUr ? "میں نے پڑھ کر تسلیم کیا" : "I Understand & Acknowledge"}</span>
           </button>
         </footer>
       </div>

@@ -65,16 +65,16 @@ export const AcademyView: React.FC = () => {
           </div>
         </div>
 
-        {/* Master Nav Tabs */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1.5 rounded-xl bg-[#FAF8F5] dark:bg-[#0B1713] border border-[#245642]/30 shadow-xs self-start md:self-auto">
+        {/* Master Nav Tabs - Single Line Layout */}
+        <div className="inline-flex items-center flex-nowrap gap-1 sm:gap-1.5 p-1.5 rounded-xl bg-[#FAF8F5] dark:bg-[#0B1713] border border-[#245642]/30 shadow-xs self-start md:self-auto shrink-0 overflow-x-auto max-w-full">
           <button
             type="button"
             aria-pressed={activeTab === "masterclass"}
             onClick={() => setActiveTab("masterclass")}
-            className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all ${
+            className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
               activeTab === "masterclass"
                 ? "bg-[#245642] text-white shadow-xs"
-                : "text-stone-700 dark:text-stone-300 hover:text-[#245642] dark:hover:text-emerald-300"
+                : "text-stone-700 dark:text-stone-300 hover:text-[#245642] dark:hover:text-emerald-300 hover:bg-stone-200/50 dark:hover:bg-stone-800/50"
             }`}
           >
             {isUr ? "۸ ارکانِ شریعت (Masterclass)" : "8-Pillar Masterclass"}
@@ -83,10 +83,10 @@ export const AcademyView: React.FC = () => {
             type="button"
             aria-pressed={activeTab === "whyWeDiffer"}
             onClick={() => setActiveTab("whyWeDiffer")}
-            className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all ${
+            className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
               activeTab === "whyWeDiffer"
                 ? "bg-[#245642] text-white shadow-xs"
-                : "text-stone-700 dark:text-stone-300 hover:text-[#245642] dark:hover:text-emerald-300"
+                : "text-stone-700 dark:text-stone-300 hover:text-[#245642] dark:hover:text-emerald-300 hover:bg-stone-200/50 dark:hover:bg-stone-800/50"
             }`}
           >
             {isUr ? "فروقِ اساسی (ردِّ عول و تعصیب)" : "Why We Differ"}
@@ -95,10 +95,10 @@ export const AcademyView: React.FC = () => {
             type="button"
             aria-pressed={activeTab === "scenarios"}
             onClick={() => setActiveTab("scenarios")}
-            className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all ${
+            className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
               activeTab === "scenarios"
                 ? "bg-[#245642] text-white shadow-xs"
-                : "text-stone-700 dark:text-stone-300 hover:text-[#245642] dark:hover:text-emerald-300"
+                : "text-stone-700 dark:text-stone-300 hover:text-[#245642] dark:hover:text-emerald-300 hover:bg-stone-200/50 dark:hover:bg-stone-800/50"
             }`}
           >
             {isUr ? "عملی مشقیں (Simulations)" : "Case Simulations"}

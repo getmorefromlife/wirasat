@@ -251,44 +251,47 @@ export const PillarCard: React.FC<PillarCardProps> = ({ pillar, language }) => {
           <div className="flex items-center justify-between border-b border-stone-200 dark:border-stone-800 pb-3">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-              <h4 className="font-bold text-sm uppercase tracking-wider text-[#0A2118] dark:text-emerald-200 font-cinzel">
-                {isUr ? "عملی فقہی مثال و تجزیہ" : (pillar.caseStudy.title || "Practical Real-World Case Study")}
+              <h4 className={`font-bold text-sm uppercase tracking-wider text-[#0A2118] dark:text-emerald-200 ${isUr ? "font-nastaliq text-base tracking-normal" : "font-cinzel"}`}>
+                {isUr ? (pillar.caseStudy.titleUr || "عملی فقہی مثال و تجزیہ") : (pillar.caseStudy.title || "Practical Real-World Case Study")}
               </h4>
             </div>
-            <span className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">
-              Legal Precedent
+            <span className={`text-[11px] font-semibold text-stone-500 uppercase tracking-wider ${isUr ? "font-nastaliq text-xs tracking-normal" : ""}`}>
+              {isUr ? "شرعی نظیر" : "Legal Precedent"}
             </span>
           </div>
 
           <div className="space-y-4 text-xs sm:text-sm leading-relaxed">
             {/* Estate Scenario */}
             <div className="p-4 rounded-xl bg-[#FAF8F5] dark:bg-[#13251e] border border-stone-200 dark:border-stone-800 space-y-1.5">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#245642] dark:text-emerald-400 flex items-center gap-1.5">
+              <span className={`text-xs font-bold uppercase tracking-wider text-[#245642] dark:text-emerald-400 flex items-center gap-1.5 ${isUr ? "font-nastaliq text-sm tracking-normal" : ""}`}>
                 <FileText className="w-3.5 h-3.5" />
                 {isUr ? "صورتِ مسئلہ" : "Estate Scenario"}
               </span>
-              <p className="text-stone-800 dark:text-stone-200 font-medium">
-                {pillar.caseStudy.scenario}
+              <p className={`text-stone-800 dark:text-stone-200 font-medium ${isUr ? "font-nastaliq text-sm sm:text-base leading-[2.3]" : ""}`}>
+                {(isUr && pillar.caseStudy.scenarioUr) ? pillar.caseStudy.scenarioUr : pillar.caseStudy.scenario}
               </p>
             </div>
 
             {/* Step-by-Step Resolution */}
-            {pillar.caseStudy.steps.length > 0 && (
+            {((isUr && pillar.caseStudy.stepsUr && pillar.caseStudy.stepsUr.length > 0) || pillar.caseStudy.steps.length > 0) && (
               <div className="space-y-2.5 pt-1">
-                <span className="text-xs font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 flex items-center gap-1.5">
+                <span className={`text-xs font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 flex items-center gap-1.5 ${isUr ? "font-nastaliq text-sm tracking-normal" : ""}`}>
                   <Scale className="w-3.5 h-3.5 text-[#245642] dark:text-emerald-400" />
                   {isUr ? "مرحلہ وار شرعی حل" : "Step-by-Step Juridical Resolution"}
                 </span>
                 <div className="space-y-2">
-                  {pillar.caseStudy.steps.map((step, sIdx) => (
+                  {((isUr && pillar.caseStudy.stepsUr && pillar.caseStudy.stepsUr.length > 0)
+                    ? pillar.caseStudy.stepsUr
+                    : pillar.caseStudy.steps
+                  ).map((step, sIdx) => (
                     <div
                       key={sIdx}
                       className="p-3 rounded-lg bg-white dark:bg-[#0e1c17] border border-stone-200 dark:border-stone-800 text-stone-800 dark:text-stone-200 font-medium flex items-start gap-2.5 shadow-2xs"
                     >
                       <span className="w-5 h-5 rounded-full bg-[#245642]/10 dark:bg-[#245642]/30 text-[#245642] dark:text-emerald-400 font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
-                        {sIdx + 1}
+                        {isUr ? (sIdx + 1).toLocaleString('ur-PK') : (sIdx + 1)}
                       </span>
-                      <div className="flex-1 whitespace-pre-line leading-relaxed">
+                      <div className={`flex-1 whitespace-pre-line leading-relaxed ${isUr ? "font-nastaliq text-sm sm:text-base leading-[2.3]" : ""}`}>
                         {step}
                       </div>
                     </div>
@@ -298,14 +301,14 @@ export const PillarCard: React.FC<PillarCardProps> = ({ pillar, language }) => {
             )}
 
             {/* Takeaway / Conclusion */}
-            {pillar.caseStudy.takeaway && (
+            {((isUr && pillar.caseStudy.takeawayUr) || pillar.caseStudy.takeaway) && (
               <div className="p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-emerald-950 dark:text-emerald-200 font-semibold text-xs sm:text-sm flex items-start gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-emerald-900 dark:text-emerald-300 mr-1">
+                <div className={isUr ? "font-nastaliq text-sm sm:text-base leading-[2.3]" : ""}>
+                  <strong className={`text-emerald-900 dark:text-emerald-300 mr-1 ${isUr ? "font-nastaliq font-bold" : ""}`}>
                     {isUr ? "فقہی نتیجہ و سبق:" : "Jurisprudential Takeaway:"}
                   </strong>
-                  <span>{pillar.caseStudy.takeaway}</span>
+                  <span>{(isUr && pillar.caseStudy.takeawayUr) ? pillar.caseStudy.takeawayUr : pillar.caseStudy.takeaway}</span>
                 </div>
               </div>
             )}

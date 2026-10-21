@@ -40,9 +40,13 @@ export interface MarjaRulings {
 
 export interface CaseStudy {
   title: string;
+  titleUr?: string;
   scenario: string;
+  scenarioUr?: string;
   steps: string[];
+  stepsUr?: string[];
   takeaway: string;
+  takeawayUr?: string;
 }
 
 export interface MasterclassPillar {
@@ -103,9 +107,20 @@ export const MASTERCLASS_PILLARS: MasterclassPillar[] = [
     },
     caseStudy: {
       title: "Pillar I Case Study: Gross vs. Net Estate Liquidation",
+      titleUr: "پہلا ستون: کل ترکہ بمقابلہ خالص ترکہ کی شرعی تطہیر",
       scenario: "Zayd passes away leaving an estate valued at ₨ 10,000,000. Liabilities include: Customary burial expenses of ₨ 200,000; Outstanding commercial loan of ₨ 1,800,000; Unpaid Mahr owed to his surviving wife of ₨ 1,000,000; Unpaid religious tax (Khums) of ₨ 1,000,000; and a written testamentary will stating: 'Give ₨ 3,000,000 to an orphanage.'",
+      scenarioUr: "زید وفات پاتا ہے اور اس کا کل ترکہ ۱ کروڑ روپے (₨ 10,000,000) ہے۔ اس پر درج ذیل واجبات ہیں: تجہیز و تکفین کے شرعی و عرفی اخراجات ۲ لاکھ روپے (₨ 200,000)؛ کاروباری قرضہ ۱۸ لاکھ روپے (₨ 1,800,000)؛ بیوہ کا غیر ادا شدہ مہر ۱۰ لاکھ روپے (₨ 1,000,000)؛ غیر ادا شدہ خمس ۱۰ لاکھ روپے (₨ 1,000,000)؛ اور ایک تحریری وصیت کہ 'میرے مال سے ۳۰ لاکھ روپے یتیم خانے کو دیے جائیں'۔",
       steps: ["1. Gross Estate Audit: ₨ 10,000,000.", "2. Deduct Customary Burial (Kafn wa Tajhīz): ₨ 10,000,000 - ₨ 200,000 → Balance: ₨ 9,800,000.", "3. Deduct Creditors & Unpaid Mahr: ₨ 9,800,000 - (₨ 1,800,000 debt + ₨ 1,000,000 Mahr) → Balance: ₨ 7,000,000.", "4. Deduct Divine Liabilities (Khums): ₨ 7,000,000 - ₨ 1,000,000 → Balance: ₨ 6,000,000.", "5. Apply Statutory 1/3rd Will Ceiling: Maximum enforceable will = 1/3 × ₨ 6,000,000 = ₨ 2,000,000. (Even though Zayd requested ₨ 3,000,000, the law clamps it down to ₨ 2,000,000 unless all heirs consent).", "6. Compute Net Distributable Estate (Al-Tarkah al-Ṣāfiyah): ₨ 6,000,000 - ₨ 2,000,000 = **₨ 4,000,000**."],
+      stepsUr: [
+        "۱. کل ترکہ کا حساب: ۱۰,۰۰۰,۰۰۰ روپے (ایک کروڑ روپے)۔",
+        "۲. تجہیز و تکفین کی منہائی: ۱۰,۰۰۰,۰۰۰ - ۲۰۰,۰۰۰ = ۹,۸۰۰,۰۰۰ روپے باقی بچے۔",
+        "۳. بندوں کے قرض اور بیوہ کے مہر کی ادائیگی: ۹,۸۰۰,۰۰۰ - (۱,۸۰۰,۰۰۰ قرض + ۱,۰۰۰,۰۰۰ مہر) = ۷,۰۰۰,۰۰۰ روپے باقی بچے۔",
+        "۴. حقوقِ الٰہی (خمس) کی منہائی: ۷,۰۰۰,۰۰۰ - ۱,۰۰۰,۰۰۰ = ۶,۰۰۰,۰۰۰ روپے باقی بچے۔",
+        "۵. وصیت کے لیے شرعی ایک تہائی (۱/۳) کی حد کا اطلاق: نافذ العمل وصیت کی زیادہ سے زیادہ حد = ۱/۳ × ۶,۰۰۰,۰۰۰ = ۲,۰۰۰,۰۰۰ روپے (اگرچہ زید نے ۳۰ لاکھ کی وصیت کی تھی، لیکن تمام ورثاء کی رضامندی کے بغیر صرف ۲۰ لاکھ تک ہی نافذ ہوگی)۔",
+        "۶. خالص قابلِ تقسیم ترکہ (الترکۃ الصافیہ): ۶,۰۰۰,۰۰۰ - ۲,۰۰۰,۰۰۰ = ۴,۰۰۰,۰۰۰ روپے (چالیس لاکھ روپے)۔"
+      ],
       takeaway: "The heirs divide strictly ₨ 4,000,000, not the original ₨ 10,000,000. The widow receives her ₨ 1,000,000 Mahr as a primary creditor first, and then still inherits her full spousal share from the remaining net estate.",
+      takeawayUr: "ورثاء میں اصل ایک کروڑ تقسیم نہیں ہوگا بلکہ تمام قرضوں، حقوق اور وصیت کی ادائیگی کے بعد باقی بچنے والے خالص ۴۰ لاکھ روپے تقسیم ہوں گے۔ بیوہ اپنا ۱۰ لاکھ مہر بطورِ قرض خواہ پہلے وصول کرے گی اور اس کے بعد بچنے والے ترکے میں سے اپنا شرعی حصہ بھی الگ سے پائے گی۔"
     },
   },
 
@@ -144,9 +159,19 @@ export const MASTERCLASS_PILLARS: MasterclassPillar[] = [
     },
     caseStudy: {
       title: "Pillar II Case Study: Sabab Priority Over Blood Lineage",
+      titleUr: "دوسرا ستون: سبب کی برتری اور نسبی ورثاء کی ترتیب",
       scenario: "Fatima passes away leaving behind her Husband (Ali), her Mother, and her biological Brother. The net distributable estate is ₨ 1,200,000.",
+      scenarioUr: "فاطمہ وفات پاتی ہیں اور پسماندگان میں ان کے شوہر (علی)، ان کی والدہ، اور ان کا سگا بھائی شامل ہیں۔ خالص قابلِ تقسیم ترکہ ۱۲ لاکھ روپے (₨ 1,200,000) ہے۔",
       steps: ["1. Identify Sabab (Matrimonial Contract): Ali is the surviving Husband. Because Fatima has no children, Ali's non-negotiable Quranic share is 1/2 (50%). Ali receives: 1/2 × ₨ 1,200,000 = **₨ 600,000**.", "2. Calculate Residue for Blood Kin (Nasab): ₨ 1,200,000 - ₨ 600,000 = ₨ 600,000.", "3. Evaluate Blood Kinship Tiers: Surviving relatives are the Mother (Tier 1) and Brother (Tier 2).", "4. Apply the Tier Exclusion Gate: The Mother (Tier 1) completely and totally excludes the Brother (Tier 2) via Ḥujub al-Ḥirmān. The brother receives **₨ 0**.", "5. Distribute Residue: The Mother receives the entire remaining balance of **₨ 600,000** (taking her fixed 1/3rd Quranic share plus the surplus returned via Radd)."],
+      stepsUr: [
+        "۱. سبب (نکاحِ دائمی) کا تعین: علی متوفیہ کے شوہر ہیں۔ چونکہ فاطمہ کی کوئی اولاد نہیں ہے، اس لیے شوہر کا قطعی قرآنی حصہ نصف یعنی ۱/۲ (۵۰ فیصد) ہے۔ شوہر کا حصہ: ۱/۲ × ۱,۲۰۰,۰۰۰ = ۶۰۰,۰۰۰ روپے (چھ لاکھ روپے)۔",
+        "۲. خونی رشتہ داروں (نسب) کے لیے بقیہ ترکہ کا تعین: ۱,۲۰۰,۰۰۰ - ۶۰۰,۰۰۰ = ۶۰۰,۰۰۰ روپے باقی بچے۔",
+        "۳. خونی طبقات کی جانچ: پسماندگان میں والدہ (طبقۂ اول) اور بھائی (طبقۂ دوم) موجود ہیں۔",
+        "۴. حجبِ حرمان کا نفاذ: طبقۂ اول (والدہ) کی موجودگی میں طبقۂ دوم (بھائی) مکمل طور پر محروم ہو جاتا ہے۔ بھائی کا حصہ = ۰ روپے (کچھ نہیں)۔",
+        "۵. بقیہ ترکہ کی تقسیم: والدہ کو پورا بقیہ ۶۰۰,۰۰۰ روپے مل جائے گا (جس میں ان کا مقررہ قرآنی حصہ ۱/۳ اور باقی بچا ہوا مال بطورِ رد شامل ہے)۔"
+      ],
       takeaway: "The husband took his full statutory share through Sabab without interference, while the mother eliminated the brother through Tier 1 Nasab precedence.",
+      takeawayUr: "شوہر نے 'سبب' کی بنیاد پر بغیر کسی رکاوٹ کے اپنا مکمل قرآنی حصہ پایا، جبکہ والدہ نے طبقۂ اول کا وارث ہونے کے ناطے طبقۂ دوم کے بھائی کو مکمل طور پر وراثت سے خارج کر دیا۔"
     },
   },
 
@@ -185,9 +210,19 @@ export const MASTERCLASS_PILLARS: MasterclassPillar[] = [
     },
     caseStudy: {
       title: "Pillar III Case Study: Total Exclusion of Extended Agnates by a Daughter",
+      titleUr: "تیسرا ستون: اکیلی بیٹی کے ذریعے بھائیوں اور چچاؤں کی مکمل محرومی",
       scenario: "Hassan passes away leaving behind his Wife, one Daughter, 3 Full Brothers, and 2 Paternal Uncles (Chachas). The net estate is ₨ 8,000,000.",
+      scenarioUr: "حسن وفات پاتے ہیں اور پسماندگان میں ان کی بیوہ، ایک بیٹی، ۳ سگے بھائی، اور ۲ چچا موجود ہیں۔ خالص ترکہ ۸۰ لاکھ روپے (₨ 8,000,000) ہے۔",
       steps: ["1. Allocate Spousal Share (Sabab): Since Hassan leaves a surviving child, his Wife receives her fixed 1/8th Quranic share: 1/8 × ₨ 8,000,000 = **₨ 1,000,000**.", "2. Determine Distributable Residue: ₨ 8,000,000 - ₨ 1,000,000 = ₨ 7,000,000.", "3. Apply Tier 1 Blood Lineage: The Daughter is a direct Tier 1 heir. Her statutory Quranic share as a single daughter is 1/2 (₨ 4,000,000).", "4. Enforce Ḥujub al-Ḥirmān (Total Exclusion): The Daughter's presence in Tier 1 completely blocks the 3 Brothers (Tier 2) and the 2 Uncles (Tier 3). The brothers and uncles receive **₨ 0**.", "5. Return of Surplus (Al-Radd): The leftover residue (₨ 3,000,000) does NOT go to distant agnates (Ta'sīb is repudiated). It returns entirely to the Daughter via Radd. Total Daughter portion: ₨ 4,000,000 + ₨ 3,000,000 = **₨ 7,000,000** (87.5% of the total estate)."],
+      stepsUr: [
+        "۱. زوجیت کے سبب کا حصہ: چونکہ متوفی کی اولاد موجود ہے، اس لیے بیوہ کا قطعی قرآنی حصہ ۱/۸ (آٹھواں حصہ) ہے۔ بیوہ کا حصہ: ۱/۸ × ۸,۰۰۰,۰۰۰ = ۱,۰۰۰,۰۰۰ روپے (دس لاکھ روپے)۔",
+        "۲. خونی ورثاء کے لیے بقیہ ترکہ: ۸,۰۰۰,۰۰۰ - ۱,۰۰۰,۰۰۰ = ۷,۰۰۰,۰۰۰ روپے (ستر لاکھ روپے)۔",
+        "۳. طبقۂ اول کے نسبی وارث کا تعین: بیٹی طبقۂ اول کی بلاواسطہ وارث ہے۔ اکیلی بیٹی کا مقررہ قرآنی فریضہ نصف ۱/۲ ہے (یعنی ۴,۰۰۰,۰۰۰ روپے)۔",
+        "۴. حجبِ حرمان (مکمل محرومی) کا اطلاق: طبقۂ اول میں اکیلی بیٹی کی موجودگی نے طبقۂ دوم کے تینوں بھائیوں اور طبقۂ سوم کے دونوں چچاؤں کو کلی طور پر محروم کر دیا۔ بھائیوں اور چچاؤں کا حصہ = ۰ روپے (کچھ نہیں)۔",
+        "۵. بقیہ مال کی واپسی (بطلانِ تعصیب و الرد): فقہِ جعفریہ میں عصبہ کا نظریہ باطل ہے۔ لہٰذا باقی بچنے والے ۳۰ لاکھ روپے چچاؤں یا بھائیوں کو نہیں جائیں گے، بلکہ رد کے ذریعے پورے کے پورے بیٹی کو لوٹائے جائیں گے۔ بیٹی کا کل حصہ: ۴,۰۰۰,۰۰۰ + ۳,۰۰۰,۰۰۰ = ۷,۰۰۰,۰۰۰ روپے (کل ترکے کا ۸۷.۵ فیصد)۔"
+      ],
       takeaway: "Even though Hassan had 3 brothers and 2 uncles, his lone daughter legally captured the entire remaining estate, leaving the extended male relatives with zero statutory entitlement.",
+      takeawayUr: "حسن کے ۳ بھائی اور ۲ چچا ہونے کے باوجود، ان کی تنہا بیٹی نے شریعت کے مطابق بیوہ کے حصے کے بعد پورا ترکہ حاصل کیا اور دور کے تمام مرد رشتہ دار شرعاً کلی محروم رہے۔"
     },
   },
 
@@ -226,9 +261,19 @@ export const MASTERCLASS_PILLARS: MasterclassPillar[] = [
     },
     caseStudy: {
       title: "Pillar IV Case Study: Multiple Wives & Real Estate Land Valuation",
+      titleUr: "چوتھا ستون: متعدد بیویاں، جائیداد کی قیمت اور زمین کے احکام",
       scenario: "Tariq passes away leaving 2 permanent wives (Wife A and Wife B), 1 Son, and 1 Daughter. His estate consists of: Liquid Cash of ₨ 4,000,000; Residential Land valued at ₨ 10,000,000; and the Building structure on that land valued at ₨ 6,000,000. Total gross estate = ₨ 20,000,000.",
+      scenarioUr: "طارق وفات پاتے ہیں اور پسماندگان میں ۲ دائمی بیویاں (بیوی 'الف' اور بیوی 'ب')، ۱ بیٹا اور ۱ بیٹی ہیں۔ ترکہ درج ذیل پر مشتمل ہے: نقد رقم ۴۰ لاکھ روپے (₨ 4,000,000)؛ رہائشی زمین کی مالیت ۱ کروڑ روپے (₨ 10,000,000)؛ اور اس زمین پر تعمیر شدہ عمارت کی مالیت ۶۰ لاکھ روپے (₨ 6,000,000)۔ کل ترکہ = ۲ کروڑ روپے (₨ 20,000,000)۔",
       steps: ["1. Liquid Cash Distribution (₨ 4,000,000): Wives collectively take 1/8th (₨ 500,000), split equally (₨ 250,000 each). Children share remaining ₨ 3,500,000 in a 2:1 ratio (Son: ₨ 2,333,333; Daughter: ₨ 1,166,667).", "2. Building Structure Valuation (₨ 6,000,000): All Marāji' agree wives take 1/8th of building value (₨ 750,000), split equally (₨ 375,000 each). Children share remaining ₨ 5,250,000 (Son: ₨ 3,500,000; Daughter: ₨ 1,750,000).", "3. Residential Land Valuation (₨ 10,000,000) under Sayyid Sistani & Khamenei: Wives inherit 1/8th of the monetary value of land (₨ 1,250,000), split equally (₨ 625,000 cash each). Children divide remaining ₨ 8,750,000.", "4. Residential Land Valuation under Sayyid Khoei & Makarem Shirazi: Wives receive ₨ 0 from the land. The entire ₨ 10,000,000 land value goes solely to the Son (₨ 6,666,667) and Daughter (₨ 3,333,333).", "5. Final Sistani Total for Each Wife: ₨ 250,000 (cash) + ₨ 375,000 (building) + ₨ 625,000 (land) = **₨ 1,250,000 each**."],
+      stepsUr: [
+        "۱. نقد رقم کی تقسیم (۴,۰۰۰,۰۰۰ روپے): اولاد کی موجودگی میں دونوں بیویاں مشترکہ طور پر ۱/۸ (۵۰۰,۰۰۰ روپے) پائیں گی جو ان میں برابر تقسیم ہوگا (۲۵۰,۰۰۰ روپے فی کس)۔ بقیہ ۳,۵۰۰,۰۰۰ روپے بیٹا اور بیٹی میں ۲ اور ۱ کی نسبت سے تقسیم ہوں گے (بیٹا: ۲,۳۳۳,۳۳۳ روپے؛ بیٹی: ۱,۱۶۶,۶۶۷ روپے)۔",
+        "۲. عمارت کی قیمت کی تقسیم (۶,۰۰۰,۰۰۰ روپے): تمام مراجع کے متفقہ فیصلے کے تحت دونوں بیویاں عمارت کی قیمت کا ۱/۸ (۷۵۰,۰۰۰ روپے) برابر پائیں گی (۳۷۵,۰۰۰ روپے فی کس)۔ باقی ۵,۲۵۰,۰۰۰ روپے بیٹے اور بیٹی میں تقسیم ہوں گے (بیٹا: ۳,۵۰۰,۰۰۰ روپے؛ بیٹی: ۱,۷۵۰,۰۰۰ روپے)۔",
+        "۳. رہائشی زمین کی قیمت (۱۰,۰۰۰,۰۰۰ روپے) - آیت اللہ سیستانی و آیت اللہ خامنہ ای کا فتویٰ: دونوں بیویاں زمین کی نقد قیمت کا ۱/۸ (۱,۲۵۰,۰۰۰ روپے) پائیں گی، جو دونوں میں برابر تقسیم ہوگا (۶۲۵,۰۰۰ روپے نقد فی کس)۔ باقی ۸,۷۵۰,۰۰۰ روپے اولاد میں تقسیم ہوں گے۔",
+        "۴. زمین کی قیمت - آیت اللہ خوئی کا فتویٰ: بیویاں زمین کی قیمت سے کچھ نہیں پائیں گی (۰ روپے)۔ پوری زمین کی ۱۰,۰۰۰,۰۰۰ روپے مالیت صرف بیٹے اور بیٹی میں تقسیم ہوگی۔",
+        "۵. آیت اللہ سیستانی کے فتویٰ پر ہر بیوی کا کل حصہ: ۲۵۰,۰۰۰ (نقد) + ۳۷۵,۰۰۰ (عمارت) + ۶۲۵,۰۰۰ (زمین کی قیمت) = ۱,۲۵۰,۰۰۰ روپے (بارہ لاکھ پچاس ہزار روپے فی کس)۔"
+      ],
       takeaway: "Under contemporary rulings of Ayatollahs Sistani and Khamenei, the widow's financial security is preserved by awarding her 1/8th the cash value of all land without granting physical partition.",
+      takeawayUr: "معاصر مراجع (آیت اللہ سیستانی و خامنہ ای) کے فتاویٰ کے مطابق بیوہ کو زمین کی جسمانی تقسیم کے بغیر اس کی بازاری قیمت کا ۱/۸ نقد ادا کیا جاتا ہے تاکہ بیوہ کا مالی تحفظ یقینی رہے اور جائیداد بکھرنے سے بچے۔"
     },
   },
 
@@ -261,9 +306,19 @@ export const MASTERCLASS_PILLARS: MasterclassPillar[] = [
     },
     caseStudy: {
       title: "Pillar V Case Study: Deficit Absorption Without Diluting Parents or Spouse",
+      titleUr: "پانچواں ستون: بطلانِ عول اور والدین و شریکِ حیات کے حقوق کا تحفظ",
       scenario: "Zainab passes away leaving her Husband, her Mother, her Father, and 2 Daughters. The net distributable estate is ₨ 12,000,000.",
+      scenarioUr: "زینب وفات پاتی ہیں اور پسماندگان میں ان کے شوہر، والدہ، والد، اور ۲ بیٹیاں شامل ہیں۔ خالص قابلِ تقسیم ترکہ ۱ کروڑ ۲۰ لاکھ روپے (₨ 12,000,000) ہے۔",
       steps: ["1. Calculate Statutory Fractions: Husband (1/4 = 3/12 = ₨ 3,000,000); Father (1/6 = 2/12 = ₨ 2,000,000); Mother (1/6 = 2/12 = ₨ 2,000,000); 2 Daughters (2/3 = 8/12 = ₨ 8,000,000). Total fractions = 15/12 (₨ 15,000,000 on a ₨ 12M estate).", "2. Repudiate Non-Shia 'Awl: Ja'fari jurisprudence refuses to inflate the denominator to 15, which would have unlawfully reduced the husband and parents' shares.", "3. Protect Fixed Inviolable Heirs: The Husband takes his full ₨ 3,000,000 (100% intact). The Father takes his full ₨ 2,000,000 (100% intact). The Mother takes her full ₨ 2,000,000 (100% intact). Total paid to protected sharers = **₨ 7,000,000**.", "4. Allocate Balance to Residuaries: The 2 Daughters absorb the deficit and receive the entire remaining balance: ₨ 12,000,000 - ₨ 7,000,000 = **₨ 5,000,000**.", "5. Divide Between Daughters: Each daughter receives **₨ 2,500,000**."],
+      stepsUr: [
+        "۱. قرآنی حصوں کا حساب: شوہر کا حصہ ۱/۴ (۳/۱۲ = ۳,۰۰۰,۰۰۰ روپے)؛ والد کا حصہ ۱/۶ (۲/۱۲ = ۲,۰۰۰,۰۰۰ روپے)؛ والدہ کا حصہ ۱/۶ (۲/۱۲ = ۲,۰۰۰,۰۰۰ روپے)؛ ۲ بیٹیوں کا قرآنی حصہ ۲/۳ (۸/۱۲ = ۸,۰۰۰,۰۰۰ روپے)۔ تمام حصوں کا مجموعہ ۱۵/۱۲ بنتا ہے جو کہ کل مال سے ۳۰ لاکھ زیادہ (۱۲۵ فیصد) ہے۔",
+        "۲. عول کا بطلان: فقہِ جعفریہ مخرج کو بڑھا کر ۱۵ کرنے (عول) کو سختی سے مسترد کرتی ہے، کیونکہ اس سے شوہر اور والدین کے متعین قرآنی حصے پر ناجائز کٹوتی ہو جاتی۔",
+        "۳. غیر متغیر ورثاء کا مکمل تحفظ: شوہر اپنا مکمل حصہ ۳,۰۰۰,۰۰۰ روپے پائے گا۔ والد اپنا مکمل حصہ ۲,۰۰۰,۰۰۰ روپے پائیں گے۔ والدہ اپنا مکمل حصہ ۲,۰۰۰,۰۰۰ روپے پائیں گی۔ محفوظ ورثاء کو ادا کردہ کل رقم = ۷,۰۰۰,۰۰۰ روپے (ستّر لاکھ روپے)۔",
+        "۴. حسابی خسارے کا لچکدار حصے سے ازالہ: امیرالمومنین حضرت علیؑ کے فیصلے کے مطابق حسابی کمی بیٹیوں کے لچکدار حصے پر ڈالی جاتی ہے۔ دونوں بیٹیوں کو باقی بچنے والا پورا مال ملے گا: ۱۲,۰۰۰,۰۰۰ - ۷,۰۰۰,۰۰۰ = ۵,۰۰۰,۰۰۰ روپے (پچاس لاکھ روپے)۔",
+        "۵. بیٹیوں میں آپسی تقسیم: دونوں بیٹیاں ۵۰ لاکھ روپے آپس میں برابر بانٹ لیں گی یعنی ۲,۵۰۰,۰۰۰ روپے (پچیس لاکھ روپے) فی کس۔"
+      ],
       takeaway: "Imam Ali's (as) ruling shields the vulnerable parents and spouse from mathematical dilution. The deficit is absorbed exclusively by the daughters' flexible share.",
+      takeawayUr: "فرمانِ امیرالمومنینؑ کے مطابق شریعت میں شوہر اور بوڑھے والدین کے مقررہ حصے پر کبھی کٹوتی نہیں لگتی۔ حسابی خسارے کو بیٹیوں کا لچکدار حصہ جذب کرتا ہے اور کسی کے حق پر ظلم نہیں ہوتا۔"
     },
   },
 
@@ -296,9 +351,19 @@ export const MASTERCLASS_PILLARS: MasterclassPillar[] = [
     },
     caseStudy: {
       title: "Pillar VI Case Study: Multi-Branch Tanzīl Representation & Ḥabwah Appraisal",
+      titleUr: "چھٹا ستون: تنزیل (قائم مقامی) کی شاخیں اور احکامِ حَبْوہ",
       scenario: "Hajji Baqir passes away leaving: His Wife; all his direct sons and daughters are deceased. Surviving descendants: 2 Potiyaan (daughters of deceased Son A), 1 Pota (son of deceased Son A), and 1 Nawasa (son of deceased Daughter B). Estate = ₨ 24,000,000.",
+      scenarioUr: "حاجی باقر وفات پاتے ہیں اور پسماندگان میں ان کی بیوہ موجود ہیں، جبکہ ان کے تمام صلبی بیٹے اور بیٹیاں پہلے ہی فوت ہو چکے ہیں۔ زندہ پوتوں اور نواسوں میں: ۲ پوتیاں اور ۱ پوتا (مرحوم بیٹے 'الف' کی اولاد) اور ۱ نواسہ (مرحومہ بیٹی 'ب' کا بیٹا) شامل ہیں۔ ترکہ = ۲ کروڑ ۴۰ لاکھ روپے (₨ 24,000,000) ہے۔",
       steps: ["1. Ḥabwah Relics Determination: Pota (son of Son A) is the eldest living male descendant, but Ḥabwah is reserved exclusively for a direct son. Since no direct son lives, the relics are appraised and merged into the general estate.", "2. Spousal Share Allocation (Sabab): The Wife takes her fixed 1/8th share (since descendants exist): 1/8 × ₨ 24,000,000 = **₨ 3,000,000**.", "3. Distributable Residue for Lineage: ₨ 24,000,000 - ₨ 3,000,000 = ₨ 21,000,000.", "4. Tanzīl Representation at Parent Branch Level: Deceased Son A and Deceased Daughter B are represented in a 2:1 ratio (3 total units). Each branch unit = ₨ 21,000,000 ÷ 3 = ₨ 7,000,000. Son A's Branch takes: 2 × ₨ 7,000,000 = **₨ 14,000,000**. Daughter B's Branch takes: 1 × ₨ 7,000,000 = **₨ 7,000,000**.", "5. Internal Distribution within Branches: Nawasa (son of Daughter B) takes the entire **₨ 7,000,000** branch portion. Son A's branch (₨ 14,000,000) is divided among 1 Pota (2 units) + 2 Potiyaan (1 unit each) = 4 units (₨ 3,500,000 per unit). Pota receives: 2 × ₨ 3.5M = **₨ 7,000,000**; Each Poti receives: 1 × ₨ 3.5M = **₨ 3,500,000**."],
+      stepsUr: [
+        "۱. حَبْوہ کے تبرکات کا شرعی حکم: پوتا اگرچہ سب سے بڑا مذکر ہے مگر حَبْوہ صرف صلبی (براہِ راست) بیٹے کا حق ہے۔ چونکہ کوئی صلبی بیٹا حیات نہیں، اس لیے باپ کے تبرکات کی قیمت لگا کر انہیں عام ترکے میں شامل کیا جائے گا۔",
+        "۲. بیوہ کا حصہ: اولاد کی نسل موجود ہونے کے سبب بیوہ کا حصہ ۱/۸ ہے: ۱/۸ × ۲۴,۰۰۰,۰۰۰ = ۳,۰۰۰,۰۰۰ روپے (تیس لاکھ روپے)۔",
+        "۳. اولاد کی شاخوں کے لیے بقیہ ترکہ: ۲۴,۰۰۰,۰۰۰ - ۳,۰۰۰,۰۰۰ = ۲۱,۰۰۰,۰۰۰ روپے (دو کروڑ دس لاکھ روپے)۔",
+        "۴. تنزیل کے تحت اصل والدین کی بنیاد پر تقسیم: مرحوم بیٹا 'الف' اور مرحومہ بیٹی 'ب' اپنے والد کے قائم مقام بن کر ۲ اور ۱ کی نسبت پائیں گے (کل ۳ حصے)۔ فی حصہ = ۷,۰۰۰,۰۰۰ روپے۔ بیٹے 'الف' کی شاخ کو ملے گا: ۲ × ۷,۰۰۰,۰۰۰ = ۱۴,۰۰۰,۰۰۰ روپے (ایک کروڑ چالیس لاکھ)۔ بیٹی 'ب' کی شاخ کو ملے گا: ۱ × ۷,۰۰۰,۰۰۰ = ۷,۰۰۰,۰۰۰ روپے (ستر لاکھ)۔",
+        "۵. ہر شاخ کے اندر اولاد کی تقسیم: بیٹی 'ب' کا اکلوتا نواسہ اپنی ماں کی پوری شاخ کے ۷۰ لاکھ روپے لے لے گا۔ بیٹے 'الف' کی شاخ (۱ کروڑ ۴۰ لاکھ) ۱ پوتے (۲ حصے) اور ۲ پوتیوں (۱، ۱ حصہ) یعنی کل ۴ حصوں میں تقسیم ہوگی (۳۵ لاکھ فی حصہ)۔ پوتا پائے گا: ۷۰ لاکھ روپے؛ اور ہر پوتی پائے گی: ۳۵ لاکھ روپے۔"
+      ],
       takeaway: "Grandchildren inherit solely by representation (Tanzīl) when the direct generation is extinct, preserving the exact branch proportions of their deceased parents.",
+      takeawayUr: "صلبی اولاد کے نہ ہونے پر پوتے اور نواسے تنزیل (قائم مقامی) کے شرعی اصول کے تحت اپنے اپنے مرحوم والدین کی جگہ لیتے ہیں اور والدین کی شاخ کا مکمل حصہ حاصل کرتے ہیں۔"
     },
   },
 
@@ -331,9 +396,19 @@ export const MASTERCLASS_PILLARS: MasterclassPillar[] = [
     },
     caseStudy: {
       title: "Pillar VII Case Study: The Disqualification Filter (Murder, Apostasy, and Inheritance Capture)",
+      titleUr: "ساتواں ستون: موانعِ ارث (قتل اور کفر کے سبب محرومی)",
       scenario: "Bilal (a Muslim) passes away leaving: Son A (Muslim), who intentionally murdered Bilal in a dispute; Son B (Apostate/Non-Muslim), who renounced Islam; Son C (Practicing Muslim); and a surviving Wife (Muslim). Net Estate = ₨ 16,000,000.",
+      scenarioUr: "بلال (مسلمان) وفات پاتے ہیں اور پسماندگان میں: بیٹا 'الف' (جس نے جھگڑے میں اپنے والد کو ناحق قتل کیا)، بیٹا 'ب' (جو مرتد ہو کر غیر مسلم ہو گیا)، بیٹا 'ج' (پابندِ شریعت مسلمان)، اور بلال کی بیوی (مسلمان) شامل ہیں۔ خالص ترکہ ۱ کروڑ ۶۰ لاکھ روپے (₨ 16,000,000) ہے۔",
       steps: ["1. Apply Homicide Disqualification (Al-Qatl): Son A intentionally murdered the testator. He is totally disinherited by divine law and treated as legally non-existent (Mawjūd ka al-Ma'dūm).", "2. Apply Religion Disqualification (Al-Kufr): Son B is an apostate/non-Muslim. Under Shia law, a non-Muslim cannot inherit from a Muslim relative. He receives **₨ 0**.", "3. Allocate Spousal Share: The Wife inherits her 1/8th statutory share (since Son C is an active descendant): 1/8 × ₨ 16,000,000 = **₨ 2,000,000**.", "4. Capture of Residue by Sole Eligible Heir: Son C is the only qualifying child free from legal impediments. He takes the entire remaining balance: ₨ 16,000,000 - ₨ 2,000,000 = **₨ 14,000,000**.", "5. Blocking Impact: The disqualified brothers cannot participate in distribution nor block Son C from taking the full residue."],
+      stepsUr: [
+        "۱. قتلِ عمد کے مانع کا نفاذ: بیٹا 'الف' نے اپنے والد کو جان بوجھ کر قتل کیا۔ شریعت کے مطابق قاتل اپنے مقتول کے مال سے مکمل طور پر محروم ہے اور قانونی لحاظ سے غیر موجود (کالمعدوم) ہے۔",
+        "۲. کفر و ارتداد کے مانع کا نفاذ: بیٹا 'ب' دائرۂ اسلام سے خارج ہو چکا ہے۔ فقہِ جعفریہ کے مطابق کافر کسی مسلمان کا وارث نہیں بن سکتا۔ اس کا حصہ = ۰ روپے (کچھ نہیں)۔",
+        "۳. بیوہ کے حصے کی تخصیص: بیٹا 'ج' کے شرعی وارث ہونے کی وجہ سے بیوہ کا قرآنی حصہ ۱/۸ ہے: ۱/۸ × ۱۶,۰۰۰,۰۰۰ = ۲,۰۰۰,۰۰۰ روپے (بیس لاکھ روپے)۔",
+        "۴. واحد اہل وارث کا ترکے پر استحقاق: چونکہ بیٹا 'ج' تمام موانع سے پاک واحد شرعی وارث ہے، اس لیے باقی سارا ترکہ وہی پائے گا: ۱۶,۰۰۰,۰۰۰ - ۲,۰۰۰,۰۰۰ = ۱۴,۰۰۰,۰۰۰ روپے (ایک کروڑ چالیس لاکھ روپے)۔",
+        "۵. محروم بیٹوں کی عدم موجودگی کا اثر: جن بھائیوں پر مانع لاگو ہو گیا وہ نہ خود وراثت پا سکتے ہیں اور نہ ہی وہ بیٹے 'ج' کے حصے کے لیے کسی قسم کی رکاوٹ بن سکتے ہیں۔"
+      ],
       takeaway: "Intentional murder and apostasy completely sever inheritance title. A single eligible Muslim heir captures the balance of the estate.",
+      takeawayUr: "ناحق قتل اور کفر وراثت کے حق کو جڑ سے کاٹ دیتے ہیں۔ جس وارث میں مانع پایا جائے وہ شرعاً کالمعدوم ہو جاتا ہے اور باقی بچ جانے والا واحد شرعی وارث پورے بقیہ ترکے کا حقدار ٹھہرتا ہے۔"
     },
   },
 
@@ -366,9 +441,17 @@ export const MASTERCLASS_PILLARS: MasterclassPillar[] = [
     },
     caseStudy: {
       title: "Pillar VIII Case Study: Simultaneous Fatalities Without Circular Looping",
+      titleUr: "آٹھواں ستون: مشترکہ حادثات اور دوطرفہ توارث (غرقیٰ و ہدمیٰ)",
       scenario: "Father (Ali) and his adult Son (Hassan) perish together in an airplane crash, and the exact sequence of death cannot be medically determined. Ali leaves behind his Wife (Zahra) and personal assets worth ₨ 12,000,000. Hassan leaves behind his Wife (Maryam) and independent personal savings worth ₨ 6,000,000.",
+      scenarioUr: "والد (علی) اور ان کا جوان بیٹا (حسن) ایک ہوائی جہاز کے حادثے میں بیک وقت جاں بحق ہو جاتے ہیں، اور طبی و سائنسی طور پر یہ معلوم نہیں ہو سکتا کہ پہلے کس کا انتقال ہوا۔ علی کے پسماندگان میں ان کی بیوہ (زہرا) اور ان کا ذاتی مال ۱ کروڑ ۲۰ لاکھ روپے (₨ 12,000,000) ہے۔ حسن کے پسماندگان میں ان کی بیوہ (مریم) اور ان کی اپنی ذاتی بچت ۶۰ لاکھ روپے (₨ 6,000,000) ہے۔",
       steps: ["1. Phase 1 — Administer Ali's Original Estate (₨ 12,000,000): Assume Hassan survived Ali. Ali's Wife (Zahra) takes 1/8th = ₨ 1,500,000. Hassan (presumed surviving son) takes residue = ₨ 10,500,000. This ₨ 10,500,000 transfers directly to Hassan's estate and his wife Maryam.", "2. Phase 2 — Administer Hassan's Original Estate (₨ 6,000,000): Assume Ali survived Hassan. Hassan's Wife (Maryam) takes 1/4th (no children) = ₨ 1,500,000. Ali (presumed surviving father) takes residue = ₨ 4,500,000. This ₨ 4,500,000 transfers directly to Ali's heirs (his wife Zahra).", "3. Phase 3 — The Anti-Looping Application (Mā Wuriṣa Lā Yūrath): Hassan's heirs do not take a cut of the ₨ 4,500,000 Ali just inherited from Hassan. Ali's heirs do not take a cut of the ₨ 10,500,000 Hassan just inherited from Ali. Cross-succession applies strictly to original pre-accident assets (Aṣl al-Māl)."],
+      stepsUr: [
+        "۱. پہلا مرحلہ — علی کے اصل مال (۱۲,۰۰۰,۰۰۰ روپے) کی تقسیم: یہ فرض کیا جائے گا کہ حسن اپنے والد کے بعد تک زندہ رہا۔ علی کی بیوہ (زہرا) کو ۱/۸ ملے گا = ۱,۵۰۰,۰۰۰ روپے (پندرہ لاکھ)۔ حسن (بطورِ زندہ فرض کیا گیا بیٹا) بقیہ ۱۰,۵۰۰,۰۰۰ روپے کا حقدار ہوگا۔ یہ رقم براہِ راست حسن کے ورثاء (اس کی بیوہ مریم) کو منتقل ہوگی۔",
+        "۲. دوسرا مرحلہ — حسن کے اصل مال (۶,۰۰۰,۰۰۰ روپے) کی تقسیم: اب یہ فرض کیا جائے گا کہ علی اپنے بیٹے کے بعد تک زندہ رہا۔ چونکہ حسن کی کوئی اولاد نہیں، اس لیے اس کی بیوہ (مریم) کو ۱/۴ ملے گا = ۱,۵۰۰,۰۰۰ روپے (پندرہ لاکھ)۔ علی (بطورِ زندہ فرض کیا گیا والد) بقیہ ۴,۵۰۰,۰۰۰ روپے کا حقدار ہوگا۔ یہ رقم علی کے ورثاء (اس کی بیوہ زہرا) کو منتقل ہوگی۔",
+        "۳. تیسرا مرحلہ — گردش و تسلسل کی ممانعت (ما ورث لا یورث): حسن کے ورثاء اس ۴۵ لاکھ روپے میں سے دوبارہ حصہ نہیں مانگ سکتے جو علی کو ابھی حسن سے ملا ہے۔ اسی طرح علی کے ورثاء اس ۱ کروڑ ۵ لاکھ روپے میں سے دوبارہ حصہ نہیں لے سکتے جو حسن کو علی سے ملا ہے۔ دوطرفہ توارث کا نفاذ صرف اور صرف حادثے سے پہلے کے اصل ذاتی مال (اصل المال) پر ہوتا ہے۔"
+      ],
       takeaway: "Both families receive their divine rights without legal gridlock or unfair exclusion, strictly preventing circular multi-transfer loops.",
+      takeawayUr: "فقہِ جعفریہ کا یہ زریں قانون دونوں خاندانوں کو ان کے حقوق دلاتا ہے اور لامحدود تکرار (دور و تسلسل) کو روک کر بغیر کسی حق تلفی کے عادلانہ فیصلہ کرتا ہے۔"
     },
   },
 

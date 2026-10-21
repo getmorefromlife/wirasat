@@ -108,7 +108,8 @@ function WaterfallSimulator({ isUr }: { isUr: boolean }) {
               </label>
               <input
                 type="number"
-                value={funeral}
+                value={funeral || ""}
+                placeholder="0"
                 onChange={(e) => setFuneral(Math.max(0, Number(e.target.value)))}
                 className="w-full p-2 rounded-lg border border-stone-300 bg-white font-mono text-xs"
               />
@@ -119,7 +120,8 @@ function WaterfallSimulator({ isUr }: { isUr: boolean }) {
               </label>
               <input
                 type="number"
-                value={debts}
+                value={debts || ""}
+                placeholder="0"
                 onChange={(e) => setDebts(Math.max(0, Number(e.target.value)))}
                 className="w-full p-2 rounded-lg border border-stone-300 bg-white font-mono text-xs"
               />
@@ -133,7 +135,8 @@ function WaterfallSimulator({ isUr }: { isUr: boolean }) {
               </label>
               <input
                 type="number"
-                value={divine}
+                value={divine || ""}
+                placeholder="0"
                 onChange={(e) => setDivine(Math.max(0, Number(e.target.value)))}
                 className="w-full p-2 rounded-lg border border-stone-300 bg-white font-mono text-xs"
               />
@@ -144,7 +147,8 @@ function WaterfallSimulator({ isUr }: { isUr: boolean }) {
               </label>
               <input
                 type="number"
-                value={requestedWill}
+                value={requestedWill || ""}
+                placeholder="0"
                 onChange={(e) => setRequestedWill(Math.max(0, Number(e.target.value)))}
                 className="w-full p-2 rounded-lg border border-stone-300 bg-white font-mono text-xs"
               />
