@@ -69,12 +69,14 @@ export interface WhiteboardNode {
 }
 
 export const AVATAR_OPTIONS = [
-  { id: "grandfather", src: "/images/avatars/avatar-grandfather.jpg", labelEn: "Elderly Male", labelUr: "بزرگ مرد (والد/دادا)" },
-  { id: "grandmother", src: "/images/avatars/avatar-grandmother.jpg", labelEn: "Elderly Female", labelUr: "بزرگ خاتون (والدہ/دادی)" },
-  { id: "adult-male", src: "/images/avatars/avatar-adult-male.jpg", labelEn: "Adult Male", labelUr: "بالغ مرد (شوہر/بیٹا)" },
-  { id: "wife", src: "/images/avatars/avatar-wife.jpg", labelEn: "Wife / Mature Female", labelUr: "زوجہ / بیوہ" },
-  { id: "daughter", src: "/images/avatars/avatar-daughter.jpg", labelEn: "Young Female", labelUr: "بیٹی / پوتی" },
-  { id: "boy", src: "/images/avatars/avatar-boy.jpg", labelEn: "Young Boy", labelUr: "پوتا / نواسہ" },
+  { id: "father", src: "/images/avatars/father.jpeg", labelEn: "Father / Elder Male", labelUr: "والد / بزرگ مرد" },
+  { id: "mother", src: "/images/avatars/mother.jpeg", labelEn: "Mother / Elder Female", labelUr: "والدہ / بزرگ خاتون" },
+  { id: "husband", src: "/images/avatars/husband.jpeg", labelEn: "Husband", labelUr: "شوہر" },
+  { id: "wife", src: "/images/avatars/wife.jpeg", labelEn: "Wife", labelUr: "زوجہ / بیوہ" },
+  { id: "son", src: "/images/avatars/son.jpeg", labelEn: "Son", labelUr: "بیٹا" },
+  { id: "daughter", src: "/images/avatars/daughter.jpeg", labelEn: "Daughter", labelUr: "بیٹی" },
+  { id: "grand-son", src: "/images/avatars/grand-son.jpeg", labelEn: "Grandson", labelUr: "پوتا / نواسہ" },
+  { id: "grand-daughter", src: "/images/avatars/grand-daughter.jpeg", labelEn: "Granddaughter", labelUr: "پوتی / نواسی" },
 ];
 
 export function getNodeAvatar(node: WhiteboardNode): string {
@@ -83,44 +85,44 @@ export function getNodeAvatar(node: WhiteboardNode): string {
   // Root deceased
   if (node.relation === "DECEASED") {
     return node.gender === "FEMALE"
-      ? "/images/avatars/avatar-grandmother.jpg"
-      : "/images/avatars/avatar-grandfather.jpg";
+      ? "/images/avatars/mother.jpeg"
+      : "/images/avatars/father.jpeg";
   }
 
   // Parents / Grandparents
   if (node.relation === "FATHER") {
-    return "/images/avatars/avatar-grandfather.jpg";
+    return "/images/avatars/father.jpeg";
   }
   if (node.relation === "MOTHER") {
-    return "/images/avatars/avatar-grandmother.jpg";
+    return "/images/avatars/mother.jpeg";
   }
 
-  // Spouse: Wife gets the mature female avatar, Husband gets adult male
+  // Spouse
   if (node.relation === "SPOUSE") {
     return node.gender === "FEMALE"
-      ? "/images/avatars/avatar-wife.jpg"
-      : "/images/avatars/avatar-adult-male.jpg";
+      ? "/images/avatars/wife.jpeg"
+      : "/images/avatars/husband.jpeg";
   }
 
   // Children
   if (node.relation === "SON") {
-    return "/images/avatars/avatar-adult-male.jpg";
+    return "/images/avatars/son.jpeg";
   }
   if (node.relation === "DAUGHTER") {
-    return "/images/avatars/avatar-daughter.jpg";
+    return "/images/avatars/daughter.jpeg";
   }
 
   // Grandchildren
   if (node.relation === "GRANDCHILD") {
     return node.gender === "FEMALE"
-      ? "/images/avatars/avatar-daughter.jpg"
-      : "/images/avatars/avatar-boy.jpg";
+      ? "/images/avatars/grand-daughter.jpeg"
+      : "/images/avatars/grand-son.jpeg";
   }
 
   // Fallback by gender
   return node.gender === "FEMALE"
-    ? "/images/avatars/avatar-daughter.jpg"
-    : "/images/avatars/avatar-adult-male.jpg";
+    ? "/images/avatars/daughter.jpeg"
+    : "/images/avatars/son.jpeg";
 }
 
 interface BezierConnection {
@@ -1807,7 +1809,7 @@ export function KinshipWhiteboard() {
                     </button>
                   )}
                 </div>
-                <div className="grid grid-cols-6 gap-2">
+                <div className="grid grid-cols-4 gap-2.5">
                   {AVATAR_OPTIONS.map((opt) => {
                     const activeAvatar = getNodeAvatar(selectedNode);
                     const isPicked = (selectedNode.customAvatar || activeAvatar) === opt.src;
@@ -1817,18 +1819,23 @@ export function KinshipWhiteboard() {
                         type="button"
                         onClick={() => updateSelectedNode({ customAvatar: opt.src })}
                         title={isUr ? opt.labelUr : opt.labelEn}
-                        className={`relative rounded-full aspect-square p-0.5 border-2 transition-all cursor-pointer overflow-hidden ${
+                        className={`flex flex-col items-center p-1.5 rounded-xl border transition-all cursor-pointer ${
                           isPicked
-                            ? "border-emerald-600 ring-2 ring-emerald-500/50 scale-105 shadow-sm"
-                            : "border-stone-200 dark:border-stone-700 hover:border-emerald-400 opacity-80 hover:opacity-100"
+                            ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-600 ring-2 ring-emerald-500/40 shadow-xs"
+                            : "border-stone-200 dark:border-stone-700 hover:border-emerald-400 bg-stone-50/50 dark:bg-stone-800/40 opacity-80 hover:opacity-100"
                         }`}
                       >
-                        <img
-                          src={opt.src}
-                          alt={opt.labelEn}
-                          className="w-full h-full rounded-full object-cover scale-[1.2]"
-                          crossOrigin="anonymous"
-                        />
+                        <div className="w-11 h-11 rounded-full overflow-hidden border border-stone-200 dark:border-stone-600 flex items-center justify-center">
+                          <img
+                            src={opt.src}
+                            alt={opt.labelEn}
+                            className="w-full h-full object-cover scale-[1.2]"
+                            crossOrigin="anonymous"
+                          />
+                        </div>
+                        <span className="text-[10.5px] font-bold mt-1 text-stone-700 dark:text-stone-300 font-nastaliq leading-[1.8] text-center truncate max-w-full">
+                          {isUr ? opt.labelUr.split(" ")[0] : opt.labelEn.split(" ")[0]}
+                        </span>
                       </button>
                     );
                   })}
