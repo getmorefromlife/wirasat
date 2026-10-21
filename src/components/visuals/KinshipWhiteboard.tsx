@@ -59,12 +59,68 @@ export interface WhiteboardNode {
   spouseOfId?: string; // Links wife/husband to deceased
   x: number;
   y: number;
+  customAvatar?: string; // User-selected or preset avatar path
   // Specific attributes
   unpaidMahr?: number; // For wives
   impediments?: {
     isKiller: boolean;
     isNonMuslim: boolean;
   };
+}
+
+export const AVATAR_OPTIONS = [
+  { id: "grandfather", src: "/images/avatars/avatar-grandfather.jpg", labelEn: "Elderly Male", labelUr: "بزرگ مرد (والد/دادا)" },
+  { id: "grandmother", src: "/images/avatars/avatar-grandmother.jpg", labelEn: "Elderly Female", labelUr: "بزرگ خاتون (والدہ/دادی)" },
+  { id: "adult-male", src: "/images/avatars/avatar-adult-male.jpg", labelEn: "Adult Male", labelUr: "بالغ مرد (شوہر/بیٹا)" },
+  { id: "wife", src: "/images/avatars/avatar-wife.jpg", labelEn: "Wife / Mature Female", labelUr: "زوجہ / بیوہ" },
+  { id: "daughter", src: "/images/avatars/avatar-daughter.jpg", labelEn: "Young Female", labelUr: "بیٹی / پوتی" },
+  { id: "boy", src: "/images/avatars/avatar-boy.jpg", labelEn: "Young Boy", labelUr: "پوتا / نواسہ" },
+];
+
+export function getNodeAvatar(node: WhiteboardNode): string {
+  if (node.customAvatar) return node.customAvatar;
+
+  // Root deceased
+  if (node.relation === "DECEASED") {
+    return node.gender === "FEMALE"
+      ? "/images/avatars/avatar-grandmother.jpg"
+      : "/images/avatars/avatar-grandfather.jpg";
+  }
+
+  // Parents / Grandparents
+  if (node.relation === "FATHER") {
+    return "/images/avatars/avatar-grandfather.jpg";
+  }
+  if (node.relation === "MOTHER") {
+    return "/images/avatars/avatar-grandmother.jpg";
+  }
+
+  // Spouse: Wife gets the mature female avatar, Husband gets adult male
+  if (node.relation === "SPOUSE") {
+    return node.gender === "FEMALE"
+      ? "/images/avatars/avatar-wife.jpg"
+      : "/images/avatars/avatar-adult-male.jpg";
+  }
+
+  // Children
+  if (node.relation === "SON") {
+    return "/images/avatars/avatar-adult-male.jpg";
+  }
+  if (node.relation === "DAUGHTER") {
+    return "/images/avatars/avatar-daughter.jpg";
+  }
+
+  // Grandchildren
+  if (node.relation === "GRANDCHILD") {
+    return node.gender === "FEMALE"
+      ? "/images/avatars/avatar-daughter.jpg"
+      : "/images/avatars/avatar-boy.jpg";
+  }
+
+  // Fallback by gender
+  return node.gender === "FEMALE"
+    ? "/images/avatars/avatar-daughter.jpg"
+    : "/images/avatars/avatar-adult-male.jpg";
 }
 
 interface BezierConnection {
@@ -1475,7 +1531,7 @@ export function KinshipWhiteboard() {
 
                   {/* Circular Node Body (r=45px, 90x90px) */}
                   <div
-                    className={`relative w-[90px] h-[90px] rounded-full flex flex-col items-center justify-center transition-all duration-200 border-[3.5px] ${
+                    className={`relative w-[90px] h-[90px] rounded-full transition-all duration-200 border-[3.5px] ${
                       isSelected
                         ? "ring-4 ring-emerald-500/40 scale-105 shadow-2xl"
                         : "hover:scale-105 shadow-lg"
@@ -1489,33 +1545,32 @@ export function KinshipWhiteboard() {
                         : "bg-emerald-50/95 text-emerald-950 border-[#1b4d3e] dark:bg-emerald-950/60 dark:text-emerald-100 ring-2 ring-emerald-400/20"
                     }`}
                   >
-                    {/* Role Icon */}
-                    {isRoot ? (
-                      <Scale size={28} className="text-amber-300 mb-0.5" />
-                    ) : node.relation === "SPOUSE" || node.gender === "FEMALE" ? (
-                      <Heart
-                        size={28}
-                        className={
-                          isDeceased
-                            ? "text-rose-600 dark:text-rose-400 mb-0.5"
-                            : "text-pink-600 dark:text-pink-400 mb-0.5"
-                        }
+                    {/* Inner cropped circle for the avatar */}
+                    <div className="w-full h-full rounded-full overflow-hidden flex items-center justify-center relative">
+                      <img
+                        src={getNodeAvatar(node)}
+                        alt={isUr ? node.nameUr : node.nameEn}
+                        className={`w-full h-full object-cover scale-[1.22] transition-all duration-200 pointer-events-none select-none ${
+                          isDeceased && !isRoot ? "grayscale contrast-125 opacity-75" : ""
+                        }`}
+                        crossOrigin="anonymous"
+                        loading="eager"
                       />
-                    ) : (
-                      <User
-                        size={28}
-                        className={
-                          isDeceased
-                            ? "text-rose-700 dark:text-rose-300 mb-0.5"
-                            : "text-[#1b4d3e] dark:text-emerald-300 mb-0.5"
-                        }
-                      />
-                    )}
+
+                      {/* Root Deceased Gold Judicial Scale Badge Overlay */}
+                      {isRoot && (
+                        <div className="absolute inset-0 bg-[#245642]/35 flex items-center justify-center pointer-events-none">
+                          <div className="bg-[#1b4334]/90 p-1.5 rounded-full border border-amber-400 shadow-md">
+                            <Scale size={20} className="text-amber-300 drop-shadow-sm" />
+                          </div>
+                        </div>
+                      )}
+                    </div>
 
                     {/* Distinct Red Cross Badge on Top Right for Deceased */}
                     {isDeceased && !isRoot && (
                       <div
-                        className="absolute -top-1.5 -right-1.5 w-7 h-7 rounded-full bg-rose-600 text-white flex items-center justify-center border-2 border-white dark:border-[#0E1E18] shadow-md z-30"
+                        className="absolute -top-1.5 -right-1.5 w-7 h-7 rounded-full bg-rose-600 text-white flex items-center justify-center border-2 border-white dark:border-[#0E1E18] shadow-md z-30 pointer-events-none"
                         title={isUr ? "متوفیٰ (وفات پا چکا ہے)" : "Deceased"}
                       >
                         <X size={15} strokeWidth={3.5} />
@@ -1734,6 +1789,55 @@ export function KinshipWhiteboard() {
                     {isUr ? "خاتون (Pink)" : "Female"}
                   </button>
                 </div>
+              </div>
+
+              {/* Illustrated Avatar Picker */}
+              <div className="pt-3 border-t border-stone-200 dark:border-stone-800">
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-xs font-bold text-stone-700 dark:text-stone-300 block">
+                    {isUr ? "تصویر / اواتار (Avatar)" : "Illustrated Avatar"}
+                  </label>
+                  {selectedNode.customAvatar && (
+                    <button
+                      type="button"
+                      onClick={() => updateSelectedNode({ customAvatar: undefined })}
+                      className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 hover:underline cursor-pointer"
+                    >
+                      {isUr ? "طے شدہ اواتار بحال کریں" : "Reset Default"}
+                    </button>
+                  )}
+                </div>
+                <div className="grid grid-cols-6 gap-2">
+                  {AVATAR_OPTIONS.map((opt) => {
+                    const activeAvatar = getNodeAvatar(selectedNode);
+                    const isPicked = (selectedNode.customAvatar || activeAvatar) === opt.src;
+                    return (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        onClick={() => updateSelectedNode({ customAvatar: opt.src })}
+                        title={isUr ? opt.labelUr : opt.labelEn}
+                        className={`relative rounded-full aspect-square p-0.5 border-2 transition-all cursor-pointer overflow-hidden ${
+                          isPicked
+                            ? "border-emerald-600 ring-2 ring-emerald-500/50 scale-105 shadow-sm"
+                            : "border-stone-200 dark:border-stone-700 hover:border-emerald-400 opacity-80 hover:opacity-100"
+                        }`}
+                      >
+                        <img
+                          src={opt.src}
+                          alt={opt.labelEn}
+                          className="w-full h-full rounded-full object-cover scale-[1.2]"
+                          crossOrigin="anonymous"
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-1.5">
+                  {isUr
+                    ? "کسی بھی رشتے دار کے لیے اواتار کا دستی انتخاب ممکن ہے۔"
+                    : "Customize or change the illustrated avatar for this family member."}
+                </p>
               </div>
 
               {/* Unpaid Mahr for Wife */}
