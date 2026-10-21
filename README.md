@@ -61,7 +61,7 @@ In Ja‘farī jurisprudence, estate succession is governed by strict mathematica
 - **Step 4: Relatives & Descendants:** Intuitive counters for parents, living sons, living daughters, and multi-tier grandchildren under *Tanzīl* with automated branch inheritance calculations.
 - **Instant Result Sheet & Breakdown:** Detailed breakdown tables, visual share dials, interactive distribution charts, and printable Sharia distribution certificates.
 
-### 2. 📱 SadaPay-Inspired Mobile Calculator
+### 2. 📱 Modern Mobile-First Calculator
 - Designed from the ground up for thumb-first usability on smartphones.
 - High-contrast accessible color palette, oversized tactile inputs (56px+ tap targets), and slide-up result sheets.
 - Instant toggle between simple overview, detailed math, and scholarly notes.

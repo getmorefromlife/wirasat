@@ -29,7 +29,7 @@ export default function Home() {
 
   return (
     <>
-      {/* 1. Mobile-First SadaPay-Inspired Experience (< 768px) */}
+      {/* 1. Mobile-First Experience (< 768px) */}
       {!forceDesktopOnMobile && isCalculatorView && (
         <div className="block md:hidden">
           <MobileCalculator onSwitchToDesktopMode={() => setForceDesktopOnMobile(true)} />
