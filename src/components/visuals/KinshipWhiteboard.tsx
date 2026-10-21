@@ -337,7 +337,7 @@ export function KinshipWhiteboard() {
     if ((e.target as HTMLElement).classList.contains("whiteboard-grid-surface")) {
       setIsPanning(true);
       setPanStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
-      setSelectedNodeId(null);
+      // Keep selectedNodeId and inspectorOpen preserved! Inspector only closes when 'X' is clicked.
     }
   };
 
@@ -374,6 +374,7 @@ export function KinshipWhiteboard() {
   const startNodeDrag = (e: React.MouseEvent, nodeId: string) => {
     e.stopPropagation();
     setSelectedNodeId(nodeId);
+    setInspectorOpen(true);
     setDraggingNodeId(nodeId);
     const node = nodes.find((n) => n.id === nodeId);
     if (node) {
@@ -780,26 +781,29 @@ export function KinshipWhiteboard() {
 
   const getNodeShareBadge = (node: WhiteboardNode) => {
     if (!node.isAlive && node.relation !== "DECEASED") {
-      return { text: isUr ? "متوفیٰ (قبل از مورث)" : "Predeceased", color: "bg-stone-200 text-stone-700 dark:bg-stone-800 dark:text-stone-300 border-stone-300" };
+      return {
+        text: isUr ? "متوفیٰ (پہلے وفات)" : "Predeceased",
+        color: "bg-rose-100 text-rose-800 border-rose-300 font-extrabold",
+      };
     }
 
     if (node.impediments?.isKiller) {
-      return { text: isUr ? "محروم (قاتل مورث)" : "Disqualified (Homicide)", color: "bg-rose-100 text-rose-800 border-rose-300" };
+      return { text: isUr ? "محروم (قاتل مورث)" : "Disqualified (Homicide)", color: "bg-rose-100 text-rose-800 border-rose-300 font-bold" };
     }
     if (node.impediments?.isNonMuslim) {
-      return { text: isUr ? "محروم (غیر مسلم)" : "Disqualified (Non-Muslim)", color: "bg-amber-100 text-amber-900 border-amber-300" };
+      return { text: isUr ? "محروم (غیر مسلم)" : "Disqualified (Non-Muslim)", color: "bg-amber-100 text-amber-900 border-amber-300 font-bold" };
     }
 
     if (node.relation === "DECEASED") {
-      return { text: isUr ? "اصلِ ترکہ" : "Estate Origin", color: "bg-[#245642] text-white border-[#245642]" };
+      return { text: isUr ? "اصلِ ترکہ (مورث)" : "Estate Origin", color: "bg-[#245642] text-white border-amber-400 font-black shadow-xs" };
     }
 
     // Check Tanzīl grandchild
     if (node.relation === "GRANDCHILD") {
       if ((calculationData?.livingDirectCount || 0) > 0) {
         return {
-          text: isUr ? "محجوب (الاقرب یمنع الابعد)" : "Blocked by Living Children",
-          color: "bg-stone-100 text-stone-600 border-stone-200 dark:bg-stone-800 dark:text-stone-400",
+          text: isUr ? "محجوب (الأقرب يمنع الأبعد)" : "Blocked by Living Children",
+          color: "bg-stone-100 text-stone-700 border-stone-300 dark:bg-stone-800 dark:text-stone-300 font-bold",
         };
       }
       const branchRes = calculationData?.tanzilOutput.branchResults.find((b) => b.person.id === node.id);
@@ -882,13 +886,13 @@ export function KinshipWhiteboard() {
         </div>
 
         {/* Center: Scenario Presets */}
-        <div className="flex items-center gap-1.5 bg-stone-100 dark:bg-stone-800/70 p-1 rounded-xl border border-stone-200 dark:border-stone-700">
+        <div className="flex items-center gap-2 bg-stone-100 dark:bg-stone-800/80 p-1.5 rounded-2xl border border-stone-200 dark:border-stone-700">
           <button
             onClick={() => {
               setNodes(INITIAL_NODES_CLEAN);
               setSelectedNodeId("deceased-root");
             }}
-            className="px-2.5 py-1 text-xs font-medium rounded-lg text-stone-700 dark:text-stone-300 hover:bg-white dark:hover:bg-stone-700 transition-colors cursor-pointer"
+            className="px-3 py-1.5 text-xs md:text-sm font-semibold rounded-xl text-stone-700 dark:text-stone-300 hover:bg-white dark:hover:bg-stone-700 transition-colors cursor-pointer"
             title="Clean Slate"
           >
             {isUr ? "نیا کینوس" : "Clean Slate"}
@@ -899,7 +903,7 @@ export function KinshipWhiteboard() {
               setNodes(INITIAL_NODES_4_CHILDREN);
               setSelectedNodeId("deceased-root");
             }}
-            className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-white dark:bg-stone-700 text-[#245642] dark:text-emerald-300 shadow-2xs transition-colors cursor-pointer"
+            className="px-3.5 py-1.5 text-xs md:text-sm font-bold rounded-xl bg-white dark:bg-stone-700 text-[#245642] dark:text-emerald-300 shadow-xs transition-colors cursor-pointer"
             title="The 4 Children & Grandchildren Mystery"
           >
             {isUr ? "چار اولادیں و پوتے" : "4 Children Mystery"}
@@ -910,10 +914,10 @@ export function KinshipWhiteboard() {
               setNodes(INITIAL_NODES_ORPHANED_TANZIL);
               setSelectedNodeId("son-predeceased");
             }}
-            className="px-2.5 py-1 text-xs font-medium rounded-lg text-emerald-700 dark:text-emerald-400 hover:bg-white dark:hover:bg-stone-700 transition-colors cursor-pointer flex items-center gap-1"
+            className="px-3 py-1.5 text-xs md:text-sm font-bold rounded-xl text-emerald-800 dark:text-emerald-300 hover:bg-white dark:hover:bg-stone-700 transition-colors cursor-pointer flex items-center gap-1.5"
             title="Orphaned Grandchild Tanzil Representation"
           >
-            <Sparkles size={12} className="text-amber-500" />
+            <Sparkles size={14} className="text-amber-500" />
             {isUr ? "تنزیل (یتیم پوتے)" : "Orphaned Tanzīl"}
           </button>
 
@@ -923,10 +927,10 @@ export function KinshipWhiteboard() {
               setSelectedNodeId("deceased-root");
               setShowAccidentModal(true);
             }}
-            className="px-2.5 py-1 text-xs font-medium rounded-lg text-rose-700 dark:text-rose-400 hover:bg-white dark:hover:bg-stone-700 transition-colors cursor-pointer flex items-center gap-1"
+            className="px-3 py-1.5 text-xs md:text-sm font-bold rounded-xl text-rose-800 dark:text-rose-300 hover:bg-white dark:hover:bg-stone-700 transition-colors cursor-pointer flex items-center gap-1.5"
             title="Simultaneous Catastrophe (Al-Gharqa wa al-Hadma)"
           >
-            <Flame size={12} className="text-rose-500" />
+            <Flame size={14} className="text-rose-500" />
             {isUr ? "الغرقیٰ والھدمیٰ (حادثہ)" : "Catastrophe (Accident)"}
           </button>
         </div>
@@ -1063,7 +1067,7 @@ export function KinshipWhiteboard() {
                 if (conn.type === "spouse") {
                   // Horizontal Golden Cord connecting spouses
                   const midX = (x1 + x2) / 2;
-                  const curveY = y1 + 30;
+                  const curveY = y1 + 32;
                   const path = `M ${x1} ${y1} Q ${midX} ${curveY} ${x2} ${y2}`;
 
                   return (
@@ -1071,12 +1075,12 @@ export function KinshipWhiteboard() {
                       <path
                         d={path}
                         fill="none"
-                        stroke="#D4AF37"
-                        strokeWidth="2.5"
-                        strokeDasharray="5,4"
-                        opacity="0.9"
+                        stroke="#D97706"
+                        strokeWidth="4"
+                        strokeDasharray="6,4"
+                        opacity="0.95"
                       />
-                      <circle cx={midX} cy={curveY - 8} r="5" fill="#D4AF37" />
+                      <circle cx={midX} cy={curveY - 8} r="6" fill="#D97706" />
                     </g>
                   );
                 }
@@ -1093,8 +1097,8 @@ export function KinshipWhiteboard() {
                         d={path}
                         fill="none"
                         stroke="#10B981"
-                        strokeWidth="6"
-                        opacity="0.35"
+                        strokeWidth="8"
+                        opacity="0.4"
                         filter="url(#glow)"
                       />
                       {/* Animated Core Cable */}
@@ -1102,8 +1106,8 @@ export function KinshipWhiteboard() {
                         d={path}
                         fill="none"
                         stroke="url(#tanzilActiveGrad)"
-                        strokeWidth="3"
-                        strokeDasharray="6,4"
+                        strokeWidth="4.5"
+                        strokeDasharray="7,5"
                         className="animate-[dash_1.5s_linear_infinite]"
                       />
                     </g>
@@ -1120,10 +1124,10 @@ export function KinshipWhiteboard() {
                       key={conn.id}
                       d={path}
                       fill="none"
-                      stroke="#A8A29E"
-                      strokeWidth="1.75"
-                      strokeDasharray="4,4"
-                      opacity="0.6"
+                      stroke="#78716C"
+                      strokeWidth="2.75"
+                      strokeDasharray="5,4"
+                      opacity="0.8"
                     />
                   );
                 }
@@ -1137,9 +1141,9 @@ export function KinshipWhiteboard() {
                     key={conn.id}
                     d={path}
                     fill="none"
-                    stroke="#245642"
-                    strokeWidth="2"
-                    opacity="0.75"
+                    stroke="#164E3F"
+                    strokeWidth="3.5"
+                    opacity="0.9"
                   />
                 );
               })}
@@ -1165,61 +1169,76 @@ export function KinshipWhiteboard() {
                   }}
                 >
                   {/* Floating Live Sharia Share Badge Above Node */}
-                  <div className="absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap z-20">
+                  <div className="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap z-20">
                     <span
-                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full border shadow-xs tracking-tight ${badge.color}`}
+                      className={`text-xs md:text-sm font-extrabold px-3 py-1 rounded-full border-2 shadow-sm tracking-tight ${badge.color}`}
                     >
                       {badge.text}
                     </span>
                   </div>
 
-                  {/* Circular Node Body (r=38px) */}
+                  {/* Circular Node Body (r=45px, 90x90px) */}
                   <div
-                    className={`relative w-[76px] h-[76px] rounded-full flex flex-col items-center justify-center transition-all duration-200 border-2 ${
+                    className={`relative w-[90px] h-[90px] rounded-full flex flex-col items-center justify-center transition-all duration-200 border-[3.5px] ${
                       isSelected
-                        ? "ring-4 ring-emerald-500/30 scale-105 shadow-xl"
-                        : "hover:scale-105 shadow-md"
+                        ? "ring-4 ring-emerald-500/40 scale-105 shadow-2xl"
+                        : "hover:scale-105 shadow-lg"
                     } ${
                       isRoot
-                        ? "bg-[#245642] text-white border-amber-400"
+                        ? "bg-[#245642] text-white border-amber-400 ring-4 ring-amber-400/20"
                         : isDeceased
-                        ? "bg-stone-200 text-stone-500 border-stone-400 dark:bg-stone-800 dark:text-stone-400"
+                        ? "bg-rose-50/95 text-rose-950 border-rose-600 dark:bg-rose-950/70 dark:text-rose-100 ring-4 ring-rose-500/20"
                         : node.gender === "FEMALE"
-                        ? "bg-rose-50 text-rose-900 border-rose-300 dark:bg-rose-950/40 dark:text-rose-200"
-                        : "bg-emerald-50 text-emerald-950 border-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-200"
+                        ? "bg-pink-50/95 text-pink-950 border-pink-500 dark:bg-pink-950/60 dark:text-pink-100 ring-2 ring-pink-400/20"
+                        : "bg-emerald-50/95 text-emerald-950 border-[#1b4d3e] dark:bg-emerald-950/60 dark:text-emerald-100 ring-2 ring-emerald-400/20"
                     }`}
                   >
                     {/* Role Icon */}
                     {isRoot ? (
-                      <Scale size={24} className="text-amber-300 mb-0.5" />
-                    ) : node.relation === "SPOUSE" ? (
-                      <Heart size={22} className="text-rose-500 mb-0.5" />
+                      <Scale size={28} className="text-amber-300 mb-0.5" />
+                    ) : node.relation === "SPOUSE" || node.gender === "FEMALE" ? (
+                      <Heart
+                        size={28}
+                        className={
+                          isDeceased
+                            ? "text-rose-600 dark:text-rose-400 mb-0.5"
+                            : "text-pink-600 dark:text-pink-400 mb-0.5"
+                        }
+                      />
                     ) : (
-                      <User size={22} className="mb-0.5" />
+                      <User
+                        size={28}
+                        className={
+                          isDeceased
+                            ? "text-rose-700 dark:text-rose-300 mb-0.5"
+                            : "text-[#1b4d3e] dark:text-emerald-300 mb-0.5"
+                        }
+                      />
                     )}
 
-                    {/* Predeceased Ribbon or Slash */}
+                    {/* Distinct Red Cross Badge on Top Right for Deceased */}
                     {isDeceased && !isRoot && (
-                      <div className="absolute inset-0 rounded-full flex items-center justify-center bg-black/10 backdrop-blur-[0.5px]">
-                        <span className="text-[9px] font-black uppercase text-rose-700 bg-white/90 px-1 rounded-sm shadow-2xs">
-                          {isUr ? "متوفیٰ" : "Deceased"}
-                        </span>
+                      <div
+                        className="absolute -top-1.5 -right-1.5 w-7 h-7 rounded-full bg-rose-600 text-white flex items-center justify-center border-2 border-white dark:border-[#0E1E18] shadow-md z-30"
+                        title={isUr ? "متوفیٰ (وفات پا چکا ہے)" : "Deceased"}
+                      >
+                        <X size={15} strokeWidth={3.5} />
                       </div>
                     )}
                   </div>
 
-                  {/* Node Name & Kinship Label Below */}
-                  <div className="absolute top-[82px] left-1/2 -translate-x-1/2 text-center w-36 pointer-events-none">
+                  {/* Node Name & Kinship Label Below - Fully visible with zero clipping */}
+                  <div className="absolute top-[96px] left-1/2 -translate-x-1/2 text-center w-52 pointer-events-none px-2 py-1 overflow-visible">
                     <p
-                      className={`text-xs font-bold leading-tight drop-shadow-2xs ${
-                        isSelected ? "text-emerald-800 dark:text-emerald-300 font-extrabold" : "text-stone-800 dark:text-stone-200"
+                      className={`text-sm md:text-base font-bold font-nastaliq leading-[2.4] text-stone-900 dark:text-stone-100 drop-shadow-xs whitespace-normal ${
+                        isSelected ? "text-emerald-900 dark:text-emerald-200 font-black scale-105" : ""
                       }`}
                     >
-                      {isUr ? node.nameUr : node.nameEn}
+                      {isUr ? (node.nameUr || node.relation) : (node.nameEn || node.relation)}
                     </p>
-                    <p className="text-[10px] text-stone-500 dark:text-stone-400">
+                    <span className="inline-block text-xs font-bold px-2.5 py-0.5 rounded-full bg-stone-200/90 dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-stone-300 dark:border-stone-700 mt-0.5">
                       {node.relation}
-                    </p>
+                    </span>
                   </div>
 
                   {/* Interactive Micro Handles (+) on Hover */}
@@ -1231,10 +1250,10 @@ export function KinshipWhiteboard() {
                           e.stopPropagation();
                           addRelativeNode(node.id, "parent");
                         }}
-                        className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-stone-800 border-2 border-emerald-600 text-emerald-700 dark:text-emerald-300 flex items-center justify-center hover:bg-emerald-50 shadow-md cursor-pointer hover:scale-125 transition-transform"
+                        className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-stone-800 border-2 border-emerald-600 text-emerald-700 dark:text-emerald-300 flex items-center justify-center hover:bg-emerald-50 shadow-md cursor-pointer hover:scale-125 transition-transform z-30"
                         title={isUr ? "والدین شامل کریں" : "Add Parent"}
                       >
-                        <Plus size={13} strokeWidth={3} />
+                        <Plus size={15} strokeWidth={3} />
                       </button>
                     )}
 
@@ -1244,10 +1263,10 @@ export function KinshipWhiteboard() {
                         e.stopPropagation();
                         addRelativeNode(node.id, "child");
                       }}
-                      className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-stone-800 border-2 border-[#245642] text-[#245642] dark:text-emerald-300 flex items-center justify-center hover:bg-emerald-50 shadow-md cursor-pointer hover:scale-125 transition-transform"
+                      className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-stone-800 border-2 border-[#1b4d3e] text-[#1b4d3e] dark:text-emerald-300 flex items-center justify-center hover:bg-emerald-50 shadow-md cursor-pointer hover:scale-125 transition-transform z-30"
                       title={isUr ? "اولاد شامل کریں" : "Add Child"}
                     >
-                      <Plus size={13} strokeWidth={3} />
+                      <Plus size={15} strokeWidth={3} />
                     </button>
 
                     {/* Right Handle: Add Spouse */}
@@ -1257,10 +1276,10 @@ export function KinshipWhiteboard() {
                           e.stopPropagation();
                           addRelativeNode(node.id, "spouse");
                         }}
-                        className="absolute top-1/2 -right-3 -translate-y-1/2 w-6 h-6 rounded-full bg-white dark:bg-stone-800 border-2 border-amber-500 text-amber-700 dark:text-amber-300 flex items-center justify-center hover:bg-amber-50 shadow-md cursor-pointer hover:scale-125 transition-transform"
+                        className="absolute top-1/2 -right-3.5 -translate-y-1/2 w-7 h-7 rounded-full bg-white dark:bg-stone-800 border-2 border-amber-500 text-amber-700 dark:text-amber-300 flex items-center justify-center hover:bg-amber-50 shadow-md cursor-pointer hover:scale-125 transition-transform z-30"
                         title={isUr ? "شریکِ حیات شامل کریں" : "Add Spouse"}
                       >
-                        <Plus size={13} strokeWidth={3} />
+                        <Plus size={15} strokeWidth={3} />
                       </button>
                     )}
                   </div>
@@ -1311,62 +1330,63 @@ export function KinshipWhiteboard() {
             RIGHT-HAND SIDE: NODE INSPECTOR DRAWER
             ------------------------------------------------------------------- */}
         {inspectorOpen && selectedNode && (
-          <div className="w-80 border-l border-stone-200 dark:border-stone-800 bg-white dark:bg-[#0E1E18] flex flex-col z-30 shadow-xl">
-            {/* Inspector Header */}
-            <div className="p-4 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Sliders size={16} className="text-[#245642] dark:text-emerald-400" />
-                <h3 className="text-sm font-bold text-stone-800 dark:text-stone-100">
-                  {isUr ? "تفصیلاتِ رشتہ دار" : "Node Inspector"}
+          <div className="w-88 border-l border-stone-200 dark:border-stone-800 bg-white dark:bg-[#0E1E18] flex flex-col z-30 shadow-2xl">
+            {/* Inspector Header with prominent close button */}
+            <div className="p-4 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between bg-stone-50/70 dark:bg-stone-900/50">
+              <div className="flex items-center gap-2.5">
+                <Sliders size={18} className="text-[#245642] dark:text-emerald-400" />
+                <h3 className="text-base font-bold text-stone-900 dark:text-stone-100">
+                  {isUr ? "تفصیلاتِ رشتہ دار (انسپکٹر)" : "Node Inspector"}
                 </h3>
               </div>
               <button
                 onClick={() => setInspectorOpen(false)}
-                className="text-stone-400 hover:text-stone-600 cursor-pointer p-1 rounded-md"
+                className="text-stone-500 hover:text-stone-900 dark:hover:text-white cursor-pointer p-1.5 rounded-lg hover:bg-stone-200/60 dark:hover:bg-stone-800 transition-colors"
+                title={isUr ? "بند کریں (Close)" : "Close Inspector"}
               >
-                <X size={16} />
+                <X size={18} />
               </button>
             </div>
 
             {/* Inspector Body */}
-            <div className="p-4 space-y-4 flex-1 overflow-y-auto">
+            <div className="p-5 space-y-5 flex-1 overflow-y-auto">
               {/* Names */}
               <div>
-                <label className="text-[11px] font-bold text-stone-600 dark:text-stone-400 uppercase tracking-wider block mb-1">
+                <label className="text-xs font-bold text-stone-700 dark:text-stone-300 block mb-1.5">
                   {isUr ? "نام (اردو)" : "Name (Urdu)"}
                 </label>
                 <input
                   type="text"
                   value={selectedNode.nameUr}
                   onChange={(e) => updateSelectedNode({ nameUr: e.target.value })}
-                  className="w-full px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs font-nastaliq"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-sm font-nastaliq leading-[2.2] focus:outline-emerald-600"
                 />
               </div>
 
               <div>
-                <label className="text-[11px] font-bold text-stone-600 dark:text-stone-400 uppercase tracking-wider block mb-1">
+                <label className="text-xs font-bold text-stone-700 dark:text-stone-300 block mb-1.5">
                   {isUr ? "نام (انگریزی)" : "Name (English)"}
                 </label>
                 <input
                   type="text"
                   value={selectedNode.nameEn}
                   onChange={(e) => updateSelectedNode({ nameEn: e.target.value })}
-                  className="w-full px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs font-sans"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-sm font-sans focus:outline-emerald-600"
                 />
               </div>
 
               {/* Status: Alive vs Predeceased */}
               {selectedNode.relation !== "DECEASED" && (
-                <div className="pt-2 border-t border-stone-200 dark:border-stone-800">
-                  <label className="text-[11px] font-bold text-stone-600 dark:text-stone-400 uppercase tracking-wider block mb-2">
+                <div className="pt-3 border-t border-stone-200 dark:border-stone-800">
+                  <label className="text-xs font-bold text-stone-700 dark:text-stone-300 block mb-2.5">
                     {isUr ? "حیات یا وفات کی حالت" : "Vital Status"}
                   </label>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-3">
                     <button
                       onClick={() => updateSelectedNode({ isAlive: true })}
-                      className={`py-1.5 px-3 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
+                      className={`py-2.5 px-4 rounded-xl text-sm font-extrabold border-2 transition-all cursor-pointer ${
                         selectedNode.isAlive
-                          ? "bg-emerald-600 text-white border-emerald-700 shadow-xs"
+                          ? "bg-emerald-600 text-white border-emerald-700 shadow-md scale-102"
                           : "bg-stone-100 text-stone-600 border-stone-200 dark:bg-stone-800 dark:text-stone-300"
                       }`}
                     >
@@ -1374,16 +1394,16 @@ export function KinshipWhiteboard() {
                     </button>
                     <button
                       onClick={() => updateSelectedNode({ isAlive: false })}
-                      className={`py-1.5 px-3 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
+                      className={`py-2.5 px-4 rounded-xl text-sm font-extrabold border-2 transition-all cursor-pointer ${
                         !selectedNode.isAlive
-                          ? "bg-rose-600 text-white border-rose-700 shadow-xs"
+                          ? "bg-rose-600 text-white border-rose-700 shadow-md scale-102"
                           : "bg-stone-100 text-stone-600 border-stone-200 dark:bg-stone-800 dark:text-stone-300"
                       }`}
                     >
-                      {isUr ? "متوفیٰ (پہلے)" : "Predeceased"}
+                      {isUr ? "متوفیٰ (وفات)" : "Predeceased"}
                     </button>
                   </div>
-                  <p className="text-[10px] text-stone-500 mt-1.5">
+                  <p className="text-xs text-stone-500 mt-2 leading-relaxed">
                     {isUr
                       ? "اولاد کو 'متوفیٰ' کرنے سے تنزیل کا قانون خودکار طور پر اثر انداز ہوتا ہے۔"
                       : "Toggling to predeceased simulates whether grandchildren receive representation."}
@@ -1392,48 +1412,48 @@ export function KinshipWhiteboard() {
               )}
 
               {/* Gender */}
-              <div className="pt-2 border-t border-stone-200 dark:border-stone-800">
-                <label className="text-[11px] font-bold text-stone-600 dark:text-stone-400 uppercase tracking-wider block mb-2">
+              <div className="pt-3 border-t border-stone-200 dark:border-stone-800">
+                <label className="text-xs font-bold text-stone-700 dark:text-stone-300 block mb-2.5">
                   {isUr ? "جنس (مرد / خاتون)" : "Gender"}
                 </label>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => updateSelectedNode({ gender: "MALE" })}
-                    className={`py-1.5 px-3 rounded-lg text-xs font-bold border cursor-pointer ${
+                    className={`py-2.5 px-4 rounded-xl text-sm font-extrabold border-2 cursor-pointer transition-all ${
                       selectedNode.gender === "MALE"
-                        ? "bg-[#245642] text-white border-[#1b4232]"
+                        ? "bg-[#1b4d3e] text-white border-[#13382c] shadow-md scale-102"
                         : "bg-stone-100 text-stone-600 border-stone-200 dark:bg-stone-800 dark:text-stone-300"
                     }`}
                   >
-                    {isUr ? "مرد" : "Male"}
+                    {isUr ? "مرد (Green)" : "Male"}
                   </button>
                   <button
                     onClick={() => updateSelectedNode({ gender: "FEMALE" })}
-                    className={`py-1.5 px-3 rounded-lg text-xs font-bold border cursor-pointer ${
+                    className={`py-2.5 px-4 rounded-xl text-sm font-extrabold border-2 cursor-pointer transition-all ${
                       selectedNode.gender === "FEMALE"
-                        ? "bg-rose-700 text-white border-rose-800"
+                        ? "bg-pink-600 text-white border-pink-700 shadow-md scale-102"
                         : "bg-stone-100 text-stone-600 border-stone-200 dark:bg-stone-800 dark:text-stone-300"
                     }`}
                   >
-                    {isUr ? "خاتون" : "Female"}
+                    {isUr ? "خاتون (Pink)" : "Female"}
                   </button>
                 </div>
               </div>
 
               {/* Unpaid Mahr for Wife */}
               {selectedNode.relation === "SPOUSE" && selectedNode.gender === "FEMALE" && (
-                <div className="pt-2 border-t border-stone-200 dark:border-stone-800">
-                  <label className="text-[11px] font-bold text-stone-600 dark:text-stone-400 uppercase tracking-wider block mb-1">
-                    {isUr ? "غیر ادا شدہ مہر (مہرِ مؤجل)" : "Unpaid Mahr (PKR)"}
+                <div className="pt-3 border-t border-stone-200 dark:border-stone-800">
+                  <label className="text-xs font-bold text-amber-900 dark:text-amber-200 block mb-1.5">
+                    {isUr ? "غیر ادا شدہ مہر (مہرِ مؤجل) PKR" : "Unpaid Mahr (PKR)"}
                   </label>
                   <input
                     type="number"
                     value={selectedNode.unpaidMahr || 0}
                     onChange={(e) => updateSelectedNode({ unpaidMahr: Math.max(0, Number(e.target.value)) })}
-                    className="w-full px-3 py-1.5 rounded-lg border border-amber-300 bg-amber-50/50 dark:bg-amber-950/20 text-xs font-bold text-amber-900 dark:text-amber-200"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-amber-400 bg-amber-50/70 dark:bg-amber-950/30 text-sm font-bold text-amber-900 dark:text-amber-100"
                     step={10000}
                   />
-                  <p className="text-[10px] text-amber-800 dark:text-amber-400 mt-1">
+                  <p className="text-xs text-amber-800 dark:text-amber-300 mt-1.5 leading-relaxed">
                     {isUr
                       ? "مہرِ مؤجل ترکے سے پہلے بطور قرض ادا ہوتا ہے، پھر حصہ ملتا ہے۔"
                       : "Unpaid Mahr is treated as prior debt (Duyūn al-Nās) deducted before division."}
@@ -1443,12 +1463,12 @@ export function KinshipWhiteboard() {
 
               {/* Sharia Impediments (Mawani' al-Irth) */}
               {selectedNode.relation !== "DECEASED" && (
-                <div className="pt-2 border-t border-stone-200 dark:border-stone-800 space-y-2">
-                  <label className="text-[11px] font-bold text-stone-600 dark:text-stone-400 uppercase tracking-wider block">
+                <div className="pt-3 border-t border-stone-200 dark:border-stone-800 space-y-2.5">
+                  <label className="text-xs font-bold text-stone-700 dark:text-stone-300 block">
                     {isUr ? "موانعِ ارث (شرعی رکاوٹیں)" : "Sharia Impediments"}
                   </label>
 
-                  <label className="flex items-center gap-2 text-xs text-stone-700 dark:text-stone-300 cursor-pointer">
+                  <label className="flex items-center gap-2.5 text-xs md:text-sm font-medium text-stone-800 dark:text-stone-200 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={selectedNode.impediments?.isKiller || false}
@@ -1460,12 +1480,12 @@ export function KinshipWhiteboard() {
                           },
                         })
                       }
-                      className="rounded text-rose-600 focus:ring-rose-500"
+                      className="w-4 h-4 rounded text-rose-600 focus:ring-rose-500"
                     />
                     <span>{isUr ? "قتلِ مورث (قاتل بن گیا)" : "Homicide of Decedent (Qātil)"}</span>
                   </label>
 
-                  <label className="flex items-center gap-2 text-xs text-stone-700 dark:text-stone-300 cursor-pointer">
+                  <label className="flex items-center gap-2.5 text-xs md:text-sm font-medium text-stone-800 dark:text-stone-200 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={selectedNode.impediments?.isNonMuslim || false}
@@ -1477,7 +1497,7 @@ export function KinshipWhiteboard() {
                           },
                         })
                       }
-                      className="rounded text-amber-600 focus:ring-amber-500"
+                      className="w-4 h-4 rounded text-amber-600 focus:ring-amber-500"
                     />
                     <span>{isUr ? "کفر / غیر مسلم" : "Non-Muslim (Kufr)"}</span>
                   </label>
@@ -1486,12 +1506,12 @@ export function KinshipWhiteboard() {
 
               {/* Delete Node Action */}
               {selectedNode.relation !== "DECEASED" && (
-                <div className="pt-4 border-t border-stone-200 dark:border-stone-800">
+                <div className="pt-5 border-t border-stone-200 dark:border-stone-800">
                   <button
                     onClick={() => deleteNode(selectedNode.id)}
-                    className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg border border-rose-300 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold transition-colors cursor-pointer"
+                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-rose-300 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs md:text-sm font-bold transition-colors cursor-pointer shadow-xs"
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={16} />
                     <span>{isUr ? "اس فرد کو کینوس سے ہٹائیں" : "Delete Relative"}</span>
                   </button>
                 </div>
