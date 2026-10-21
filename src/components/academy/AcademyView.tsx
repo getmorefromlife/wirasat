@@ -59,7 +59,7 @@ export const AcademyView: React.FC = () => {
             <WirasatLogo variant="icon" color="emerald" size="sm" />
             <span>
               {isUr
-                ? "تحقیق و تدوین: مولانا سیّد آئمن رضوی (فاضلِ حوزہ علمیہ قم)"
+                ? "تحقیق و تدوین: مولانا سیّد آئمن رضوی (فاضلِ حوزہ علمیہ قم)"
                 : "Scholarly Research & Curation: Maulana Syed Imon Rizvi (Qum Seminary Graduate)"}
             </span>
           </div>

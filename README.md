@@ -17,7 +17,7 @@
 **Wirasat** is conceived, researched, and directed under the religious guidance and scholarly supervision of:
 
 ### **Maulana Syed Imon Rizvi**
-*(مولانا سید عِمران حیدر رضوی)*
+*(مولانا سیّد آئمن رضوی)*
 
 An esteemed Islamic scholar and researcher dedicated to modernizing Islamic legal education, resolving contemporary inheritance dilemmas, and making the nuanced divine laws of the Holy Qur'an and Ahl al-Bayt (a.s.) accessible, transparent, and computable for Muslim communities worldwide.
 
@@ -176,7 +176,7 @@ Wirasat is built to provide maximum mathematical precision and scholarly educati
 
 ## 👤 Project Credits & Authors
 
-- **Religious Supervision & Jurisprudential Direction:** **Maulana Syed Imon Rizvi** *(مولانا سید عِمران حیدر رضوی)*
+- **Religious Supervision & Jurisprudential Direction:** **Maulana Syed Imon Rizvi** *(مولانا سیّد آئمن رضوی)*
 - **Organization:** Wirasat Foundation / GetMoreFromLife
 - **Repository:** [https://github.com/getmorefromlife/wirasat](https://github.com/getmorefromlife/wirasat)
 

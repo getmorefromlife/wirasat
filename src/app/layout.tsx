@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   applicationName: "Wirasat",
   authors: [{ name: "Maulana Syed Imon Rizvi (مولانا سیّد آئمن رضوی)" }],
   creator: "Maulana Syed Imon Rizvi",
-  keywords: ["Wirasat", "وراثت", "A Legacy of Fairness", "Shia Inheritance", "Fiqh al-Mawarith", "Ja'fari Law", "Maulana Syed Imon Rizvi", "مولانا سید آئمن رضوی", "Sistani", "Khamenei"],
+  keywords: ["Wirasat", "وراثت", "A Legacy of Fairness", "Shia Inheritance", "Fiqh al-Mawarith", "Ja'fari Law", "Maulana Syed Imon Rizvi", "مولانا سیّد آئمن رضوی", "Sistani", "Khamenei"],
   openGraph: {
     type: "website",
     url: "https://shia-wirasat.vercel.app",
