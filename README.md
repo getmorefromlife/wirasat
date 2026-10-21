@@ -176,8 +176,8 @@ Wirasat is built to provide maximum mathematical precision and scholarly educati
 
 ## 👤 Project Credits & Authors
 
-- **Religious Supervision & Jurisprudential Direction:** **Maulana Syed Aiman Rizvi** *(مولانا سیّد آئمن رضوی)*
-- **Organization:** Wirasat Foundation / GetMoreFromLife
+- **Religious Supervision & Jurisprudential Direction:** **Maulana Syed Imon Rizvi** *(مولانا سیّد آئمن رضوی)*
+- **Organization:** Radiant Academy / GetMoreFromLife
 - **Repository:** [https://github.com/getmorefromlife/wirasat](https://github.com/getmorefromlife/wirasat)
 
 ---
@@ -194,7 +194,7 @@ This project is licensed under a **Dual Open-Source & Cultural Protection Licens
    The illustrated kinship avatars, Wasiyyah visual encyclopedia, and Masterclass texts are licensed under **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International ([CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/))**.  
    *Commercial redistribution or sale of original illustrations and scholarly texts is strictly prohibited without written consent.*
 
-**Copyright © 2026 Maulana Syed Aiman Rizvi (مولانا سیّد آئمن رضوی). All rights reserved.**
+**Copyright © 2026 Maulana Syed Imon Rizvi (مولانا سیّد آئمن رضوی). All rights reserved.**
 
 ---
 
