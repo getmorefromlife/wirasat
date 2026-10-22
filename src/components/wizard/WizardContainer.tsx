@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { ScenarioCaseStoryCard } from "./ScenarioCaseStoryCard";
 import { OnePageDashboard } from "@/components/dashboard/OnePageDashboard";
+import { SampleScenariosModal } from "@/components/modals/SampleScenariosModal";
 
 export const WizardContainer: React.FC = () => {
   const {
@@ -41,7 +42,7 @@ export const WizardContainer: React.FC = () => {
   } = useInheritanceStore();
 
   const t = TRANSLATIONS[language];
-  const [showPresetDropdown, setShowPresetDropdown] = useState(false);
+  const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const stepperRef = React.useRef<HTMLDivElement>(null);
   const isFirstRender = React.useRef(true);
 
@@ -159,51 +160,15 @@ export const WizardContainer: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2 relative self-end sm:self-auto">
-          {/* Preset Selector Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setShowPresetDropdown(!showPresetDropdown)}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[var(--theme-gold)]/10 hover:bg-[var(--theme-gold)]/20 border border-[var(--theme-gold)]/40 text-sm font-bold text-[var(--theme-gold)] transition-all shadow-sm cursor-pointer"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-[var(--theme-gold)]" />
-              <span>{language === "ur" ? "نمونۂ کیسز دیکھیں (۵ کیسز)" : "Browse 5 Sample Scenarios"}</span>
-            </button>
-
-            {showPresetDropdown && (
-              <div className="absolute top-full end-0 mt-2 w-[min(28rem,calc(100vw-3rem))] rounded-2xl sacred-card p-3 z-50 space-y-2 shadow-2xl border border-[var(--theme-gold)]/50 bg-white">
-                <div className="flex items-center justify-between px-2 py-1 text-xs font-bold uppercase tracking-wider text-[var(--theme-gold)] border-b border-[var(--theme-border)]/60 pb-1.5 mb-1">
-                  <span>{language === "ur" ? "۵ حقیقی فقہی مثالیں (Real Fiqh Cases)" : "5 Real-World Shia Inheritance Cases"}</span>
-                  <span className="text-[11px] text-[var(--theme-text-muted)]">{language === "ur" ? "کلک کر کے لوڈ کریں" : "Click to Load"}</span>
-                </div>
-                {SCENARIO_PRESETS.map((p, idx) => (
-                  <button
-                    key={p.id}
-                    onClick={() => {
-                      loadPreset(p.id);
-                      setShowPresetDropdown(false);
-                    }}
-                    className={`w-full text-start p-3 rounded-xl transition-all text-xs space-y-1 border cursor-pointer ${
-                      activePresetId === p.id
-                        ? "bg-theme-chip border-theme-brand"
-                        : "hover:bg-stone-50 border-stone-200"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="w-4 h-4 rounded-full bg-theme-card-dark text-white flex items-center justify-center text-[10px] font-mono shrink-0">
-                        {idx + 1}
-                      </span>
-                      <span className="font-bold text-[#172e22] block text-sm">
-                        {language === "ur" ? p.titleUr : p.titleEn}
-                      </span>
-                    </div>
-                    <span className="text-stone-600 line-clamp-2 leading-relaxed block font-nastaliq leading-[2.2]">
-                      {language === "ur" ? p.descriptionUr : p.descriptionEn}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          {/* Preset Selector Button (Opens Modal) */}
+          <button
+            type="button"
+            onClick={() => setIsPresetModalOpen(true)}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-linear-to-r from-[var(--theme-gold)]/20 to-[var(--theme-gold)]/10 hover:from-[var(--theme-gold)]/30 hover:to-[var(--theme-gold)]/20 border-2 border-[var(--theme-gold)]/60 text-sm font-black text-[var(--theme-gold)] transition-all shadow-sm cursor-pointer"
+          >
+            <Sparkles className="w-4 h-4 text-[var(--theme-gold)]" />
+            <span>{language === "ur" ? "نمونۂ کیسز دیکھیں (۵ کیسز)" : "Browse 5 Sample Scenarios"}</span>
+          </button>
 
           {/* Reset All */}
           <button
@@ -352,6 +317,15 @@ export const WizardContainer: React.FC = () => {
       </div>
     </>
   )}
+
+      {/* Full-Screen 5 Sample Scenarios Modal */}
+      <SampleScenariosModal
+        isOpen={isPresetModalOpen}
+        onClose={() => setIsPresetModalOpen(false)}
+        activePresetId={activePresetId}
+        onSelectPreset={(id) => loadPreset(id)}
+        language={language}
+      />
 </div>
 );
 };
