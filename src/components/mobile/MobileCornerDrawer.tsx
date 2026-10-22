@@ -108,10 +108,10 @@ export const MobileCornerDrawer: React.FC<MobileCornerDrawerProps> = ({
             </div>
             <div className="grid grid-cols-2 gap-2 font-sans">
               {[
-                { id: "emerald" as Theme, nameEn: "Emerald", nameUr: "زمرد و طلا", dot: "#1b4332" },
-                { id: "lapis" as Theme, nameEn: "Samarkand", nameUr: "لاجوردی", dot: "#1d4ed8" },
-                { id: "andalusia" as Theme, nameEn: "Andalusia", nameUr: "اندلسی", dot: "#9a3412" },
-                { id: "midnight" as Theme, nameEn: "Midnight", nameUr: "شبِ نیلگوں", dot: "#0f1724" },
+                { id: "emerald" as Theme, nameEn: "Al-Firdaws", nameUr: "جَنَّۃُ الفِردَوس", dot: "#047857" },
+                { id: "lapis" as Theme, nameEn: "Al-Kawthar", nameUr: "نَھرُ الکَوثَر", dot: "#1d4ed8" },
+                { id: "andalusia" as Theme, nameEn: "Salsabeel", nameUr: "عَینُ سَلسَبِیل", dot: "#c2410c" },
+                { id: "midnight" as Theme, nameEn: "Laylat al-Qadr", nameUr: "لَیلَۃُ القَدر", dot: "#0ea5e9" },
               ].map((t) => {
                 const isCurrent = (theme || "emerald") === t.id;
                 return (
@@ -120,7 +120,7 @@ export const MobileCornerDrawer: React.FC<MobileCornerDrawerProps> = ({
                     onClick={() => setTheme(t.id)}
                     className={`flex items-center gap-2 p-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
                       isCurrent
-                        ? "bg-[#edf3e7] border-[var(--theme-gold)] text-[var(--theme-gold)] shadow-xs"
+                        ? "bg-theme-chip border-theme-brand text-theme-brand shadow-xs font-black"
                         : "border-stone-200 hover:bg-stone-50 text-stone-700"
                     }`}
                   >

@@ -157,7 +157,7 @@ export const SmartReaderSuite: React.FC<SmartReaderSuiteProps> = ({
         aria-hidden="true"
       >
         <div
-          className="h-full bg-gradient-to-r from-emerald-600 via-amber-500 to-emerald-600 transition-all duration-150 ease-out shadow-[0_0_8px_rgba(245,158,11,0.6)]"
+          className="h-full bg-gradient-to-r from-[var(--theme-brand)] via-[var(--theme-radiant-gold)] to-[var(--theme-brand)] transition-all duration-150 ease-out shadow-[0_0_8px_rgba(245,158,11,0.6)]"
           style={{ width: `${scrollProgress}%` }}
         />
       </div>
@@ -174,7 +174,7 @@ export const SmartReaderSuite: React.FC<SmartReaderSuiteProps> = ({
           <button
             type="button"
             onClick={() => setIsTocOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#245642] text-white text-xs font-bold shadow-xs hover:bg-[#1a4031] transition-all cursor-pointer shrink-0"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-theme-card-dark text-white text-xs font-bold shadow-xs hover:bg-theme-card-dark-hover transition-all cursor-pointer shrink-0"
             title={isUr ? "مکمل فہرستِ ابواب" : "Full Table of Contents"}
           >
             <List className="w-3.5 h-3.5" />
@@ -198,8 +198,8 @@ export const SmartReaderSuite: React.FC<SmartReaderSuiteProps> = ({
                   onClick={() => scrollTo(section.id)}
                   className={`px-3 py-1 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer shrink-0 border ${
                     isActive
-                      ? "bg-[#245642] text-white border-[#245642] shadow-xs"
-                      : "bg-white dark:bg-[#12251e] text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 hover:text-[#245642] dark:hover:text-emerald-300"
+                      ? "bg-theme-card-dark text-white border-theme-card-dark shadow-xs"
+                      : "bg-white dark:bg-[#12251e] text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-800 hover:bg-theme-chip hover:text-theme-brand"
                   } ${isUr ? "font-nastaliq leading-[2]" : ""}`}
                 >
                   <span className="opacity-70 text-[10px] mr-1 inline-block">
@@ -212,7 +212,7 @@ export const SmartReaderSuite: React.FC<SmartReaderSuiteProps> = ({
           </div>
 
           {/* Reading Percent Pill in Ribbon */}
-          <div className="shrink-0 px-2.5 py-1 rounded-md bg-[#edf3e7] dark:bg-[#132c21] border border-[#a5b69d]/40 text-[#245642] dark:text-emerald-300 text-[11px] font-extrabold tabular-nums">
+          <div className="shrink-0 px-2.5 py-1 rounded-md bg-theme-chip border border-theme-chip text-theme-brand text-[11px] font-extrabold tabular-nums">
             {scrollProgress}%
           </div>
         </div>
@@ -313,9 +313,9 @@ export const SmartReaderSuite: React.FC<SmartReaderSuiteProps> = ({
             dir={isUr ? "rtl" : "ltr"}
           >
             {/* Drawer Header */}
-            <div className="p-5 border-b border-[#245642]/20 flex items-center justify-between bg-white dark:bg-[#12251e]">
+            <div className="p-5 border-b border-theme-subtle flex items-center justify-between bg-white dark:bg-[#12251e]">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-[#245642] text-white flex items-center justify-center shadow-xs">
+                <div className="w-9 h-9 rounded-xl bg-theme-card-dark text-white flex items-center justify-center shadow-xs">
                   <Compass className="w-5 h-5 text-amber-300" />
                 </div>
                 <div>
@@ -346,9 +346,9 @@ export const SmartReaderSuite: React.FC<SmartReaderSuiteProps> = ({
             </div>
 
             {/* Reading Progress Visual inside Modal */}
-            <div className="px-5 py-3 bg-[#edf3e7]/50 dark:bg-[#132c21]/50 border-b border-[#a5b69d]/20 flex items-center justify-between text-xs font-semibold text-[#245642] dark:text-emerald-300">
+            <div className="px-5 py-3 bg-theme-chip border-b border-theme-chip flex items-center justify-between text-xs font-semibold text-theme-brand">
               <span className="flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                <Sparkles className="w-3.5 h-3.5 text-[var(--theme-radiant-gold)]" />
                 <span>{isUr ? "شعبہ جاتی فہرست" : "Guided Reading Outline"}</span>
               </span>
               <span className="tabular-nums font-bold">
@@ -370,8 +370,8 @@ export const SmartReaderSuite: React.FC<SmartReaderSuiteProps> = ({
                     }}
                     className={`w-full text-left rtl:text-right p-3 rounded-xl transition-all cursor-pointer flex items-center justify-between gap-3 border ${
                       isActive
-                        ? "bg-[#245642] text-white border-[#245642] shadow-sm font-bold"
-                        : "bg-white dark:bg-[#12251e] border-stone-200 dark:border-stone-800 text-stone-800 dark:text-stone-200 hover:border-[#245642]/50 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/30"
+                        ? "bg-theme-card-dark text-white border-theme-card-dark shadow-sm font-bold"
+                        : "bg-white dark:bg-[#12251e] border-stone-200 dark:border-stone-800 text-stone-800 dark:text-stone-200 hover:border-theme-brand/50 hover:bg-theme-chip"
                     }`}
                   >
                     <div className="flex items-center gap-3 truncate">
@@ -431,7 +431,7 @@ export const SmartReaderSuite: React.FC<SmartReaderSuiteProps> = ({
               <button
                 type="button"
                 onClick={() => setIsTocOpen(false)}
-                className="px-4 py-1.5 rounded-lg bg-[#245642] text-white font-bold hover:bg-[#1a4031] transition-all cursor-pointer shadow-xs"
+                className="px-4 py-1.5 rounded-lg bg-theme-card-dark text-white font-bold hover:bg-theme-card-dark-hover transition-all cursor-pointer shadow-xs"
               >
                 {isUr ? "بند کریں" : "Close"}
               </button>

@@ -8,9 +8,9 @@ export function HeroSection() {
  return <div className="home-intro">
  <section className="legacy-hero">
   <div className="hero-copy">
-   <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#eef3e8] border border-[#d2dec7] mb-4 shadow-xs">
+   <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-theme-chip border border-theme-chip mb-4 shadow-xs">
      <WirasatLogo variant="icon" color="emerald" size="sm" />
-     <span className={`text-[11px] font-bold tracking-wider text-[#245642] uppercase ${ur ? "font-nastaliq text-xs tracking-normal" : "font-jakarta"}`}>
+     <span className={`text-[11px] font-bold tracking-wider text-theme-brand uppercase ${ur ? "font-nastaliq text-xs tracking-normal" : "font-jakarta"}`}>
        {ur ? "وِرَاثَت — عدل و انصاف کی میراث" : "WIRASAT — A LEGACY OF FAIRNESS"}
      </span>
    </div>

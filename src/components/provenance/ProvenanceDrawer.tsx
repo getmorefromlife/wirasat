@@ -51,14 +51,14 @@ export function ProvenanceDrawer() {
         dir={isUr ? "rtl" : "ltr"}
       >
         {/* Drawer Header */}
-        <div className="p-5 sm:p-6 bg-[#245642] text-white flex items-center justify-between border-b border-[#1b3f30] shrink-0">
+        <div className="p-5 sm:p-6 bg-theme-card-dark text-white flex items-center justify-between border-b border-theme-card-dark shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#172e22] border border-[#3d6e57] flex items-center justify-center shrink-0 shadow-xs">
+            <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0 shadow-xs">
               <WirasatLogo variant="icon" color="white" size="sm" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#86efac] px-2 py-0.5 rounded-full bg-[#172e22] border border-[#3d6e57]">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-theme-gold px-2 py-0.5 rounded-full bg-white/10 border border-white/20">
                   {isUr ? "شرعی سند و استدلال" : "Scholarly Provenance & Fatwa"}
                 </span>
               </div>

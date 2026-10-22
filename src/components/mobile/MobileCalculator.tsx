@@ -335,7 +335,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                   onClick={() => setMarja(m.id)}
                   className={`flex-1 py-3 px-3 rounded-2xl text-sm sm:text-base font-black transition-all cursor-pointer border-2 ${
                     isSelected
-                      ? "bg-[#0a241a] text-white border-[#0a241a] shadow-md scale-101"
+                      ? "bg-theme-card-dark text-white border-theme-card-dark shadow-md scale-101"
                       : "bg-white text-[#0f172a] border-stone-300 hover:bg-stone-50"
                   }`}
                 >
@@ -358,7 +358,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
               onClick={() => updateDeceased({ gender: "male" })}
               className={`px-4 py-2.5 rounded-2xl text-sm font-black transition-all cursor-pointer border-2 ${
                 deceased.gender === "male"
-                  ? "bg-[#0a241a] text-white border-[#0a241a] shadow-sm"
+                  ? "bg-theme-card-dark text-white border-theme-card-dark shadow-sm"
                   : "bg-stone-100 text-[#0f172a] border-stone-300 hover:bg-stone-200"
               }`}
             >
@@ -370,7 +370,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
               onClick={() => updateDeceased({ gender: "female" })}
               className={`px-4 py-2.5 rounded-2xl text-sm font-black transition-all cursor-pointer border-2 ${
                 deceased.gender === "female"
-                  ? "bg-[#0a241a] text-white border-[#0a241a] shadow-sm"
+                  ? "bg-theme-card-dark text-white border-theme-card-dark shadow-sm"
                   : "bg-stone-100 text-[#0f172a] border-stone-300 hover:bg-stone-200"
               }`}
             >
@@ -381,15 +381,15 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
           </div>
         </div>
 
-        {/* 3. Hero Estate Balance Card (Pure Solid Forest Background, Pure White Text & Bright Gold Highlight) */}
-        <div className="p-6 rounded-3xl bg-[#0a241a] text-white shadow-xl space-y-5 border-3 border-[#164330]">
+        {/* 3. Hero Estate Balance Card (Dynamic Heavenly Theme Card) */}
+        <div className="p-6 rounded-3xl bg-theme-card-dark text-white shadow-xl space-y-5 border-3 border-theme-card-dark">
           <div className="flex items-center justify-between">
             <span className={`text-sm sm:text-base font-black uppercase tracking-wider text-white ${
               isUr ? "font-nastaliq text-lg" : "font-sans"
             }`}>
               {isUr ? "کل ترکہ کی مالیت" : "Total Estate Value"}
             </span>
-            <span className="text-xs sm:text-sm px-3.5 py-1 rounded-full bg-[#164330] border-2 border-[#2b6b50] text-[#fef08a] font-black font-sans">
+            <span className="text-xs sm:text-sm px-3.5 py-1 rounded-full bg-white/10 border-2 border-white/20 text-theme-gold font-black font-sans">
               {currency}
             </span>
           </div>
@@ -397,7 +397,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
           {/* Amount Display & Input */}
           <div className="space-y-1.5">
             <div className="flex items-center gap-3 bg-black/40 p-3.5 rounded-2xl border-2 border-white/20">
-              <span className="text-3xl sm:text-4xl font-black text-[#fef08a] font-sans">
+              <span className="text-3xl sm:text-4xl font-black text-theme-gold font-sans">
                 {currency === "PKR" ? "₨" : "$"}
               </span>
               <input
@@ -417,7 +417,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
             </div>
           </div>
 
-          {/* Quick Addition Chips (High Contrast White on Dark) */}
+          {/* Quick Addition Chips */}
           <div className="flex flex-wrap gap-2 pt-1 font-sans">
             {[
               { label: "+100k", val: 100000 },
@@ -429,7 +429,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
               <button
                 key={chip.label}
                 onClick={() => addQuickAmount(chip.val)}
-                className="px-3.5 py-2 rounded-xl bg-[#164330] hover:bg-[#20573e] text-white text-xs sm:text-sm font-black border-2 border-[#2f7556] transition-transform active:scale-95 cursor-pointer shadow-xs"
+                className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-black border-2 border-white/20 transition-transform active:scale-95 cursor-pointer shadow-xs"
               >
                 {chip.label}
               </button>
@@ -440,7 +440,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
           <div className={`pt-3 border-t-2 border-white/20 ${isUr ? "font-nastaliq" : "font-sans"}`}>
             <button
               onClick={() => setShowDebtsAccordion(!showDebtsAccordion)}
-              className="w-full flex items-center justify-between text-xs sm:text-sm text-[#fef08a] font-black hover:text-white cursor-pointer py-1"
+              className="w-full flex items-center justify-between text-xs sm:text-sm text-theme-gold font-black hover:text-white cursor-pointer py-1"
             >
               <span>
                 {isUr ? "قرضہ جات یا وصیت وضع کریں" : "Deduct Debts & Will"}
@@ -484,13 +484,13 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
           </div>
         </div>
 
-        {/* 4. Large Tactile Heir Counters (Pure White Cards, Black text, 56px Buttons) */}
+        {/* 4. Large Tactile Heir Counters */}
         <div className={`space-y-4 ${isUr ? "font-nastaliq" : "font-sans"}`}>
           <div className="flex items-center justify-between px-1">
             <h2 className="text-sm sm:text-base font-black uppercase tracking-wider text-[#0f172a]">
               {isUr ? "زندہ وارثین کا اندراج" : "Surviving Heirs Selection"}
             </h2>
-            <span className="text-xs sm:text-sm font-black text-[#0a241a]">
+            <span className="text-xs sm:text-sm font-black text-theme-brand">
               {isUr ? "+ / − بٹن سے تعداد مقرر کریں" : "Set counts using + / −"}
             </span>
           </div>
@@ -527,7 +527,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                 <button
                   onClick={() => setWifeCount(Math.min(4, (heirs.spouseCount || 0) + 1))}
                   disabled={(heirs.spouseCount || 0) === 4}
-                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#0a241a] hover:bg-[#051811] disabled:opacity-20 disabled:pointer-events-none text-white border-2 border-[#051811] flex items-center justify-center font-black transition-transform active:scale-90 cursor-pointer shadow-md"
+                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-theme-card-dark hover:bg-theme-card-dark-hover disabled:opacity-20 disabled:pointer-events-none text-white border-2 border-theme-card-dark flex items-center justify-center font-black transition-transform active:scale-90 cursor-pointer shadow-md"
                   aria-label="Increase wives"
                 >
                   <Plus size={24} className="stroke-[3.5]" />
@@ -553,7 +553,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                 onClick={() => updateHeirs({ spouseCount: heirs.spouseCount === 1 ? 0 : 1 })}
                 className={`px-6 py-4 rounded-2xl font-black text-sm sm:text-base transition-all cursor-pointer border-2 ${
                   heirs.spouseCount === 1
-                    ? "bg-[#0a241a] text-white border-[#051811] shadow-md"
+                    ? "bg-theme-card-dark text-white border-theme-card-dark shadow-md"
                     : "bg-[#e2e8f0] text-[#0f172a] border-[#94a3b8] hover:bg-[#cbd5e1]"
                 }`}
               >
@@ -574,7 +574,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
           <div className="p-5 rounded-3xl bg-white border-2 border-stone-300 shadow-sm flex items-center justify-between">
             <div>
               <div className="flex items-center gap-2 font-black text-base sm:text-xl text-[#0f172a]">
-                <User size={22} className="text-[#0a241a] stroke-[3]" />
+                <User size={22} className="text-theme-brand stroke-[3]" />
                 <span className={isUr ? "font-nastaliq text-2xl" : ""}>
                   {isUr ? "زندہ بیٹے (ابناء)" : "Living Sons"}
                 </span>
@@ -598,7 +598,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
               </span>
               <button
                 onClick={() => handleSonsChange((heirs.sonsCount || 0) + 1)}
-                className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#0a241a] hover:bg-[#051811] text-white border-2 border-[#051811] flex items-center justify-center font-black transition-transform active:scale-90 cursor-pointer shadow-md"
+                className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-theme-card-dark hover:bg-theme-card-dark-hover text-white border-2 border-theme-card-dark flex items-center justify-center font-black transition-transform active:scale-90 cursor-pointer shadow-md"
                 aria-label="Increase sons"
               >
                 <Plus size={24} className="stroke-[3.5]" />
@@ -634,7 +634,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
               </span>
               <button
                 onClick={() => handleDaughtersChange((heirs.daughtersCount || 0) + 1)}
-                className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#0a241a] hover:bg-[#051811] text-white border-2 border-[#051811] flex items-center justify-center font-black transition-transform active:scale-90 cursor-pointer shadow-md"
+                className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-theme-card-dark hover:bg-theme-card-dark-hover text-white border-2 border-theme-card-dark flex items-center justify-center font-black transition-transform active:scale-90 cursor-pointer shadow-md"
                 aria-label="Increase daughters"
               >
                 <Plus size={24} className="stroke-[3.5]" />
@@ -649,7 +649,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
               className="w-full p-5 bg-stone-100 hover:bg-stone-200 text-[#0f172a] flex items-center justify-between text-left rtl:text-right cursor-pointer transition-colors"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-[#0a241a] text-white flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-2xl bg-theme-card-dark text-white flex items-center justify-center shrink-0">
                   <Baby size={22} className="stroke-[2.5]" />
                 </div>
                 <div>
@@ -680,7 +680,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                   className={`p-4 rounded-2xl border-2 text-xs sm:text-sm leading-relaxed font-bold ${
                     hasLivingDirectChildren
                       ? "bg-amber-100 border-amber-400 text-amber-950"
-                      : "bg-[#edf3e7] border-[#8cb87d] text-[#0a241a]"
+                      : "bg-theme-chip border-theme-chip text-theme-chip"
                   }`}
                 >
                   <div className="flex items-start gap-2.5">
@@ -727,7 +727,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                       </span>
                       <button
                         onClick={() => handlePoteChange(poteCount + 1)}
-                        className="w-12 h-12 rounded-xl bg-[#0a241a] text-white border-2 border-[#051811] flex items-center justify-center font-black cursor-pointer shadow-sm"
+                        className="w-12 h-12 rounded-xl bg-theme-card-dark text-white border-2 border-theme-card-dark flex items-center justify-center font-black cursor-pointer shadow-sm"
                       >
                         <Plus size={20} className="stroke-[3]" />
                       </button>
@@ -752,7 +752,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                       </span>
                       <button
                         onClick={() => handlePotiyanChange(potiyanCount + 1)}
-                        className="w-12 h-12 rounded-xl bg-[#0a241a] text-white border-2 border-[#051811] flex items-center justify-center font-black cursor-pointer shadow-sm"
+                        className="w-12 h-12 rounded-xl bg-theme-card-dark text-white border-2 border-theme-card-dark flex items-center justify-center font-black cursor-pointer shadow-sm"
                       >
                         <Plus size={20} className="stroke-[3]" />
                       </button>
@@ -784,7 +784,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                       </span>
                       <button
                         onClick={() => handleNawaseChange(nawaseCount + 1)}
-                        className="w-12 h-12 rounded-xl bg-[#0a241a] text-white border-2 border-[#051811] flex items-center justify-center font-black cursor-pointer shadow-sm"
+                        className="w-12 h-12 rounded-xl bg-theme-card-dark text-white border-2 border-theme-card-dark flex items-center justify-center font-black cursor-pointer shadow-sm"
                       >
                         <Plus size={20} className="stroke-[3]" />
                       </button>
@@ -809,7 +809,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                       </span>
                       <button
                         onClick={() => handleNawasiyanChange(nawasiyanCount + 1)}
-                        className="w-12 h-12 rounded-xl bg-[#0a241a] text-white border-2 border-[#051811] flex items-center justify-center font-black cursor-pointer shadow-sm"
+                        className="w-12 h-12 rounded-xl bg-theme-card-dark text-white border-2 border-theme-card-dark flex items-center justify-center font-black cursor-pointer shadow-sm"
                       >
                         <Plus size={20} className="stroke-[3]" />
                       </button>
@@ -837,7 +837,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                 onClick={() => updateHeirs({ fatherAlive: !heirs.fatherAlive })}
                 className={`w-full py-4 rounded-2xl font-black text-sm sm:text-base transition-all cursor-pointer border-2 ${
                   heirs.fatherAlive
-                    ? "bg-[#0a241a] text-white border-[#051811] shadow-md"
+                    ? "bg-theme-card-dark text-white border-theme-card-dark shadow-md"
                     : "bg-[#e2e8f0] text-[#0f172a] border-[#94a3b8] hover:bg-[#cbd5e1]"
                 }`}
               >
@@ -868,7 +868,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                 onClick={() => updateHeirs({ motherAlive: !heirs.motherAlive })}
                 className={`w-full py-4 rounded-2xl font-black text-sm sm:text-base transition-all cursor-pointer border-2 ${
                   heirs.motherAlive
-                    ? "bg-[#0a241a] text-white border-[#051811] shadow-md"
+                    ? "bg-theme-card-dark text-white border-theme-card-dark shadow-md"
                     : "bg-[#e2e8f0] text-[#0f172a] border-[#94a3b8] hover:bg-[#cbd5e1]"
                 }`}
               >
@@ -901,7 +901,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
 
             {showAdvancedHeirs && (
               <div className="mt-2.5 p-5 rounded-3xl bg-white border-2 border-stone-300 shadow-sm space-y-4 animate-in fade-in duration-200">
-                <div className="text-xs sm:text-sm text-[#0a241a] font-bold leading-relaxed bg-[#edf3e7] p-3.5 rounded-2xl border-2 border-[#9dc58f]">
+                <div className="text-xs sm:text-sm font-bold leading-relaxed bg-theme-chip text-theme-chip p-3.5 rounded-2xl border-2 border-theme-chip">
                   {isUr
                     ? "اہم شرعی اصول: جب تک طبقۂ اول (اولاد یا والدین یا پوتے پوتیاں) میں سے کوئی بھی ایک فرد موجود ہو، طبقۂ دوم (دادا، دادی، بہن، بھائی) شرعاً مکمل محجوب (محروم) رہتا ہے۔"
                     : "Crucial Sharia Principle: If any Tier 1 heir (child, parent, or grandchild via Tanzil) survives, all Tier 2 relatives are strictly excluded."}
@@ -932,7 +932,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                           fullBrothersCount: (heirs.fullBrothersCount || 0) + 1,
                         })
                       }
-                      className="w-12 h-12 rounded-xl bg-[#0a241a] text-white border-2 border-[#051811] flex items-center justify-center font-black cursor-pointer"
+                      className="w-12 h-12 rounded-xl bg-theme-card-dark text-white border-2 border-theme-card-dark flex items-center justify-center font-black cursor-pointer"
                     >
                       <Plus size={20} className="stroke-[3]" />
                     </button>
@@ -963,7 +963,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                           fullSistersCount: (heirs.fullSistersCount || 0) + 1,
                         })
                       }
-                      className="w-12 h-12 rounded-xl bg-[#0a241a] text-white border-2 border-[#051811] flex items-center justify-center font-black cursor-pointer"
+                      className="w-12 h-12 rounded-xl bg-theme-card-dark text-white border-2 border-theme-card-dark flex items-center justify-center font-black cursor-pointer"
                     >
                       <Plus size={20} className="stroke-[3]" />
                     </button>
@@ -981,8 +981,8 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
       }`}>
         <div className="max-w-lg mx-auto flex items-center justify-between gap-4">
           <div className="shrink-0">
-            <div className="flex items-center gap-2 text-sm sm:text-base font-black text-[#0a241a]">
-              <span className="w-3.5 h-3.5 rounded-full bg-emerald-600 animate-pulse" />
+            <div className="flex items-center gap-2 text-sm sm:text-base font-black text-theme-brand">
+              <span className="w-3.5 h-3.5 rounded-full bg-theme-brand animate-pulse" />
               <span>{totalPercentage.toFixed(0)}% {isUr ? "تقسیم" : "Distributed"}</span>
             </div>
             <div className="text-sm sm:text-base text-[#0f172a] font-black mt-0.5">
@@ -992,9 +992,9 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
 
           <button
             onClick={() => setIsResultSheetOpen(true)}
-            className="flex-1 py-4 px-6 rounded-2xl bg-[#0a241a] hover:bg-[#051811] text-white font-black text-base sm:text-lg flex items-center justify-center gap-2.5 shadow-xl border-2 border-[#051811] transition-transform active:scale-98 cursor-pointer"
+            className="flex-1 py-4 px-6 rounded-2xl bg-theme-card-dark hover:bg-theme-card-dark-hover text-white font-black text-base sm:text-lg flex items-center justify-center gap-2.5 shadow-xl border-2 border-theme-card-dark transition-transform active:scale-98 cursor-pointer"
           >
-            <Sparkles size={22} className="text-[#fef08a] shrink-0" />
+            <Sparkles size={22} className="text-theme-gold shrink-0" />
             <span className={isUr ? "font-nastaliq text-lg sm:text-xl leading-none pt-1" : "leading-none"}>
               {isUr ? "حساب کی تفصیل دیکھیں" : "View Breakdown"}
             </span>

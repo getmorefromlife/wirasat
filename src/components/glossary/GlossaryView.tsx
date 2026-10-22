@@ -573,9 +573,9 @@ export function GlossaryView() {
       </div>
 
       {/* Educational Footer Banner */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-[#245642] text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-md">
+      <div className="p-6 sm:p-8 rounded-3xl bg-theme-card-dark text-white border-2 border-theme-card-dark flex flex-col md:flex-row items-center justify-between gap-6 shadow-md">
         <div className="space-y-2 text-center md:text-start">
-          <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-[#172e22] text-[#86efac] text-xs font-bold">
+          <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-white/10 text-theme-gold text-xs font-bold">
             <Sparkles className="w-3.5 h-3.5" />
             <span>{isUr ? "علم میراثِ آلِ محمد (ع)" : "The Sacred Heritage"}</span>
           </div>

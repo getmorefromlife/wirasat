@@ -69,18 +69,18 @@ export const WizardContainer: React.FC = () => {
     <div id="calculator-workspace" className="calculator-workspace max-w-5xl mx-auto px-4 py-8 space-y-6 scroll-mt-6">
       {/* Top Breadcrumb: Return to Home */}
       <div className="flex items-center justify-between gap-3 pb-2 border-b border-stone-200">
-        <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-[#245642]">
+        <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-theme-brand">
           <button
             type="button"
             onClick={() => setActiveView("home")}
-            className="text-stone-500 hover:text-[#245642] transition-colors cursor-pointer flex items-center gap-1"
+            className="text-stone-500 hover:text-theme-brand transition-colors cursor-pointer flex items-center gap-1"
           >
             <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
             <span>{language === "ur" ? "مرکزی صفحہ پر واپسی" : "Back to Home"}</span>
           </button>
           <span className="text-stone-300">/</span>
-          <span className="text-[#245642] font-extrabold flex items-center gap-1.5">
-            <Compass className="w-4 h-4 text-[#245642]" />
+          <span className="text-theme-brand font-extrabold flex items-center gap-1.5">
+            <Compass className="w-4 h-4 text-theme-brand" />
             <span>
               {language === "ur"
                 ? "حسابِ وراثت (مرحلہ وار رہنمائی)"
@@ -89,15 +89,15 @@ export const WizardContainer: React.FC = () => {
           </span>
         </div>
 
-        <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-[#edf3e7] text-[#245642] border border-[#c4d4be]">
+        <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-theme-chip text-theme-brand border border-theme-chip">
           {language === "ur" ? `مرحلہ ${wizardStep} از ۵` : `Step ${wizardStep} of 5`}
         </span>
       </div>
 
       {/* Dual Mode Switcher: 5-Step Guided Wizard vs All-in-One Dashboard */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-2 rounded-2xl bg-[#edf3e7] border border-[#c4d4be] shadow-xs">
-        <div className="flex items-center gap-2 px-2 text-xs font-bold text-[#245642]">
-          <SlidersHorizontal className="w-4 h-4 text-[#245642]" />
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-2 rounded-2xl bg-theme-chip border border-theme-chip shadow-xs">
+        <div className="flex items-center gap-2 px-2 text-xs font-bold text-theme-brand">
+          <SlidersHorizontal className="w-4 h-4 text-theme-brand" />
           <span>{language === "ur" ? "طرزِ حساب منتخب فرمائیں:" : "Calculator Display Mode:"}</span>
         </div>
 
@@ -107,7 +107,7 @@ export const WizardContainer: React.FC = () => {
             onClick={() => setCalculatorMode("wizard")}
             className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
               calculatorMode === "wizard"
-                ? "bg-[#245642] text-white shadow-sm"
+                ? "bg-theme-card-dark text-white shadow-sm"
                 : "bg-white/80 hover:bg-white text-[#52735a] border border-[#c4d4be]"
             }`}
           >
@@ -120,7 +120,7 @@ export const WizardContainer: React.FC = () => {
             onClick={() => setCalculatorMode("dashboard")}
             className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
               calculatorMode === "dashboard"
-                ? "bg-[#245642] text-white shadow-sm"
+                ? "bg-theme-card-dark text-white shadow-sm"
                 : "bg-white/80 hover:bg-white text-[#52735a] border border-[#c4d4be]"
             }`}
           >
@@ -184,12 +184,12 @@ export const WizardContainer: React.FC = () => {
                     }}
                     className={`w-full text-start p-3 rounded-xl transition-all text-xs space-y-1 border cursor-pointer ${
                       activePresetId === p.id
-                        ? "bg-[#edf3e7] border-[#245642]"
+                        ? "bg-theme-chip border-theme-brand"
                         : "hover:bg-stone-50 border-stone-200"
                     }`}
                   >
                     <div className="flex items-center gap-2">
-                      <span className="w-4 h-4 rounded-full bg-[#245642] text-white flex items-center justify-center text-[10px] font-mono shrink-0">
+                      <span className="w-4 h-4 rounded-full bg-theme-card-dark text-white flex items-center justify-center text-[10px] font-mono shrink-0">
                         {idx + 1}
                       </span>
                       <span className="font-bold text-[#172e22] block text-sm">
@@ -222,9 +222,9 @@ export const WizardContainer: React.FC = () => {
         <ScenarioCaseStoryCard />
       ) : (
         /* Fresh Start Banner with Quick Sample Links */
-        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#fafcf8] to-[#edf3e7] border border-[#c4d4be] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
+        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#fafcf8] to-theme-chip border border-theme-chip flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
           <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#245642] text-white flex items-center justify-center shrink-0 mt-0.5">
+            <div className="w-9 h-9 rounded-xl bg-theme-card-dark text-white flex items-center justify-center shrink-0 mt-0.5">
               <Sparkles className="w-4 h-4 text-amber-300" />
             </div>
             <div>
@@ -246,7 +246,7 @@ export const WizardContainer: React.FC = () => {
                 key={p.id}
                 type="button"
                 onClick={() => loadPreset(p.id)}
-                className="px-3 py-1.5 rounded-xl bg-white hover:bg-[#245642] text-[#245642] hover:text-white border border-[#245642] text-xs font-bold transition-all shadow-2xs cursor-pointer"
+                className="px-3 py-1.5 rounded-xl bg-white hover:bg-theme-card-dark text-theme-brand hover:text-white border border-theme-brand text-xs font-bold transition-all shadow-2xs cursor-pointer"
               >
                 {language === "ur" ? `کیس ${idx + 1}` : `Case ${idx + 1}`}
               </button>

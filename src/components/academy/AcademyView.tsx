@@ -68,10 +68,10 @@ export const AcademyView: React.FC = () => {
   return (
     <div className="academy-workspace max-w-6xl mx-auto px-4 py-8 space-y-8">
       {/* Academy Header */}
-      <div className="border-b border-[#245642]/20 pb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="border-b border-theme-brand/20 pb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <GraduationCap className="w-7 h-7 text-[#245642] dark:text-emerald-400" />
+            <GraduationCap className="w-7 h-7 text-theme-brand" />
             <h2 className="text-2xl md:text-3xl font-bold font-cinzel text-[#0A2118] dark:text-[#F0FDF4] tracking-tight">
               {isUr ? "دَائِرَةُ التَّعْلِيمِ وَحِكْمَةُ الْفَرَائِض" : "The Institutional 8-Pillar Masterclass"}
             </h2>
@@ -81,7 +81,7 @@ export const AcademyView: React.FC = () => {
               ? "فقہِ جعفریہ کے مطابق وراثت اور ترکے کے تمام شرعی اصولوں، اسناد و مدارک، اور فقہی باریکیوں کا مستند و تفصیلی کورس۔"
               : "An adult, institutional masterclass on Shia Ja‘farī inheritance law, scriptural precedents, and financial mechanics."}
           </p>
-          <div className="mt-2.5 inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#edf3e7] dark:bg-[#132c21] border border-[#a5b69d]/50 text-xs font-semibold text-[#245642] dark:text-emerald-300">
+          <div className="mt-2.5 inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-theme-chip border border-theme-chip text-xs font-semibold text-theme-brand">
             <WirasatLogo variant="icon" color="emerald" size="sm" />
             <span>
               {isUr
@@ -92,15 +92,15 @@ export const AcademyView: React.FC = () => {
         </div>
 
         {/* Master Nav Tabs - Single Line Layout */}
-        <div className="inline-flex items-center flex-nowrap gap-1 sm:gap-1.5 p-1.5 rounded-xl bg-[#FAF8F5] dark:bg-[#0B1713] border border-[#245642]/30 shadow-xs self-start md:self-auto shrink-0 overflow-x-auto max-w-full">
+        <div className="inline-flex items-center flex-nowrap gap-1 sm:gap-1.5 p-1.5 rounded-xl bg-[#FAF8F5] dark:bg-[#0B1713] border border-theme-brand/30 shadow-xs self-start md:self-auto shrink-0 overflow-x-auto max-w-full">
           <button
             type="button"
             aria-pressed={activeTab === "masterclass"}
             onClick={() => setActiveTab("masterclass")}
             className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
               activeTab === "masterclass"
-                ? "bg-[#245642] text-white shadow-xs"
-                : "text-stone-700 dark:text-stone-300 hover:text-[#245642] dark:hover:text-emerald-300 hover:bg-stone-200/50 dark:hover:bg-stone-800/50"
+                ? "bg-theme-card-dark text-white shadow-xs"
+                : "text-stone-700 dark:text-stone-300 hover:text-theme-brand hover:bg-stone-200/50 dark:hover:bg-stone-800/50"
             }`}
           >
             {isUr ? "۸ ارکانِ شریعت (Masterclass)" : "8-Pillar Masterclass"}
@@ -111,8 +111,8 @@ export const AcademyView: React.FC = () => {
             onClick={() => setActiveTab("whyWeDiffer")}
             className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
               activeTab === "whyWeDiffer"
-                ? "bg-[#245642] text-white shadow-xs"
-                : "text-stone-700 dark:text-stone-300 hover:text-[#245642] dark:hover:text-emerald-300 hover:bg-stone-200/50 dark:hover:bg-stone-800/50"
+                ? "bg-theme-card-dark text-white shadow-xs"
+                : "text-stone-700 dark:text-stone-300 hover:text-theme-brand hover:bg-stone-200/50 dark:hover:bg-stone-800/50"
             }`}
           >
             {isUr ? "فروقِ اساسی (ردِّ عول و تعصیب)" : "Why We Differ"}
@@ -123,8 +123,8 @@ export const AcademyView: React.FC = () => {
             onClick={() => setActiveTab("scenarios")}
             className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
               activeTab === "scenarios"
-                ? "bg-[#245642] text-white shadow-xs"
-                : "text-stone-700 dark:text-stone-300 hover:text-[#245642] dark:hover:text-emerald-300 hover:bg-stone-200/50 dark:hover:bg-stone-800/50"
+                ? "bg-theme-card-dark text-white shadow-xs"
+                : "text-stone-700 dark:text-stone-300 hover:text-theme-brand hover:bg-stone-200/50 dark:hover:bg-stone-800/50"
             }`}
           >
             {isUr ? "عملی مشقیں (Simulations)" : "Case Simulations"}
@@ -160,9 +160,9 @@ export const AcademyView: React.FC = () => {
       {activeTab === "masterclass" && (
         <div className="space-y-6">
           {/* Stage Navigator (Pill Filter) */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl bg-[#FAF8F5] dark:bg-[#0B1713] border border-[#245642]/25 shadow-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl bg-[#FAF8F5] dark:bg-[#0B1713] border border-theme-brand/25 shadow-xs">
             <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300">
-              <Compass className="w-4 h-4 text-[#245642] dark:text-emerald-400" />
+              <Compass className="w-4 h-4 text-theme-brand" />
               <span>{isUr ? "مراحلِ کورس (Curriculum Stages):" : "Curriculum Stages:"}</span>
             </div>
 
@@ -172,7 +172,7 @@ export const AcademyView: React.FC = () => {
                 onClick={() => setSelectedStage("ALL")}
                 className={`px-3 py-1 rounded-lg border transition-all ${
                   selectedStage === "ALL"
-                    ? "bg-[#245642] text-white border-[#245642] shadow-2xs"
+                    ? "bg-theme-card-dark text-white border-theme-card-dark shadow-2xs"
                     : "bg-white dark:bg-[#12251e] border-stone-300 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-50"
                 }`}
               >
@@ -183,7 +183,7 @@ export const AcademyView: React.FC = () => {
                 onClick={() => setSelectedStage("FOUNDATIONS")}
                 className={`px-3 py-1 rounded-lg border transition-all ${
                   selectedStage === "FOUNDATIONS"
-                    ? "bg-[#245642] text-white border-[#245642] shadow-2xs"
+                    ? "bg-theme-card-dark text-white border-theme-card-dark shadow-2xs"
                     : "bg-white dark:bg-[#12251e] border-stone-300 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-50"
                 }`}
               >
@@ -194,7 +194,7 @@ export const AcademyView: React.FC = () => {
                 onClick={() => setSelectedStage("DISTRIBUTION")}
                 className={`px-3 py-1 rounded-lg border transition-all ${
                   selectedStage === "DISTRIBUTION"
-                    ? "bg-[#245642] text-white border-[#245642] shadow-2xs"
+                    ? "bg-theme-card-dark text-white border-theme-card-dark shadow-2xs"
                     : "bg-white dark:bg-[#12251e] border-stone-300 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-50"
                 }`}
               >
@@ -205,7 +205,7 @@ export const AcademyView: React.FC = () => {
                 onClick={() => setSelectedStage("CONTINGENCIES")}
                 className={`px-3 py-1 rounded-lg border transition-all ${
                   selectedStage === "CONTINGENCIES"
-                    ? "bg-[#245642] text-white border-[#245642] shadow-2xs"
+                    ? "bg-theme-card-dark text-white border-theme-card-dark shadow-2xs"
                     : "bg-white dark:bg-[#12251e] border-stone-300 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-50"
                 }`}
               >

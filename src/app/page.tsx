@@ -50,7 +50,7 @@ export default function Home() {
       >
         {/* Mobile View Return Banner (when force desktop is active) */}
         {forceDesktopOnMobile && (
-          <div className="md:hidden bg-[#245642] text-white px-4 py-2 text-xs flex items-center justify-between font-bold z-50">
+          <div className="md:hidden bg-theme-card-dark text-white border-b border-theme-card-dark px-4 py-2 text-xs flex items-center justify-between font-bold z-50">
             <span>{language === "ur" ? "ڈیسک ٹاپ موڈ فعال ہے" : "Desktop View Active"}</span>
             <button
               onClick={() => setForceDesktopOnMobile(false)}

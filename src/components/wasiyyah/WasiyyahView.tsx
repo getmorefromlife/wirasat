@@ -116,15 +116,15 @@ export function WasiyyahView() {
           ========================================================================= */}
       <div className="w-full bg-white/95 backdrop-blur-md border-b border-[#e2e8f0] sticky top-0 z-30 shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
-          <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-[#245642]">
+          <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-theme-brand">
             <button
               onClick={() => setActiveView("home")}
-              className={`text-stone-500 hover:text-[#245642] transition-colors cursor-pointer ${isUr ? "font-nastaliq leading-[2]" : ""}`}
+              className={`text-stone-500 hover:text-theme-brand transition-colors cursor-pointer ${isUr ? "font-nastaliq leading-[2]" : ""}`}
             >
               {isUr ? "مرکزی صفحہ" : "Home"}
             </button>
             <span className="text-stone-300">/</span>
-            <span className={`text-[#245642] font-extrabold flex items-center gap-1.5 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
+            <span className={`text-theme-brand font-extrabold flex items-center gap-1.5 ${isUr ? "font-nastaliq leading-[2]" : ""}`}>
               <Scroll className="w-4 h-4 text-[#b45309]" />
               <span>{isUr ? "کتاب الوصایا (وصیت پورٹل)" : "Kitāb al-Waṣāyā • Sharia Will Portal"}</span>
             </span>
@@ -135,7 +135,7 @@ export function WasiyyahView() {
             <button
               type="button"
               onClick={() => setInternalLang(isUr ? "en" : "ur")}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#edf3e7] text-[#245642] text-xs font-bold border border-[#c4d4be] hover:bg-[#dce5d4] transition-all cursor-pointer shadow-2xs ${isUr ? "font-nastaliq leading-[2]" : ""}`}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-theme-chip text-theme-brand text-xs font-bold border border-theme-chip hover:bg-theme-chip transition-all cursor-pointer shadow-2xs ${isUr ? "font-nastaliq leading-[2]" : ""}`}
             >
               <Globe2 className="w-3.5 h-3.5" />
               <span>{isUr ? "English View" : "اردو منظر"}</span>
@@ -168,9 +168,9 @@ export function WasiyyahView() {
         {/* =========================================================================
             MAJESTIC HERO BANNER & SCRIPTURAL FOUNDATION
             ========================================================================= */}
-        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#164e3a] via-[#245642] to-[#0f2e21] text-white p-6 sm:p-10 md:p-12 shadow-2xl border-2 border-[#164e3a] text-center">
+        <div className="relative rounded-3xl overflow-hidden bg-theme-card-dark text-white p-6 sm:p-10 md:p-12 shadow-2xl border-2 border-theme-card-dark text-center">
           {/* Subtle Background Radial Radiance */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-400/15 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none" />
 
           <div className="relative z-10 max-w-4xl mx-auto space-y-6">
             {/* Top Seal Badge */}
@@ -1445,12 +1445,12 @@ export function WasiyyahView() {
         {/* =========================================================================
             BOTTOM LAUNCH TO CALCULATOR BANNER
             ========================================================================= */}
-        <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-[#245642] to-[#164e3a] text-white flex flex-col sm:flex-row items-center justify-between gap-5 shadow-xl">
+        <div className="p-6 sm:p-8 rounded-3xl bg-theme-card-dark text-white border-2 border-theme-card-dark flex flex-col sm:flex-row items-center justify-between gap-5 shadow-xl">
           <div className="space-y-1 text-center sm:text-start">
             <h3 className={`font-black text-xl sm:text-2xl ${isUr ? "font-nastaliq leading-[2]" : "font-serif"}`}>
               {isUr ? "اب شرعی وراثت کا اگلا مرحلہ حساب کریں" : "Ready to Calculate Statutory Blood Inheritance?"}
             </h3>
-            <p className="text-xs sm:text-sm text-emerald-200 font-nastaliq leading-[2.2]">
+            <p className="text-xs sm:text-sm text-theme-gold font-nastaliq leading-[2.2]">
               {isUr
                 ? "وصیت اور ادائے قرض کے تمام قواعد سمجھنے کے بعد، اب چند سیکنڈ میں اپنے خاندان کا درست شرعی حساب معلوم کریں۔"
                 : "Now that you understand testamentary bequests, calculate your family's exact Quranic shares."}
