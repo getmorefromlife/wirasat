@@ -1858,6 +1858,39 @@ export function calculateInheritance(
     );
   }
 
+  // Normalize percentage and fraction against the total Net Distributable Estate (or total allocated)
+  // so every heir's percentage accurately represents their portion of the full net estate (summing to 100%)
+  const totalAllocated = heirShares.reduce((sum, h) => sum + h.totalMonetaryShare, 0);
+  const baselineTotal = balanceSheet.netDistributableEstate > 0 ? balanceSheet.netDistributableEstate : totalAllocated;
+
+  if (baselineTotal > 0 && heirShares.length > 0) {
+    heirShares.forEach((h) => {
+      // 1. True percentage of total net estate
+      h.percentage = (h.totalMonetaryShare / baselineTotal) * 100;
+
+      // 2. If a spouse took a share, adjust fraction string to reflect true share of total estate
+      if (spouseTotalMoney > 0) {
+        const targetRatio = h.totalMonetaryShare / baselineTotal;
+        const denominators = [1, 2, 3, 4, 6, 8, 12, 16, 24, 32, 48, 64, 72, 96, 120, 144, 192, 288];
+        let bestFraction = null;
+
+        for (const den of denominators) {
+          const num = Math.round(targetRatio * den);
+          if (num > 0 && Math.abs(targetRatio - num / den) < 0.0001) {
+            bestFraction = formatFraction(num, den);
+            break;
+          }
+        }
+
+        if (bestFraction && bestFraction.num > 0) {
+          h.fractionNumerator = bestFraction.num;
+          h.fractionDenominator = bestFraction.den;
+          h.fractionString = bestFraction.str;
+        }
+      }
+    });
+  }
+
   return {
     balanceSheet,
     activeTier,

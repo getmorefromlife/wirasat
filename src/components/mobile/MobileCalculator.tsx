@@ -983,10 +983,10 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
           <div className="shrink-0">
             <div className="flex items-center gap-2 text-sm sm:text-base font-black text-theme-brand">
               <span className="w-3.5 h-3.5 rounded-full bg-theme-brand animate-pulse" />
-              <span>{totalPercentage.toFixed(0)}% {isUr ? "تقسیم" : "Distributed"}</span>
+              <span suppressHydrationWarning>{totalPercentage.toFixed(0)}% {isUr ? "تقسیم" : "Distributed"}</span>
             </div>
             <div className="text-sm sm:text-base text-[#0f172a] font-black mt-0.5">
-              <span>{currency} {formatNumber(netEstate)}</span>
+              <span suppressHydrationWarning>{currency} {formatNumber(netEstate)}</span>
             </div>
           </div>
 
