@@ -311,7 +311,9 @@ export function Navbar() {
                                 </span>
                               )}
                             </div>
-                            <p className="text-[11px] text-stone-500 dark:text-stone-400 leading-relaxed mt-0.5 line-clamp-1">
+                            <p className={`text-[11px] text-stone-500 dark:text-stone-400 mt-0.5 line-clamp-1 ${
+                              isUr ? "font-nastaliq leading-[2]" : "leading-relaxed"
+                            }`}>
                               {isUr ? item.descUr : item.descEn}
                             </p>
                           </div>

@@ -125,7 +125,9 @@ export const MobileResultSheet: React.FC<MobileResultSheetProps> = ({
                 <h3 className="font-black text-lg sm:text-xl text-stone-950 leading-tight">
                   {isUr ? "حتمی شرعی تقسیمِ ترکہ" : "Final Distribution Breakdown"}
                 </h3>
-                <p className="text-xs sm:text-sm font-bold text-stone-600 font-sans mt-0.5">
+                <p className={`text-xs sm:text-sm font-bold text-stone-600 mt-0.5 ${
+                  isUr ? "font-nastaliq leading-[2]" : "font-sans"
+                }`}>
                   {isUr
                     ? `فتویٰ مطابق: حضرت آیت اللہ ${deceased.marja.toUpperCase()}`
                     : `According to Ayatullah ${deceased.marja.toUpperCase()}`}
@@ -144,7 +146,7 @@ export const MobileResultSheet: React.FC<MobileResultSheetProps> = ({
         </div>
 
         {/* Scrollable Results Content */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-5 font-sans">
+        <div className={`flex-1 overflow-y-auto p-4 sm:p-5 space-y-5 ${isUr ? "font-nastaliq" : "font-sans"}`}>
           {/* Summary Card */}
           <div className="p-5 rounded-3xl bg-[#edf3e7] border-2 border-[#b8ccb0] flex items-center justify-between shadow-xs">
             <div>
@@ -265,7 +267,9 @@ export const MobileResultSheet: React.FC<MobileResultSheetProps> = ({
         </div>
 
         {/* Action Buttons Footer (Large Buttons) */}
-        <div className="p-4 sm:p-5 border-t-2 border-stone-200 bg-white flex gap-3.5 font-sans">
+        <div className={`p-4 sm:p-5 border-t-2 border-stone-200 bg-white flex gap-3.5 ${
+          isUr ? "font-nastaliq" : "font-sans"
+        }`}>
           <button
             onClick={handleCopySummary}
             className="flex-1 py-4 px-5 rounded-2xl bg-[#1b4332] hover:bg-[#122e23] text-white font-black text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-md border-2 border-[#0e271c] transition-transform active:scale-98 cursor-pointer"

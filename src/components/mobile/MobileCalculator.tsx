@@ -286,7 +286,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
           <WirasatLogo variant="navbar" color="emerald" language={language} />
         </div>
 
-        <div className="flex items-center gap-2.5 font-sans">
+        <div className="flex items-center gap-2.5">
           {/* Quick Reset */}
           <button
             onClick={() => {
@@ -321,7 +321,9 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
       <main className="max-w-lg mx-auto px-4 py-5 space-y-5">
         {/* Marja Selector (Solid Dark Green vs Crisp White with Black text) */}
         <div>
-          <label className="block text-xs sm:text-sm font-black uppercase tracking-wider text-[#0f172a] mb-2 px-1 font-sans">
+          <label className={`block text-xs sm:text-sm font-black uppercase tracking-wider text-[#0f172a] mb-2 px-1 ${
+            isUr ? "font-nastaliq" : "font-sans"
+          }`}>
             {isUr ? "مرجعِ تقلید کا انتخاب فرمائیں:" : "Select Marja‘ Rulings:"}
           </label>
           <div className="flex flex-col sm:flex-row gap-2">
@@ -382,7 +384,9 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
         {/* 3. Hero Estate Balance Card (Pure Solid Forest Background, Pure White Text & Bright Gold Highlight) */}
         <div className="p-6 rounded-3xl bg-[#0a241a] text-white shadow-xl space-y-5 border-3 border-[#164330]">
           <div className="flex items-center justify-between">
-            <span className="text-sm sm:text-base font-black uppercase tracking-wider text-white font-sans">
+            <span className={`text-sm sm:text-base font-black uppercase tracking-wider text-white ${
+              isUr ? "font-nastaliq text-lg" : "font-sans"
+            }`}>
               {isUr ? "کل ترکہ کی مالیت" : "Total Estate Value"}
             </span>
             <span className="text-xs sm:text-sm px-3.5 py-1 rounded-full bg-[#164330] border-2 border-[#2b6b50] text-[#fef08a] font-black font-sans">
@@ -404,7 +408,9 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                 className="w-full bg-transparent text-3xl sm:text-5xl font-black text-white placeholder-stone-400 outline-hidden font-sans tracking-tight"
               />
             </div>
-            <div className="text-xs sm:text-sm text-white font-medium font-sans px-1">
+            <div className={`text-xs sm:text-sm text-white font-medium px-1 ${
+              isUr ? "font-nastaliq leading-[2.2]" : "font-sans"
+            }`}>
               {isUr
                 ? "رقم پر ٹیپ کر کے تبدیل کریں یا نیچے دیے گئے بٹنز دبائیں"
                 : "Tap number to edit or tap quick addition chips below"}
@@ -431,7 +437,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
           </div>
 
           {/* Debts/Wasiyyah Section */}
-          <div className="pt-3 border-t-2 border-white/20 font-sans">
+          <div className={`pt-3 border-t-2 border-white/20 ${isUr ? "font-nastaliq" : "font-sans"}`}>
             <button
               onClick={() => setShowDebtsAccordion(!showDebtsAccordion)}
               className="w-full flex items-center justify-between text-xs sm:text-sm text-[#fef08a] font-black hover:text-white cursor-pointer py-1"
@@ -479,7 +485,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
         </div>
 
         {/* 4. Large Tactile Heir Counters (Pure White Cards, Black text, 56px Buttons) */}
-        <div className="space-y-4 font-sans">
+        <div className={`space-y-4 ${isUr ? "font-nastaliq" : "font-sans"}`}>
           <div className="flex items-center justify-between px-1">
             <h2 className="text-sm sm:text-base font-black uppercase tracking-wider text-[#0f172a]">
               {isUr ? "زندہ وارثین کا اندراج" : "Surviving Heirs Selection"}
@@ -970,7 +976,9 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
       </main>
 
       {/* 8. Sticky Bottom Floating CTA (High Contrast) */}
-      <div className="fixed bottom-0 inset-x-0 z-40 bg-white border-t-3 border-stone-400 p-4 shadow-2xl font-sans">
+      <div className={`fixed bottom-0 inset-x-0 z-40 bg-white border-t-3 border-stone-400 p-4 shadow-2xl ${
+        isUr ? "font-nastaliq" : "font-sans"
+      }`}>
         <div className="max-w-lg mx-auto flex items-center justify-between gap-4">
           <div className="shrink-0">
             <div className="flex items-center gap-2 text-sm sm:text-base font-black text-[#0a241a]">

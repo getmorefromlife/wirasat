@@ -343,6 +343,12 @@ body[dir="rtl"],
   font-family: 'Noto Nastaliq Urdu', 'Gulzar', serif !important;
 }
 
+/* Universally override Latin font classes on all child elements in RTL/Urdu mode */
+[dir="rtl"] :is(.font-sans, .font-cinzel, .font-jakarta, .font-inter, button, label, input, select, h1, h2, h3, h4, h5, h6, p, span, div, th, td, a, small, strong, b, summary, li, dt, dd):not(.font-naskh):not(.font-arabic):not([lang="ar"]):not([data-lang-preserve="en"]),
+[lang="ur"] :is(.font-sans, .font-cinzel, .font-jakarta, .font-inter, button, label, input, select, h1, h2, h3, h4, h5, h6, p, span, div, th, td, a, small, strong, b, summary, li, dt, dd):not(.font-naskh):not(.font-arabic):not([lang="ar"]):not([data-lang-preserve="en"]) {
+  font-family: 'Noto Nastaliq Urdu', 'Gulzar', serif !important;
+}
+
 /* Enforce strictly NO italics on Urdu text */
 [lang="ur"] em,
 [lang="ur"] i,
@@ -361,7 +367,7 @@ body[dir="rtl"],
   font-style: normal !important;
 }
 
-/* Sacred Quranic verses, Hadith and Arabic inscriptions */
+/* Sacred Quranic verses, Hadith and Arabic inscriptions strictly retain Naskh */
 .font-naskh,
 .font-arabic,
 [lang="ar"],

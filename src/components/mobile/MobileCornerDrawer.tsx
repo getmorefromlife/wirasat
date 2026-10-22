@@ -85,7 +85,7 @@ export const MobileCornerDrawer: React.FC<MobileCornerDrawerProps> = ({
         </div>
 
         {/* Links list */}
-        <div className="flex-1 p-4 sm:p-5 space-y-3 font-sans">
+        <div className={`flex-1 p-4 sm:p-5 space-y-3 ${isUr ? "font-nastaliq" : "font-sans"}`}>
           {/* Language Toggle Pill */}
           <button
             onClick={() => setLanguage(language === "en" ? "ur" : "en")}
@@ -135,7 +135,9 @@ export const MobileCornerDrawer: React.FC<MobileCornerDrawerProps> = ({
             </div>
           </div>
 
-          <div className="pt-2 pb-1 text-xs sm:text-sm font-black uppercase tracking-wider text-stone-700 px-2 font-sans">
+          <div className={`pt-2 pb-1 text-xs sm:text-sm font-black uppercase tracking-wider text-stone-700 px-2 ${
+            isUr ? "font-nastaliq text-base leading-[2]" : "font-sans"
+          }`}>
             {isUr ? "علمی و تربیتی سیکشن" : "Learning & Exploration"}
           </div>
 
@@ -152,7 +154,9 @@ export const MobileCornerDrawer: React.FC<MobileCornerDrawerProps> = ({
                 <div className="font-black text-base sm:text-lg text-stone-950 group-hover:text-[#1b4332]">
                   {isUr ? "وراثت اکیڈمی" : "Inheritance Academy"}
                 </div>
-                <div className="text-xs sm:text-sm text-stone-600 font-medium font-sans">
+                <div className={`text-xs sm:text-sm text-stone-600 font-medium ${
+                  isUr ? "font-nastaliq leading-[2]" : "font-sans"
+                }`}>
                   {isUr ? "مکمل فقہی کورس اور اسباق" : "Complete fiqh curriculum & course"}
                 </div>
               </div>
@@ -176,7 +180,9 @@ export const MobileCornerDrawer: React.FC<MobileCornerDrawerProps> = ({
                 <div className="font-black text-base sm:text-lg text-stone-950 group-hover:text-[#1b4332]">
                   {isUr ? "وصیت (Will) لکھنے کی گائیڈ" : "Wasiyyah Writing Guide"}
                 </div>
-                <div className="text-xs sm:text-sm text-stone-600 font-medium font-sans">
+                <div className={`text-xs sm:text-sm text-stone-600 font-medium ${
+                  isUr ? "font-nastaliq leading-[2]" : "font-sans"
+                }`}>
                   {isUr ? "شرعی و قانونی رہنما اصول" : "Sharia rules on 1/3 testament"}
                 </div>
               </div>
@@ -197,7 +203,9 @@ export const MobileCornerDrawer: React.FC<MobileCornerDrawerProps> = ({
                 <div className="font-black text-base sm:text-lg text-stone-950 group-hover:text-[#1b4332]">
                   {isUr ? "شجرۂ نسب (Family Tree)" : "Family Tree Visualizer"}
                 </div>
-                <div className="text-xs sm:text-sm text-stone-600 font-medium font-sans">
+                <div className={`text-xs sm:text-sm text-stone-600 font-medium ${
+                  isUr ? "font-nastaliq leading-[2]" : "font-sans"
+                }`}>
                   {isUr ? "خاندانی طبقات کی بصری تصویر" : "Kinship tiers and tree"}
                 </div>
               </div>
@@ -218,7 +226,9 @@ export const MobileCornerDrawer: React.FC<MobileCornerDrawerProps> = ({
                 <div className="font-black text-base sm:text-lg text-stone-950 group-hover:text-[#1b4332]">
                   {isUr ? "فقہی فرہنگ و لغت" : "Jurisprudential Lexicon"}
                 </div>
-                <div className="text-xs sm:text-sm text-stone-600 font-medium font-sans">
+                <div className={`text-xs sm:text-sm text-stone-600 font-medium ${
+                  isUr ? "font-nastaliq leading-[2]" : "font-sans"
+                }`}>
                   {isUr ? "حجب، تعصیب، عول کی اصطلاحات" : "Glossary of classical terms"}
                 </div>
               </div>
@@ -239,7 +249,9 @@ export const MobileCornerDrawer: React.FC<MobileCornerDrawerProps> = ({
                 <div className="font-black text-base sm:text-lg text-stone-950 group-hover:text-[#1b4332]">
                   {isUr ? "مراجع کا تقابلی میٹرکس" : "Marja‘ Comparison Matrix"}
                 </div>
-                <div className="text-xs sm:text-sm text-stone-600 font-medium font-sans">
+                <div className={`text-xs sm:text-sm text-stone-600 font-medium ${
+                  isUr ? "font-nastaliq leading-[2]" : "font-sans"
+                }`}>
                   {isUr ? "سیستانی، خامنہ ای، خوئی فتاویٰ" : "Side-by-side scholarly differences"}
                 </div>
               </div>
@@ -264,7 +276,9 @@ export const MobileCornerDrawer: React.FC<MobileCornerDrawerProps> = ({
                   <div className="font-black text-base sm:text-lg text-stone-950">
                     {isUr ? "مکمل ڈیسک ٹاپ موڈ" : "Full Desktop Mode"}
                   </div>
-                  <div className="text-xs sm:text-sm text-stone-600 font-medium font-sans">
+                  <div className={`text-xs sm:text-sm text-stone-600 font-medium ${
+                    isUr ? "font-nastaliq leading-[2]" : "font-sans"
+                  }`}>
                     {isUr ? "کلاسک 5 مرحلہ وار ویو دیکھیں" : "Switch to multi-step wizard"}
                   </div>
                 </div>
@@ -275,7 +289,7 @@ export const MobileCornerDrawer: React.FC<MobileCornerDrawerProps> = ({
         </div>
 
         {/* Footer Actions */}
-        <div className="p-5 border-t-2 border-stone-200 bg-white space-y-3 font-sans">
+        <div className={`p-5 border-t-2 border-stone-200 bg-white space-y-3 ${isUr ? "font-nastaliq" : "font-sans"}`}>
           <button
             onClick={() => {
               resetAll();

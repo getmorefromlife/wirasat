@@ -31,7 +31,10 @@ export const PillarCard: React.FC<PillarCardProps> = ({ pillar, language }) => {
   }[pillar.stage];
 
   return (
-    <article className="rounded-2xl border-2 border-[#245642]/25 bg-[#FAF8F5] dark:bg-[#0B1713] p-6 sm:p-8 shadow-md transition-all space-y-6 text-stone-900 dark:text-stone-100">
+    <article
+      id={`pillar-${pillar.pillarNumber}`}
+      className="scroll-mt-28 rounded-2xl border-2 border-[#245642]/25 bg-[#FAF8F5] dark:bg-[#0B1713] p-6 sm:p-8 shadow-md transition-all space-y-6 text-stone-900 dark:text-stone-100"
+    >
       {/* 1. PILLAR HEADER */}
       <header className="border-b border-[#245642]/20 pb-5 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3">

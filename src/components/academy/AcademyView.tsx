@@ -25,6 +25,7 @@ import {
   Compass,
 } from "lucide-react";
 import { WirasatLogo } from "@/components/ui/WirasatLogo";
+import { SmartReaderSuite, ReaderSection } from "@/components/ui/SmartReaderSuite";
 
 export const AcademyView: React.FC = () => {
   const { language, loadPreset, setActiveView } = useInheritanceStore();
@@ -38,6 +39,31 @@ export const AcademyView: React.FC = () => {
     if (selectedStage === "ALL") return true;
     return p.stage === selectedStage;
   });
+
+  const pillarSections: ReaderSection[] = MASTERCLASS_PILLARS.map((p) => ({
+    id: `pillar-${p.pillarNumber}`,
+    labelEn: `Pillar ${p.romanNumeral}: ${p.titleEn.split(":")[0]}`,
+    labelUr: `رکن ${p.pillarNumber}: ${p.titleUr.split(":")[0]}`,
+    badgeEn: `Stage ${p.stage === "FOUNDATIONS" ? "1" : p.stage === "DISTRIBUTION" ? "2" : "3"}`,
+    badgeUr: p.stage === "FOUNDATIONS" ? "مرحلہ ۱" : p.stage === "DISTRIBUTION" ? "مرحلہ ۲" : "مرحلہ ۳",
+  }));
+
+  const whyWeDifferSections: ReaderSection[] = [
+    {
+      id: "refutation-tasib",
+      labelEn: "1. Repudiation of Ta‘ṣīb",
+      labelUr: "۱. بطلانِ تعصیب (بیٹیوں کا تحفظ)",
+      badgeEn: "Surah Al-Ahzab 33:6",
+      badgeUr: "قرآنی دلائل",
+    },
+    {
+      id: "refutation-awl",
+      labelEn: "2. Repudiation of ‘Awl",
+      labelUr: "۲. بطلانِ عول (عدلِ امیرالمومنینؑ)",
+      badgeEn: "Wasā'il al-Shī'ah",
+      badgeUr: "خطبہ کوفہ",
+    },
+  ];
 
   return (
     <div className="academy-workspace max-w-6xl mx-auto px-4 py-8 space-y-8">
@@ -105,6 +131,30 @@ export const AcademyView: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Guided Smart Reader Suite for Masterclass & Fiqh Differences */}
+      {activeTab === "masterclass" && (
+        <SmartReaderSuite
+          titleEn="The 8-Pillar Masterclass"
+          titleUr="۸ ارکانِ شریعت وراثت"
+          sections={pillarSections}
+          language={language}
+          onSectionSelect={() => {
+            if (selectedStage !== "ALL") setSelectedStage("ALL");
+          }}
+          offsetY={110}
+        />
+      )}
+
+      {activeTab === "whyWeDiffer" && (
+        <SmartReaderSuite
+          titleEn="Why Ja‘fari Law Differs"
+          titleUr="فروقِ اساسی (ردِّ عول و تعصیب)"
+          sections={whyWeDifferSections}
+          language={language}
+          offsetY={110}
+        />
+      )}
 
       {/* VIEW 1: THE 8-PILLAR MASTERCLASS */}
       {activeTab === "masterclass" && (
@@ -177,7 +227,10 @@ export const AcademyView: React.FC = () => {
       {activeTab === "whyWeDiffer" && (
         <div className="space-y-8">
           {/* REFUTATION 1: BUTLAN AL-TA'SIB */}
-          <div className="p-6 sm:p-8 rounded-2xl bg-[#FAF8F5] dark:bg-[#0B1713] border-2 border-emerald-600/40 shadow-xl space-y-4 text-stone-900 dark:text-stone-100">
+          <div
+            id="refutation-tasib"
+            className="scroll-mt-28 p-6 sm:p-8 rounded-2xl bg-[#FAF8F5] dark:bg-[#0B1713] border-2 border-emerald-600/40 shadow-xl space-y-4 text-stone-900 dark:text-stone-100"
+          >
             <div className="flex items-center justify-between border-b border-[#245642]/20 pb-3">
               <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">
                 {isUr ? "بنیادی فقہی امتیاز #1" : "Foundational Distinction #1"}
@@ -245,7 +298,10 @@ export const AcademyView: React.FC = () => {
           </div>
 
           {/* REFUTATION 2: BUTLAN AL-'AWL */}
-          <div className="p-6 sm:p-8 rounded-2xl bg-[#FAF8F5] dark:bg-[#0B1713] border-2 border-amber-600/40 shadow-xl space-y-4 text-stone-900 dark:text-stone-100">
+          <div
+            id="refutation-awl"
+            className="scroll-mt-28 p-6 sm:p-8 rounded-2xl bg-[#FAF8F5] dark:bg-[#0B1713] border-2 border-amber-600/40 shadow-xl space-y-4 text-stone-900 dark:text-stone-100"
+          >
             <div className="flex items-center justify-between border-b border-amber-600/20 pb-3">
               <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300">
                 {isUr ? "بنیادی فقہی امتیاز #2" : "Foundational Distinction #2"}

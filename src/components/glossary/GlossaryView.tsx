@@ -30,6 +30,7 @@ import {
 import { useInheritanceStore } from "@/store/useInheritanceStore";
 import { MARJA_DATABASE } from "@/lib/marja-rules";
 import { MarjaId } from "@/types/fiqh";
+import { SmartReaderSuite, ReaderSection } from "@/components/ui/SmartReaderSuite";
 
 export function GlossaryView() {
   const {
@@ -62,10 +63,24 @@ export function GlossaryView() {
     }
   }, [selectedGlossaryTermId]);
 
+  const categoryOrder: GlossaryCategory[] = ["ESTATE", "TIERS", "DISTRIBUTION", "PLANNING", "IMPEDIMENTS"];
+
+  const glossaryCategorySections: ReaderSection[] = categoryOrder.map((catKey) => {
+    const meta = GLOSSARY_CATEGORIES[catKey];
+    const count = GLOSSARY_ITEMS.filter((i) => i.category === catKey).length;
+    return {
+      id: `category-anchor-${catKey.toLowerCase()}`,
+      labelEn: meta.en,
+      labelUr: meta.ur,
+      badgeEn: `${count} terms`,
+      badgeUr: `${count} اصطلاحات`,
+    };
+  });
+
   // Search filtering logic
   const filteredItems = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
-    return GLOSSARY_ITEMS.filter((item) => {
+    const items = GLOSSARY_ITEMS.filter((item) => {
       // Category filter
       if (selectedCategory !== "ALL" && item.category !== selectedCategory) {
         return false;
@@ -85,6 +100,17 @@ export function GlossaryView() {
         item.detailedExplanationUr.toLowerCase().includes(q)
       );
     });
+
+    // If viewing ALL categories with no search, sort grouped by categoryOrder
+    if (selectedCategory === "ALL" && !q) {
+      return [...items].sort((a, b) => {
+        const orderA = categoryOrder.indexOf(a.category);
+        const orderB = categoryOrder.indexOf(b.category);
+        return orderA - orderB;
+      });
+    }
+
+    return items;
   }, [searchQuery, selectedCategory]);
 
   const toggleExpand = (id: string) => {
@@ -143,6 +169,19 @@ export function GlossaryView() {
           <span className="font-mono">{GLOSSARY_ITEMS.length} {isUr ? "مفصل اصطلاحات" : "Essential Terms"}</span>
         </div>
       </div>
+
+      {/* Guided Smart Reader Suite for Lexicon Categories */}
+      <SmartReaderSuite
+        titleEn="Lexicon of Shia Inheritance Law"
+        titleUr="فرہنگِ اصطلاحاتِ وراثت"
+        sections={glossaryCategorySections}
+        language={language}
+        onSectionSelect={() => {
+          if (selectedCategory !== "ALL") setSelectedCategory("ALL");
+          if (searchQuery) setSearchQuery("");
+        }}
+        offsetY={120}
+      />
 
       {/* Sticky Search & Filtration Bar */}
       <div className="sticky top-4 z-30 bg-[#fafbf8]/95 backdrop-blur-md p-4 sm:p-5 rounded-3xl border border-[#d8e0d2] shadow-sm space-y-4">
@@ -260,29 +299,53 @@ export function GlossaryView() {
       )}
 
       {/* Glossary Cards Container */}
-      <div className="grid grid-cols-1 gap-5">
-        {filteredItems.map((item) => {
+      <div className="space-y-6">
+        {filteredItems.map((item, idx) => {
           const isExpanded = expandedCardId === item.id;
           const categoryMeta = GLOSSARY_CATEGORIES[item.category];
+          const isFirstInCategory =
+            selectedCategory === "ALL" &&
+            !searchQuery &&
+            (idx === 0 || filteredItems[idx - 1].category !== item.category);
 
           return (
-            <div
-              key={item.id}
-              ref={(el) => {
-                cardRefs.current[item.id] = el;
-              }}
-              id={`term-${item.id}`}
-              className={`rounded-3xl border transition-all duration-300 bg-white overflow-hidden shadow-xs hover:shadow-md ${
-                isExpanded
-                  ? "border-[#245642] ring-1 ring-[#245642]/20"
-                  : "border-[#d8e0d2] hover:border-[#a5b69d]"
-              }`}
-            >
-              {/* Card Header & Summary (Clickable to Expand) */}
+            <React.Fragment key={item.id}>
+              {isFirstInCategory && (
+                <div
+                  id={`category-anchor-${item.category.toLowerCase()}`}
+                  className="scroll-mt-32 pt-8 pb-3 border-b-2 border-[#245642]/20 flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-8 h-8 rounded-xl bg-[#245642] text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                      {categoryOrder.indexOf(item.category) + 1}
+                    </span>
+                    <h2 className="text-xl sm:text-2xl font-bold font-cinzel text-[#0A2118] dark:text-[#F0FDF4]">
+                      {isUr ? categoryMeta.ur : categoryMeta.en}
+                    </h2>
+                  </div>
+                  <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#edf3e7] text-[#245642] border border-[#a5b69d]/40">
+                    {filteredItems.filter((i) => i.category === item.category).length}{" "}
+                    {isUr ? "اصطلاحات" : "Terms"}
+                  </span>
+                </div>
+              )}
+
               <div
-                onClick={() => toggleExpand(item.id)}
-                className="p-5 sm:p-6 cursor-pointer select-none bg-gradient-to-b from-white to-[#fafbf8] transition-colors"
+                ref={(el) => {
+                  cardRefs.current[item.id] = el;
+                }}
+                id={`term-${item.id}`}
+                className={`scroll-mt-28 rounded-3xl border transition-all duration-300 bg-white overflow-hidden shadow-xs hover:shadow-md ${
+                  isExpanded
+                    ? "border-[#245642] ring-1 ring-[#245642]/20"
+                    : "border-[#d8e0d2] hover:border-[#a5b69d]"
+                }`}
               >
+                {/* Card Header & Summary (Clickable to Expand) */}
+                <div
+                  onClick={() => toggleExpand(item.id)}
+                  className="p-5 sm:p-6 cursor-pointer select-none bg-gradient-to-b from-white to-[#fafbf8] transition-colors"
+                >
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   {/* Left: Term Title & Metadata */}
                   <div className="space-y-1.5 flex-1">
@@ -504,8 +567,9 @@ export function GlossaryView() {
                 </div>
               )}
             </div>
-          );
-        })}
+          </React.Fragment>
+        );
+      })}
       </div>
 
       {/* Educational Footer Banner */}

@@ -46,6 +46,7 @@ import {
   WASIYYAH_CLASSIFICATIONS,
   INVALID_WASIYYAH_SIGNS,
 } from "@/lib/wasiyyah-db";
+import { SmartReaderSuite, ReaderSection } from "@/components/ui/SmartReaderSuite";
 
 export function WasiyyahView() {
   const { language, setLanguage, activeWasiyyahSection, deceased, getCalculationResult, setActiveView, setWizardStep } =
@@ -86,16 +87,16 @@ export function WasiyyahView() {
   const excessAmount = Math.max(0, willAmount - allowableAmount);
   const sacredInheritanceAmount = Math.max(0, baselineEstate - willAmount);
 
-  const navSections = [
-    { id: "overview", labelEn: "1. The 2 Categories", labelUr: "۱. وصیت کی ۲ اقسام" },
-    { id: "thuluth", labelEn: "2. 1/3rd Divine Ceiling", labelUr: "۲. ایک تہائی (ثلث) کی حد" },
-    { id: "rulings", labelEn: "3. 5 Legal Rulings", labelUr: "۳. الاحکام الخمسہ" },
-    { id: "pillars", labelEn: "4. The 4 Pillars Grid", labelUr: "۴. ارکانِ وصیت (۴ عناصر)" },
-    { id: "heir_bequest", labelEn: "5. Bequest to an Heir", labelUr: "۵. وارث کے حق میں وصیت" },
-    { id: "hierarchy", labelEn: "6. Priority Ladder", labelUr: "۶. تصفیاتی سیڑھی (ترتیب)" },
-    { id: "revocation", labelEn: "7. 3 Ways to Revoke", labelUr: "۷. منسوخی کے ۳ طریقے" },
-    { id: "invalid_signs", labelEn: "8. 8 Void Signs Matrix", labelUr: "۸. باطل وصیت کی ۸ علامات" },
-    { id: "executors", labelEn: "9. Executor & Guardian", labelUr: "۹. وصی و شرعی سرپرست" },
+  const navSections: ReaderSection[] = [
+    { id: "overview", labelEn: "1. The 2 Categories", labelUr: "۱. وصیت کی ۲ اقسام", badgeEn: "Ahdiyah & Tamlikiyah", badgeUr: "عہدیہ و تملیکیہ" },
+    { id: "thuluth", labelEn: "2. 1/3rd Divine Ceiling", labelUr: "۲. ایک تہائی (ثلث) کی حد", badgeEn: "Surah Al-Baqarah", badgeUr: "حدِ ثلث و قرآن" },
+    { id: "rulings", labelEn: "3. 5 Legal Rulings", labelUr: "۳. الاحکام الخمسہ", badgeEn: "Wajib, Mustahab, Haram...", badgeUr: "واجب، مستحب، حرام..." },
+    { id: "pillars", labelEn: "4. The 4 Pillars Grid", labelUr: "۴. ارکانِ وصیت (۴ عناصر)", badgeEn: "Musi, Musa-lahu...", badgeUr: "موصی، موصی لہ، موصی بہ..." },
+    { id: "heir_bequest", labelEn: "5. Bequest to an Heir", labelUr: "۵. وارث کے حق میں وصیت", badgeEn: "Valid in Shia Fiqh", badgeUr: "فقہ جعفری کا امتیاز" },
+    { id: "hierarchy", labelEn: "6. Priority Ladder", labelUr: "۶. تصفیاتی سیڑھی (ترتیب)", badgeEn: "Debts vs Bequests", badgeUr: "دیون، کفن و دفن، وصایا" },
+    { id: "revocation", labelEn: "7. 3 Ways to Revoke", labelUr: "۷. منسوخی کے ۳ طریقے", badgeEn: "Explicit & Action-based", badgeUr: "صریح و فعلی رجوع" },
+    { id: "invalid_signs", labelEn: "8. 8 Void Signs Matrix", labelUr: "۸. باطل وصیت کی ۸ علامات", badgeEn: "Nullification Triggers", badgeUr: "بطلان کے اسباب" },
+    { id: "executors", labelEn: "9. Executor & Guardian", labelUr: "۹. وصی و شرعی سرپرست", badgeEn: "Wasi & Qayyim Rules", badgeUr: "شرائطِ وصی و قیّم" },
   ];
 
   const scrollToSection = (id: string) => {
@@ -111,7 +112,7 @@ export function WasiyyahView() {
       dir={isUr ? "rtl" : "ltr"}
     >
       {/* =========================================================================
-          TOP BREADCRUMB & STICKY SUB-NAV ANCHOR BAR
+          TOP BREADCRUMB
           ========================================================================= */}
       <div className="w-full bg-white/95 backdrop-blur-md border-b border-[#e2e8f0] sticky top-0 z-30 shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
@@ -152,20 +153,16 @@ export function WasiyyahView() {
             </button>
           </div>
         </div>
-
-        {/* Horizontal Navigation Pills Bar (Centered on desktop, scrollable on mobile) */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 overflow-x-auto flex items-center justify-start sm:justify-center gap-2 border-t border-stone-100 no-scrollbar">
-          {navSections.map((sec) => (
-            <button
-              key={sec.id}
-              onClick={() => scrollToSection(sec.id)}
-              className={`px-3 py-1 rounded-lg text-xs font-bold whitespace-nowrap bg-stone-100 hover:bg-[#245642] text-stone-700 hover:text-white transition-all cursor-pointer border border-stone-200 ${isUr ? "font-nastaliq leading-[2]" : ""}`}
-            >
-              {isUr ? sec.labelUr : sec.labelEn}
-            </button>
-          ))}
-        </div>
       </div>
+
+      {/* Guided Smart Reader Suite (Progress Bar, Sticky Ribbon with Scroll-Spy & Quick Nav Companion) */}
+      <SmartReaderSuite
+        titleEn="Kitāb al-Waṣāyā • Sharia Will Portal"
+        titleUr="کتاب الوصایا • جامع شرعی رہنمائی"
+        sections={navSections}
+        language={internalLang}
+        offsetY={110}
+      />
 
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-8 space-y-14">
         {/* =========================================================================
