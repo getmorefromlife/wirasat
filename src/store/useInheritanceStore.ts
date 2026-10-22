@@ -430,7 +430,8 @@ export const useInheritanceStore = create<InheritanceState>()(
       },
 
       setFontStyle: (style) => set({ fontStyle: style }),
-      setActiveView: (view) => set({ activeView: view }),
+      setActiveView: (view) =>
+        set({ activeView: view, activeWasiyyahSection: null, wizardStep: view === "wizard" ? 1 : undefined, selectedGlossaryTermId: null }),
       setActiveVisualParadigm: (paradigm) => set({ activeVisualParadigm: paradigm }),
       setWizardStep: (step) => set({ wizardStep: step }),
       setCalculatorMode: (mode) => set({ calculatorMode: mode }),

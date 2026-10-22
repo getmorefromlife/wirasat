@@ -1,7 +1,7 @@
 export type MarjaId = 'sistani' | 'khamenei' | 'khoei' | 'makarem' | 'najafi';
 
 export type Language = 'en' | 'ur';
-export type Theme = 'emerald' | 'obsidian' | 'parchment';
+export type Theme = 'emerald' | 'lapis' | 'andalusia' | 'midnight' | 'obsidian' | 'parchment';
 export type FontScale = 'small' | 'normal' | 'large' | 'scholar';
 export type FontStyle = 'nastaliq' | 'naskh';
 

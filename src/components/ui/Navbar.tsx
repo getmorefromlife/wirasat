@@ -14,8 +14,11 @@ import {
   GraduationCap,
   Compass,
   ChevronDown,
+  Palette,
+  Check,
 } from "lucide-react";
 import { useInheritanceStore, type ViewTab } from "@/store/useInheritanceStore";
+import { type Theme } from "@/types/fiqh";
 import { WirasatLogo } from "@/components/ui/WirasatLogo";
 
 interface HubItem {
@@ -38,9 +41,11 @@ interface NavHub {
 }
 
 export function Navbar() {
-  const { language, activeView, setActiveView, setLanguage, fontScale } = useInheritanceStore();
+  const { language, activeView, setActiveView, setLanguage, fontScale, theme, setTheme } = useInheritanceStore();
   const [openHubId, setOpenHubId] = useState<string | null>(null);
+  const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
   const navContainerRef = useRef<HTMLDivElement>(null);
+  const themeDropdownRef = useRef<HTMLDivElement>(null);
 
   const isUr = language === "ur";
 
@@ -48,7 +53,8 @@ export function Navbar() {
     document.documentElement.dir = isUr ? "rtl" : "ltr";
     document.documentElement.lang = language;
     document.documentElement.setAttribute("data-font-scale", fontScale);
-  }, [language, fontScale, isUr]);
+    document.documentElement.setAttribute("data-theme", theme || "emerald");
+  }, [language, fontScale, isUr, theme]);
 
   // Click-outside and Escape key listener to close dropdowns smoothly
   useEffect(() => {
@@ -56,10 +62,14 @@ export function Navbar() {
       if (navContainerRef.current && !navContainerRef.current.contains(e.target as Node)) {
         setOpenHubId(null);
       }
+      if (themeDropdownRef.current && !themeDropdownRef.current.contains(e.target as Node)) {
+        setIsThemeMenuOpen(false);
+      }
     };
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setOpenHubId(null);
+        setIsThemeMenuOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -315,8 +325,109 @@ export function Navbar() {
           })}
         </nav>
 
-        {/* Right Actions: Language Switcher */}
-        <div className="nav-actions shrink-0">
+        {/* Right Actions: Theme & Language Switchers */}
+        <div className="nav-actions shrink-0 flex items-center gap-2">
+          {/* Theme Switcher Dropdown */}
+          <div className="relative" ref={themeDropdownRef}>
+            <button
+              type="button"
+              onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-white/80 dark:bg-stone-800/80 hover:bg-stone-100 text-xs font-bold text-stone-800 dark:text-stone-100 transition-colors shadow-2xs cursor-pointer"
+              aria-label="Change color theme"
+              title={isUr ? "رنگین تھیم تبدیل کریں" : "Change Color Theme"}
+            >
+              <Palette size={15} className="text-[var(--theme-gold)]" />
+              <span className="hidden sm:inline">
+                {theme === "lapis"
+                  ? (isUr ? "لاجوردی" : "Lapis")
+                  : theme === "andalusia"
+                  ? (isUr ? "اندلسی" : "Andalusia")
+                  : theme === "midnight" || theme === "obsidian"
+                  ? (isUr ? "شبِ تار" : "Midnight")
+                  : (isUr ? "زمرد" : "Emerald")}
+              </span>
+            </button>
+
+            {isThemeMenuOpen && (
+              <div
+                className={`absolute top-full mt-2 w-56 p-2 rounded-2xl bg-white/98 dark:bg-[#0E1E18]/98 backdrop-blur-xl border border-stone-200/90 dark:border-stone-700/80 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-150 space-y-1 ${
+                  isUr ? "left-0 text-right" : "right-0 text-left"
+                }`}
+              >
+                <div className="px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-stone-600 dark:text-stone-300">
+                  {isUr ? "پسندیدہ تھیم منتخب کریں" : "Select Color Mood"}
+                </div>
+                {[
+                  {
+                    id: "emerald" as Theme,
+                    titleEn: "Sacred Emerald",
+                    titleUr: "زمرد و طلا",
+                    dot: "#1b4332",
+                    descEn: "Regal green & warm gold",
+                    descUr: "شاہی سبز اور زریں نقوش",
+                  },
+                  {
+                    id: "lapis" as Theme,
+                    titleEn: "Samarkand Blue",
+                    titleUr: "لاجوردی و فیروزہ",
+                    dot: "#1d4ed8",
+                    descEn: "Royal sapphire & sky",
+                    descUr: "روشن نیلا اور فیروزی آب",
+                  },
+                  {
+                    id: "andalusia" as Theme,
+                    titleEn: "Andalusian Sand",
+                    titleUr: "اندلسی ریت",
+                    dot: "#9a3412",
+                    descEn: "Warm desert terracotta",
+                    descUr: "روایتی گرم ریت اور عنبری رنگ",
+                  },
+                  {
+                    id: "midnight" as Theme,
+                    titleEn: "Velvet Midnight",
+                    titleUr: "شبِ نیلگوں (ڈارک)",
+                    dot: "#0f1724",
+                    descEn: "Gilded starlight dark mode",
+                    descUr: "آنکھوں کے لیے آرام دہ سیاہ و زریں",
+                  },
+                ].map((t) => {
+                  const isCurrent = (theme || "emerald") === t.id;
+                  return (
+                    <button
+                      key={t.id}
+                      onClick={() => {
+                        setTheme(t.id);
+                        setIsThemeMenuOpen(false);
+                      }}
+                      className={`w-full p-2 rounded-xl flex items-center justify-between transition-all cursor-pointer text-start ${
+                        isCurrent
+                          ? "bg-[var(--theme-card-subtle)] text-[var(--theme-gold)] font-bold shadow-2xs"
+                          : "hover:bg-stone-50 dark:hover:bg-stone-800/60 text-stone-700 dark:text-stone-300"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <span
+                          className="w-3.5 h-3.5 rounded-full shrink-0 shadow-xs border border-black/10"
+                          style={{ backgroundColor: t.dot }}
+                        />
+                        <div className="min-w-0">
+                          <div className="text-xs font-bold leading-tight truncate">
+                            {isUr ? t.titleUr : t.titleEn}
+                          </div>
+                          <div className="text-[10px] opacity-70 truncate font-sans">
+                            {isUr ? t.descUr : t.descEn}
+                          </div>
+                        </div>
+                      </div>
+                      {isCurrent && <Check size={14} className="text-[var(--theme-gold)] shrink-0" />}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Language Switcher */}
           <button
             className="language-button flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-white/80 dark:bg-stone-800/80 hover:bg-stone-100 text-xs font-bold text-stone-800 dark:text-stone-100 transition-colors shadow-2xs cursor-pointer"
             onClick={() => setLanguage(language === "en" ? "ur" : "en")}

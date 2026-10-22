@@ -24,6 +24,12 @@ export default function Home() {
   const { activeView, setActiveView, language } = useInheritanceStore();
   const [forceDesktopOnMobile, setForceDesktopOnMobile] = React.useState(false);
 
+  // Scroll to top on every view change — prevents browser from preserving
+  // the previous page's scroll position when switching views in the SPA.
+  React.useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [activeView]);
+
   // Check if current view is a calculator/landing view
   const isCalculatorView = activeView === "home" || activeView === "wizard" || activeView === "dashboard";
 

@@ -14,7 +14,9 @@ import {
   ShieldCheck,
   ChevronRight,
   Globe2,
+  Palette,
 } from "lucide-react";
+import { type Theme } from "@/types/fiqh";
 
 interface MobileCornerDrawerProps {
   isOpen: boolean;
@@ -33,6 +35,8 @@ export const MobileCornerDrawer: React.FC<MobileCornerDrawerProps> = ({
     setActiveView,
     resetAll,
     openWasiyyahGuide,
+    theme,
+    setTheme,
   } = useInheritanceStore();
 
   const isUr = language === "ur";
@@ -95,6 +99,41 @@ export const MobileCornerDrawer: React.FC<MobileCornerDrawerProps> = ({
               {language === "ur" ? "اردو" : "EN"}
             </span>
           </button>
+
+          {/* Theme Selector Strip */}
+          <div className="p-3.5 rounded-2xl bg-white border-2 border-stone-200 space-y-2">
+            <div className="flex items-center gap-2 text-xs font-bold text-stone-700">
+              <Palette size={16} className="text-[var(--theme-gold)]" />
+              <span>{isUr ? "رنگین تھیم منتخب کریں:" : "Color Theme:"}</span>
+            </div>
+            <div className="grid grid-cols-2 gap-2 font-sans">
+              {[
+                { id: "emerald" as Theme, nameEn: "Emerald", nameUr: "زمرد و طلا", dot: "#1b4332" },
+                { id: "lapis" as Theme, nameEn: "Samarkand", nameUr: "لاجوردی", dot: "#1d4ed8" },
+                { id: "andalusia" as Theme, nameEn: "Andalusia", nameUr: "اندلسی", dot: "#9a3412" },
+                { id: "midnight" as Theme, nameEn: "Midnight", nameUr: "شبِ نیلگوں", dot: "#0f1724" },
+              ].map((t) => {
+                const isCurrent = (theme || "emerald") === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    onClick={() => setTheme(t.id)}
+                    className={`flex items-center gap-2 p-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
+                      isCurrent
+                        ? "bg-[#edf3e7] border-[var(--theme-gold)] text-[var(--theme-gold)] shadow-xs"
+                        : "border-stone-200 hover:bg-stone-50 text-stone-700"
+                    }`}
+                  >
+                    <span
+                      className="w-3 h-3 rounded-full shrink-0 border border-black/10"
+                      style={{ backgroundColor: t.dot }}
+                    />
+                    <span className="truncate">{isUr ? t.nameUr : t.nameEn}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
           <div className="pt-2 pb-1 text-xs sm:text-sm font-black uppercase tracking-wider text-stone-700 px-2 font-sans">
             {isUr ? "علمی و تربیتی سیکشن" : "Learning & Exploration"}
