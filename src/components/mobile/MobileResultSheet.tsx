@@ -11,7 +11,10 @@ import {
   Copy,
   Info,
   Check,
+  PieChart,
+  ChevronRight,
 } from "lucide-react";
+import { PlainStoryModal } from "@/components/modals/PlainStoryModal";
 
 interface MobileResultSheetProps {
   isOpen: boolean;
@@ -30,6 +33,7 @@ export const MobileResultSheet: React.FC<MobileResultSheetProps> = ({
   } = useInheritanceStore();
 
   const [copied, setCopied] = React.useState(false);
+  const [isStoryModalOpen, setIsStoryModalOpen] = React.useState(false);
   const isUr = language === "ur";
   const currency = deceased.currency || "PKR";
 
@@ -170,6 +174,30 @@ export const MobileResultSheet: React.FC<MobileResultSheetProps> = ({
             </div>
           </div>
 
+          {/* Plain Language Slices Story Banner */}
+          <button
+            type="button"
+            onClick={() => setIsStoryModalOpen(true)}
+            className="w-full p-4 rounded-3xl bg-linear-to-r from-amber-50 via-amber-100/70 to-amber-100 hover:from-amber-100 hover:to-amber-200 border-2 border-amber-300 text-amber-950 flex items-center justify-between gap-3 transition-all cursor-pointer shadow-sm text-start"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-amber-500 text-stone-950 flex items-center justify-center shrink-0 shadow-xs">
+                <PieChart size={20} />
+              </div>
+              <div>
+                <span className="text-xs font-black uppercase tracking-wider text-amber-900 block">
+                  {isUr ? "💡 عام فہم کہانی (The Slices Story)" : "💡 Why These Numbers? (Slices Story)"}
+                </span>
+                <span className="text-xs sm:text-sm font-bold text-stone-800 block mt-0.5">
+                  {isUr
+                    ? "کیک کے ٹکڑوں اور عام فہم انداز میں مکمل کہانی پڑھیں"
+                    : "Tap to read how every single fraction is formed step-by-step"}
+                </span>
+              </div>
+            </div>
+            <ChevronRight size={20} className="text-amber-800 rtl:rotate-180 shrink-0" />
+          </button>
+
           {/* Warning if Insolvent */}
           {isDeficit && (
             <div className="p-4 rounded-2xl bg-amber-50 border-2 border-amber-300 text-amber-950 text-sm font-bold flex items-center gap-3">
@@ -295,6 +323,15 @@ export const MobileResultSheet: React.FC<MobileResultSheetProps> = ({
           </button>
         </div>
       </div>
+
+      {/* Dynamic Slices Story Modal */}
+      <PlainStoryModal
+        isOpen={isStoryModalOpen}
+        onClose={() => setIsStoryModalOpen(false)}
+        result={result}
+        deceased={deceased}
+        initialLanguage={language}
+      />
     </div>
   );
 };

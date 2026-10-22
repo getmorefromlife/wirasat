@@ -16,7 +16,9 @@ import {
   Sliders,
   DollarSign,
   Info,
+  PieChart,
 } from "lucide-react";
+import { PlainStoryModal } from "@/components/modals/PlainStoryModal";
 
 interface Props {
   calculationResult: InheritanceCalculationResult;
@@ -66,6 +68,7 @@ export const SimpleDistributionInfographic: React.FC<Props> = ({
   // Interactive Live Pocket Calculator state
   const [customEstateAmount, setCustomEstateAmount] = useState<number>(netEstateOriginal);
   const [isLiveCalculatorActive, setIsLiveCalculatorActive] = useState<boolean>(false);
+  const [isStoryModalOpen, setIsStoryModalOpen] = useState<boolean>(false);
 
   // Active calculation base: either original net estate or custom calculator input
   const activeBaseAmount = isLiveCalculatorActive ? customEstateAmount : netEstateOriginal;
@@ -279,6 +282,33 @@ export const SimpleDistributionInfographic: React.FC<Props> = ({
         </div>
       </div>
 
+      {/* Dynamic Slices Story Interactive Callout Banner */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-linear-to-r from-amber-50 via-amber-100/70 to-amber-50 border-2 border-amber-300 text-amber-950 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
+        <div className="flex items-center gap-3.5">
+          <div className="w-11 h-11 rounded-2xl bg-amber-500 text-stone-950 flex items-center justify-center shrink-0 shadow-sm">
+            <PieChart className="w-6 h-6" />
+          </div>
+          <div>
+            <span className="text-xs font-black uppercase tracking-wider text-amber-900 block">
+              {isUr ? "💡 عام فہم کہانی (The Slices Story)" : "💡 Why These Numbers? (The Slices Story)"}
+            </span>
+            <p className="text-xs sm:text-sm font-semibold text-stone-800 mt-0.5">
+              {isUr
+                ? "جانیں کہ کیک کے کتنے ٹکڑے ہوئے، بیوہ اور بیٹی کا حصہ کیسے بنا اور ۱۰۰٪ تقسیم کیسے مکمل ہوئی۔"
+                : "Understand how the estate cake was cut, why each fraction was formed, and how 100% distribution is achieved."}
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setIsStoryModalOpen(true)}
+          className="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-stone-950 text-xs sm:text-sm font-black transition-all shadow-sm cursor-pointer whitespace-nowrap self-start sm:self-auto shrink-0 border border-amber-600"
+        >
+          {isUr ? "مکمل کہانی پڑھیں" : "Read Full Story"}
+        </button>
+      </div>
+
       {/* Itemized Heir Cards: Large, Plain Language, Zero Complexities */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
         {activeHeirs.map((h, idx) => {
@@ -367,6 +397,15 @@ export const SimpleDistributionInfographic: React.FC<Props> = ({
           );
         })}
       </div>
+
+      {/* Plain Language Slices Story Modal */}
+      <PlainStoryModal
+        isOpen={isStoryModalOpen}
+        onClose={() => setIsStoryModalOpen(false)}
+        result={calculationResult}
+        deceased={deceased}
+        initialLanguage={language}
+      />
     </div>
   );
 };

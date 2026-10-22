@@ -27,6 +27,7 @@ import { WirasatLogo } from "@/components/ui/WirasatLogo";
 import { ScenarioCaseStoryCard } from "@/components/wizard/ScenarioCaseStoryCard";
 import { SimpleDistributionInfographic } from "@/components/wizard/SimpleDistributionInfographic";
 import { WasiyyahLink } from "@/components/wasiyyah/WasiyyahLink";
+import { PlainStoryModal } from "@/components/modals/PlainStoryModal";
 
 export const Step5Results: React.FC = () => {
   const {
@@ -46,6 +47,7 @@ export const Step5Results: React.FC = () => {
 
   const [expandedProofId, setExpandedProofId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"simple" | "detailed" | "both">("both");
+  const [isStoryModalOpen, setIsStoryModalOpen] = useState(false);
 
   const toggleProof = (id: string) => {
     setExpandedProofId(expandedProofId === id ? null : id);
@@ -100,7 +102,16 @@ export const Step5Results: React.FC = () => {
         </div>
 
         {/* Quick Action Buttons */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            type="button"
+            onClick={() => setIsStoryModalOpen(true)}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-linear-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-stone-950 text-sm font-black shadow-md transition-all cursor-pointer border border-amber-600"
+          >
+            <Sparkles className="w-4 h-4 text-stone-950" />
+            <span>{language === "ur" ? "💡 آسان الفاظ میں کہانی (The Slices Story)" : "💡 Explain in Plain Words (Slices Story)"}</span>
+          </button>
+
           <button
             onClick={() => setActiveView("galaxy")}
             className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl sacred-card text-sm font-bold text-[var(--theme-gold)] hover:border-[var(--theme-gold)] transition-all shadow-sm"
@@ -787,6 +798,15 @@ export const Step5Results: React.FC = () => {
       )}
         </div>
       )}
+
+      {/* Dynamic Plain-Language Slices Story Modal */}
+      <PlainStoryModal
+        isOpen={isStoryModalOpen}
+        onClose={() => setIsStoryModalOpen(false)}
+        result={result}
+        deceased={deceased}
+        initialLanguage={language}
+      />
     </div>
   );
 };
