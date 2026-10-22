@@ -19,7 +19,7 @@ import {
 import { calculateInheritance } from "@/lib/fiqh-engine";
 import { SCENARIO_PRESETS } from "@/lib/scenarios";
 
-export type ViewTab = "home" | "wizard" | "dashboard" | "wasiyyah" | "tree" | "academy" | "matrix" | "visuals" | "galaxy" | "glossary" | "whiteboard";
+export type ViewTab = "home" | "wizard" | "dashboard" | "wasiyyah" | "tree" | "academy" | "matrix" | "visuals" | "galaxy" | "glossary" | "whiteboard" | "library";
 
 export interface InheritanceState {
   // App UI Controls
@@ -778,7 +778,7 @@ export const useInheritanceStore = create<InheritanceState>()(
       partialize: (state) => ({
         isSample: state.isSample,
         language: state.language,
-        theme: state.theme,
+        theme: "emerald" as const,
         activeDesignSystem: state.activeDesignSystem,
         fontScale: state.fontScale,
         fontStyle: state.fontStyle,
@@ -787,6 +787,12 @@ export const useInheritanceStore = create<InheritanceState>()(
         debts: state.debts,
         heirs: state.heirs,
       }),
+      onRehydrateStorage: () => (state) => {
+        if (state && typeof document !== "undefined") {
+          state.theme = "emerald";
+          document.documentElement.setAttribute("data-theme", "emerald");
+        }
+      },
     }
   )
 );

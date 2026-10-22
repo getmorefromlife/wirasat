@@ -13,6 +13,7 @@ import { GlossaryView } from "@/components/glossary/GlossaryView";
 import { ProvenanceDrawer } from "@/components/provenance/ProvenanceDrawer";
 import { WasiyyahGuideDrawer } from "@/components/wasiyyah/WasiyyahGuideDrawer";
 import { WasiyyahView } from "@/components/wasiyyah/WasiyyahView";
+import { LibraryView } from "@/components/library/LibraryView";
 import { Footer } from "@/components/layout/Footer";
 import { useInheritanceStore } from "@/store/useInheritanceStore";
 import { OnePageDashboard } from "@/components/dashboard/OnePageDashboard";
@@ -89,6 +90,7 @@ export default function Home() {
           {activeView === "whiteboard" && <KinshipWhiteboard />}
           {activeView === "galaxy" && <div className="max-w-7xl mx-auto px-4 py-6"><KinshipGalaxy /></div>}
           {activeView === "glossary" && <GlossaryView />}
+          {activeView === "library" && <LibraryView />}
         </main>
 
         {/* Sacred Footer with Scholarly Disclaimer */}

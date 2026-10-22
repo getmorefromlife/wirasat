@@ -15,6 +15,7 @@ import {
   ChevronRight,
   Globe2,
   Palette,
+  Library,
 } from "lucide-react";
 import { type Theme } from "@/types/fiqh";
 
@@ -100,46 +101,34 @@ export const MobileCornerDrawer: React.FC<MobileCornerDrawerProps> = ({
             </span>
           </button>
 
-          {/* Theme Selector Strip */}
-          <div className="p-3.5 rounded-2xl bg-white border-2 border-stone-200 space-y-2">
-            <div className="flex items-center gap-2 text-xs font-bold text-stone-700">
-              <Palette size={16} className="text-[var(--theme-gold)]" />
-              <span>{isUr ? "رنگین تھیم منتخب کریں:" : "Color Theme:"}</span>
-            </div>
-            <div className="grid grid-cols-2 gap-2 font-sans">
-              {[
-                { id: "emerald" as Theme, nameEn: "Al-Firdaws", nameUr: "جَنَّۃُ الفِردَوس", dot: "#047857" },
-                { id: "lapis" as Theme, nameEn: "Al-Kawthar", nameUr: "نَھرُ الکَوثَر", dot: "#1d4ed8" },
-                { id: "andalusia" as Theme, nameEn: "Salsabeel", nameUr: "عَینُ سَلسَبِیل", dot: "#c2410c" },
-                { id: "midnight" as Theme, nameEn: "Laylat al-Qadr", nameUr: "لَیلَۃُ القَدر", dot: "#0ea5e9" },
-              ].map((t) => {
-                const isCurrent = (theme || "emerald") === t.id;
-                return (
-                  <button
-                    key={t.id}
-                    onClick={() => setTheme(t.id)}
-                    className={`flex items-center gap-2 p-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
-                      isCurrent
-                        ? "bg-theme-chip border-theme-brand text-theme-brand shadow-xs font-black"
-                        : "border-stone-200 hover:bg-stone-50 text-stone-700"
-                    }`}
-                  >
-                    <span
-                      className="w-3 h-3 rounded-full shrink-0 border border-black/10"
-                      style={{ backgroundColor: t.dot }}
-                    />
-                    <span className="truncate">{isUr ? t.nameUr : t.nameEn}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
           <div className={`pt-2 pb-1 text-xs sm:text-sm font-black uppercase tracking-wider text-stone-700 px-2 ${
             isUr ? "font-nastaliq text-base leading-[2]" : "font-sans"
           }`}>
             {isUr ? "علمی و تربیتی سیکشن" : "Learning & Exploration"}
           </div>
+
+          {/* Scholarly Library & Books */}
+          <button
+            onClick={() => navigateTo("library")}
+            className="w-full flex items-center justify-between p-4 rounded-2xl bg-white border-2 border-stone-200 hover:border-[#1b4332] hover:bg-[#edf3e7]/50 transition-all text-left rtl:text-right shadow-xs cursor-pointer group"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-2xl bg-emerald-100 text-[#1b4332] flex items-center justify-center shrink-0 border border-emerald-200">
+                <Library size={22} className="stroke-[2.5]" />
+              </div>
+              <div>
+                <div className="font-black text-base sm:text-lg text-stone-950 group-hover:text-[#1b4332]">
+                  {isUr ? "کتب و مستند مآخذِ وراثت" : "Scholarly Library & Books"}
+                </div>
+                <div className={`text-xs sm:text-sm text-stone-600 font-medium ${
+                  isUr ? "font-nastaliq leading-[2]" : "font-sans"
+                }`}>
+                  {isUr ? "پی ڈی ایف کتب اور مراجع کے مصدقہ فتاویٰ" : "Downloadable PDFs & official Marāji‘ codes"}
+                </div>
+              </div>
+            </div>
+            <ChevronRight size={20} className="text-stone-400 rtl:rotate-180 stroke-[2.5]" />
+          </button>
 
           {/* Academy */}
           <button
