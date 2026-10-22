@@ -1,5 +1,7 @@
 # Interactive inheritance visuals
 
+For proposed teaching experiences and a prioritized learning roadmap, see [Inheritance learning ideas](./INHERITANCE-LEARNING-IDEAS.md).
+
 ## Recommended starting point: living family tree + estate flow
 
 Build two synchronized views of the same scenario: a living family tree explains relationships; an estate-flow view explains the amounts returned by the existing calculation engine. Selecting a relative highlights that relative in both views and opens an explanation panel. Editing survival, counts, jurisdiction, or estate inputs updates both views immediately.

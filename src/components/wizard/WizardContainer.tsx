@@ -44,14 +44,12 @@ export const WizardContainer: React.FC = () => {
   const t = TRANSLATIONS[language];
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
   const stepperRef = React.useRef<HTMLDivElement>(null);
-  const isFirstRender = React.useRef(true);
+  const previousStepRef = React.useRef(wizardStep);
 
-  // Automatically keep user anchored at the calculator whenever step changes
+  // Scroll only after a real step change, never on entry or an effect replay.
   React.useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
+    if (previousStepRef.current === wizardStep) return;
+    previousStepRef.current = wizardStep;
     const timer = setTimeout(() => {
       stepperRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 40);

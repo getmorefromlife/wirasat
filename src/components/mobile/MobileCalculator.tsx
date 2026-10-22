@@ -275,13 +275,13 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
 
   return (
     <div
-      className={`min-h-screen bg-[#f8fafc] text-[#0f172a] pb-36 ${
+      className={`sunlit-mobile min-h-screen bg-[#f8fafc] text-[#0f172a] pb-36 ${
         isUr ? "font-nastaliq" : "font-sans"
       }`}
       dir={isUr ? "rtl" : "ltr"}
     >
       {/* 1. Strict High-Contrast App Bar (Pure White background, Black text & icons) */}
-      <header className="sticky top-0 z-30 bg-white border-b-2 border-stone-300 px-4 py-3 flex items-center justify-between shadow-xs">
+      <header className="sticky top-0 z-30 bg-white border-b-2 border-stone-300 px-4 py-3 flex flex-wrap gap-3 items-center justify-between shadow-xs">
         <div className="flex items-center gap-2 scale-105 origin-left rtl:origin-right">
           <WirasatLogo variant="navbar" color="emerald" language={language} />
         </div>
@@ -349,7 +349,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
         </div>
 
         {/* Deceased Gender Switcher (Pure High Contrast) */}
-        <div className="p-4 rounded-3xl bg-white border-2 border-stone-300 shadow-xs flex items-center justify-between">
+        <div className="p-4 rounded-3xl bg-white border-2 border-stone-300 shadow-xs flex flex-wrap gap-3 items-center justify-between">
           <span className="text-sm sm:text-base font-black text-[#0f172a]">
             {isUr ? "مرحوم / مرحومہ کی جنس:" : "Deceased Gender:"}
           </span>
@@ -405,7 +405,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                 value={totalGrossAssets || ""}
                 onChange={(e) => handleTotalEstateChange(parseFloat(e.target.value) || 0)}
                 placeholder="0"
-                className="w-full bg-transparent text-3xl sm:text-5xl font-black text-white placeholder-stone-400 outline-hidden font-sans tracking-tight"
+                className="w-full min-w-0 bg-transparent text-3xl sm:text-5xl font-black text-white placeholder-stone-400 outline-hidden font-sans tracking-tight"
               />
             </div>
             <div className={`text-xs sm:text-sm text-white font-medium px-1 ${
