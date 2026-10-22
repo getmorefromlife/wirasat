@@ -44,35 +44,49 @@ In Ja‘farī jurisprudence, estate succession is governed by strict mathematica
 ## 🚀 Key Modules & Capabilities
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                               WIRASAT SUITE                                 │
-├───────────────────┬───────────────────┬───────────────────┬─────────────────┤
-│    CALCULATOR     │ KINSHIP STUDIO    │     ACADEMY       │  WASIYYAH HUB   │
-│  4-Step Wizard    │ Whiteboard Canvas │ 8-Pillar Master   │ Encyclopedia &  │
-│  Gross → Net      │ HD Kinship Trees  │ Case Studies      │ Will Generator  │
-│  Tanzil & Marja'  │ Sim Disaster Mode │ Quran & Hadith    │ Official PDF    │
-└───────────────────┴───────────────────┴───────────────────┴─────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────────────────┐
+│                                      WIRASAT SUITE                                      │
+├───────────────────┬───────────────────┬───────────────────┬──────────────┬──────────────┤
+│    CALCULATOR     │ KINSHIP STUDIO    │     ACADEMY       │ WASIYYAH HUB │  SCHOLARLY   │
+│  4-Step Wizard    │ Whiteboard Canvas │ 8-Pillar Master   │ Encyclopedia │   LIBRARY    │
+│  Gross → Net      │ HD Kinship Trees  │ Case Studies      │ & Generator  │ Master PDFs  │
+│  Tanzil & Slices  │ Sim Disaster Mode │ Quran & Hadith    │ Official PDF │ Maraji' Hub  │
+└───────────────────┴───────────────────┴───────────────────┴──────────────┴──────────────┘
 ```
 
-### 1. 🧮 Interactive 4-Step Inheritance Calculator
+### 1. 🧮 Interactive 4-Step Inheritance Calculator & Slices Story Engine
 - **Step 1: Estate & Purification:** Enter gross estate assets (cash, property, investments) and deduct customary burial (*Kafn wa Tajhīz*), debts, unpaid *Mahr*, religious liabilities (*Khums*), and testamentary wills (enforcing the strict 1/3rd ceiling).
 - **Step 2: Deceased Profile:** Set gender and legal attributes.
 - **Step 3: Spousal Setup:** Support for surviving husband or multiple wives (up to 4 permanent wives sharing the 1/8 or 1/4 share equally).
 - **Step 4: Relatives & Descendants:** Intuitive counters for parents, living sons, living daughters, and multi-tier grandchildren under *Tanzīl* with automated branch inheritance calculations.
+- **Plain-Language Slices Story Engine (حسابی تقسیم کی عام فہم وضاحت):** Real-world intuitive translation of mathematical fractions (e.g., explaining why a daughter gets 7/32 and a son gets 21/32 through an intuitive "32 equal slices" story, detailing the surviving spouse's Quranic 1/8 reserve and the remaining 7/8 split under the divine 2:1 ratio).
 - **Instant Result Sheet & Breakdown:** Detailed breakdown tables, visual share dials, interactive distribution charts, and printable Sharia distribution certificates.
 
-### 2. 📱 Modern Mobile-First Calculator
+### 2. 📚 Scholarly Library & Books Hub (کتب خانہ و مصادر)
+A verified digital repository under **Knowledge & Academy** featuring downloadable master texts and official Marāji‘ rulings:
+- **Direct Master PDF Access & In-Browser Reader:**
+  1. *Islāmī Qānūn-e-Virāsat* (`اسلامی قانونِ وراثت`) — Allamah Sayyid Ali Naqi Naqvi (*Naqqan Sahib*) [12.4 MB]
+  2. *Tawḍīḥ al-Masā'il Jāmi‘* (`توضیح المسائل جامع — بابِ وراثت`) — Grand Ayatollah Sayyid Ali al-Husayni al-Sistani [3.7 MB]
+  3. *Tawḍīḥ al-Masā'il* (`توضیح المسائل اسلامی احکام — بابِ میراث`) — Grand Ayatollah Sayyid Ali al-Khamenei [6.2 MB]
+- **Verified Official Marāji‘ Online Portals:**
+  - Grand Ayatollah Sistani's English Legal Code (*Inheritance & Wills*)
+  - Grand Ayatollah Sistani's Urdu Legal Code (*بابِ وراثت و ترکہ*)
+  - Grand Ayatollah Makarem Shirazi's Inheritance Rulings (*Al-Islam.org*)
+  - Canonical Hadith Source: *Kitāb al-Mawārīth* from *Al-Kāfī* (Shaykh al-Kulaynī)
+  - Classical Masterwork: *Sharā'i‘ al-Islām* (Al-Muḥaqqiq al-Ḥillī)
+
+### 3. 📱 Modern Mobile-First Calculator
 - Designed from the ground up for thumb-first usability on smartphones.
 - High-contrast accessible color palette, oversized tactile inputs (56px+ tap targets), and slide-up result sheets.
 - Instant toggle between simple overview, detailed math, and scholarly notes.
 
-### 3. 🎨 Kinship Whiteboard Studio (استودیو نسب)
+### 4. 🎨 Kinship Whiteboard Studio (استودیو نسب)
 - A generative family tree canvas with customizable node relationships.
 - Real-time simulation of living heirs, deceased parents, and representation branches.
 - **Full HD Canvas Export:** High-resolution export of the complete family diagram for legal documentation and family archives.
 - **Simultaneous Catastrophe Simulation (*Al-Gharqā wa al-Hadmā*):** Simulating plane crashes or building collapses where the sequence of death is unknown, demonstrating bilateral cross-succession without circular looping.
 
-### 4. 🏛️ 8-Pillar Masterclass Academy (دَائِرَةُ التَّعْلِيمِ وَحِكْمَةُ الْفَرَائِض)
+### 5. 🏛️ 8-Pillar Masterclass Academy (دَائِرَةُ التَّعْلِيمِ وَحِكْمَةُ الْفَرَائِض)
 A comprehensive curriculum covering the 8 doctrinal pillars of Ja‘farī inheritance:
 - **Pillar I:** Estate Purification Waterfall (Gross vs. Net Estate)
 - **Pillar II:** Dual Grounds of Title (*Al-Sabab* vs. *Al-Nasab*)
@@ -84,10 +98,14 @@ A comprehensive curriculum covering the 8 doctrinal pillars of Ja‘farī inheri
 - **Pillar VIII:** Complex Succession Events (Unborn Fetus Escrow, Simultaneous Disasters, *Munāsakhāt*)
 - **Practical Real-World Case Studies (عملی فقہی مثال و تجزیہ):** Every pillar includes an audited numerical case study with step-by-step juridical resolution in both English and Urdu Nastaleeq.
 
-### 5. 📜 Encyclopedic Wasiyyah (Islamic Will) Guide & Generator
+### 6. 📜 Encyclopedic Wasiyyah (Islamic Will) Guide & Generator
 - **Comprehensive Visual Guide:** The Sharia rules of testamentary wills, executor duties, and debt precedence.
 - **Centered Qur'anic Framing:** Majestic calligraphy of Surah An-Nisā’ (4:11) and Surah Al-Baqarah (2:180) with centered Nastaleeq translations.
 - **Customized Testamentary Will Generator:** Generates legally structured, religiously validated wills ready for notarization and distribution.
+
+### 7. 🕌 Jannat al-Firdaws Design System
+- **Sacred Royal Emerald & Persian Saffron Gold:** Deep jewel-tone emerald green (`#065f46`) balanced with radiant saffron gold (`#b45309`, `#f59e0b`) and pure crisp porcelain white card surfaces (`#ffffff`).
+- **Typography & Directionality:** Native Noto Nastaliq Urdu with bidirectional RTL/LTR layout stability, crisp hierarchy, and zero color dilution.
 
 ---
 
