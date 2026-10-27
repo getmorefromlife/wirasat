@@ -1130,3 +1130,54 @@ body{margin:0;} .site-header button,.hero-actions button{border:0;font-family:in
 .whiteboard-node-inspector{max-height:88vh;}.whiteboard-node-inspector>div:first-child{flex-shrink:0;}.whiteboard-node-inspector>div:last-child{min-height:0;}
 .kinship-whiteboard-studio:fullscreen .whiteboard-node-inspector{max-height:calc(100vh - 160px);}
 @media(max-width:900px){.whiteboard-node-inspector{position:absolute;top:0;bottom:0;inset-inline-end:0;width:min(352px,94vw);max-height:none;}}
+
+/* Whiteboard: Floating Glass HUD & Smooth Zoom Slider */
+.whiteboard-zoom-hud {
+  box-shadow: 0 10px 30px -4px rgba(27, 77, 62, 0.16), 0 4px 12px -2px rgba(27, 77, 62, 0.08);
+}
+.whiteboard-zoom-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 9999px;
+  outline: none;
+  cursor: pointer;
+}
+.whiteboard-zoom-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #245642;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.28);
+  cursor: grab;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+.whiteboard-zoom-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.22);
+  background: #193c2b;
+}
+.whiteboard-zoom-slider::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.35);
+}
+.whiteboard-zoom-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #245642;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.28);
+  cursor: grab;
+}
+.dark .whiteboard-zoom-slider::-webkit-slider-thumb {
+  background: #10b981;
+  border-color: #064e3b;
+}
+.dark .whiteboard-zoom-slider::-moz-range-thumb {
+  background: #10b981;
+  border-color: #064e3b;
+}
+

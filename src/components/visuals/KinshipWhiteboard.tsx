@@ -29,6 +29,7 @@ import {
   Compass,
   Zap,
   LayoutGrid,
+  Target,
 } from "lucide-react";
 import { useInheritanceStore } from "@/store/useInheritanceStore";
 import { calculateInheritance, calculateBalanceSheet } from "@/lib/fiqh-engine";
@@ -394,13 +395,42 @@ export function KinshipWhiteboard() {
   // Canvas Reference for export
   const canvasRef = useRef<HTMLDivElement>(null);
 
+  // Smooth Center-Anchored Zoom Function
+  const setZoomAnchored = useCallback(
+    (newZoomVal: number | ((prev: number) => number), focal?: { x: number; y: number }) => {
+      setZoom((prevZoom) => {
+        const targetZoom = typeof newZoomVal === "function" ? newZoomVal(prevZoom) : newZoomVal;
+        const clampedZoom = Math.min(2.0, Math.max(0.3, Number(targetZoom.toFixed(2))));
+        if (Math.abs(clampedZoom - prevZoom) < 0.001) return prevZoom;
+
+        const surface = canvasRef.current;
+        if (surface) {
+          const rect = surface.getBoundingClientRect();
+          const fx = focal ? focal.x - rect.left : surface.clientWidth / 2;
+          const fy = focal ? focal.y - rect.top : surface.clientHeight / 2;
+
+          setPan((prevPan) => {
+            const canvasX = (fx - prevPan.x) / prevZoom;
+            const canvasY = (fy - prevPan.y) / prevZoom;
+            return {
+              x: Math.round(fx - canvasX * clampedZoom),
+              y: Math.round(fy - canvasY * clampedZoom),
+            };
+          });
+        }
+        return clampedZoom;
+      });
+    },
+    []
+  );
+
   const frameBoard = (candidate: WhiteboardNode[]) => {
     const surface=canvasRef.current;
     if(!surface || !candidate.length)return;
     const minX=Math.min(...candidate.map(n=>n.x))-140, maxX=Math.max(...candidate.map(n=>n.x))+140;
     const minY=Math.min(...candidate.map(n=>n.y))-110, maxY=Math.max(...candidate.map(n=>n.y))+190;
-    const scale=Math.min(1,Math.max(.85,Math.min(surface.clientWidth/(maxX-minX+60),surface.clientHeight/(maxY-minY+60))));
-    setZoom(scale);
+    const scale=Math.min(1.1,Math.max(.35,Math.min(surface.clientWidth/(maxX-minX+60),surface.clientHeight/(maxY-minY+60))));
+    setZoom(Number(scale.toFixed(2)));
     setPan({x:(surface.clientWidth-(maxX-minX)*scale)/2-minX*scale,y:(surface.clientHeight-(maxY-minY)*scale)/2-minY*scale});
   };
   useEffect(() => { frameBoard(nodesRef.current); }, []);
@@ -484,9 +514,9 @@ export function KinshipWhiteboard() {
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
       if (e.ctrlKey || e.metaKey) {
-        // Pinch-to-zoom or Ctrl+wheel zoom
-        const zoomDelta = e.deltaY < 0 ? 0.08 : -0.08;
-        setZoom((z) => Math.min(2.0, Math.max(0.4, Number((z + zoomDelta).toFixed(2)))));
+        // Pinch-to-zoom or Ctrl+wheel zoom anchored to cursor
+        const zoomDelta = e.deltaY < 0 ? 0.05 : -0.05;
+        setZoomAnchored((z) => z + zoomDelta, { x: e.clientX, y: e.clientY });
       } else {
         // Two-finger trackpad panning or mouse wheel pan
         setPan((p) => ({
@@ -500,7 +530,7 @@ export function KinshipWhiteboard() {
     return () => {
       canvasEl.removeEventListener("wheel", handleWheel);
     };
-  }, []);
+  }, [setZoomAnchored]);
 
   /* -------------------------------------------------------------------------
      NODE POSITION DRAGGING & PANNING HANDLERS
@@ -609,6 +639,19 @@ export function KinshipWhiteboard() {
     const surface=canvasRef.current;
     if(surface) setPan({x:surface.clientWidth/2-person.x*zoom,y:surface.clientHeight/2-person.y*zoom});
   };
+
+  const focusOnPerson = useCallback(
+    (person: WhiteboardNode) => {
+      const surface = canvasRef.current;
+      if (surface) {
+        setPan({
+          x: Math.round(surface.clientWidth / 2 - person.x * zoom),
+          y: Math.round(surface.clientHeight / 2 - (person.y + 60) * zoom),
+        });
+      }
+    },
+    [zoom]
+  );
 
   /* -------------------------------------------------------------------------
      FIQH ENGINE REAL-TIME CALCULATION INTEGRATION
@@ -1154,21 +1197,27 @@ export function KinshipWhiteboard() {
 
           {/* Zoom Out */}
           <button
-            onClick={() => setZoom((z) => Math.max(0.4, Number((z - 0.1).toFixed(2))))}
-            className="p-1.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 hover:bg-stone-50 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-200 cursor-pointer transition-colors"
+            onClick={() => setZoomAnchored((z) => z - 0.1)}
+            disabled={zoom <= 0.3}
+            className="p-1.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 hover:bg-stone-50 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-200 cursor-pointer transition-colors disabled:opacity-40"
             title="Zoom Out"
           >
             <Minus size={14} />
           </button>
 
-          <span className="text-xs font-semibold w-8 text-center text-stone-600 dark:text-stone-400">
+          <button
+            onClick={() => setZoomAnchored(1.0)}
+            className="text-xs font-semibold w-10 text-center text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 transition-colors cursor-pointer"
+            title={isUr ? "100% پر ری سیٹ کریں" : "Reset to 100%"}
+          >
             {Math.round(zoom * 100)}%
-          </span>
+          </button>
 
           {/* Zoom In */}
           <button
-            onClick={() => setZoom((z) => Math.min(2.0, Number((z + 0.1).toFixed(2))))}
-            className="p-1.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 hover:bg-stone-50 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-200 cursor-pointer transition-colors"
+            onClick={() => setZoomAnchored((z) => z + 0.1)}
+            disabled={zoom >= 2.0}
+            className="p-1.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 hover:bg-stone-50 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-200 cursor-pointer transition-colors disabled:opacity-40"
             title="Zoom In"
           >
             <Plus size={14} />
@@ -1176,12 +1225,9 @@ export function KinshipWhiteboard() {
 
           {/* Reset Zoom */}
           <button
-            onClick={() => {
-              setZoom(1);
-              setPan({ x: 40, y: 30 });
-            }}
+            onClick={() => frameBoard(nodesRef.current)}
             className="p-1.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 hover:bg-stone-50 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-200 cursor-pointer transition-colors"
-            title="Reset View"
+            title={isUr ? "خاکہ اسکرین پر فٹ کریں" : "Fit Family to View"}
           >
             <RotateCcw size={14} />
           </button>
@@ -1488,6 +1534,94 @@ export function KinshipWhiteboard() {
             })}
           </div>
 
+          {/* Floating Glass HUD Pill for Smooth Zoom Controls */}
+          <div
+            className="whiteboard-zoom-hud absolute bottom-5 start-5 z-20 flex items-center gap-2 px-3 py-2 rounded-2xl bg-white/92 dark:bg-[#10241b]/95 backdrop-blur-md border border-stone-200/80 dark:border-emerald-800/60 select-none transition-all duration-200 shadow-xl"
+            onMouseDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+            role="toolbar"
+            aria-label={isUr ? "زوم کنٹرولز" : "Zoom controls"}
+          >
+            {/* Zoom Out Button */}
+            <button
+              type="button"
+              onClick={() => setZoomAnchored((z) => z - 0.1)}
+              disabled={zoom <= 0.3}
+              className="w-8 h-8 rounded-xl flex items-center justify-center text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-emerald-900/50 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
+              title={isUr ? "زوم آؤٹ (−10%)" : "Zoom Out (−10%)"}
+              aria-label={isUr ? "زوم آؤٹ" : "Zoom Out"}
+            >
+              <Minus size={15} strokeWidth={2.5} />
+            </button>
+
+            {/* Smooth Zoom Slider */}
+            <div className="relative flex items-center group">
+              <input
+                type="range"
+                min="30"
+                max="200"
+                step="1"
+                value={Math.round(zoom * 100)}
+                onChange={(e) => setZoomAnchored(Number(e.target.value) / 100)}
+                className="whiteboard-zoom-slider w-24 sm:w-28 h-1.5 rounded-full"
+                style={{
+                  background: `linear-gradient(to right, #245642 0%, #245642 ${
+                    ((zoom - 0.3) / (2.0 - 0.3)) * 100
+                  }%, #e5e7eb ${((zoom - 0.3) / (2.0 - 0.3)) * 100}%, #e5e7eb 100%)`,
+                }}
+                aria-label={isUr ? "زوم لیول سلائیڈر" : "Zoom level slider"}
+              />
+            </div>
+
+            {/* Zoom In Button */}
+            <button
+              type="button"
+              onClick={() => setZoomAnchored((z) => z + 0.1)}
+              disabled={zoom >= 2.0}
+              className="w-8 h-8 rounded-xl flex items-center justify-center text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-emerald-900/50 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
+              title={isUr ? "زوم ان (+10%)" : "Zoom In (+10%)"}
+              aria-label={isUr ? "زوم ان" : "Zoom In"}
+            >
+              <Plus size={15} strokeWidth={2.5} />
+            </button>
+
+            <div className="h-4 w-px bg-stone-300/80 dark:bg-stone-700 mx-0.5" />
+
+            {/* Zoom Percentage Badge (Click to reset to 100%) */}
+            <button
+              type="button"
+              onClick={() => setZoomAnchored(1.0)}
+              className="px-2 py-1 rounded-lg text-xs font-bold text-stone-700 dark:text-emerald-300 hover:bg-stone-100 dark:hover:bg-emerald-900/40 active:scale-95 transition-all cursor-pointer min-w-12 text-center"
+              title={isUr ? "100% پر ری سیٹ کریں" : "Click to reset to 100%"}
+            >
+              {Math.round(zoom * 100)}%
+            </button>
+
+            <div className="h-4 w-px bg-stone-300/80 dark:bg-stone-700 mx-0.5" />
+
+            {/* Fit Family (Fit to View) Button */}
+            <button
+              type="button"
+              onClick={() => frameBoard(nodesRef.current)}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-[#1b4d3e] dark:text-emerald-300 bg-emerald-50/80 dark:bg-emerald-950/60 hover:bg-emerald-100/90 dark:hover:bg-emerald-900/60 active:scale-95 border border-emerald-600/20 transition-all cursor-pointer"
+              title={isUr ? "پورا خاندان اسکرین پر فٹ کریں" : "Fit all family members to screen"}
+            >
+              <Maximize2 size={13} strokeWidth={2.2} />
+              <span className="hidden sm:inline">{isUr ? "مکمل خاکہ" : "Fit"}</span>
+            </button>
+
+            {/* Center Selected Relative (if selected) */}
+            {selectedNode && (
+              <button
+                type="button"
+                onClick={() => focusOnPerson(selectedNode)}
+                className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 active:scale-95 transition-all cursor-pointer"
+                title={isUr ? `اس فرد (${selectedNode.nameUr || selectedNode.relation}) پر فوکس کریں` : `Focus on ${selectedNode.nameEn || selectedNode.relation}`}
+              >
+                <Target size={13} strokeWidth={2.2} className="text-[#245642] dark:text-emerald-400" />
+              </button>
+            )}
+          </div>
         </div>
 
         {/* -------------------------------------------------------------------
