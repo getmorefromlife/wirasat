@@ -1130,6 +1130,8 @@ body{margin:0;} .site-header button,.hero-actions button{border:0;font-family:in
 .whiteboard-node-inspector{max-height:88vh;}.whiteboard-node-inspector>div:first-child{flex-shrink:0;}.whiteboard-node-inspector>div:last-child{min-height:0;}
 .kinship-whiteboard-studio:fullscreen .whiteboard-node-inspector{max-height:calc(100vh - 160px);}
 @media(max-width:900px){.whiteboard-node-inspector{position:absolute;top:0;bottom:0;inset-inline-end:0;width:min(352px,94vw);max-height:none;}}
+@media(max-width:768px){.whiteboard-explanation-drawer{position:absolute!important;top:0;bottom:0;inset-inline-end:0;width:min(440px,96vw)!important;max-height:none;}}
+
 
 /* Whiteboard: Floating Glass HUD & Smooth Zoom Slider */
 .whiteboard-zoom-hud {

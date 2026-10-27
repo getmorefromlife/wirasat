@@ -78,7 +78,7 @@ export function WhiteboardExplanationDrawer({
 
   return (
     <div
-      className="whiteboard-explanation-drawer fixed sm:absolute top-0 bottom-0 inset-inline-end-0 w-full sm:w-[440px] md:w-[480px] bg-white dark:bg-[#0c1a14] border-l border-stone-200 dark:border-emerald-900/60 shadow-[-12px_0_35px_rgba(0,0,0,0.18)] z-50 flex flex-col transition-all duration-300 select-text"
+      className="whiteboard-explanation-drawer w-full sm:w-[440px] md:w-[480px] shrink-0 border-l border-stone-200 dark:border-emerald-900/60 bg-white dark:bg-[#0c1a14] z-30 flex flex-col shadow-2xl transition-all duration-300 select-text"
       role="region"
       aria-label={isUr ? "شرعی رہنمائی و حسابی آڈٹ" : "Shariah & Mathematical Audit"}
     >

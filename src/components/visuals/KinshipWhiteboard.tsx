@@ -438,6 +438,14 @@ export function KinshipWhiteboard() {
   };
   useEffect(() => { frameBoard(nodesRef.current); }, []);
 
+  // Automatically re-center and frame family visual on the side whenever explanation drawer or inspector toggles
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      frameBoard(nodesRef.current);
+    }, 80);
+    return () => clearTimeout(timer);
+  }, [isExplanationOpen, inspectorOpen]);
+
   // Toggle Full HD with native fullscreen + CSS fallback
   const toggleFullHD = async () => {
     const nextState = !isFullHD;
@@ -1925,7 +1933,10 @@ export function KinshipWhiteboard() {
         {/* Live Shariah & Mathematical Audit Explanation Drawer */}
         <WhiteboardExplanationDrawer
           isOpen={isExplanationOpen}
-          onClose={() => setIsExplanationOpen(false)}
+          onClose={() => {
+            setIsExplanationOpen(false);
+            if (selectedNodeId) setInspectorOpen(true);
+          }}
           calculationData={calculationData}
           family={family}
           nodes={nodes}
