@@ -30,9 +30,11 @@ import {
   Zap,
   LayoutGrid,
   Target,
+  BookOpen,
 } from "lucide-react";
 import { useInheritanceStore } from "@/store/useInheritanceStore";
 import { calculateInheritance, calculateBalanceSheet } from "@/lib/fiqh-engine";
+import { WhiteboardExplanationDrawer } from "./WhiteboardExplanationDrawer";
 import { PersonNode, WifeProfile, HeirsInput, DeceasedInfo, EstateAssets, EstateDebts, BranchCalculationResult } from "@/types/fiqh";
 import html2canvas from "html2canvas";
 
@@ -391,6 +393,7 @@ export function KinshipWhiteboard() {
 
   // Inspector Open State
   const [inspectorOpen, setInspectorOpen] = useState<boolean>(true);
+  const [isExplanationOpen, setIsExplanationOpen] = useState<boolean>(false);
 
   // Canvas Reference for export
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -1234,7 +1237,10 @@ export function KinshipWhiteboard() {
 
           {/* Inspector Toggle */}
           <button
-            onClick={() => setInspectorOpen(!inspectorOpen)}
+            onClick={() => {
+              setInspectorOpen(!inspectorOpen);
+              if (!inspectorOpen) setIsExplanationOpen(false);
+            }}
             className={`p-1.5 rounded-lg border text-xs font-bold cursor-pointer transition-colors ${
               inspectorOpen
                 ? "bg-[#245642] text-white border-[#245642]"
@@ -1243,6 +1249,26 @@ export function KinshipWhiteboard() {
             title={isUr ? "تفصیلات کا پینل کھولیں/بند کریں" : "Toggle Inspector Panel"}
           >
             <Sliders size={14} />
+          </button>
+
+          {/* Shariah & Math Audit Explanation Drawer Toggle */}
+          <button
+            onClick={() => {
+              setIsExplanationOpen(!isExplanationOpen);
+              if (!isExplanationOpen) setInspectorOpen(false);
+            }}
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-bold cursor-pointer transition-all shadow-2xs whitespace-nowrap ${
+              isExplanationOpen
+                ? "bg-[#1b4d3e] text-amber-200 border-[#1b4d3e] shadow-md ring-2 ring-emerald-600/30"
+                : "border-emerald-600/30 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-[#1b4d3e] dark:text-emerald-300"
+            }`}
+            title={isUr ? "شرعی رہنمائی و حسابی آڈٹ پینل کھولیں/بند کریں" : "Toggle Live Shariah & Math Explanatory Drawer"}
+          >
+            <BookOpen size={14} className={isExplanationOpen ? "text-amber-300" : "text-[#1b4d3e] dark:text-emerald-300"} />
+            <span>{isUr ? "شرعی حساب و رہنمائی" : "Fiqh Audit"}</span>
+            {calculationData?.calcResult && (
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            )}
           </button>
 
           {/* Snapshot PNG */}
@@ -1621,6 +1647,26 @@ export function KinshipWhiteboard() {
                 <Target size={13} strokeWidth={2.2} className="text-[#245642] dark:text-emerald-400" />
               </button>
             )}
+
+            <div className="h-4 w-px bg-stone-300/80 dark:bg-stone-700 mx-0.5" />
+
+            {/* Quick Live Fiqh Audit Drawer Button */}
+            <button
+              type="button"
+              onClick={() => {
+                setIsExplanationOpen(!isExplanationOpen);
+                if (!isExplanationOpen) setInspectorOpen(false);
+              }}
+              className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
+                isExplanationOpen
+                  ? "bg-[#245642] text-white border-[#245642] shadow-xs"
+                  : "text-stone-700 dark:text-emerald-300 hover:bg-stone-100 dark:hover:bg-emerald-900/40 border-stone-200/80 dark:border-emerald-800/40"
+              }`}
+              title={isUr ? "شرعی رہنمائی و حسابی آڈٹ" : "Live Fiqh Audit"}
+            >
+              <BookOpen size={13} strokeWidth={2.2} />
+              <span className="hidden md:inline">{isUr ? "شرعی آڈٹ" : "Audit"}</span>
+            </button>
           </div>
         </div>
 
@@ -1875,6 +1921,22 @@ export function KinshipWhiteboard() {
             </div>
           </div>
         )}
+
+        {/* Live Shariah & Mathematical Audit Explanation Drawer */}
+        <WhiteboardExplanationDrawer
+          isOpen={isExplanationOpen}
+          onClose={() => setIsExplanationOpen(false)}
+          calculationData={calculationData}
+          family={family}
+          nodes={nodes}
+          isUr={isUr}
+          currency={planningInfo.currency}
+          estateSubjectName={
+            isUr
+              ? family.subject?.nameUr || family.subject?.relation
+              : family.subject?.nameEn || family.subject?.relation
+          }
+        />
       </div>
 
           {/* Tanzīl Quick Status Ribbon - Positioned away from inspector in both LTR and RTL */}
