@@ -31,7 +31,7 @@ import {
   LayoutGrid,
 } from "lucide-react";
 import { useInheritanceStore } from "@/store/useInheritanceStore";
-import { calculateInheritance, calculateNamedTanzilBranches, calculateBalanceSheet } from "@/lib/fiqh-engine";
+import { calculateInheritance, calculateBalanceSheet } from "@/lib/fiqh-engine";
 import { PersonNode, WifeProfile, HeirsInput, DeceasedInfo, EstateAssets, EstateDebts, BranchCalculationResult } from "@/types/fiqh";
 import html2canvas from "html2canvas";
 
@@ -39,34 +39,8 @@ import html2canvas from "html2canvas";
    TYPES & INTERFACES FOR WHITEBOARD
    ========================================================================= */
 
-export type WhiteboardRelation =
-  | "DECEASED"
-  | "SPOUSE"
-  | "FATHER"
-  | "MOTHER"
-  | "SON"
-  | "DAUGHTER"
-  | "GRANDCHILD";
-
-export interface WhiteboardNode {
-  id: string;
-  nameEn: string;
-  nameUr: string;
-  gender: "MALE" | "FEMALE";
-  relation: WhiteboardRelation;
-  isAlive: boolean;
-  parentId?: string; // Direct parent in tree
-  spouseOfId?: string; // Links wife/husband to deceased
-  x: number;
-  y: number;
-  customAvatar?: string; // User-selected or preset avatar path
-  // Specific attributes
-  unpaidMahr?: number; // For wives
-  impediments?: {
-    isKiller: boolean;
-    isNonMuslim: boolean;
-  };
-}
+export type { WhiteboardRelation, WhiteboardNode } from "@/lib/whiteboard-model";
+import { type WhiteboardNode, type WhiteboardError, type AddRelativeType, WHITEBOARD_ERRORS, validateWhiteboard, getAddRelativeError, createWhiteboardRelative, editWhiteboardPerson, removeWhiteboardPerson, projectWhiteboardFamily, arrangeWhiteboard } from "@/lib/whiteboard-model";
 
 export const AVATAR_OPTIONS = [
   { id: "father", src: "/images/avatars/father.jpeg", labelEn: "Father / Elder Male", labelUr: "والد / بزرگ مرد" },
@@ -361,7 +335,7 @@ const INITIAL_NODES_SIMULTANEOUS_ACCIDENT: WhiteboardNode[] = [
    ========================================================================= */
 
 export function KinshipWhiteboard() {
-  const { language, assets, debts, updateAssets, updateDebts, updateHeirs } = useInheritanceStore();
+  const { language, assets, debts, deceased: planningInfo, updateDeceased, updateAssets, updateDebts, updateHeirs } = useInheritanceStore();
   const isUr = language === "ur";
 
   // Canvas Viewport State
@@ -371,7 +345,24 @@ export function KinshipWhiteboard() {
   const [panStart, setPanStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
   // Nodes & Selection
-  const [nodes, setNodes] = useState<WhiteboardNode[]>(INITIAL_NODES_4_CHILDREN);
+  const [nodes, setNodes] = useState<WhiteboardNode[]>(() => arrangeWhiteboard(INITIAL_NODES_4_CHILDREN));
+  const [estateSubjectId, setEstateSubjectId] = useState("deceased-root");
+  const [deletedSnapshot, setDeletedSnapshot] = useState<WhiteboardNode[] | null>(null);
+  const family = useMemo(() => projectWhiteboardFamily(nodes, estateSubjectId), [nodes, estateSubjectId]);
+  const nodesRef = useRef(nodes);
+  nodesRef.current = nodes;
+  const [relationshipError, setRelationshipError] = useState<WhiteboardError | null>(null);
+  const errorMessage = (error: WhiteboardError) => WHITEBOARD_ERRORS[error][isUr ? "ur" : "en"];
+  const replaceNodes = (candidate: WhiteboardNode[]) => {
+    const error = validateWhiteboard(candidate);
+    setRelationshipError(error);
+    if (error) return false;
+    if (!candidate.some(n => n.id === estateSubjectId)) setEstateSubjectId(candidate.find(n => n.relation === "DECEASED")!.id);
+    nodesRef.current = candidate;
+    setDeletedSnapshot(null);
+    setNodes(candidate);
+    return true;
+  };
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>("deceased-root");
   const [draggingNodeId, setDraggingNodeId] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -402,6 +393,17 @@ export function KinshipWhiteboard() {
 
   // Canvas Reference for export
   const canvasRef = useRef<HTMLDivElement>(null);
+
+  const frameBoard = (candidate: WhiteboardNode[]) => {
+    const surface=canvasRef.current;
+    if(!surface || !candidate.length)return;
+    const minX=Math.min(...candidate.map(n=>n.x))-140, maxX=Math.max(...candidate.map(n=>n.x))+140;
+    const minY=Math.min(...candidate.map(n=>n.y))-110, maxY=Math.max(...candidate.map(n=>n.y))+190;
+    const scale=Math.min(1,Math.max(.85,Math.min(surface.clientWidth/(maxX-minX+60),surface.clientHeight/(maxY-minY+60))));
+    setZoom(scale);
+    setPan({x:(surface.clientWidth-(maxX-minX)*scale)/2-minX*scale,y:(surface.clientHeight-(maxY-minY)*scale)/2-minY*scale});
+  };
+  useEffect(() => { frameBoard(nodesRef.current); }, []);
 
   // Toggle Full HD with native fullscreen + CSS fallback
   const toggleFullHD = async () => {
@@ -576,73 +578,36 @@ export function KinshipWhiteboard() {
      ADDING NODES FROM INTERACTIVE HANDLES (+)
      ------------------------------------------------------------------------- */
 
-  const addRelativeNode = (targetNodeId: string, type: "parent" | "child" | "spouse") => {
-    const parent = nodes.find((n) => n.id === targetNodeId);
-    if (!parent) return;
-
-    const newId = `node-${Date.now()}`;
-    let newNode: WhiteboardNode;
-
-    if (type === "parent") {
-      const isFather = !nodes.some((n) => n.relation === "FATHER");
-      newNode = {
-        id: newId,
-        nameEn: isFather ? "Father" : "Mother",
-        nameUr: isFather ? "والد صاحب" : "والدہ محترمہ",
-        gender: isFather ? "MALE" : "FEMALE",
-        relation: isFather ? "FATHER" : "MOTHER",
-        isAlive: true,
-        x: parent.x + (isFather ? -90 : 90),
-        y: Math.max(50, parent.y - 140),
-      };
-    } else if (type === "spouse") {
-      const isWife = parent.gender === "MALE";
-      newNode = {
-        id: newId,
-        nameEn: isWife ? "Wife" : "Husband",
-        nameUr: isWife ? "زوجہ (بیوی)" : "شوہر",
-        gender: isWife ? "FEMALE" : "MALE",
-        relation: "SPOUSE",
-        isAlive: true,
-        spouseOfId: parent.id,
-        unpaidMahr: 0,
-        x: parent.x + 180,
-        y: parent.y,
-      };
-    } else {
-      // Child or Grandchild
-      const isDirectChild = parent.relation === "DECEASED" || parent.relation === "SPOUSE";
-      const siblingCount = nodes.filter((n) => n.parentId === targetNodeId).length;
-      newNode = {
-        id: newId,
-        nameEn: isDirectChild ? (siblingCount % 2 === 0 ? "Son" : "Daughter") : "Grandchild",
-        nameUr: isDirectChild
-          ? siblingCount % 2 === 0
-            ? "بیٹا"
-            : "بیٹی"
-          : parent.gender === "MALE"
-          ? "پوتا / پوتی"
-          : "نواسہ / نواسی",
-        gender: siblingCount % 2 === 0 ? "MALE" : "FEMALE",
-        relation: isDirectChild ? (siblingCount % 2 === 0 ? "SON" : "DAUGHTER") : "GRANDCHILD",
-        isAlive: true,
-        parentId: targetNodeId,
-        x: parent.x - 90 + siblingCount * 120,
-        y: parent.y + 160,
-      };
+  const addRelativeNode = (targetNodeId: string, type: AddRelativeType) => {
+    const created = createWhiteboardRelative(nodesRef.current, targetNodeId, type, `node-${crypto.randomUUID()}`);
+    if (created.error || !created.node) {
+      setRelationshipError(created.error || "missing-person");
+      return;
     }
-
-    setNodes((prev) => [...prev, newNode]);
-    setSelectedNodeId(newId);
-    setInspectorOpen(true);
+    if (replaceNodes(arrangeWhiteboard([...nodesRef.current, created.node]))) {
+      setSelectedNodeId(created.node.id);
+      setInspectorOpen(true);
+    }
   };
 
   const deleteNode = (nodeId: string) => {
-    if (nodeId === "deceased-root") return; // cannot delete root deceased
-    setNodes((prev) => prev.filter((n) => n.id !== nodeId && n.parentId !== nodeId));
-    if (selectedNodeId === nodeId) {
-      setSelectedNodeId("deceased-root");
+    if (nodeId === estateSubjectId || nodesRef.current.find(n => n.id === nodeId)?.relation === "DECEASED") return;
+    const snapshot = nodesRef.current;
+    const candidate = removeWhiteboardPerson(snapshot, nodeId);
+    if (candidate.some(n => n.id === estateSubjectId) && replaceNodes(candidate) && !candidate.some(n => n.id === selectedNodeId)) {
+      setSelectedNodeId(estateSubjectId);
     }
+    if (candidate.some(n => n.id === estateSubjectId)) setDeletedSnapshot(snapshot);
+  };
+
+  const exploreEstate = (nodeId: string) => {
+    const edited = editWhiteboardPerson(nodesRef.current, nodeId, {isAlive:false});
+    if (edited.error || !replaceNodes(edited.nodes)) return;
+    setEstateSubjectId(nodeId);
+    setSelectedNodeId(nodeId);
+    const person=edited.nodes.find(n=>n.id === nodeId)!;
+    const surface=canvasRef.current;
+    if(surface) setPan({x:surface.clientWidth/2-person.x*zoom,y:surface.clientHeight/2-person.y*zoom});
   };
 
   /* -------------------------------------------------------------------------
@@ -650,14 +615,14 @@ export function KinshipWhiteboard() {
      ------------------------------------------------------------------------- */
 
   const calculationData = useMemo(() => {
-    const root = nodes.find((n) => n.relation === "DECEASED") || nodes[0];
+    const root = family.subject;
     if (!root) return null;
 
     const deceasedInfo: DeceasedInfo = {
       gender: root.gender === "MALE" ? "male" : "female",
       name: isUr ? root.nameUr : root.nameEn,
-      currency: "PKR",
-      marja: "sistani",
+      currency: planningInfo.currency,
+      marja: planningInfo.marja,
       hasEldestSon: false,
       eldestSonIsSaneAndNonAqq: false,
       habwah: {
@@ -685,8 +650,8 @@ export function KinshipWhiteboard() {
     };
 
     // Calculate pending mahr from wives
-    const wivesList: WifeProfile[] = nodes
-      .filter((n) => n.relation === "SPOUSE" && n.gender === "FEMALE")
+    const wivesList: WifeProfile[] = family.spouses
+      .filter((n) => n.gender === "FEMALE")
       .map((w) => ({
         id: w.id,
         name: isUr ? w.nameUr : w.nameEn,
@@ -710,18 +675,16 @@ export function KinshipWhiteboard() {
 
     // Build Named Descendants Tree for Tanzīl
     const namedDescendants: PersonNode[] = [];
-    const directChildren = nodes.filter(
-      (n) => (n.relation === "SON" || n.relation === "DAUGHTER") && (n.parentId === root.id || !n.parentId)
-    );
+    const directChildren = family.children;
 
     directChildren.forEach((child) => {
-      const grandchildren = nodes.filter((gc) => gc.relation === "GRANDCHILD" && gc.parentId === child.id);
+      const grandchildren = family.grandchildren.get(child.id) || [];
       const childNode: PersonNode = {
         id: child.id,
         name: isUr ? child.nameUr : child.nameEn,
         gender: child.gender,
         isAlive: child.isAlive,
-        relation: child.relation as "SON" | "DAUGHTER",
+        relation: child.gender === "MALE" ? "SON" : "DAUGHTER",
         impediments: {
           isKiller: child.impediments?.isKiller || false,
           isNonMuslim: child.impediments?.isNonMuslim || false,
@@ -745,40 +708,54 @@ export function KinshipWhiteboard() {
     });
 
     // Check parents
-    const fatherNode = nodes.find((n) => n.relation === "FATHER");
-    const motherNode = nodes.find((n) => n.relation === "MOTHER");
+    const fatherNode = family.parents.find(n=>n.gender === "MALE");
+    const motherNode = family.parents.find(n=>n.gender === "FEMALE");
 
+    const eligible = (n: WhiteboardNode) => n.isAlive && !n.impediments?.isKiller && !n.impediments?.isNonMuslim;
+    const countRole = (role: string) => nodes.filter(n=>family.roles.get(n.id) === role && eligible(n)).length;
     const heirsInput: HeirsInput = {
       wives: wivesList,
-      spouseCount: wivesList.filter((w) => w.isAlive).length,
+      spouseCount: root.gender === "MALE" ? wivesList.filter((w) => w.isAlive).length : family.spouses.filter(n => n.gender === "MALE" && n.isAlive && !n.impediments?.isKiller && !n.impediments?.isNonMuslim).length,
       fatherAlive: !!(fatherNode && fatherNode.isAlive && !fatherNode.impediments?.isKiller && !fatherNode.impediments?.isNonMuslim),
       fatherImpediment: !!(fatherNode?.impediments?.isKiller || fatherNode?.impediments?.isNonMuslim),
       motherAlive: !!(motherNode && motherNode.isAlive && !motherNode.impediments?.isKiller && !motherNode.impediments?.isNonMuslim),
       motherImpediment: !!(motherNode?.impediments?.isKiller || motherNode?.impediments?.isNonMuslim),
-      sonsCount: directChildren.filter((c) => c.relation === "SON" && c.isAlive && !c.impediments?.isKiller && !c.impediments?.isNonMuslim).length,
-      daughtersCount: directChildren.filter((c) => c.relation === "DAUGHTER" && c.isAlive && !c.impediments?.isKiller && !c.impediments?.isNonMuslim).length,
+      sonsCount: directChildren.filter((c) => c.gender === "MALE" && c.isAlive && !c.impediments?.isKiller && !c.impediments?.isNonMuslim).length,
+      daughtersCount: directChildren.filter((c) => c.gender === "FEMALE" && c.isAlive && !c.impediments?.isKiller && !c.impediments?.isNonMuslim).length,
       deceasedSonsWithChildren: [],
       deceasedDaughtersWithChildren: [],
       namedDescendants,
-      paternalGrandfatherAlive: false,
-      paternalGrandmotherAlive: false,
-      maternalGrandfatherAlive: false,
-      maternalGrandmotherAlive: false,
-      fullBrothersCount: 0,
-      fullSistersCount: 0,
-      paternalBrothersCount: 0,
-      paternalSistersCount: 0,
-      uterineBrothersCount: 0,
-      uterineSistersCount: 0,
+      childrenList: namedDescendants.map(child => ({
+        id: child.id,
+        name: child.name,
+        gender: child.gender,
+        isAlive: child.isAlive,
+        impediments: { isKiller: Boolean(child.impediments?.isKiller), isNonMuslim: Boolean(child.impediments?.isNonMuslim), isLian: false },
+        children: (child.children || []).map(gc => ({
+          id: gc.id, name: gc.name, gender: gc.gender, isAlive: gc.isAlive,
+          parentGender: child.gender, parentChildId: child.id,
+          impediments: { isKiller: Boolean(gc.impediments?.isKiller), isNonMuslim: Boolean(gc.impediments?.isNonMuslim), isLian: false },
+        })),
+      })),
+      paternalGrandfatherAlive: countRole("PATERNAL_GRANDFATHER") > 0,
+      paternalGrandmotherAlive: countRole("PATERNAL_GRANDMOTHER") > 0,
+      maternalGrandfatherAlive: countRole("MATERNAL_GRANDFATHER") > 0,
+      maternalGrandmotherAlive: countRole("MATERNAL_GRANDMOTHER") > 0,
+      fullBrothersCount: countRole("FULL_BROTHER"),
+      fullSistersCount: countRole("FULL_SISTER"),
+      paternalBrothersCount: countRole("PATERNAL_BROTHER"),
+      paternalSistersCount: countRole("PATERNAL_SISTER"),
+      uterineBrothersCount: countRole("MATERNAL_BROTHER"),
+      uterineSistersCount: countRole("MATERNAL_SISTER"),
       deceasedSiblingsChildren: [],
       motherBlockingBrothers: 0,
       motherBlockingSisters: 0,
-      paternalUnclesCount: 0,
-      paternalAuntsCount: 0,
-      maternalUnclesCount: 0,
-      maternalAuntsCount: 0,
-      paternalCousinsCount: 0,
-      maternalCousinsCount: 0,
+      paternalUnclesCount: countRole("PATERNAL_UNCLE"),
+      paternalAuntsCount: countRole("PATERNAL_AUNT"),
+      maternalUnclesCount: countRole("MATERNAL_UNCLE"),
+      maternalAuntsCount: countRole("MATERNAL_AUNT"),
+      paternalCousinsCount: countRole("PATERNAL_COUSIN"),
+      maternalCousinsCount: countRole("MATERNAL_COUSIN"),
     };
 
     const calcResult = calculateInheritance(deceasedInfo, currentAssets, currentDebts, heirsInput);
@@ -789,23 +766,21 @@ export function KinshipWhiteboard() {
       (c) => c.isAlive && !c.impediments?.isKiller && !c.impediments?.isNonMuslim
     ).length;
 
-    const tanzilOutput = calculateNamedTanzilBranches(
-      namedDescendants,
-      balanceSheet.netDistributableEstate,
-      balanceSheet.netDistributableEstate,
-      "PKR"
-    );
+    const tanzilOutput = {branchResults: calcResult.branchResults || []};
 
     return {
+      ready: family.unresolvedIds.size === 0,
+      deceasedInfo,
+      heirsInput,
       calcResult,
       balanceSheet,
       tanzilOutput,
       livingDirectCount,
-      isTanzilActive: livingDirectCount === 0 && namedDescendants.some((c) => !c.isAlive && (c.children?.length || 0) > 0),
+      isTanzilActive: livingDirectCount === 0 && namedDescendants.some((c) => !c.isAlive && c.children?.some(gc => gc.isAlive && !gc.impediments?.isKiller && !gc.impediments?.isNonMuslim)),
       isGrossZero,
       canvasEstateGross,
     };
-  }, [nodes, canvasEstateGross, debts, isUr]);
+  }, [nodes, family, canvasEstateGross, debts, isUr, planningInfo.currency, planningInfo.marja]);
 
   /* -------------------------------------------------------------------------
      CONNECTIONS & BEZIER CURVE GENERATION
@@ -831,7 +806,7 @@ export function KinshipWhiteboard() {
         const parentNode = nodes.find((n) => n.id === node.parentId);
         if (parentNode) {
           // If node is grandchild
-          if (node.relation === "GRANDCHILD") {
+          if (family.roles.get(node.id) === "GRANDCHILD") {
             const isBlockedByLivingChild = (calculationData?.livingDirectCount || 0) > 0;
             list.push({
               id: `conn-gc-${node.id}`,
@@ -850,12 +825,16 @@ export function KinshipWhiteboard() {
         }
       }
 
+      if (node.secondParentId) {
+        list.push({id:`conn-second-parent-${node.id}`,fromId:node.secondParentId,toId:node.id,type:"parent-child"});
+      }
+
       // Father/Mother to Root
       if ((node.relation === "FATHER" || node.relation === "MOTHER") && root) {
         list.push({
           id: `conn-parent-${node.id}`,
           fromId: node.id,
-          toId: root.id,
+          toId: node.parentOfId || root.id,
           type: "parent-child",
         });
       }
@@ -869,66 +848,9 @@ export function KinshipWhiteboard() {
      ------------------------------------------------------------------------- */
 
   const handleAutoArrange = () => {
-    const root = nodes.find((n) => n.relation === "DECEASED");
-    if (!root) return;
-
-    const newNodes = nodes.map((node) => ({ ...node }));
-
-    // 1. Generation 0: Parents (Top Row at y = 120)
-    const parents = newNodes.filter((n) => n.relation === "FATHER" || n.relation === "MOTHER");
-    const parentSpacing = 260;
-    const parentStartX = 580 - ((parents.length - 1) * parentSpacing) / 2;
-    parents.forEach((p, idx) => {
-      p.x = Math.round(parentStartX + idx * parentSpacing);
-      p.y = 120;
-    });
-
-    // 2. Generation 1: Root Deceased & Spouses (Center Row at y = 290)
-    const rootNode = newNodes.find((n) => n.id === root.id);
-    if (rootNode) {
-      rootNode.x = 580;
-      rootNode.y = 290;
-    }
-
-    const spouses = newNodes.filter((n) => n.relation === "SPOUSE");
-    const spouseStartX = 840;
-    const spouseSpacing = 200;
-    spouses.forEach((s, idx) => {
-      s.x = Math.round(spouseStartX + idx * spouseSpacing);
-      s.y = 290;
-    });
-
-    // 3. Generation 2: Direct Children (Row at y = 500) & Generation 3: Grandchildren (Row at y = 720)
-    const children = newNodes.filter((n) => n.relation === "SON" || n.relation === "DAUGHTER");
-
-    // Compute width required per child branch based on their grandchildren count
-    const branchWidths = children.map((c) => {
-      const gcs = newNodes.filter((g) => g.relation === "GRANDCHILD" && g.parentId === c.id);
-      return Math.max(220, gcs.length * 150);
-    });
-
-    const totalChildrenWidth = branchWidths.reduce((sum, w) => sum + w, 0);
-    let currentX = 580 - totalChildrenWidth / 2;
-
-    children.forEach((c, idx) => {
-      const bWidth = branchWidths[idx];
-      const childCenterX = currentX + bWidth / 2;
-      c.x = Math.round(childCenterX);
-      c.y = 500;
-
-      // Arrange grandchildren neatly beneath this child's column
-      const grandchildren = newNodes.filter((g) => g.relation === "GRANDCHILD" && g.parentId === c.id);
-      const gcSpacing = 140;
-      const gcStartX = childCenterX - ((grandchildren.length - 1) * gcSpacing) / 2;
-      grandchildren.forEach((gc, gcIdx) => {
-        gc.x = Math.round(gcStartX + gcIdx * gcSpacing);
-        gc.y = 720;
-      });
-
-      currentX += bWidth;
-    });
-
-    setNodes(newNodes);
+    const arranged = arrangeWhiteboard(nodes);
+    replaceNodes(arranged);
+    frameBoard(arranged);
   };
 
   /* -------------------------------------------------------------------------
@@ -936,34 +858,10 @@ export function KinshipWhiteboard() {
      ------------------------------------------------------------------------- */
 
   const handleSyncToCalculator = () => {
-    const root = nodes.find((n) => n.relation === "DECEASED") || nodes[0];
-    const directChildren = nodes.filter(
-      (n) => (n.relation === "SON" || n.relation === "DAUGHTER") && (n.parentId === root.id || !n.parentId)
-    );
-    const sons = directChildren.filter((c) => c.relation === "SON" && c.isAlive);
-    const daughters = directChildren.filter((c) => c.relation === "DAUGHTER" && c.isAlive);
-    const fatherNode = nodes.find((n) => n.relation === "FATHER");
-    const motherNode = nodes.find((n) => n.relation === "MOTHER");
-
-    const wivesList: WifeProfile[] = nodes
-      .filter((n) => n.relation === "SPOUSE" && n.gender === "FEMALE")
-      .map((w) => ({
-        id: w.id,
-        name: isUr ? w.nameUr : w.nameEn,
-        isAlive: w.isAlive && !w.impediments?.isKiller && !w.impediments?.isNonMuslim,
-        marriageType: "PERMANENT",
-        hasMahrPending: (w.unpaidMahr || 0) > 0,
-        pendingMahrAmount: w.unpaidMahr || 0,
-      }));
-
-    updateHeirs({
-      wives: wivesList,
-      spouseCount: wivesList.filter((w) => w.isAlive).length,
-      fatherAlive: !!(fatherNode && fatherNode.isAlive),
-      motherAlive: !!(motherNode && motherNode.isAlive),
-      sonsCount: sons.length,
-      daughtersCount: daughters.length,
-    });
+    const error = validateWhiteboard(nodesRef.current);
+    if (error || !calculationData || !calculationData.ready) { setRelationshipError(error || "incomplete-family"); return; }
+    updateDeceased(calculationData.deceasedInfo);
+    updateHeirs(calculationData.heirsInput);
 
     updateAssets({
       cash: canvasEstateGross,
@@ -1019,14 +917,9 @@ export function KinshipWhiteboard() {
 
   const updateSelectedNode = (partial: Partial<WhiteboardNode>) => {
     if (!selectedNodeId) return;
-    setNodes((prev) =>
-      prev.map((n) => {
-        if (n.id === selectedNodeId) {
-          return { ...n, ...partial };
-        }
-        return n;
-      })
-    );
+    const edited = editWhiteboardPerson(nodesRef.current, selectedNodeId, partial);
+    if (edited.error) { setRelationshipError(edited.error); return; }
+    replaceNodes(edited.nodes);
   };
 
   /* -------------------------------------------------------------------------
@@ -1034,109 +927,50 @@ export function KinshipWhiteboard() {
      ------------------------------------------------------------------------- */
 
   const getNodeShareBadge = (node: WhiteboardNode) => {
-    if (!node.isAlive && node.relation !== "DECEASED") {
-      return {
-        text: isUr ? "متوفیٰ (پہلے وفات)" : "Predeceased",
-        color: "bg-rose-100 text-rose-800 border-rose-300 font-extrabold",
-      };
+    const role=family.roles.get(node.id) || "OTHER";
+    if(node.id === estateSubjectId) return {text:node.isAlive ? (isUr?"زندہ مرکزی شخص · فرضی ترکہ":"Living subject · hypothetical estate") : (isUr?"منتخب ترکہ":"Selected estate"),color:"bg-[#245642] text-white border-amber-400 font-bold"};
+    if(!node.isAlive) return {text:isUr?"پہلے وفات پا چکے":"Predeceased",color:"bg-rose-100 text-rose-900 border-rose-300"};
+    if(node.impediments?.isKiller || node.impediments?.isNonMuslim) return {text:isUr?"مانعِ ارث موجود":"Impediment selected",color:"bg-rose-100 text-rose-900 border-rose-300"};
+    if(!calculationData?.ready) return {text:isUr?"والدین کے ربط کی تصدیق کریں":"Confirm parent links",color:"bg-amber-50 text-amber-950 border-amber-300"};
+    const zero=calculationData.isGrossZero;
+    if(role === "GRANDCHILD") {
+      if(calculationData.livingDirectCount > 0) return {text:isUr?"زندہ اولاد کے سبب محروم":"Blocked by living children",color:"bg-stone-100 text-stone-700 border-stone-300"};
+      const branch=calculationData.tanzilOutput.branchResults.find(b=>b.person.id === node.id);
+      if(branch) return {text:`${branch.finalFraction} (${Math.round(zero?0:branch.monetaryValue).toLocaleString()} ${planningInfo.currency})`,color:"bg-emerald-700 text-white border-emerald-800"};
     }
-
-    if (node.impediments?.isKiller) {
-      return { text: isUr ? "محروم (قاتل مورث)" : "Disqualified (Homicide)", color: "bg-rose-100 text-rose-800 border-rose-300 font-bold" };
-    }
-    if (node.impediments?.isNonMuslim) {
-      return { text: isUr ? "محروم (غیر مسلم)" : "Disqualified (Non-Muslim)", color: "bg-amber-100 text-amber-900 border-amber-300 font-bold" };
-    }
-
-    if (node.relation === "DECEASED") {
-      return { text: isUr ? "اصلِ ترکہ (مورث)" : "Estate Origin", color: "bg-[#245642] text-white border-amber-400 font-black shadow-xs" };
-    }
-
-    const isGrossZero = calculationData?.isGrossZero ?? true;
-    const gross = calculationData?.canvasEstateGross ?? 0;
-
-    // Check Tanzīl grandchild
-    if (node.relation === "GRANDCHILD") {
-      if ((calculationData?.livingDirectCount || 0) > 0) {
-        return {
-          text: isUr ? "محجوب (الأقرب يمنع الأبعد)" : "Blocked by Living Children",
-          color: "bg-stone-100 text-stone-700 border-stone-300 dark:bg-stone-800 dark:text-stone-300 font-bold",
-        };
-      }
-      const branchRes = calculationData?.tanzilOutput.branchResults.find((b) => b.person.id === node.id);
-      if (branchRes) {
-        const money = isGrossZero ? 0 : branchRes.monetaryValue;
-        return {
-          text: `${branchRes.finalFraction} (${Math.round(money).toLocaleString()} PKR)`,
-          color: "bg-emerald-600 text-white border-emerald-700 shadow-xs animate-pulse",
-        };
-      }
-    }
-
-    // Check Spouse
-    if (node.relation === "SPOUSE") {
-      const spouseShare = calculationData?.calcResult.heirShares.find(
-        (s) => s.relationKey === "wives" || s.relationKey === "wife" || s.relationKey === "husband"
-      );
-      const mahrDeducted = node.unpaidMahr || 0;
-      if (spouseShare) {
-        const money = isGrossZero
-          ? mahrDeducted
-          : ((spouseShare.percentage / 100) * gross) / Math.max(1, spouseShare.count) + mahrDeducted;
-        return {
-          text: `${spouseShare.fractionString} (${Math.round(money).toLocaleString()} PKR)`,
-          color: "bg-amber-700 text-white border-amber-800",
-        };
-      }
-    }
-
-    // Check Sons/Daughters
-    if (node.relation === "SON" || node.relation === "DAUGHTER") {
-      const isSon = node.relation === "SON";
-      const directShare = calculationData?.calcResult.heirShares.find(
-        (s) =>
-          s.relationKey === (isSon ? "sons" : "daughters") ||
-          s.relationKey === (isSon ? "son" : "daughter")
-      );
-      if (directShare) {
-        const money = isGrossZero
-          ? 0
-          : ((directShare.percentage / 100) * gross) / Math.max(1, directShare.count);
-        return {
-          text: `${directShare.fractionString} (${Math.round(money).toLocaleString()} PKR)`,
-          color: "bg-[#245642] text-white border-[#1c4333]",
-        };
-      }
-    }
-
-    // Parents
-    if (node.relation === "FATHER" || node.relation === "MOTHER") {
-      const parentShare = calculationData?.calcResult.heirShares.find(
-        (s) => s.relationKey === (node.relation === "FATHER" ? "father" : "mother")
-      );
-      if (parentShare) {
-        const money = isGrossZero
-          ? 0
-          : ((parentShare.percentage / 100) * gross) / Math.max(1, parentShare.count);
-        return {
-          text: `${parentShare.fractionString} (${Math.round(money).toLocaleString()} PKR)`,
-          color: "bg-emerald-800 text-white border-emerald-900",
-        };
-      }
-    }
-
-    return { text: isUr ? "زیرِ تدقیق" : "Calculating...", color: "bg-stone-100 text-stone-700" };
+    const shareKey = role === "SPOUSE" ? (node.gender === "MALE"?"husband":"wives") : role === "SON" ? "sons" : role === "DAUGHTER" ? "daughters" : role.toLowerCase();
+    const share=calculationData.calcResult.heirShares.find(sh=>sh.id === shareKey || sh.relationKey === shareKey);
+    if(share) return {text:`${share.fractionString} (${Math.round(zero?0:share.sharePerIndividual).toLocaleString()} ${planningInfo.currency})`,color:"bg-[#245642] text-white border-[#163c2c]"};
+    if(role === "OTHER") return {text:isUr?"دیگر خاندانی ربط":"Other family connection",color:"bg-stone-100 text-stone-700 border-stone-300"};
+    return {text:isUr?"انفرادی حصہ ظاہر نہیں ہوا":"No individual allocation",color:"bg-stone-100 text-stone-700 border-stone-300"};
   };
+
+  const relationLabel = (node: WhiteboardNode) => {
+    const role=family.roles.get(node.id)||"OTHER";
+    const urLabels:Record<string,string>={SUBJECT:"مرکزی شخص",FATHER:"والد",MOTHER:"والدہ",SON:"بیٹا",DAUGHTER:"بیٹی",SPOUSE:"شریکِ حیات",GRANDCHILD:"پوتا / پوتی / نواسا / نواسی",PATERNAL_GRANDFATHER:"دادا",PATERNAL_GRANDMOTHER:"دادی",MATERNAL_GRANDFATHER:"نانا",MATERNAL_GRANDMOTHER:"نانی",FULL_BROTHER:"سگا بھائی",FULL_SISTER:"سگی بہن",PATERNAL_BROTHER:"علاتی بھائی",PATERNAL_SISTER:"علاتی بہن",MATERNAL_BROTHER:"اخیافی بھائی",MATERNAL_SISTER:"اخیافی بہن",SIBLING_UNSPECIFIED:"بہن / بھائی · والدین نامکمل",PATERNAL_UNCLE:"چچا",PATERNAL_AUNT:"پھوپھی",MATERNAL_UNCLE:"ماموں",MATERNAL_AUNT:"خالہ",PATERNAL_COUSIN:"چچا زاد / پھوپھی زاد",MATERNAL_COUSIN:"ماموں زاد / خالہ زاد",OTHER:"دیگر رشتہ"};
+    return isUr ? urLabels[role] || "دیگر رشتہ" : role === "SUBJECT" ? "Estate subject" : role === "SIBLING_UNSPECIFIED" ? "Sibling · parentage incomplete" : role.replaceAll("_"," ").toLowerCase();
+  };
+
+  const deletionPreview=selectedNode ? removeWhiteboardPerson(nodes,selectedNode.id) : nodes;
+  const deleteBlocked=!selectedNode || selectedNode.relation === "DECEASED" || selectedNode.id === estateSubjectId || !deletionPreview.some(n=>n.id === estateSubjectId);
+  const deleteReason=isUr ? "مرکزی خاندانی فرد یا فعال ترکے کے شخص کو حذف نہیں کر سکتے۔ نیا خاکہ شروع کرنے کے لیے Clean استعمال کریں۔" : "The family anchor and active estate subject must remain on the board. Use Clean to start a fresh family.";
 
   return (
     <div
       ref={studioContainerRef}
-      className={`w-full flex flex-col bg-[#FAF8F5] dark:bg-[#0B1713] text-stone-800 dark:text-stone-100 select-none ${
+      className={`kinship-whiteboard-studio min-w-0 max-w-full w-full flex flex-col bg-[#FAF8F5] dark:bg-[#0B1713] text-stone-800 dark:text-stone-100 select-none ${
         isFullHD
           ? "fixed inset-0 z-[99999] w-screen h-screen overflow-hidden"
           : "min-h-[92vh]"
       }`}
     >
+      <div className="px-4 py-3 bg-emerald-50 text-emerald-950 border-b border-emerald-200 text-sm leading-relaxed" role="note">
+        {isUr ? "فرضی منصوبہ بندی: زندہ مرکزی شخص، پہلے فوت شدہ اولاد اور زندہ پوتے نواسے آزما سکتے ہیں۔ ہر شخص کے ایک حقیقی والد اور ایک حقیقی والدہ؛ مرد کے زیادہ سے زیادہ چار مستقل بیویوں کے رشتے، خاتون کا ایک شوہر۔ یہ نکاح کی تاریخ یا طلاق کا ماڈل نہیں ہے۔" : "What-if planning: explore a living subject, predeceased children, and surviving grandchildren. Each person has one biological father and mother; this board models up to four permanent-wife connections for a man and one husband for a woman. It does not model marriage history or divorce."}
+      </div>
+      <div className="whiteboard-subject-strip" role="status"><span><Sparkles size={18}/>{isUr?"اس وقت منتخب ترکہ:":"Currently exploring:"} <strong>{isUr?family.subject.nameUr:family.subject.nameEn}</strong></span><small>{isUr?"حیات کی حالت اور ترکے کا انتخاب الگ ہیں۔":"Survival settings and estate selection are separate."}</small></div>
+      {!calculationData?.ready && <div role="alert" className="px-4 py-3 bg-amber-50 text-amber-950 border-b border-amber-300 text-sm">{WHITEBOARD_ERRORS["incomplete-family"][isUr?"ur":"en"]} {isUr?"متعلقہ افراد:":"People to review:"} {[...family.unresolvedIds].map(id=>nodes.find(n=>n.id===id)).filter(Boolean).map(n=>isUr?n!.nameUr:n!.nameEn).join(", ")}</div>}
+      {deletedSnapshot && <div className="px-4 py-3 bg-stone-100 text-stone-900 flex items-center justify-between gap-4 text-sm" role="status"><span>{isUr?"فرد اور اس کی ذیلی شاخ ہٹا دی گئی۔":"Person and dependent branch removed."}</span><button onClick={()=>{if(replaceNodes(deletedSnapshot))setDeletedSnapshot(null);}} className="underline font-bold">{isUr?"واپس لائیں":"Undo deletion"}</button></div>}
+      {relationshipError && <div className="px-4 py-3 bg-rose-50 text-rose-950 border-b border-rose-300 flex items-start justify-between gap-4 text-sm" role="alert"><span>{errorMessage(relationshipError)}</span><button type="button" onClick={() => setRelationshipError(null)} aria-label={isUr ? "پیغام بند کریں" : "Dismiss relationship message"}><X size={18}/></button></div>}
       {/* -------------------------------------------------------------------
           TOP SACRED STUDIO HEADER & TOOLBAR
           ------------------------------------------------------------------- */}
@@ -1193,7 +1027,10 @@ export function KinshipWhiteboard() {
           <div className="flex items-center gap-1 bg-stone-100 dark:bg-stone-800/80 p-1 rounded-xl border border-stone-200 dark:border-stone-700 shrink-0">
             <button
               onClick={() => {
-                setNodes(INITIAL_NODES_CLEAN);
+                replaceNodes(arrangeWhiteboard(INITIAL_NODES_CLEAN));
+                frameBoard(arrangeWhiteboard(INITIAL_NODES_CLEAN));
+                setEstateSubjectId("deceased-root");
+                setDeletedSnapshot(null);
                 setSelectedNodeId("deceased-root");
               }}
               className="px-2.5 py-1 text-xs font-semibold rounded-lg text-stone-700 dark:text-stone-300 hover:bg-white dark:hover:bg-stone-700 transition-colors cursor-pointer whitespace-nowrap"
@@ -1204,7 +1041,10 @@ export function KinshipWhiteboard() {
 
             <button
               onClick={() => {
-                setNodes(INITIAL_NODES_4_CHILDREN);
+                replaceNodes(arrangeWhiteboard(INITIAL_NODES_4_CHILDREN));
+                frameBoard(arrangeWhiteboard(INITIAL_NODES_4_CHILDREN));
+                setEstateSubjectId("deceased-root");
+                setDeletedSnapshot(null);
                 setSelectedNodeId("deceased-root");
               }}
               className="px-2.5 py-1 text-xs font-bold rounded-lg bg-white dark:bg-stone-700 text-[#245642] dark:text-emerald-300 shadow-2xs transition-colors cursor-pointer whitespace-nowrap"
@@ -1215,7 +1055,10 @@ export function KinshipWhiteboard() {
 
             <button
               onClick={() => {
-                setNodes(INITIAL_NODES_ORPHANED_TANZIL);
+                replaceNodes(arrangeWhiteboard(INITIAL_NODES_ORPHANED_TANZIL));
+                frameBoard(arrangeWhiteboard(INITIAL_NODES_ORPHANED_TANZIL));
+                setEstateSubjectId("deceased-root");
+                setDeletedSnapshot(null);
                 setSelectedNodeId("son-predeceased");
               }}
               className="px-2.5 py-1 text-xs font-bold rounded-lg text-emerald-800 dark:text-emerald-300 hover:bg-white dark:hover:bg-stone-700 transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap"
@@ -1227,7 +1070,10 @@ export function KinshipWhiteboard() {
 
             <button
               onClick={() => {
-                setNodes(INITIAL_NODES_SIMULTANEOUS_ACCIDENT);
+                replaceNodes(arrangeWhiteboard(INITIAL_NODES_SIMULTANEOUS_ACCIDENT));
+                frameBoard(arrangeWhiteboard(INITIAL_NODES_SIMULTANEOUS_ACCIDENT));
+                setEstateSubjectId("deceased-root");
+                setDeletedSnapshot(null);
                 setSelectedNodeId("deceased-root");
                 setShowAccidentModal(true);
               }}
@@ -1260,7 +1106,10 @@ export function KinshipWhiteboard() {
           <button
             onClick={() => {
               if (window.confirm(isUr ? "کیا آپ خاندانی نقشہ صاف کر کے دوبارہ شروع کرنا چاہتے ہیں؟" : "Reset canvas to fresh starter family?")) {
-                setNodes(INITIAL_NODES_4_CHILDREN);
+                replaceNodes(arrangeWhiteboard(INITIAL_NODES_4_CHILDREN));
+                frameBoard(arrangeWhiteboard(INITIAL_NODES_4_CHILDREN));
+                setEstateSubjectId("deceased-root");
+                setDeletedSnapshot(null);
                 setSelectedNodeId("deceased-root");
                 setCanvasEstateGross(assets.cash || 0);
               }
@@ -1274,7 +1123,7 @@ export function KinshipWhiteboard() {
 
           {/* Estate Input */}
           <div className="flex items-center gap-1 px-2 py-1 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-xs font-medium">
-            <span className="text-stone-400 font-serif text-[11px]">PKR</span>
+            <span className="text-stone-400 font-serif text-[11px]">{planningInfo.currency}</span>
             <input
               type="number"
               value={canvasEstateGross || ""}
@@ -1365,12 +1214,12 @@ export function KinshipWhiteboard() {
       {/* -------------------------------------------------------------------
           MAIN CANVAS WORKSPACE (NODES & CONNECTORS)
           ------------------------------------------------------------------- */}
-      <div className="flex-1 min-h-0 relative overflow-hidden flex">
+      <div className="flex-1 min-w-0 min-h-0 relative overflow-hidden flex">
         {/* Canvas Surface with Alabaster Linen */}
         <div
           ref={canvasRef}
           onMouseDown={handleCanvasMouseDown}
-          className={`whiteboard-grid-surface flex-1 relative overflow-hidden cursor-grab active:cursor-grabbing select-none ${
+          className={`whiteboard-grid-surface min-w-0 flex-1 relative overflow-hidden cursor-grab active:cursor-grabbing select-none ${
             isFullHD ? "h-full" : "h-[88vh]"
           }`}
           style={{
@@ -1414,15 +1263,16 @@ export function KinshipWhiteboard() {
                 if (!fromNode || !toNode) return null;
 
                 const x1 = fromNode.x;
-                const y1 = fromNode.y;
+                const y1 = conn.type === "spouse" ? fromNode.y : fromNode.y + 192;
                 const x2 = toNode.x;
-                const y2 = toNode.y;
+                const y2 = conn.type === "spouse" ? toNode.y : toNode.y - 85;
 
                 if (conn.type === "spouse") {
                   // Horizontal Golden Cord connecting spouses
                   const midX = (x1 + x2) / 2;
                   const curveY = y1 + 32;
-                  const path = `M ${x1} ${y1} Q ${midX} ${curveY} ${x2} ${y2}`;
+                  const direction = x2 >= x1 ? 1 : -1;
+                  const path = `M ${x1 + direction*56} ${y1} Q ${midX} ${curveY} ${x2-direction*56} ${y2}`;
 
                   return (
                     <g key={conn.id}>
@@ -1508,7 +1358,7 @@ export function KinshipWhiteboard() {
               const isSelected = selectedNodeId === node.id;
               const badge = getNodeShareBadge(node);
               const isDeceased = !node.isAlive;
-              const isRoot = node.relation === "DECEASED";
+              const isRoot = node.id === estateSubjectId;
 
               return (
                 <div
@@ -1533,7 +1383,7 @@ export function KinshipWhiteboard() {
 
                   {/* Circular Node Body (r=45px, 90x90px) */}
                   <div
-                    className={`relative w-[90px] h-[90px] rounded-full transition-all duration-200 border-[3.5px] ${
+                    className={`relative w-[90px] h-[90px] rounded-full transition-all duration-200 border-[3.5px] ${isRoot ? "whiteboard-subject-halo" : ""} ${
                       isSelected
                         ? "ring-4 ring-emerald-500/40 scale-105 shadow-2xl"
                         : "hover:scale-105 shadow-lg"
@@ -1559,14 +1409,7 @@ export function KinshipWhiteboard() {
                         loading="eager"
                       />
 
-                      {/* Root Deceased Gold Judicial Scale Badge Overlay */}
-                      {isRoot && (
-                        <div className="absolute inset-0 bg-[#245642]/35 flex items-center justify-center pointer-events-none">
-                          <div className="bg-[#1b4334]/90 p-1.5 rounded-full border border-amber-400 shadow-md">
-                            <Scale size={20} className="text-amber-300 drop-shadow-sm" />
-                          </div>
-                        </div>
-                      )}
+
                     </div>
 
                     {/* Distinct Red Cross Badge on Top Right for Deceased */}
@@ -1581,30 +1424,32 @@ export function KinshipWhiteboard() {
                   </div>
 
                   {/* Node Name & Kinship Label Below - Clean Direct Typography */}
-                  <div className="absolute top-[96px] left-1/2 -translate-x-1/2 text-center pointer-events-none z-20 min-w-[160px] max-w-[240px]">
+                  <div className="whiteboard-nameplate absolute top-[108px] left-1/2 -translate-x-1/2 text-center pointer-events-none z-20" title={isUr ? node.nameUr : node.nameEn}>
                     <p
-                      className={`text-sm md:text-base font-bold font-nastaliq leading-[2.4] text-stone-900 dark:text-stone-100 whitespace-normal ${
+                      className={`whiteboard-person-name text-base font-bold text-stone-900 dark:text-stone-100 ${
                         isSelected ? "text-emerald-900 dark:text-emerald-200 font-black" : ""
                       }`}
                     >
                       {isUr ? (node.nameUr || node.relation) : (node.nameEn || node.relation)}
                     </p>
                     <span className="inline-block text-[11px] font-bold px-2 py-0.5 rounded-full text-stone-600 dark:text-stone-300">
-                      {node.relation}
+                      {relationLabel(node)}
                     </span>
                   </div>
 
                   {/* Interactive Micro Handles (+) on Hover */}
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                     {/* Top Handle: Add Parent */}
-                    {node.relation !== "GRANDCHILD" && (
+                    {node.relation === "DECEASED" && (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           addRelativeNode(node.id, "parent");
                         }}
                         className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-stone-800 border-2 border-emerald-600 text-emerald-700 dark:text-emerald-300 flex items-center justify-center hover:bg-emerald-50 shadow-md cursor-pointer hover:scale-125 transition-transform z-30"
-                        title={isUr ? "والدین شامل کریں" : "Add Parent"}
+                        aria-label={isUr ? "والدین شامل کریں" : "Add Parent"}
+                        aria-disabled={Boolean(getAddRelativeError(nodes,node.id,"parent"))}
+                        title={getAddRelativeError(nodes,node.id,"parent") ? errorMessage(getAddRelativeError(nodes,node.id,"parent")!) : (isUr ? "والدین شامل کریں" : "Add Parent")}
                       >
                         <Plus size={15} strokeWidth={3} />
                       </button>
@@ -1617,73 +1462,39 @@ export function KinshipWhiteboard() {
                         addRelativeNode(node.id, "child");
                       }}
                       className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-stone-800 border-2 border-[#1b4d3e] text-[#1b4d3e] dark:text-emerald-300 flex items-center justify-center hover:bg-emerald-50 shadow-md cursor-pointer hover:scale-125 transition-transform z-30"
-                      title={isUr ? "اولاد شامل کریں" : "Add Child"}
+                      aria-label={isUr ? "اولاد شامل کریں" : "Add Child"}
+                      aria-disabled={Boolean(getAddRelativeError(nodes,node.id,"child"))}
+                      title={getAddRelativeError(nodes,node.id,"child") ? errorMessage(getAddRelativeError(nodes,node.id,"child")!) : (isUr ? "اولاد شامل کریں" : "Add Child")}
                     >
                       <Plus size={15} strokeWidth={3} />
                     </button>
 
                     {/* Right Handle: Add Spouse */}
-                    {(node.relation === "DECEASED" || node.relation === "SON" || node.relation === "DAUGHTER") && (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           addRelativeNode(node.id, "spouse");
                         }}
                         className="absolute top-1/2 -right-3.5 -translate-y-1/2 w-7 h-7 rounded-full bg-white dark:bg-stone-800 border-2 border-amber-500 text-amber-700 dark:text-amber-300 flex items-center justify-center hover:bg-amber-50 shadow-md cursor-pointer hover:scale-125 transition-transform z-30"
-                        title={isUr ? "شریکِ حیات شامل کریں" : "Add Spouse"}
+                        aria-label={isUr ? "شریکِ حیات شامل کریں" : "Add Spouse"}
+                        aria-disabled={Boolean(getAddRelativeError(nodes,node.id,"spouse"))}
+                        title={getAddRelativeError(nodes,node.id,"spouse") ? errorMessage(getAddRelativeError(nodes,node.id,"spouse")!) : (isUr ? "شریکِ حیات شامل کریں" : "Add Spouse")}
                       >
                         <Plus size={15} strokeWidth={3} />
                       </button>
-                    )}
                   </div>
                 </div>
               );
             })}
           </div>
 
-          {/* Tanzīl Quick Status Ribbon - Positioned away from inspector in both LTR and RTL */}
-          <div className="absolute bottom-4 ltr:left-4 rtl:right-4 z-20 bg-white/95 dark:bg-[#0E1E18]/95 backdrop-blur-md p-3 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-lg max-w-sm">
-            <div className="flex items-center gap-2 mb-1.5">
-              <div
-                className={`w-3 h-3 rounded-full ${
-                  calculationData?.isTanzilActive
-                    ? "bg-emerald-500 animate-ping"
-                    : (calculationData?.livingDirectCount || 0) > 0
-                    ? "bg-amber-500"
-                    : "bg-stone-400"
-                }`}
-              />
-              <span className="text-xs font-bold text-stone-800 dark:text-stone-100">
-                {calculationData?.isTanzilActive
-                  ? isUr
-                    ? "تنزیل فعال ہے (قائم مقامی کا حق)"
-                    : "Tanzīl Representation Active"
-                  : (calculationData?.livingDirectCount || 0) > 0
-                  ? isUr
-                    ? "الأقرب يمنع الأبعد (پوتے محجوب)"
-                    : "Al-Aqrab Yamna‘ (Grandchildren Barred)"
-                  : isUr
-                  ? "حالتِ انتظار"
-                  : "Standard Branch"}
-              </span>
-            </div>
-            <p className="text-[11px] text-stone-600 dark:text-stone-400 leading-relaxed">
-              {calculationData?.isTanzilActive
-                ? isUr
-                  ? "چونکہ مورث کا کوئی براہِ راست بیٹا یا بیٹی زندہ نہیں ہے، اس لیے یتیم پوتے اور نواسے اپنے مرحوم والدین کے حصے میں قائم مقام بن چکے ہیں۔"
-                  : "All direct children are deceased. Grandchildren step directly into their predeceased parents' shoes via Tanzīl representation."
-                : isUr
-                ? `چونکہ مورث کا ${calculationData?.livingDirectCount} زندہ بیٹا/بیٹی موجود ہے، فقہی قاعدہ 'الأقرب يمنع الأبعد' کے تحت پوتے محروم ہیں۔`
-                : `${calculationData?.livingDirectCount} living direct child bars all grandchildren under the proximity rule.`}
-            </p>
-          </div>
         </div>
 
         {/* -------------------------------------------------------------------
             RIGHT-HAND SIDE: NODE INSPECTOR DRAWER
             ------------------------------------------------------------------- */}
         {inspectorOpen && selectedNode && (
-          <div className="w-88 border-l border-stone-200 dark:border-stone-800 bg-white dark:bg-[#0E1E18] flex flex-col z-30 shadow-2xl">
+          <div className="whiteboard-node-inspector w-88 shrink-0 border-l border-stone-200 dark:border-stone-800 bg-white dark:bg-[#0E1E18] flex flex-col z-30 shadow-2xl">
             {/* Inspector Header with prominent close button */}
             <div className="p-4 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between bg-stone-50/70 dark:bg-stone-900/50">
               <div className="flex items-center gap-2.5">
@@ -1692,17 +1503,22 @@ export function KinshipWhiteboard() {
                   {isUr ? "تفصیلاتِ رشتہ دار (انسپکٹر)" : "Node Inspector"}
                 </h3>
               </div>
+              <div className="flex items-center gap-1 shrink-0"><button type="button" disabled={deleteBlocked} aria-label={isUr?"فرد حذف کریں":"Delete person"} title={deleteBlocked?deleteReason:(isUr?"فرد اور اس کی ذیلی شاخ حذف کریں":"Delete person and dependent branch")} onClick={()=>selectedNode && deleteNode(selectedNode.id)} className="min-h-10 px-2 flex items-center gap-1 rounded-lg border border-rose-200 bg-rose-50 text-rose-800 disabled:opacity-40 disabled:cursor-not-allowed"><Trash2 size={17}/><span className="text-xs font-bold">{isUr?"حذف":"Delete"}</span></button>
               <button
                 onClick={() => setInspectorOpen(false)}
                 className="text-stone-500 hover:text-stone-900 dark:hover:text-white cursor-pointer p-1.5 rounded-lg hover:bg-stone-200/60 dark:hover:bg-stone-800 transition-colors"
                 title={isUr ? "بند کریں (Close)" : "Close Inspector"}
               >
                 <X size={18} />
-              </button>
+              </button></div>
             </div>
 
             {/* Inspector Body */}
             <div className="p-5 space-y-5 flex-1 overflow-y-auto">
+              {relationshipError && <div className="sticky top-0 z-40 rounded-xl border border-rose-300 bg-rose-50 p-3 text-sm leading-relaxed text-rose-950 shadow-sm">{errorMessage(relationshipError)}</div>}
+              <div className="whiteboard-estate-action"><strong>{isUr?"فرضی ترکے کا مرکز":"Hypothetical estate focus"}</strong><p>{selectedNode.id === estateSubjectId ? (isUr?"اس فرد کا ترکہ منتخب ہے؛ ہالہ اسی مرکز کو ظاہر کرتا ہے۔":"This person’s estate is selected. The halo marks this focus.") : (isUr?"اس فرد کا ترکہ دیکھیں۔ خاندان کے تمام رشتے محفوظ رہیں گے۔":"Explore this person’s estate while preserving every family connection.")}</p><button disabled={selectedNode.id === estateSubjectId} onClick={()=>exploreEstate(selectedNode.id)}>{selectedNode.id === estateSubjectId ? (isUr?"منتخب ترکہ":"Current estate subject") : (isUr?"اس شخص کا ترکہ دیکھیں":"Explore this person’s estate")}</button></div>
+              {selectedNode.parentId && <label className="block text-sm font-bold">{isUr?"دوسرے حقیقی والد / والدہ":"Second biological parent"}<select aria-label={isUr?"دوسرے حقیقی والد / والدہ":"Second biological parent"} value={selectedNode.secondParentId || (selectedNode.parentageReviewed ? "__not_in_scenario__" : "")} onChange={e=>updateSelectedNode({secondParentId:e.target.value && e.target.value !== "__not_in_scenario__" ? e.target.value : undefined,parentageReviewed:Boolean(e.target.value)})} className="w-full min-h-11 border border-stone-300 rounded-lg px-2 mt-2 bg-white text-stone-900"><option value="">{isUr?"ابھی تصدیق نہیں ہوئی":"Not confirmed yet"}</option><option value="__not_in_scenario__">{isUr?"دوسرا والد / والدہ اس فرضی خاندان میں شامل نہیں":"Other parent is not included in this scenario"}</option>{nodes.filter(n=>n.id !== selectedNode.id && n.id !== selectedNode.parentId && n.gender !== nodes.find(p=>p.id === selectedNode.parentId)?.gender && !editWhiteboardPerson(nodes, selectedNode.id, {secondParentId:n.id}).error).map(n=><option key={n.id} value={n.id}>{isUr?n.nameUr:n.nameEn}</option>)}</select><small className="block mt-1 font-normal text-stone-600">{isUr?"ایک شریکِ حیات کو خودکار طور پر والدہ یا والد نہیں سمجھا جاتا۔":"A spouse is never automatically assumed to be this person’s parent."}</small></label>}
+              {!deleteBlocked && nodes.length-deletionPreview.length > 1 && <p className="text-sm text-rose-800 bg-rose-50 rounded-lg p-3">{isUr?`حذف کرنے سے اس فرد سمیت ${nodes.length-deletionPreview.length} افراد کی ذیلی شاخ ہٹے گی۔ فوراً Undo سے واپس لا سکتے ہیں۔`:`Deleting this person removes ${nodes.length-deletionPreview.length} people including their dependent branch. Undo is available immediately afterwards.`}</p>}
               {/* Names */}
               <div>
                 <label className="text-xs font-bold text-stone-700 dark:text-stone-300 block mb-1.5">
@@ -1728,11 +1544,20 @@ export function KinshipWhiteboard() {
                 />
               </div>
 
+              <div className="space-y-2 border-t border-stone-200 pt-3">
+                <h4 className="text-sm font-bold">{isUr ? "رشتے شامل کریں" : "Add relationships"}</h4>
+                {(["parent", "spouse", "child"] as const).map(type => {
+                  const reason = getAddRelativeError(nodes, selectedNode.id, type);
+                  const label = type === "parent" ? (isUr ? "والد / والدہ شامل کریں" : "Add parent") : type === "spouse" ? (isUr ? "شریکِ حیات شامل کریں" : "Add spouse") : (isUr ? "اولاد شامل کریں" : "Add child");
+                  return <div key={type}><button type="button" aria-disabled={Boolean(reason)} onClick={() => addRelativeNode(selectedNode.id, type)} className={`w-full min-h-10 px-3 py-2 rounded-lg text-sm font-bold border ${reason ? "bg-stone-100 text-stone-600 border-stone-300" : "bg-emerald-50 text-emerald-950 border-emerald-300 hover:bg-emerald-100"}`}>{label}{reason ? " · " + (isUr ? "حد / رکاوٹ" : "unavailable") : " +"}</button>{reason && <p className="text-xs leading-relaxed text-stone-600 mt-1">{errorMessage(reason)}</p>}</div>;
+                })}
+              </div>
+
               {/* Status: Alive vs Predeceased */}
-              {selectedNode.relation !== "DECEASED" && (
+              {(
                 <div className="pt-3 border-t border-stone-200 dark:border-stone-800">
                   <label className="text-xs font-bold text-stone-700 dark:text-stone-300 block mb-2.5">
-                    {isUr ? "حیات یا وفات کی حالت" : "Vital Status"}
+                    {selectedNode.id === estateSubjectId ? (isUr ? "مرکزی شخص کی فرضی حالت" : "Planning subject status") : (isUr ? "فرضی وفات کے وقت حالت" : "Status at the assumed estate event")}
                   </label>
                   <div className="grid grid-cols-2 gap-3">
                     <button
@@ -1743,7 +1568,7 @@ export function KinshipWhiteboard() {
                           : "bg-stone-100 text-stone-600 border-stone-200 dark:bg-stone-800 dark:text-stone-300"
                       }`}
                     >
-                      {isUr ? "حیات (زندہ)" : "Alive"}
+                      {selectedNode.id === estateSubjectId ? (isUr ? "زندہ · منصوبہ بندی" : "Alive · planning") : (isUr ? "حیات (زندہ)" : "Alive")}
                     </button>
                     <button
                       onClick={() => updateSelectedNode({ isAlive: false })}
@@ -1753,13 +1578,13 @@ export function KinshipWhiteboard() {
                           : "bg-stone-100 text-stone-600 border-stone-200 dark:bg-stone-800 dark:text-stone-300"
                       }`}
                     >
-                      {isUr ? "متوفیٰ (وفات)" : "Predeceased"}
+                      {selectedNode.id === estateSubjectId ? (isUr ? "فرضی وفات" : "Assumed estate event") : (isUr ? "متوفیٰ (وفات)" : "Predeceased")}
                     </button>
                   </div>
                   <p className="text-xs text-stone-500 mt-2 leading-relaxed">
                     {isUr
-                      ? "اولاد کو 'متوفیٰ' کرنے سے تنزیل کا قانون خودکار طور پر اثر انداز ہوتا ہے۔"
-                      : "Toggling to predeceased simulates whether grandchildren receive representation."}
+                      ? "یہ صرف فرضی حالات ہیں۔ مرکزی شخص زندہ رہ سکتا ہے؛ اولاد اور پوتے نواسوں کی حالت فرضی تقسیم کے وقت کے مطابق بدلیں۔"
+                      : "These are what-if settings, not real-life declarations. The subject may be alive today; relatives’ survival is evaluated at the assumed estate event."}
                   </p>
                 </div>
               )}
@@ -1851,7 +1676,7 @@ export function KinshipWhiteboard() {
               {selectedNode.relation === "SPOUSE" && selectedNode.gender === "FEMALE" && (
                 <div className="pt-3 border-t border-stone-200 dark:border-stone-800">
                   <label className="text-xs font-bold text-amber-900 dark:text-amber-200 block mb-1.5">
-                    {isUr ? "غیر ادا شدہ مہر (مہرِ مؤجل) PKR" : "Unpaid Mahr (PKR)"}
+                    {isUr ? `غیر ادا شدہ مہر (${planningInfo.currency})` : `Unpaid Mahr (${planningInfo.currency})`}
                   </label>
                   <input
                     type="number"
@@ -1870,7 +1695,7 @@ export function KinshipWhiteboard() {
               )}
 
               {/* Sharia Impediments (Mawani' al-Irth) */}
-              {selectedNode.relation !== "DECEASED" && (
+              {selectedNode.id !== estateSubjectId && (
                 <div className="pt-3 border-t border-stone-200 dark:border-stone-800 space-y-2.5">
                   <label className="text-xs font-bold text-stone-700 dark:text-stone-300 block">
                     {isUr ? "موانعِ ارث (شرعی رکاوٹیں)" : "Sharia Impediments"}
@@ -1912,22 +1737,50 @@ export function KinshipWhiteboard() {
                 </div>
               )}
 
-              {/* Delete Node Action */}
-              {selectedNode.relation !== "DECEASED" && (
-                <div className="pt-5 border-t border-stone-200 dark:border-stone-800">
-                  <button
-                    onClick={() => deleteNode(selectedNode.id)}
-                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-rose-300 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs md:text-sm font-bold transition-colors cursor-pointer shadow-xs"
-                  >
-                    <Trash2 size={16} />
-                    <span>{isUr ? "اس فرد کو کینوس سے ہٹائیں" : "Delete Relative"}</span>
-                  </button>
-                </div>
-              )}
+
             </div>
           </div>
         )}
       </div>
+
+          {/* Tanzīl Quick Status Ribbon - Positioned away from inspector in both LTR and RTL */}
+          <div className="px-4 py-3 bg-white dark:bg-[#0E1E18] border-t border-stone-200 dark:border-stone-800">
+            <div className="flex items-center gap-2 mb-1.5">
+              <div
+                className={`w-3 h-3 rounded-full ${
+                  calculationData?.isTanzilActive
+                    ? "bg-emerald-500 animate-ping"
+                    : (calculationData?.livingDirectCount || 0) > 0
+                    ? "bg-amber-500"
+                    : "bg-stone-400"
+                }`}
+              />
+              <span className="text-xs font-bold text-stone-800 dark:text-stone-100">
+                {!calculationData?.ready ? (isUr ? "والدین کے نامکمل ربط کی تصدیق کریں" : "Confirm missing parent links") : calculationData?.isTanzilActive
+                  ? isUr
+                    ? "تنزیل فعال ہے (قائم مقامی کا حق)"
+                    : "Tanzīl Representation Active"
+                  : (calculationData?.livingDirectCount || 0) > 0
+                  ? isUr
+                    ? "الأقرب يمنع الأبعد (پوتے محجوب)"
+                    : "Al-Aqrab Yamna‘ (Grandchildren Barred)"
+                  : isUr
+                  ? "حالتِ انتظار"
+                  : "Standard Branch"}
+              </span>
+            </div>
+            <p className="text-[11px] text-stone-600 dark:text-stone-400 leading-relaxed">
+              {!calculationData?.ready ? WHITEBOARD_ERRORS["incomplete-family"][isUr?"ur":"en"] : calculationData?.isTanzilActive
+                ? isUr
+                  ? "چونکہ مورث کا کوئی براہِ راست بیٹا یا بیٹی زندہ نہیں ہے، اس لیے یتیم پوتے اور نواسے اپنے مرحوم والدین کے حصے میں قائم مقام بن چکے ہیں۔"
+                  : "All direct children are deceased. Grandchildren step directly into their predeceased parents' shoes via Tanzīl representation."
+                : (calculationData?.livingDirectCount || 0) > 0
+                ? isUr
+                  ? `مرکزی شخص کی ${calculationData?.livingDirectCount} زندہ براہِ راست اولاد موجود ہے؛ پوتوں اور نواسوں کی حالت حساب کے مطابق دکھائی گئی ہے۔`
+                  : `${calculationData?.livingDirectCount} surviving direct child(ren) are recorded. Grandchild status follows the calculation.`
+                : isUr ? "منتخب شخص کے درج شدہ خاندانی ربط کے مطابق حساب دیکھیں۔" : "Review the calculation using the selected person’s recorded family connections."}
+            </p>
+          </div>
 
       {/* -------------------------------------------------------------------
           SIMULTANEOUS ACCIDENT SIMULATOR MODAL (الغرقیٰ والھدمیٰ)
