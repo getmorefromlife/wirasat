@@ -20,6 +20,7 @@ import { OnePageDashboard } from "@/components/dashboard/OnePageDashboard";
 
 import { MobileCalculator } from "@/components/mobile/MobileCalculator";
 import { KinshipWhiteboard } from "@/components/visuals/KinshipWhiteboard";
+import { VisualMathStudio } from "@/components/academy/VisualMathStudio";
 
 export default function Home() {
   const { activeView, setActiveView, language } = useInheritanceStore();
@@ -91,6 +92,7 @@ export default function Home() {
           {activeView === "galaxy" && <div className="max-w-7xl mx-auto px-4 py-6"><KinshipGalaxy /></div>}
           {activeView === "glossary" && <GlossaryView />}
           {activeView === "library" && <LibraryView />}
+          {activeView === "math-academy" && <VisualMathStudio />}
         </main>
 
         {/* Sacred Footer with Scholarly Disclaimer */}

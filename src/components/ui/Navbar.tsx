@@ -146,8 +146,17 @@ export function Navbar() {
       titleEn: "Knowledge & Academy",
       titleUr: "علم و فقہی رہنمائی",
       icon: GraduationCap,
-      views: ["academy", "wasiyyah", "glossary", "library"],
+      views: ["math-academy", "academy", "wasiyyah", "glossary", "library"],
       items: [
+        {
+          id: "math-academy",
+          titleEn: "Visual Math Masterclass",
+          titleUr: "بصری ریاضی اور کسریں",
+          descEn: "Interactive pie slicer, why 48 slices, & 2:1 ratio",
+          descUr: "ترکے کے کُل ۴۸ حصوں کی حقیقت، لائیو پیزا کٹر اور ۲:۱ کا راز",
+          icon: PieChart,
+          badge: isUr ? "بنیادی آغاز" : "Start Here",
+        },
         {
           id: "library",
           titleEn: "Scholarly Library & Books",

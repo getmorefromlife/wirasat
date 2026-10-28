@@ -14,7 +14,9 @@ import {
   FileText,
   PieChart,
   ChevronDown,
+  ArrowRight,
 } from "lucide-react";
+import { useInheritanceStore } from "@/store/useInheritanceStore";
 import { WhiteboardNode, projectWhiteboardFamily } from "@/lib/whiteboard-model";
 import { MARJA_DATABASE } from "@/lib/marja-rules";
 import { MarjaId, type HeirShareResult, type InheritanceCalculationResult, type BalanceSheetSummary, type DeceasedInfo } from "@/types/fiqh";
@@ -56,6 +58,7 @@ export function WhiteboardExplanationDrawer({
   };
 
   const [activeTab, setActiveTab] = useState<"math" | "fiqh" | "audit">("math");
+  const { setActiveView } = useInheritanceStore();
 
   const [expanded,setExpanded]=useState(false);
   const [panelWidth,setPanelWidth]=useState(540);
@@ -497,6 +500,24 @@ export function WhiteboardExplanationDrawer({
                   {isUr ? slicesAnalysis.whySlicesStoryUr : slicesAnalysis.whySlicesStoryEn}
                 </span>
               </div>
+
+              {/* Direct Link to Visual Math Studio */}
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  setActiveView("math-academy");
+                }}
+                className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-600 via-emerald-700 to-teal-800 hover:opacity-95 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer"
+              >
+                <Sparkles size={14} className="text-amber-300" />
+                <span>
+                  {isUr
+                    ? "انٹرایکٹو بصری حسابی اسٹوڈیو کھولیں (سلائیڈرز اور پائی چارٹ)"
+                    : "Launch Interactive Math Lab & Pie Slicer Studio"}
+                </span>
+                <ArrowRight size={13} className="text-white/80" />
+              </button>
             </div>
 
             {/* Heirs Distribution List with Chronological Order */}
