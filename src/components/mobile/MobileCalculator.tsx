@@ -22,6 +22,7 @@ import {
   Coins,
 } from "lucide-react";
 import { ValuationHelpersModal } from "@/components/calculator/ValuationHelpersModal";
+import { SCENARIO_PRESETS } from "@/lib/scenarios";
 
 interface MobileCalculatorProps {
   onSwitchToDesktopMode?: () => void;
@@ -45,6 +46,8 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
     updateNamedDescendants,
     resetAll,
     getCalculationResult,
+    loadPreset,
+    activePresetId,
   } = useInheritanceStore();
 
   const isUr = language === "ur";
@@ -347,6 +350,39 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                   <span className={isUr ? "font-nastaliq leading-[2]" : ""}>
                     {isUr ? m.labelUr : m.labelEn}
                   </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* 1-Tap Real-World Family Archetype Chips */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between px-1">
+            <span className={`text-xs font-black uppercase tracking-wider text-stone-700 ${isUr ? "font-nastaliq" : "font-sans"}`}>
+              {isUr ? "حقیقی خاندانی نمونے (1-Tap Templates):" : "Real-World Family Archetypes:"}
+            </span>
+            <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">
+              ~99% Cases
+            </span>
+          </div>
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
+            {SCENARIO_PRESETS.map((p, idx) => {
+              const isSelected = activePresetId === p.id;
+              return (
+                <button
+                  key={p.id}
+                  onClick={() => loadPreset(p.id)}
+                  className={`px-3 py-2 rounded-2xl text-xs font-black whitespace-nowrap transition-all border-2 shrink-0 cursor-pointer flex items-center gap-1.5 shadow-2xs ${
+                    isSelected
+                      ? "bg-[#1b4332] text-white border-[#1b4332]"
+                      : "bg-white text-stone-800 border-stone-300 hover:border-[#1b4332]"
+                  }`}
+                >
+                  <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${isSelected ? "bg-amber-300 text-stone-900" : "bg-stone-200 text-stone-700"}`}>
+                    {idx + 1}
+                  </span>
+                  <span>{isUr ? p.titleUr : p.titleEn}</span>
                 </button>
               );
             })}

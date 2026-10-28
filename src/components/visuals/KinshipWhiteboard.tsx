@@ -343,7 +343,7 @@ const INITIAL_NODES_SIMULTANEOUS_ACCIDENT: WhiteboardNode[] = [
    ========================================================================= */
 
 export function KinshipWhiteboard() {
-  const { language, assets, debts, deceased: planningInfo, updateDeceased, updateAssets, updateDebts, updateHeirs, setActiveView } = useInheritanceStore();
+  const { language, assets, debts, deceased: planningInfo, updateDeceased, updateAssets, updateDebts, updateHeirs, setActiveView, loadPreset } = useInheritanceStore();
   const isUr = language === "ur";
   const arrangeWhiteboard=useCallback((familyNodes:readonly WhiteboardNode[])=>arrangeFamily(familyNodes,isUr),[isUr]);
 
@@ -470,9 +470,12 @@ export function KinshipWhiteboard() {
         setSelectedNodeId("deceased-root");
         setActiveTemplateId(template.id);
         setShowTemplatesModal(false);
+        if (template.id !== "template-clean-slate") {
+          loadPreset(template.id);
+        }
       }
     },
-    [isUr, frameBoard]
+    [isUr, frameBoard, loadPreset]
   );
   useEffect(() => { frameBoard(nodesRef.current); }, []);
 

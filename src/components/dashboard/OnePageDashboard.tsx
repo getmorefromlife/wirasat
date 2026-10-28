@@ -55,6 +55,7 @@ export const OnePageDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"estate" | "heirs" | "habwah">("estate");
   const [helperModalOpen, setHelperModalOpen] = useState(false);
   const [helperTab, setHelperTab] = useState<"real-estate" | "gold">("real-estate");
+  const [showPresetDropdown, setShowPresetDropdown] = useState(false);
 
   // Format monetary figures
   const formatAmount = (val: number) => {
@@ -183,26 +184,63 @@ export const OnePageDashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Right: Real-World Case Presets & Reset */}
-        <div className="flex items-center gap-2 flex-wrap justify-end">
-          <span className="text-xs font-bold text-[#52735a] hidden lg:inline">
-            {isUr ? "نمونۂ کیسز:" : "Presets:"}
-          </span>
-          {SCENARIO_PRESETS.slice(0, 4).map((p, idx) => (
-            <button
-              key={p.id}
-              type="button"
-              onClick={() => loadPreset(p.id)}
-              className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
-                activePresetId === p.id
-                  ? "bg-theme-card-dark text-white border-theme-card-dark shadow-2xs"
-                  : "bg-white hover:bg-theme-chip text-theme-brand border-theme-chip"
-              }`}
-              title={isUr ? p.titleUr : p.titleEn}
-            >
-              {isUr ? `کیس ${idx + 1}` : `Case ${idx + 1}`}
-            </button>
-          ))}
+        {/* Right: Unified 8 Family Templates Selector */}
+        <div className="flex items-center gap-2 flex-wrap justify-end relative">
+          <button
+            type="button"
+            onClick={() => setShowPresetDropdown(!showPresetDropdown)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border-2 border-[#c4d4be] hover:border-theme-brand text-xs font-bold text-theme-brand shadow-2xs cursor-pointer transition-colors"
+          >
+            <Users size={14} className="text-[#1b4332]" />
+            <span>
+              {activePresetId
+                ? (isUr
+                    ? SCENARIO_PRESETS.find((p) => p.id === activePresetId)?.titleUr || "منتخب خاکہ"
+                    : SCENARIO_PRESETS.find((p) => p.id === activePresetId)?.titleEn || "Active Template")
+                : (isUr ? "۸ مستند خاندانی خاکے (Templates)" : "8 Family Archetypes")}
+            </span>
+            <ChevronDown size={14} className={`text-stone-400 transition-transform ${showPresetDropdown ? "rotate-180" : ""}`} />
+          </button>
+
+          {/* Dropdown Menu */}
+          {showPresetDropdown && (
+            <div className="absolute right-0 rtl:left-0 rtl:right-auto top-full mt-2 w-80 sm:w-96 max-h-96 overflow-y-auto rounded-2xl bg-white border-2 border-stone-300 shadow-2xl p-2 z-50 space-y-1">
+              <div className="p-2 border-b border-stone-200 text-xs font-black text-stone-700 flex justify-between items-center">
+                <span>{isUr ? "۸ مستند خاندانی خاکے (آبادیاتی تحقیق):" : "8 Demographic Family Archetypes:"}</span>
+                <span className="text-[10px] text-stone-500 font-mono">~99% Cases</span>
+              </div>
+              {SCENARIO_PRESETS.map((p, idx) => {
+                const isSelected = activePresetId === p.id;
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => {
+                      loadPreset(p.id);
+                      setShowPresetDropdown(false);
+                    }}
+                    className={`w-full text-start p-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex flex-col gap-0.5 ${
+                      isSelected
+                        ? "bg-[#1b4332] text-white shadow-xs"
+                        : "hover:bg-stone-100 text-stone-800"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-black text-xs">{idx + 1}. {isUr ? p.titleUr : p.titleEn}</span>
+                      {isSelected && (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/20 text-white font-mono">
+                          Active
+                        </span>
+                      )}
+                    </div>
+                    <span className={`text-[10px] ${isSelected ? "text-emerald-200" : "text-stone-500"}`}>
+                      {isUr ? p.descriptionUr : p.descriptionEn}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
           <button
             type="button"

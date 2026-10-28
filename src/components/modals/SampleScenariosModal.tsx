@@ -102,7 +102,7 @@ export const SampleScenariosModal: React.FC<SampleScenariosModalProps> = ({
               : "Click any scenario to instantly load its complete estate, debts, and family structure:"}
           </span>
           <span className="text-[11px] font-bold text-[#245642]">
-            {isUr ? "۵ مستند کیسز" : "5 Canonical Cases"}
+            {isUr ? "۸ مستند خاندانی خاکے" : "8 Demographic Archetypes"}
           </span>
         </div>
 
