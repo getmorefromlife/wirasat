@@ -1602,11 +1602,11 @@ function ShareWheelView({ result, isUr, currency, loadPreset }: any) {
             {loadPreset && (
               <button
                 type="button"
-                onClick={() => loadPreset("scenario-1")}
+                onClick={() => loadPreset("template-nuclear-standard")}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#245642] hover:bg-[#1a3f30] text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
               >
                 <Sparkles size={14} className="text-emerald-300" />
-                <span>{isUr ? "نمونہ کیس لوڈ کریں (Preset 1)" : "Load Sample Case (Preset 1)"}</span>
+                <span>{isUr ? "نمونہ خاکہ لوڈ کریں (بنیادی خاندان)" : "Load Archetype (Nuclear Family)"}</span>
               </button>
             )}
           </div>
