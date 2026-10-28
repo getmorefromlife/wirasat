@@ -68,131 +68,215 @@ interface ParadigmMeta {
   icon: React.ComponentType<{ className?: string; size?: number }>;
   categoryEn: string;
   categoryUr: string;
+  categoryKey: "ALL" | "MONEY" | "LINEAGE" | "PRIORITY" | "LEGAL";
   descEn: string;
   descUr: string;
+  benefitEn: string;
+  benefitUr: string;
+  fiqhInsightEn: string;
+  fiqhInsightUr: string;
+  integrationBadgeEn: string;
+  integrationBadgeUr: string;
 }
 
 export const PARADIGMS: ParadigmMeta[] = [
   {
-    id: "tree_tanzil",
+    id: "sankey_flow",
     number: 1,
+    titleEn: "Estate-Flow Pipeline",
+    titleUr: "بہاؤ ترکہ و مالی پائپ لائن",
+    icon: Workflow,
+    categoryEn: "Balance Sheet & Money",
+    categoryUr: "میزان ترکہ و رقوم",
+    categoryKey: "MONEY",
+    descEn: "Strict Qur'anic deduction pipeline: Gross Estate → Kafn → Debts → Wasiyyah (1/3 check) → Distributable Blood Shares.",
+    descUr: "قرآنی و فقہی اخراجات کا تسلسل: کل ترکہ ← کفن و تدفین ← دیون ← وصیت (تہائی حد) ← تقسیمِ ورثاء۔",
+    benefitEn: "Best for tracking every rupee/dollar from Gross Estate down to burial, debts, and final blood shares.",
+    benefitUr: "مالی تنازعات کا خاتمہ: کل ترکے سے کفن، قرض، اور وصیت کی کٹوتی کے بعد تقسیم کا مرحلہ وار مالی بہاؤ۔",
+    fiqhInsightEn: "Mandated by Qur'an 4:11: 'After payment of any legacy and after debt' (مِنۢ بَعۡدِ وَصِیَّةࣲ یُوصِی بِهَاۤ أَوۡ دَیۡنٍ). Debt clearance strictly precedes blood share division.",
+    fiqhInsightUr: "قرآنی فرمان (نساء: ۱۱): ترکے کی تقسیم سے پہلے میت کے تمام واجبات و قرض اور ثلثِ وصیت کی ادائیگی شرعاً واجب اور مقدم ہے۔",
+    integrationBadgeEn: "🟢 Live Engine Synced",
+    integrationBadgeUr: "🟢 لائیو انجن سے مربوط",
+  },
+  {
+    id: "tree_tanzil",
+    number: 2,
     titleEn: "Living Tree & Tanzīl",
     titleUr: "شجرۂ حیات و تنزیل",
     icon: GitFork,
     categoryEn: "Kinship & Lineage",
     categoryUr: "نسب و قرابت",
+    categoryKey: "LINEAGE",
     descEn: "Generational tree highlighting named grandchildren inheriting by representation (Tanzīl) or excluded by proximity.",
     descUr: "نسل در نسل شجرہ جو پوتوں، پوتیوں، نواسوں اور نواسیوں کی بقائم مقامی (تنزیل) یا محرومی کی وضاحت کرتا ہے۔",
+    benefitEn: "Best for resolving orphaned grandchildren: clearly shows if they inherit via representation or are blocked by living aunts/uncles.",
+    benefitUr: "یتیم پوتوں اور نواسوں کے حق کی وضاحت: واضح کرتا ہے کہ وہ کب بقائم مقامی (تنزیل) وارث بنتے ہیں اور کب چچا/پھوپھی کے سبب محجوب ہوتے ہیں۔",
+    fiqhInsightEn: "Under Ja'fari jurisprudence, grandchildren step into the exact standing of their deceased parent (Qur'an 4:11) via Tanzīl, provided no closer direct child survives.",
+    fiqhInsightUr: "اہلِ بیت (ع) کا فقہی اصول: قریبی اولاد نہ ہونے کی صورت میں پوتے پوتیاں اپنے متوفی والدین کے قائم مقام بن کر ان کا پورا قرآنی حصہ پاتے ہیں۔",
+    integrationBadgeEn: "🟢 Live Engine Synced",
+    integrationBadgeUr: "🟢 لائیو انجن سے مربوط",
+  },
+  {
+    id: "share_wheel",
+    number: 3,
+    titleEn: "Family Tree + Share Wheel",
+    titleUr: "شجرۂ نسب و چرخۂ حصص",
+    icon: PieChart,
+    categoryEn: "Proportional Geometry",
+    categoryUr: "تناسبی ہندسہ",
+    categoryKey: "MONEY",
+    descEn: "Synchronized dual-view linking heir nodes to a dynamic donut distribution wheel with slice hover highlights.",
+    descUr: "شجرۂ نسب اور دائروی پائی چارٹ کا ہم آہنگ منظر، جہاں ہر وارث کا قرآنی حصہ نمایاں ہے۔",
+    benefitEn: "Best for visual balance: hovering any slice illuminates that heir's lineage on the tree and displays their exact share.",
+    benefitUr: "تناسبی موازنہ: کسی بھی حصے پر ماؤس لے جانے سے متعلقہ وارث اور اس کی قرابت نمایاں ہو جاتی ہے۔",
+    fiqhInsightEn: "Demonstrates that the sum of all divine shares and Radd surplus totals exactly 100%, without the invalid Sunni reduction of 'Awl.",
+    fiqhInsightUr: "بطلانِ عول کا ثبوت: تمام ورثاء کے حصص اور رد کا مجموعہ مل کر مکمل ۱۰۰ فیصد بنتا ہے، کسی کے قرآنی حصے میں کٹوتی نہیں ہوتی۔",
+    integrationBadgeEn: "🟢 Live Engine Synced",
+    integrationBadgeUr: "🟢 لائیو انجن سے مربوط",
   },
   {
     id: "rings",
-    number: 2,
+    number: 4,
     titleEn: "Concentric Family Rings",
     titleUr: "مرکزی خاندانی دائرے",
     icon: Disc,
     categoryEn: "Proximity & Priority",
     categoryUr: "قربت و اولویت",
+    categoryKey: "PRIORITY",
     descEn: "Radial proximity orbits radiating outward from the deceased, demonstrating priority tiers and generational blocking.",
     descUr: "میت کے گرد دائرہ نما طبقات جو قرابت کے مدارج اور حجبِ حرمان کی واضح عکاسی کرتے ہیں۔",
+    benefitEn: "Best for understanding blocking: provides geometric proof of how the inner family ring shields the estate from outer relatives.",
+    benefitUr: "قرابت کے مدارج کا ہندسی ثبوت: دکھاتا ہے کہ اندرونی حلقے (اولاد و والدین) بیرونی حلقوں (بھائیوں اور چچاؤں) کو کیسے مکمل طور پر روکتے ہیں۔",
+    fiqhInsightEn: "Surah Al-Ahzab (33:6) establishes that blood relatives are prioritized by closeness ('al-Aqrab Yamna' al-Ab'ad').",
+    fiqhInsightUr: "سورۂ احزاب (۳۳:۶): «وَأُوْلُواْ ٱلۡأَرۡحَامِ بَعۡضُهُمۡ أَوۡلَىٰ بِبَعۡضٍ» — قریبی دائرے دور کے رشتہ داروں کو مکمل محجوب کر دیتے ہیں۔",
+    integrationBadgeEn: "🟢 Live Engine Synced",
+    integrationBadgeUr: "🟢 لائیو انجن سے مربوط",
   },
   {
     id: "lanes",
-    number: 3,
+    number: 5,
     titleEn: "Color-Coded Tier Lanes",
     titleUr: "طبقاتی راستے (سوئم لینز)",
     icon: Columns,
     categoryEn: "Statutory Classes",
     categoryUr: "فقہی طبقات",
+    categoryKey: "PRIORITY",
     descEn: "Distinct horizontal lanes dividing heirs across Spouse, Tier 1, Tier 2, and Tier 3 with live eligibility indicators.",
     descUr: "چار فقہی راستے (زوجیت، طبقہ اول، طبقہ دوم، طبقہ سوم) جو اہل اور محروم وارثین کو الگ ظاہر کرتے ہیں۔",
-  },
-  {
-    id: "sankey_flow",
-    number: 4,
-    titleEn: "Estate-Flow Pipeline",
-    titleUr: "بہاؤ ترکہ (پائپ لائن)",
-    icon: Workflow,
-    categoryEn: "Balance Sheet & Money",
-    categoryUr: "میزان ترکہ و رقوم",
-    descEn: "Strict Qur'anic deduction pipeline: Gross Estate → Kafn → Debts → Wasiyyah (1/3 check) → Distributable Blood Shares.",
-    descUr: "قرآنی و فقہی اخراجات کا تسلسل: کل ترکہ ← کفن و تدفین ← دیون ← وصیت (تہائی حد) ← تقسیمِ ورثاء۔",
-  },
-  {
-    id: "cards",
-    number: 5,
-    titleEn: "Household Cards",
-    titleUr: "گھریلو وارث کارڈز",
-    icon: LayoutGrid,
-    categoryEn: "Direct Controls",
-    categoryUr: "براہ راست کنٹرول",
-    descEn: "Modular cards with direct survival toggles, impediment badges (Qatl, Kufr), and individual share breakdowns.",
-    descUr: "انفرادی وارث کارڈز جن میں حیات، قتل یا کفر کے موانع اور رقم کے فوری حساب کی سہولت موجود ہے۔",
-  },
-  {
-    id: "radial",
-    number: 6,
-    titleEn: "Radial Kinship Map",
-    titleUr: "شعاعی قرابتی نقشہ",
-    icon: Radio,
-    categoryEn: "Orbital Network",
-    categoryUr: "مداری رابطہ",
-    descEn: "Orbital constellation graph connecting all family branches to the central deceased hub.",
-    descUr: "میت کو مرکز مان کر تمام شاخوں کے مابین کھنچے ہوئے قرابتی تعلقات کا شعاعی خاکہ۔",
+    benefitEn: "Best for seeing active vs locked classes: clearly shows which tier is currently inheriting and which tiers are locked.",
+    benefitUr: "چاروں طبقات کی تقسیم: فوری طور پر بتاتا ہے کہ کون سا طبقہ ترکہ پانے کا حقدار ہے اور کن طبقات پر شرعی تالا لگ چکا ہے۔",
+    fiqhInsightEn: "Under Surah Al-Anfal (8:75), a single heir in Class 1 completely exhausts the estate before Class 2 (siblings) can inherit.",
+    fiqhInsightUr: "سورۂ انفال (۸:۷۵): طبقہ اول کا کوئی بھی وارث طبقہ دوم اور سوم کے تمام افراد کے لیے حجبِ حرمان بن جاتا ہے۔",
+    integrationBadgeEn: "🟢 Live Engine Synced",
+    integrationBadgeUr: "🟢 لائیو انجن سے مربوط",
   },
   {
     id: "decision_path",
-    number: 7,
+    number: 6,
     titleEn: "Decision-Path Flowchart",
     titleUr: "فقہی فیصلے کا راستہ",
     icon: GitCommit,
     categoryEn: "Algorithmic Logic",
     categoryUr: "فقہی استدلال",
+    categoryKey: "LEGAL",
     descEn: "Step-by-step logic tree tracing how the fiqh engine resolved exclusion, Hajb, and final fractional shares.",
     descUr: "قدم بہ قدم فقہی استدلال کا فلو چارٹ جو بتاتا ہے کہ کون کیونکر وارث بنا یا محروم ہوا۔",
-  },
-  {
-    id: "share_wheel",
-    number: 8,
-    titleEn: "Family Tree + Share Wheel",
-    titleUr: "شجرہ و چرخۂ حصص",
-    icon: PieChart,
-    categoryEn: "Proportional Geometry",
-    categoryUr: "تناسبی ہندسہ",
-    descEn: "Synchronized dual-view linking heir nodes to a dynamic donut distribution wheel with slice hover highlights.",
-    descUr: "شجرۂ نسب اور دائروی پائی چارٹ کا ہم آہنگ منظر، جہاں ہر وارث کا قرآنی حصہ نمایاں ہے۔",
-  },
-  {
-    id: "snapshots",
-    number: 9,
-    titleEn: "Estate Planning 'What-If' Studio",
-    titleUr: "شرعی منصوبہ بندی (وصیت و ہبۂ حیات اسٹوڈیو)",
-    icon: Split,
-    categoryEn: "Scenario Simulations",
-    categoryUr: "مفروضہ مناظر و تخمینہ کار",
-    descEn: "Interactive sandbox comparing statutory baseline vs 1/3rd Wasiyyah vs uncapped lifetime gift (Hibah) with live delta diffs.",
-    descUr: "متحرک تخمینہ کار جہاں شریعتِ خالص، ثلثِ وصیت اور ہبۂ حیات کا باہمی موازنہ اور نفع و نقصان دیکھا جا سکتا ہے۔",
-  },
-  {
-    id: "timeline",
-    number: 10,
-    titleEn: "Estate Legal Timeline",
-    titleUr: "قانونی مراحل کا خطِ زمانی",
-    icon: Clock,
-    categoryEn: "Chronology of Law",
-    categoryUr: "ترتیبِ احکام",
-    descEn: "Sequential legal timeline: Death → Tajhīz → Debt Clearance → Wasiyyah → Class Resolution → Distribution.",
-    descUr: "احکامِ ترکہ کی زمانی ترتیب: انتقال ← تجہیز و تکفین ← ادائیگیِ دیون ← نفاذِ وصیت ← تعینِ طبقات ← تقسیم۔",
+    benefitEn: "Best for legal auditing: traces the exact computational logic and questions the engine checked to arrive at every fraction.",
+    benefitUr: "وکلاء اور علماء کے لیے مکمل شرعی آڈٹ: مراجعِ عظام کے فتاویٰ کی کڑی در کڑی حسابی تصدیق۔",
+    fiqhInsightEn: "Provides full legal auditability conforming to the authoritative verdicts of Sistani, Khamenei, Khoei, Makarem, and Najafi.",
+    fiqhInsightUr: "فقہی استدلال کا ریاضیاتی فلو چارٹ: مرحلہ وار فیصلے جو بتاتے ہیں کہ سسٹم نے کس بنیاد پر محرومی اور حصص کا تعین کیا۔",
+    integrationBadgeEn: "🟢 Live Engine Synced",
+    integrationBadgeUr: "🟢 لائیو انجن سے مربوط",
   },
   {
     id: "matrix_grid",
-    number: 11,
+    number: 7,
     titleEn: "Inheritance Matrix Grid",
     titleUr: "جامع جدولِ وراثت",
     icon: TableProperties,
     categoryEn: "Institutional Audit",
     categoryUr: "جامع آڈٹ ٹیبل",
+    categoryKey: "LEGAL",
     descEn: "High-density spreadsheet listing every relative, Qur'anic base fraction, Radd surplus, decimal, and proof citation.",
     descUr: "ایک تفصیلی جدول جس میں ہر وارث کا فرض، رد، اعشاری تناسب، نقد رقم اور فقہی حوالہ درج ہے۔",
+    benefitEn: "Best for documentation: provides a clean, institutional tabular record ideal for official family settlement agreements.",
+    benefitUr: "عدالتی و شرعی ریکارڈ اور فیملی صلح نامے کے لیے موزوں ترین تفصیلی دفتری دستاویز۔",
+    fiqhInsightEn: "Every heir's share is broken down into their Farḍ (Qur'anic base fraction) and Radd (proportional return of residue).",
+    fiqhInsightUr: "جامع دفتری چارٹ: ہر وارث کا قرآنی فرض، رد، اعشاری تناسب، خالص نقد رقم اور فقہی حوالہ ایک نظر میں۔",
+    integrationBadgeEn: "🟢 Live Engine Synced",
+    integrationBadgeUr: "🟢 لائیو انجن سے مربوط",
+  },
+  {
+    id: "cards",
+    number: 8,
+    titleEn: "Household Cards",
+    titleUr: "گھریلو وارث کارڈز",
+    icon: LayoutGrid,
+    categoryEn: "Direct Controls",
+    categoryUr: "براہ راست کنٹرول",
+    categoryKey: "LINEAGE",
+    descEn: "Modular cards with direct survival toggles, impediment badges (Qatl, Kufr), and individual share breakdowns.",
+    descUr: "انفرادی وارث کارڈز جن میں حیات، قتل یا کفر کے موانع اور رقم کے فوری حساب کی سہولت موجود ہے۔",
+    benefitEn: "Best for quick interactive toggling: test what happens if an heir passes away or has a religious impediment.",
+    benefitUr: "وارثین کا انفرادی جائزہ: فوری حیات و موت کے بٹن، قتل و کفر کے موانع اور ہر وارث کی نقد رقم کا براہ راست کنٹرول۔",
+    fiqhInsightEn: "Impediments (Mawani' al-Irth) such as intentional homicide (Qatl) remove an heir completely without blocking other heirs.",
+    fiqhInsightUr: "موانعِ ارث: قتلِ عمد اور کفر وارث کو مکمل محروم کر دیتے ہیں اور وہ دیگر ورثاء کے حصص کے لیے رکاوٹ بھی نہیں بنتا۔",
+    integrationBadgeEn: "🟢 Live Engine Synced",
+    integrationBadgeUr: "🟢 لائیو انجن سے مربوط",
+  },
+  {
+    id: "radial",
+    number: 9,
+    titleEn: "Radial Kinship Map",
+    titleUr: "شعاعی قرابتی نقشہ",
+    icon: Radio,
+    categoryEn: "Orbital Network",
+    categoryUr: "مداری رابطہ",
+    categoryKey: "LINEAGE",
+    descEn: "Orbital constellation graph connecting all family branches to the central deceased hub.",
+    descUr: "میت کو مرکز مان کر تمام شاخوں کے مابین کھنچے ہوئے قرابتی تعلقات کا شعاعی خاکہ۔",
+    benefitEn: "Best for large extended families: maps maternal, paternal, and spousal branches radiating from the deceased.",
+    benefitUr: "پیچیدہ خاندانی شاخوں کا شعاعی خاکہ: میت کے گرد مادری، پدری اور ازدواجی رشتوں کے نیٹ ورک کا خوبصورت موازنہ۔",
+    fiqhInsightEn: "Contrasts maternal equal sharing (1:1) with paternal male-female proportion (2:1).",
+    fiqhInsightUr: "مادری رشتہ داروں میں مرد و زن کی برابری (۱:۱) اور پدری رشتہ داروں میں ۲:۱ کے تناسب کا واضح فرق۔",
+    integrationBadgeEn: "🟢 Live Engine Synced",
+    integrationBadgeUr: "🟢 لائیو انجن سے مربوط",
+  },
+  {
+    id: "snapshots",
+    number: 10,
+    titleEn: "Estate Planning 'What-If' Studio",
+    titleUr: "شرعی منصوبہ بندی (وصیت و ہبۂ حیات اسٹوڈیو)",
+    icon: Split,
+    categoryEn: "Scenario Simulations",
+    categoryUr: "مفروضہ مناظر و تخمینہ کار",
+    categoryKey: "MONEY",
+    descEn: "Interactive sandbox comparing statutory baseline vs 1/3rd Wasiyyah vs uncapped lifetime gift (Hibah) with live delta diffs.",
+    descUr: "متحرک تخمینہ کار جہاں شریعتِ خالص، ثلثِ وصیت اور ہبۂ حیات کا باہمی موازنہ اور نفع و نقصان دیکھا جا سکتا ہے۔",
+    benefitEn: "Best for estate planning: shows how a 1/3rd Wasiyyah or Lifetime Gift (Hibah) can protect spouses or excluded grandchildren.",
+    benefitUr: "شرعی وصیت بمقابلہ ہبۂ حیات کا نفع و نقصان: موازنہ کرتا ہے کہ گفٹ کرنے یا وصیت لکھنے سے پوتوں یا بیوی کو کیا فائدہ پہنچتا ہے۔",
+    fiqhInsightEn: "A Wasiyyah is restricted to 1/3 of the net estate; gifts during sound health (Hibat al-Hayat) have no monetary cap.",
+    fiqhInsightUr: "وصیت صرف ایک تہائی (۱/۳) مال تک محدود رہتی ہے، جبکہ زندگی میں ہبہ کرنے پر شریعت میں مال کی کوئی حد مقرر نہیں۔",
+    integrationBadgeEn: "🟢 Live Engine Synced",
+    integrationBadgeUr: "🟢 لائیو انجن سے مربوط",
+  },
+  {
+    id: "timeline",
+    number: 11,
+    titleEn: "Estate Legal Timeline",
+    titleUr: "قانونی مراحل کا خطِ زمانی",
+    icon: Clock,
+    categoryEn: "Chronology of Law",
+    categoryUr: "ترتیبِ احکام",
+    categoryKey: "MONEY",
+    descEn: "Sequential legal timeline: Death → Tajhīz → Debt Clearance → Wasiyyah → Class Resolution → Distribution.",
+    descUr: "احکامِ ترکہ کی زمانی ترتیب: انتقال ← تجہیز و تکفین ← ادائیگیِ دیون ← نفاذِ وصیت ← تعینِ طبقات ← تقسیم۔",
+    benefitEn: "Best for executors (Wasi): step-by-step checklist ensuring debts and burial costs are cleared before property is divided.",
+    benefitUr: "وصی کے لیے ضروری رہنمائی: ورثاء میں جائیداد بانٹنے سے پہلے میت کے قرضے اور کفن دفن کے اخراجات نمٹانا لازمی ہے۔",
+    fiqhInsightEn: "Qur'an 4:11 gives strict priority to settling debts before distributing any share to sons, daughters, or spouses.",
+    fiqhInsightUr: "ترکے کے نفاذ کی شرعی و زمانی ترتیب: وفات ← تجہیز و تدفین ← قرض کی ادائیگی ← وصیت کا نفاذ ← طبقات کا تعین ← تقسیم۔",
+    integrationBadgeEn: "🟢 Live Engine Synced",
+    integrationBadgeUr: "🟢 لائیو انجن سے مربوط",
   },
   {
     id: "story_mode",
@@ -202,41 +286,69 @@ export const PARADIGMS: ParadigmMeta[] = [
     icon: BookOpen,
     categoryEn: "Human Explanation",
     categoryUr: "سلیس بیانیہ",
+    categoryKey: "LEGAL",
     descEn: "Editorial walkthrough explaining the family's estate case in warm, plain language with divine justice rationale.",
     descUr: "سادہ، سلیس اور دلنشین زبان میں خاندان کے ترکے کی مکمل داستان، بلا کسی پیچیدہ اصطلاح کے۔",
-  },
-  {
-    id: "kinship_galaxy",
-    number: 13,
-    titleEn: "The Kinship Galaxy",
-    titleUr: "فلکِ قرابت و بطلانِ اوہام",
-    icon: Sparkles,
-    categoryEn: "Subcontinent Myth-Shatterer",
-    categoryUr: "بطلانِ اوہام و رسومات",
-    descEn: "Interactive celestial matrix shattering subcontinent customary myths (uncles vs daughters, in-laws, maternal parity).",
-    descUr: "برصغیر کے خاندانی اوہام (چچاؤں کا دعویٰ، سسرال کا دخل، میکے کی محرومی) کا فلکیاتی و بصری ابطال۔",
+    benefitEn: "Best for family elders: explains the final inheritance division in warm, respectful, narrative language.",
+    benefitUr: "پیچیدہ فقہی فارمولوں کا سلیس و دلنشین کہانی میں ترجمہ: عام فہم خاندانوں اور بزرگوں کے سمجھنے کے لیے آسان بیانیہ۔",
+    fiqhInsightEn: "Fosters family harmony by explaining the divine rationale of fairness behind every relative's share.",
+    fiqhInsightUr: "شریعتِ الٰہی کے عدل و انصاف کی سادہ لفظوں میں وضاحت، تاکہ خاندان میں باہمی محبت برقرار رہے۔",
+    integrationBadgeEn: "🟢 Live Engine Synced",
+    integrationBadgeUr: "🟢 لائیو انجن سے مربوط",
   },
   {
     id: "simple_infographic",
-    number: 14,
+    number: 13,
     titleEn: "At-A-Glance Visual Infographic & Pocket Calculator",
     titleUr: "ایک تصویری آسان خلاصہ و جیبی کیلکولیٹر",
     icon: Sparkles,
     categoryEn: "Instant Simplicity",
     categoryUr: "انتہائی آسان فہم خلاصہ",
+    categoryKey: "MONEY",
     descEn: "One-picture visual summary for everyday people without math complexity, plus interactive live pocket cash calculator.",
     descUr: "عام فہم افراد کے لیے ایک تصویری خلاصہ، بغیر کسی الجھاؤ کے، مع متحرک جیبی کیش کیلکولیٹر۔",
+    benefitEn: "Best for mobile & sharing: clean single-image summary ready for instant WhatsApp sharing or quick screenshots.",
+    benefitUr: "واٹس ایپ شیئرنگ اور فوری سکرین شاٹ کے لیے ایک تصویری آسان خلاصہ، مع جیبی کیش کیلکولیٹر۔",
+    fiqhInsightEn: "Distills the final legal result into a simple, beautiful graphic for everyday heirs without mathematical background.",
+    fiqhInsightUr: "بغیر کسی الجھاؤ کے ہر وارث کے ہاتھ میں آنے والی رقم کی فوری تصویری جھلک۔",
+    integrationBadgeEn: "🟢 Live Engine Synced",
+    integrationBadgeUr: "🟢 لائیو انجن سے مربوط",
   },
   {
     id: "kinship_whiteboard",
-    number: 15,
+    number: 14,
     titleEn: "Kinship Whiteboard Studio",
     titleUr: "اسٹوڈیو کنبہ وائٹ بورڈ",
     icon: Workflow,
     categoryEn: "Generative Sandbox Canvas",
     categoryUr: "تَخْطِيطُ الْعَائِلَة — متحرک کینوس",
+    categoryKey: "LINEAGE",
     descEn: "Figma/Miro-style interactive kinship canvas. Add family nodes with '+' handles, simulate predeceased children, and test catastrophic accidents.",
     descUr: "فگما اسٹائل متحرک کنبہ کینوس۔ پلس بٹن سے نئے رشتہ دار جوڑیں، متوفی اولاد کی تنزیل دیکھیں اور الغرقیٰ و الھدمیٰ کا تخمینہ لگائیں۔",
+    benefitEn: "Best for exploratory diagramming: drag, connect, add custom family members freely with dual-direction calculator sync.",
+    benefitUr: "فگما اسٹائل متحرک کنبہ کینوس: آزادی کے ساتھ شجرہ بنائیں، نئے رشتے جوڑیں اور الغرقیٰ و الھدمیٰ کا لائیو تخمینہ لگائیں۔",
+    fiqhInsightEn: "Two-way synced with the Main Calculator: sketch any family and click 'Push to Calc' or 'Pull from Calc' effortlessly.",
+    fiqhInsightUr: "کیلکولیٹر سے مکمل طور پر جڑا ہوا: یہاں بنایا گیا کوئی بھی خاندانی نقشہ ایک کلک سے کیلکولیٹر میں منتقل ہو جاتا ہے۔",
+    integrationBadgeEn: "🔄 2-Way Synced Canvas",
+    integrationBadgeUr: "🔄 دو طرفہ مربوط کینوس",
+  },
+  {
+    id: "kinship_galaxy",
+    number: 15,
+    titleEn: "The Kinship Galaxy",
+    titleUr: "فلکِ قرابت و بطلانِ اوہام",
+    icon: Sparkles,
+    categoryEn: "Subcontinent Myth-Shatterer",
+    categoryUr: "بطلانِ اوہام و رسومات",
+    categoryKey: "PRIORITY",
+    descEn: "Interactive celestial matrix shattering subcontinent customary myths (uncles vs daughters, in-laws, maternal parity).",
+    descUr: "برصغیر کے خاندانی اوہام (چچاؤں کا دعویٰ، سسرال کا دخل، میکے کی محرومی) کا فلکیاتی و بصری ابطال۔",
+    benefitEn: "Best for busting cultural myths: demonstrates in 3D how daughters completely bar uncles from receiving anything.",
+    benefitUr: "برصغیر کے خاندانی اوہام کا فلکیاتی و بصری ابطال: چچاؤں کا بیٹیوں کی جائیداد پر دعویٰ اور متبنیٰ (لے پالک) کے غلط تصورات کا خاتمہ۔",
+    fiqhInsightEn: "Shatters non-Islamic traditions by visually proving that daughters inherit 100% of the residue through divine Radd.",
+    fiqhInsightUr: "رسم و رواج کا خاتمہ: قرآن کی رو سے بیٹیاں تمام ترکے کی وارث ہیں اور چچا یا تایا کا کوئی حق نہیں بنتا۔",
+    integrationBadgeEn: "✨ 3D Educational Galaxy",
+    integrationBadgeUr: "✨ ۳ ڈی تعلیمی رصدگاہ",
   },
 ];
 
@@ -395,6 +507,7 @@ export const VisualChartsStudio: React.FC = () => {
     setActiveParadigmState(id);
     setActiveVisualParadigm(id);
   };
+  const [selectedCategory, setSelectedCategory] = useState<"ALL" | "MONEY" | "LINEAGE" | "PRIORITY" | "LEGAL">("ALL");
   const [selectedRelativeId, setSelectedRelativeId] = useState<string>("child-1");
 
   const result = getCalculationResult();
@@ -414,6 +527,19 @@ export const VisualChartsStudio: React.FC = () => {
   const daughterNode = namedDescendants.find((n) => n.relation === "DAUGHTER" && n.children && n.children.length > 0);
   const daughterBranchEqualRatio = !!daughterNode?.daughterBranchEqualRatio;
 
+  const filteredParadigms =
+    selectedCategory === "ALL"
+      ? PARADIGMS
+      : PARADIGMS.filter((p) => p.categoryKey === selectedCategory);
+
+  const categoryTabs: { key: "ALL" | "MONEY" | "LINEAGE" | "PRIORITY" | "LEGAL"; labelEn: string; labelUr: string; count: number }[] = [
+    { key: "ALL", labelEn: "All Views (15)", labelUr: "تمام ۱۵ ماڈلز", count: 15 },
+    { key: "MONEY", labelEn: "Money & Balance", labelUr: "مالی بہاؤ و ترکہ", count: 5 },
+    { key: "LINEAGE", labelEn: "Lineage & Tanzīl", labelUr: "شجرۂ نسب و تنزیل", count: 4 },
+    { key: "PRIORITY", labelEn: "Class Priority", labelUr: "طبقات و حجب", count: 3 },
+    { key: "LEGAL", labelEn: "Legal Proofs & Stories", labelUr: "فقہی دلائل و داستان", count: 3 },
+  ];
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in duration-300">
       {/* Studio Header */}
@@ -425,29 +551,33 @@ export const VisualChartsStudio: React.FC = () => {
             <div className="flex items-center gap-2.5 flex-wrap">
               <span className="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#edf3e7] text-[#245642] border border-[#a5b69d] flex items-center gap-1.5 shadow-2xs">
                 <Sparkles size={13} className="text-[#245642]" />
-                <span>{isUr ? "۱۲ بصری اسٹوڈیو و رصدگاہ" : "12-Paradigm Interactive Visual Observatory"}</span>
+                <span>{isUr ? "۱۵ جہتی بصری رصدگاہ و اسٹوڈیو" : "15-Paradigm Interactive Visual Observatory"}</span>
               </span>
               <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-[#e8f0e0] text-[#1e4634] border border-[#b7c9a5]">
                 {isUr ? "تنزیل و اقربیت انجن فعال" : "Tanzīl & Proximity Engine Active"}
               </span>
+              <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a] flex items-center gap-1">
+                <Scale size={12} className="text-[#92400e]" />
+                <span>{isUr ? "فقہی حکمت و تفصیلی وضاحت" : "With Fiqh Insight Dossier"}</span>
+              </span>
             </div>
 
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold font-cinzel text-[var(--theme-text-primary)] pt-1.5 pb-1">
-              {isUr ? "شجرۂ تنزیل و ۱۲ جہتی بصری رصدگاہ" : "Mawārīth Visual Observatory & Tanzīl Studio"}
+              {isUr ? "شجرۂ تنزیل و ۱۵ جہتی بصری رصدگاہ" : "Mawārīth Visual Observatory & Tanzīl Studio"}
             </h1>
 
             <p className="text-sm md:text-base text-[var(--theme-text-secondary)] max-w-2xl leading-relaxed">
               {isUr
-                ? "اہلِ بیت (ع) کے احکامِ وراثت کی تفہیم کے لیے ۱۲ جدید بصری خاکے، بمع قاعدۂ اقربیت اور پوتوں، نواسوں کی بقائم مقامی (تنزیل)۔"
-                : "Explore Shia Islamic inheritance rules across 12 distinct interactive mathematical and genealogical perspectives."}
+                ? "اہلِ بیت (ع) کے احکامِ وراثت کی تفہیم کے لیے ۱۵ جامع بصری خاکے، ہر خاکے کے نفع و مقصد اور قرآنی و فقہی دلیل کی تفصیلی وضاحت کے ساتھ۔"
+                : "Explore Shia Islamic inheritance rules across 15 distinct interactive mathematical, genealogical, and legal perspectives — enriched with purpose explanations and divine jurisprudence insights."}
             </p>
           </div>
 
           {/* Quick Tanzil Interactive Test Toolbar */}
-          <div className="bg-[#f9faf7] p-5 rounded-2xl border border-[#d8e0d2] space-y-3.5 min-w-[340px] shadow-xs">
+          <div className="bg-[#f9faf7] dark:bg-stone-900/80 p-5 rounded-2xl border border-[#d8e0d2] dark:border-stone-800 space-y-3.5 min-w-[340px] shadow-xs">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-extrabold text-[#245642] uppercase tracking-wider flex items-center gap-1.5">
-                <Scale size={14} className="text-[#245642]" />
+              <span className="text-xs font-extrabold text-[#245642] dark:text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                <Scale size={14} className="text-[#245642] dark:text-emerald-400" />
                 {isUr ? "فوری تجرباتی کنٹرول (تنزیل)" : "Live Tanzīl Simulator Controls"}
               </span>
               <span
@@ -471,20 +601,20 @@ export const VisualChartsStudio: React.FC = () => {
               {/* Direct Child Living Toggle */}
               <button
                 onClick={() => toggleChildSurvival("child-3")}
-                className={`w-full py-2.5 px-3.5 rounded-xl text-xs font-bold flex items-center justify-between transition-all ${
+                className={`w-full py-2.5 px-3.5 rounded-xl text-xs font-bold flex items-center justify-between transition-all cursor-pointer ${
                   isGrandchildrenExcluded
                     ? "bg-[#245642] text-white border border-[#1b3d30] shadow-sm hover:bg-[#1a4031]"
-                    : "bg-white border border-[#c5d0bb] text-[#243d32] hover:border-[#245642] shadow-2xs"
+                    : "bg-white dark:bg-stone-900 border border-[#c5d0bb] dark:border-stone-700 text-[#243d32] dark:text-stone-200 hover:border-[#245642] shadow-2xs"
                 }`}
               >
                 <div className="flex items-center gap-2">
                   {isGrandchildrenExcluded ? <UserCheck size={15} className="text-emerald-300" /> : <UserX size={15} className="text-stone-500" />}
-                  <span className={isGrandchildrenExcluded ? "text-white font-extrabold" : "text-[#243d32]"}>
+                  <span className={isGrandchildrenExcluded ? "text-white font-extrabold" : "text-[#243d32] dark:text-stone-200"}>
                     {isUr ? "صلبی بیٹی (زینب) کی حیات:" : "Direct Child (Zaynab) Living:"}
                   </span>
                 </div>
                 <span className={`font-extrabold uppercase px-2 py-0.5 rounded text-[10px] ${
-                  isGrandchildrenExcluded ? "bg-white/20 text-white" : "bg-stone-100 text-stone-700 border border-stone-200"
+                  isGrandchildrenExcluded ? "bg-white/20 text-white" : "bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-stone-200 dark:border-stone-700"
                 }`}>
                   {isGrandchildrenExcluded ? (isUr ? "زندہ (پوتے محروم!)" : "ALIVE (Excludes Grandchildren)") : (isUr ? "مرحومہ (تنزیل فعال)" : "DECEASED (Tanzīl On)")}
                 </span>
@@ -494,12 +624,12 @@ export const VisualChartsStudio: React.FC = () => {
               {daughterNode && (
                 <button
                   onClick={() => toggleDaughterBranchRatio(daughterNode.id)}
-                  className="w-full py-2.5 px-3.5 rounded-xl text-xs font-bold bg-white border border-[#c5d0bb] text-[#243d32] hover:border-[#245642] flex items-center justify-between transition-all shadow-2xs"
+                  className="w-full py-2.5 px-3.5 rounded-xl text-xs font-bold bg-white dark:bg-stone-900 border border-[#c5d0bb] dark:border-stone-700 text-[#243d32] dark:text-stone-200 hover:border-[#245642] flex items-center justify-between transition-all shadow-2xs cursor-pointer"
                 >
-                  <span className="truncate text-stone-700">
+                  <span className="truncate text-stone-700 dark:text-stone-300">
                     {isUr ? "نواسیوں میں تقسیم کا فتویٰ:" : "Daughter's Children Ratio Fatwa:"}
                   </span>
-                  <span className="text-[#245642] font-extrabold ml-2 flex-shrink-0 bg-[#eef4ea] px-2 py-0.5 rounded border border-[#d2ded0]">
+                  <span className="text-[#245642] dark:text-emerald-400 font-extrabold ml-2 flex-shrink-0 bg-[#eef4ea] dark:bg-emerald-950/40 px-2 py-0.5 rounded border border-[#d2ded0] dark:border-emerald-800/40">
                     {daughterBranchEqualRatio
                       ? isUr ? "۱:۱ (مساوی، قدیم فتویٰ)" : "1:1 (Classical Equal)"
                       : isUr ? "۲:۱ (احوط وجوبی، سیستانی)" : "2:1 (Ahwat Wujubi, Sistani)"}
@@ -510,192 +640,339 @@ export const VisualChartsStudio: React.FC = () => {
           </div>
         </div>
 
-        {/* 14-Paradigm Navigation Selector */}
-        <div className="mt-8 pt-6 border-t border-[var(--theme-border)]">
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-            <div className="flex items-center gap-2.5 flex-wrap">
-              <span className="text-xs sm:text-sm font-extrabold text-[#245642] dark:text-emerald-300 uppercase tracking-wider">
-                {isUr ? "۱۴ بصری خاکے و خاکۂ نسب منتخب کریں:" : "Select Visual Architecture Paradigm:"}
-              </span>
-              <span className="text-xs text-[#245642] dark:text-emerald-300 font-extrabold bg-[#edf3e7] dark:bg-[#132c21] px-3 py-1 rounded-full border border-[#a5b69d]/60">
-                {currentMeta.number}/14: {isUr ? currentMeta.titleUr : currentMeta.titleEn}
-              </span>
-            </div>
-
-            {/* Quick 1-Click Clean Slate Reset All */}
-            <button
-              type="button"
-              onClick={resetAll}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 text-xs font-semibold text-stone-600 dark:text-stone-300 hover:text-red-600 hover:border-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all cursor-pointer shadow-2xs"
-              title={isUr ? "تمام ترکہ اور ورثاء کو صاف کر کے نیا کیس شروع کریں" : "Reset all data to zero and start fresh"}
-            >
-              <RotateCcw size={13} className="text-stone-500 hover:text-red-500 transition-colors" />
-              <span>{isUr ? "تمام ڈیٹا ری سیٹ کریں" : "Reset All to Zero"}</span>
-            </button>
+        {/* Category Filters Bar */}
+        <div className="mt-8 pt-6 border-t border-[var(--theme-border)] flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-xs font-extrabold text-[#245642] dark:text-emerald-300 uppercase tracking-wider mr-1">
+              {isUr ? "زمرہ جات:" : "Filter Paradigms:"}
+            </span>
+            {categoryTabs.map((tab) => {
+              const isTabActive = selectedCategory === tab.key;
+              return (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => setSelectedCategory(tab.key)}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                    isTabActive
+                      ? "bg-[#245642] text-white shadow-xs ring-2 ring-[#245642]/30"
+                      : "bg-white dark:bg-stone-900 text-stone-700 dark:text-stone-300 border border-stone-200 dark:border-stone-800 hover:border-[#245642] hover:text-[#245642]"
+                  }`}
+                >
+                  <span>{isUr ? tab.labelUr : tab.labelEn}</span>
+                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                    isTabActive ? "bg-white/20 text-white" : "bg-stone-100 dark:bg-stone-800 text-stone-500"
+                  }`}>
+                    {tab.count}
+                  </span>
+                </button>
+              );
+            })}
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
-            {PARADIGMS.map((p) => {
+          {/* Quick 1-Click Clean Slate Reset All */}
+          <button
+            type="button"
+            onClick={resetAll}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 text-xs font-semibold text-stone-600 dark:text-stone-300 hover:text-red-600 hover:border-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all cursor-pointer shadow-2xs"
+            title={isUr ? "تمام ترکہ اور ورثاء کو صاف کر کے نیا کیس شروع کریں" : "Reset all data to zero and start fresh"}
+          >
+            <RotateCcw size={13} className="text-stone-500 hover:text-red-500 transition-colors" />
+            <span>{isUr ? "تمام ڈیٹا ری سیٹ کریں" : "Reset All to Zero"}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* =========================================================================
+          OPTION A: MASTER-DETAIL DUAL-PANE STUDIO ("OBSERVATORY COCKPIT")
+          ========================================================================= */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Left Column: Big Informative Cards (lg:col-span-5 xl:col-span-4) */}
+        <div className="lg:col-span-5 xl:col-span-4 space-y-3.5">
+          <div className="flex items-center justify-between px-1">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-extrabold text-[#245642] dark:text-emerald-400 uppercase tracking-wider">
+                {isUr ? `بصری ماڈلز (${filteredParadigms.length})` : `Visual Models (${filteredParadigms.length})`}
+              </span>
+              <span className="text-[11px] text-stone-400">•</span>
+              <span className="text-[11px] font-semibold text-stone-500">
+                {isUr ? "وضاحت و افادیت کے ساتھ" : "With Benefits & Badges"}
+              </span>
+            </div>
+            <span className="text-[11px] text-stone-400 font-medium">
+              {isUr ? "منتخب کرنے کے لیے کلک کریں" : "Click to view"}
+            </span>
+          </div>
+
+          {/* Scrollable list of big cards */}
+          <div className="space-y-3 max-h-[920px] overflow-y-auto pr-1.5 scrollbar-thin">
+            {filteredParadigms.map((p) => {
               const Icon = p.icon;
               const isSelected = activeParadigm === p.id;
               const theme = PARADIGM_THEMES[p.id];
 
               return (
-                <button
+                <div
                   key={p.id}
-                  type="button"
                   onClick={() => setActiveParadigm(p.id)}
-                  className={`p-3.5 sm:p-4 rounded-2xl border text-start transition-all flex flex-col justify-between gap-2.5 min-h-[115px] relative cursor-pointer ${
+                  className={`p-4 rounded-2xl border text-start transition-all cursor-pointer relative ${
                     isSelected
-                      ? "bg-[#245642] dark:bg-emerald-950 border-2 border-emerald-500 text-white shadow-lg shadow-emerald-950/20 ring-2 ring-emerald-500/30 scale-[1.02]"
-                      : `${theme.bg} ${theme.border} hover:border-[#245642] hover:shadow-sm`
+                      ? "bg-[#edf5eb] dark:bg-emerald-950/30 border-2 border-[#245642] dark:border-emerald-500 shadow-md ring-2 ring-[#245642]/15"
+                      : "bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 hover:border-[#245642]/60 hover:bg-stone-50/80 dark:hover:bg-stone-850 shadow-2xs"
                   }`}
                 >
-                  <div className="flex items-center justify-between w-full">
-                    <Icon size={19} className={isSelected ? "text-emerald-300" : theme.iconColor} />
+                  {/* Card Top Row: Number, Icon, Category, Status Badge */}
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <div className="flex items-center gap-2">
+                      <div
+                        className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
+                          isSelected
+                            ? "bg-[#245642] text-white shadow-2xs"
+                            : `${theme.bg} ${theme.iconColor} border ${theme.border}`
+                        }`}
+                      >
+                        <Icon size={16} />
+                      </div>
+                      <span className="text-xs font-mono font-bold text-stone-600 dark:text-stone-300 bg-stone-100 dark:bg-stone-800 px-2 py-0.5 rounded">
+                        #{p.number}
+                      </span>
+                      <span className="text-[11px] font-semibold text-stone-500 dark:text-stone-400 truncate max-w-[110px]">
+                        {isUr ? p.categoryUr : p.categoryEn}
+                      </span>
+                    </div>
+
+                    {/* Integration Status Badge */}
                     <span
-                      className={`text-xs font-mono font-bold px-2 py-0.5 rounded-md ${
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0 ${
                         isSelected
-                          ? "bg-white/20 text-white"
-                          : `${theme.badgeBg} ${theme.badgeText}`
+                          ? "bg-[#245642] text-white border-[#1b3d30]"
+                          : "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/40"
                       }`}
                     >
-                      #{p.number}
+                      {isUr ? p.integrationBadgeUr : p.integrationBadgeEn}
                     </span>
                   </div>
 
-                  <div className="space-y-1">
-                    <div
-                      className={`font-bold leading-snug line-clamp-2 ${
-                        isUr
-                          ? "font-nastaliq text-[15px] sm:text-[16px] leading-[2.3] pb-1"
-                          : "text-xs sm:text-sm font-cinzel tracking-tight"
-                      } ${isSelected ? "text-white" : "text-stone-900 dark:text-stone-100"}`}
-                    >
-                      {isUr ? p.titleUr : p.titleEn}
-                    </div>
+                  {/* Title */}
+                  <h3
+                    className={`font-bold leading-tight ${
+                      isUr
+                        ? "font-nastaliq text-[17px] leading-[2.2] pb-0.5 text-stone-900 dark:text-stone-100"
+                        : "text-sm sm:text-base font-cinzel text-stone-900 dark:text-stone-100"
+                    }`}
+                  >
+                    {isUr ? p.titleUr : p.titleEn}
+                  </h3>
 
-                    <div
-                      className={`text-[11px] sm:text-xs font-medium line-clamp-1 ${
-                        isSelected ? "text-emerald-100" : "text-stone-600 dark:text-stone-400"
-                      }`}
-                    >
-                      {isUr ? p.categoryUr : p.categoryEn}
+                  {/* Description */}
+                  <p className="text-xs text-stone-600 dark:text-stone-400 line-clamp-2 mt-1 leading-relaxed">
+                    {isUr ? p.descUr : p.descEn}
+                  </p>
+
+                  {/* Dedicated Benefit Callout Box ("✨ Best For / اہم افادیت") */}
+                  <div
+                    className={`mt-3 p-2.5 rounded-xl border text-[11px] leading-relaxed flex items-start gap-2 ${
+                      isSelected
+                        ? "bg-white/90 dark:bg-emerald-900/30 border-[#245642]/30 dark:border-emerald-700/40 text-stone-800 dark:text-emerald-100"
+                        : "bg-amber-50/70 dark:bg-amber-950/20 border-amber-200/70 dark:border-amber-900/30 text-stone-700 dark:text-stone-300"
+                    }`}
+                  >
+                    <Sparkles size={14} className="shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
+                    <div>
+                      <span className="font-extrabold text-stone-900 dark:text-stone-100 mr-1">
+                        {isUr ? "اہم افادیت:" : "Best For:"}
+                      </span>
+                      <span>{isUr ? p.benefitUr : p.benefitEn}</span>
                     </div>
                   </div>
-                </button>
+
+                  {/* Selection Indicator Bar */}
+                  {isSelected && (
+                    <div className="mt-2.5 pt-2 border-t border-[#245642]/20 dark:border-emerald-800/40 flex items-center justify-between text-[11px] font-bold text-[#245642] dark:text-emerald-300">
+                      <span className="flex items-center gap-1">
+                        <CheckCircle2 size={13} className="text-[#245642] dark:text-emerald-400" />
+                        {isUr ? "زیرِ مطالعہ خاکہ (فعال)" : "Currently Viewing"}
+                      </span>
+                      <ChevronRight size={14} className={isUr ? "rotate-180" : ""} />
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
         </div>
-      </div>
 
-      {/* Active Paradigm Workspace */}
-      <div className="sacred-card p-6 md:p-8 rounded-3xl border border-[var(--theme-border)] relative bg-white shadow-xs">
-        {/* Paradigm Banner */}
-        <div className="flex items-center justify-between pb-6 mb-6 border-b border-[var(--theme-border)]">
-          <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-2xl bg-[#edf3e7] border border-[#a5b69d] flex items-center justify-center text-[#245642] shadow-2xs shrink-0">
-              <currentMeta.icon size={22} />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-extrabold text-[#245642]">
-                  {isUr ? `نمونہ نمبر ${currentMeta.number}` : `Model #${currentMeta.number}`}
-                </span>
-                <span className="text-xs text-stone-400">•</span>
-                <span className="text-xs text-stone-600 font-semibold">
-                  {isUr ? currentMeta.categoryUr : currentMeta.categoryEn}
-                </span>
+        {/* Right Column: Stage & Dossier (lg:col-span-7 xl:col-span-8) */}
+        <div className="lg:col-span-7 xl:col-span-8 space-y-6">
+          {/* Active Model Stage Canvas */}
+          <div className="sacred-card p-6 md:p-8 rounded-3xl border border-[var(--theme-border)] relative bg-white dark:bg-stone-900 shadow-xs">
+            {/* Banner */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 mb-6 border-b border-[var(--theme-border)] gap-4">
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 rounded-2xl bg-[#edf3e7] dark:bg-emerald-950/40 border border-[#a5b69d] dark:border-emerald-800/40 flex items-center justify-center text-[#245642] dark:text-emerald-300 shadow-2xs shrink-0">
+                  <currentMeta.icon size={24} />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs font-extrabold text-[#245642] dark:text-emerald-400">
+                      {isUr ? `ماڈل نمبر ${currentMeta.number}` : `Model #${currentMeta.number}`}
+                    </span>
+                    <span className="text-xs text-stone-300 dark:text-stone-700">•</span>
+                    <span className="text-xs text-stone-500 dark:text-stone-400 font-semibold">
+                      {isUr ? currentMeta.categoryUr : currentMeta.categoryEn}
+                    </span>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/40">
+                      {isUr ? currentMeta.integrationBadgeUr : currentMeta.integrationBadgeEn}
+                    </span>
+                  </div>
+                  <h2
+                    className={`font-bold text-[#172e22] dark:text-emerald-200 ${
+                      isUr
+                        ? "font-nastaliq text-2xl leading-[2.2]"
+                        : "text-xl md:text-2xl font-cinzel pt-1 pb-0.5"
+                    }`}
+                  >
+                    {isUr ? currentMeta.titleUr : currentMeta.titleEn}
+                  </h2>
+                </div>
               </div>
-              <h2 className="text-xl md:text-2xl font-bold text-[#172e22] font-cinzel pt-1 pb-0.5">
-                {isUr ? currentMeta.titleUr : currentMeta.titleEn}
-              </h2>
+
+              <div className="text-xs text-stone-500 dark:text-stone-400 max-w-xs text-start sm:text-end font-medium leading-relaxed">
+                {isUr ? currentMeta.descUr : currentMeta.descEn}
+              </div>
+            </div>
+
+            {/* Dynamic Model Render (All 15 Views) */}
+            <div className="min-h-[500px]">
+              {activeParadigm === "tree_tanzil" && (
+                <TreeTanzilView
+                  heirs={heirs}
+                  result={result}
+                  isUr={isUr}
+                  currency={currency}
+                  deceased={deceased}
+                  selectedId={selectedRelativeId}
+                  onSelect={setSelectedRelativeId}
+                  onToggleChild={toggleChildSurvival}
+                  onToggleRatio={toggleDaughterBranchRatio}
+                />
+              )}
+
+              {activeParadigm === "rings" && (
+                <ConcentricRingsView result={result} isUr={isUr} currency={currency} heirs={heirs} />
+              )}
+
+              {activeParadigm === "lanes" && (
+                <ColorCodedLanesView result={result} isUr={isUr} currency={currency} heirs={heirs} />
+              )}
+
+              {activeParadigm === "sankey_flow" && (
+                <EstateFlowPipelineView result={result} isUr={isUr} currency={currency} debts={debts} assets={assets} />
+              )}
+
+              {activeParadigm === "cards" && (
+                <HouseholdCardsView
+                  result={result}
+                  isUr={isUr}
+                  currency={currency}
+                  heirs={heirs}
+                  onToggleChild={toggleChildSurvival}
+                />
+              )}
+
+              {activeParadigm === "radial" && (
+                <RadialKinshipView result={result} isUr={isUr} currency={currency} heirs={heirs} />
+              )}
+
+              {activeParadigm === "decision_path" && (
+                <DecisionPathView result={result} isUr={isUr} currency={currency} heirs={heirs} openProvenance={openProvenance} />
+              )}
+
+              {activeParadigm === "share_wheel" && (
+                <ShareWheelView result={result} isUr={isUr} currency={currency} heirs={heirs} loadPreset={loadPreset} />
+              )}
+
+              {activeParadigm === "snapshots" && (
+                <EstatePlanningStudio result={result} isUr={isUr} currency={currency} heirs={heirs} />
+              )}
+
+              {activeParadigm === "timeline" && (
+                <EstateTimelineView result={result} isUr={isUr} currency={currency} debts={debts} />
+              )}
+
+              {activeParadigm === "matrix_grid" && (
+                <InheritanceMatrixGridView result={result} isUr={isUr} currency={currency} deceased={deceased} openProvenance={openProvenance} />
+              )}
+
+              {activeParadigm === "story_mode" && (
+                <GuidedStoryView result={result} isUr={isUr} currency={currency} deceased={deceased} debts={debts} />
+              )}
+
+              {activeParadigm === "kinship_galaxy" && (
+                <KinshipGalaxy />
+              )}
+
+              {activeParadigm === "simple_infographic" && (
+                <SimpleDistributionInfographic calculationResult={result} />
+              )}
+
+              {activeParadigm === "kinship_whiteboard" && (
+                <KinshipWhiteboard />
+              )}
             </div>
           </div>
 
-          <p className="hidden md:block text-xs text-stone-600 max-w-md text-end font-medium leading-relaxed">
-            {isUr ? currentMeta.descUr : currentMeta.descEn}
-          </p>
-        </div>
+          {/* Fiqh Explanatory & Legal Insight Dossier */}
+          <div className="sacred-card p-6 md:p-7 rounded-3xl border border-[#c5d0bb] dark:border-stone-700 bg-gradient-to-br from-[#fbfdfa] via-white to-[#f4f7f2] dark:from-stone-900 dark:via-stone-900 dark:to-stone-950 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-stone-200 dark:border-stone-800 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-[#245642] text-white flex items-center justify-center shadow-2xs shrink-0">
+                  <Scale size={16} />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-stone-900 dark:text-stone-100 font-cinzel">
+                    {isUr ? "فقہی تجزیہ، شرعی حکمت و قرآنی اساس" : "Fiqh Explanatory & Legal Insight Dossier"}
+                  </h3>
+                  <p className="text-[11px] text-stone-500 dark:text-stone-400">
+                    {isUr
+                      ? `نمونہ ${currentMeta.number} کے لیے شرعی اصول و مراجعِ عظام کی توثیق`
+                      : `Authoritative Jurisprudential Guidance for Model #${currentMeta.number}`}
+                  </p>
+                </div>
+              </div>
 
-        {/* Dynamic Model Render */}
-        <div className="min-h-[500px]">
-          {activeParadigm === "tree_tanzil" && (
-            <TreeTanzilView
-              heirs={heirs}
-              result={result}
-              isUr={isUr}
-              currency={currency}
-              deceased={deceased}
-              selectedId={selectedRelativeId}
-              onSelect={setSelectedRelativeId}
-              onToggleChild={toggleChildSurvival}
-              onToggleRatio={toggleDaughterBranchRatio}
-            />
-          )}
+              <span className="hidden sm:inline-flex text-[11px] font-bold px-2.5 py-1 rounded-full bg-[#edf3e7] dark:bg-emerald-950/40 text-[#245642] dark:text-emerald-300 border border-[#a5b69d] dark:border-emerald-800/40">
+                {isUr ? currentMeta.categoryUr : currentMeta.categoryEn}
+              </span>
+            </div>
 
-          {activeParadigm === "rings" && (
-            <ConcentricRingsView result={result} isUr={isUr} currency={currency} heirs={heirs} />
-          )}
+            {/* Fiqh Insight Content Card */}
+            <div className="p-4 rounded-2xl bg-white dark:bg-stone-900/90 border border-stone-200 dark:border-stone-800 shadow-2xs">
+              <p
+                className={`text-stone-800 dark:text-stone-200 leading-relaxed ${
+                  isUr ? "font-nastaliq text-[16px] leading-[2.4]" : "text-sm"
+                }`}
+              >
+                {isUr ? currentMeta.fiqhInsightUr : currentMeta.fiqhInsightEn}
+              </p>
+            </div>
 
-          {activeParadigm === "lanes" && (
-            <ColorCodedLanesView result={result} isUr={isUr} currency={currency} heirs={heirs} />
-          )}
+            {/* Live Calculation Engine Sync Bar */}
+            <div className="p-3.5 rounded-2xl bg-[#edf3e7]/80 dark:bg-emerald-950/20 border border-[#b7c9a5] dark:border-emerald-900/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2 text-[#1e4634] dark:text-emerald-300 font-semibold">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                <span>
+                  {isUr
+                    ? `لائیو انجن ڈیٹا: خالص ترکہ ${currency} ${(result?.balanceSheet?.netDistributableEstate || 0).toLocaleString()} اور تمام ورثاء کے حصص مکمل ہم آہنگ ہیں۔`
+                    : `Live Engine Synced: Net distributable estate of ${currency} ${(result?.balanceSheet?.netDistributableEstate || 0).toLocaleString()} and heir fractions are 100% synchronized.`}
+                </span>
+              </div>
 
-          {activeParadigm === "sankey_flow" && (
-            <EstateFlowPipelineView result={result} isUr={isUr} currency={currency} debts={debts} assets={assets} />
-          )}
-
-          {activeParadigm === "cards" && (
-            <HouseholdCardsView
-              result={result}
-              isUr={isUr}
-              currency={currency}
-              heirs={heirs}
-              onToggleChild={toggleChildSurvival}
-            />
-          )}
-
-          {activeParadigm === "radial" && (
-            <RadialKinshipView result={result} isUr={isUr} currency={currency} heirs={heirs} />
-          )}
-
-          {activeParadigm === "decision_path" && (
-            <DecisionPathView result={result} isUr={isUr} currency={currency} heirs={heirs} openProvenance={openProvenance} />
-          )}
-
-          {activeParadigm === "share_wheel" && (
-            <ShareWheelView result={result} isUr={isUr} currency={currency} heirs={heirs} loadPreset={loadPreset} />
-          )}
-
-          {activeParadigm === "snapshots" && (
-            <EstatePlanningStudio result={result} isUr={isUr} currency={currency} heirs={heirs} />
-          )}
-
-          {activeParadigm === "timeline" && (
-            <EstateTimelineView result={result} isUr={isUr} currency={currency} debts={debts} />
-          )}
-
-          {activeParadigm === "matrix_grid" && (
-            <InheritanceMatrixGridView result={result} isUr={isUr} currency={currency} deceased={deceased} openProvenance={openProvenance} />
-          )}
-
-          {activeParadigm === "story_mode" && (
-            <GuidedStoryView result={result} isUr={isUr} currency={currency} deceased={deceased} debts={debts} />
-          )}
-
-          {activeParadigm === "kinship_galaxy" && (
-            <KinshipGalaxy />
-          )}
-
-          {activeParadigm === "simple_infographic" && (
-            <SimpleDistributionInfographic calculationResult={result} />
-          )}
-
-          {activeParadigm === "kinship_whiteboard" && (
-            <KinshipWhiteboard />
-          )}
+              <div className="text-[11px] font-mono text-stone-500 dark:text-stone-400 shrink-0">
+                {isUr ? "حجب و تنزیل کا خودکار حساب" : "Real-time Hajb & Tanzīl"}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
