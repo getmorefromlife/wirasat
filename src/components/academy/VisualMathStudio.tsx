@@ -20,6 +20,11 @@ import {
   Sliders,
   ShieldAlert,
   ArrowLeftRight,
+  Lock,
+  Unlock,
+  Shield,
+  ShieldCheck,
+  Crown,
 } from "lucide-react";
 import { useInheritanceStore } from "@/store/useInheritanceStore";
 
@@ -224,8 +229,8 @@ export function VisualMathStudio() {
   const { language, setActiveView } = useInheritanceStore();
   const isUr = language === "ur";
 
-  // Active Tab: 4 modules
-  const [activeTab, setActiveTab] = useState<"sandbox" | "fractions" | "scale" | "surplus">("sandbox");
+  // Active Tab: 5 sequential modules
+  const [activeTab, setActiveTab] = useState<"sandbox" | "fractions" | "scale" | "surplus" | "tiers">("sandbox");
 
   // Selected Quranic Fraction Card
   const [selectedFraction, setSelectedFraction] = useState<QuranicFraction>(QURANIC_FRACTIONS[2]); // Default 1/8
@@ -238,6 +243,9 @@ export function VisualMathStudio() {
 
   // Step 4: Surplus Simulation Scenario
   const [surplusScenario, setSurplusScenario] = useState<"sole_daughter" | "mother_daughter" | "two_daughters">("sole_daughter");
+
+  // Step 5: Tiers & Proximity Barrier Scenario
+  const [tierScenario, setTierScenario] = useState<"daughter" | "parents" | "siblings" | "uncles">("daughter");
 
   // Derive Sandbox Calculation & Total Slices
   const sandboxMath = useMemo(() => {
@@ -419,8 +427,8 @@ export function VisualMathStudio() {
 
             <p className="text-base sm:text-lg text-emerald-100 leading-relaxed font-normal">
               {isUr
-                ? "سمجھیں کہ قرآنی کسریں کیسی ہیں، ترکہ کُل ۴۸ یا ۷۲ حصوں میں کیوں تقسیم ہوتا ہے، اور ۲:۱ کا تناسب اور فاضل ترکہ (رد) بغیر کسی اعشاریہ یا کسر کے مکمل عدل کیسے قائم کرتا ہے۔"
-                : "Demystifying the 6 Quranic fractions, the 2:1 child ratio, and the secret of why an estate expands into 48 or 72 clean slices with zero crumbs or decimals."}
+                ? "سمجھیں کہ قرآنی کسریں کیسی ہیں، ترکہ کُل ۴۸ یا ۷۲ حصوں میں کیوں تقسیم ہوتا ہے، اور طبقاتِ سه‌گانہ اور رد کا اصول بغیر کسی اعشاریہ یا کسر کے مکمل عدل کیسے قائم کرتا ہے۔"
+                : "Demystifying the 6 Quranic fractions, the 3 genealogical classes, the 2:1 child ratio, and why an estate expands into 48 or 72 clean slices with zero crumbs or decimals."}
             </p>
           </div>
 
@@ -446,59 +454,72 @@ export function VisualMathStudio() {
       </div>
 
       {/* -------------------------------------------------------------------
-          MASTERCLASS NAVIGATION TABS (4 SEQUENTIAL MODULES)
+          MASTERCLASS NAVIGATION TABS (5 SEQUENTIAL MODULES)
           ------------------------------------------------------------------- */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 p-2 rounded-3xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-stone-800 shadow-sm">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 p-2 rounded-3xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-stone-800 shadow-sm">
         <button
           type="button"
           onClick={() => setActiveTab("sandbox")}
-          className={`py-3.5 px-4 rounded-2xl text-sm sm:text-base font-bold flex items-center justify-center gap-2.5 transition-all cursor-pointer ${
+          className={`py-3.5 px-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === "sandbox"
               ? "bg-[#245642] text-white shadow-md ring-2 ring-emerald-500/20"
               : "text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800/70"
           }`}
         >
-          <PieIcon size={18} className={activeTab === "sandbox" ? "text-amber-300" : "text-stone-400"} />
-          <span>{isUr ? "۱۔ لائیو کسروں کا لیب" : "1. Interactive Slices Lab"}</span>
+          <PieIcon size={17} className={activeTab === "sandbox" ? "text-amber-300" : "text-stone-400"} />
+          <span>{isUr ? "۱۔ لائیو کسروں کا لیب" : "1. Slices Lab"}</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab("fractions")}
-          className={`py-3.5 px-4 rounded-2xl text-sm sm:text-base font-bold flex items-center justify-center gap-2.5 transition-all cursor-pointer ${
+          className={`py-3.5 px-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === "fractions"
               ? "bg-[#245642] text-white shadow-md ring-2 ring-emerald-500/20"
               : "text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800/70"
           }`}
         >
-          <Layers size={18} className={activeTab === "fractions" ? "text-amber-300" : "text-stone-400"} />
-          <span>{isUr ? "۲۔ چھ قرآنی کسریں" : "2. 6 Quranic Fractions"}</span>
+          <Layers size={17} className={activeTab === "fractions" ? "text-amber-300" : "text-stone-400"} />
+          <span>{isUr ? "۲۔ ۶ قرآنی کسریں" : "2. 6 Quranic Shares"}</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab("scale")}
-          className={`py-3.5 px-4 rounded-2xl text-sm sm:text-base font-bold flex items-center justify-center gap-2.5 transition-all cursor-pointer ${
+          className={`py-3.5 px-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === "scale"
               ? "bg-[#245642] text-white shadow-md ring-2 ring-emerald-500/20"
               : "text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800/70"
           }`}
         >
-          <Scale size={18} className={activeTab === "scale" ? "text-amber-300" : "text-stone-400"} />
+          <Scale size={17} className={activeTab === "scale" ? "text-amber-300" : "text-stone-400"} />
           <span>{isUr ? "۳۔ ۲:۱ کا تناسب و میزان" : "3. 2:1 Ratio & Scale"}</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab("surplus")}
-          className={`py-3.5 px-4 rounded-2xl text-sm sm:text-base font-bold flex items-center justify-center gap-2.5 transition-all cursor-pointer ${
+          className={`py-3.5 px-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === "surplus"
               ? "bg-[#245642] text-white shadow-md ring-2 ring-emerald-500/20"
               : "text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800/70"
           }`}
         >
-          <ArrowLeftRight size={18} className={activeTab === "surplus" ? "text-amber-300" : "text-stone-400"} />
-          <span>{isUr ? "۴۔ فاضل ترکہ: رد بنام تعصیب" : "4. Surplus: Radd vs Ta'seeb"}</span>
+          <ArrowLeftRight size={17} className={activeTab === "surplus" ? "text-amber-300" : "text-stone-400"} />
+          <span>{isUr ? "۴۔ فاضل ترکہ: رد" : "4. Surplus (Radd)"}</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab("tiers")}
+          className={`py-3.5 px-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+            activeTab === "tiers"
+              ? "bg-[#245642] text-white shadow-md ring-2 ring-emerald-500/20"
+              : "text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800/70"
+          }`}
+        >
+          <ShieldCheck size={17} className={activeTab === "tiers" ? "text-amber-300" : "text-stone-400"} />
+          <span>{isUr ? "۵۔ طبقاتِ سه‌گانہ و حجب" : "5. 3 Tiers & Proximity"}</span>
         </button>
       </div>
 
@@ -1073,7 +1094,7 @@ export function VisualMathStudio() {
 
               <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/30 text-rose-950 dark:text-rose-200 text-xs sm:text-sm font-medium">
                 {isUr
-                  ? "نتیجہ: بیٹی گھر میں موجود ہونے کے باوجود اپنی والد کی آدھی جائیداد سے محروم ہو جاتی ہے۔"
+                  ? "نتیجہ: بیٹی گھر میں موجود ہونے کے باوجود اپنے والد کی آدھی جائیداد سے محروم ہو جاتی ہے۔"
                   : "Outcome: The daughter is forced to share her father's home/estate with distant relatives."}
               </div>
             </div>
@@ -1129,6 +1150,249 @@ export function VisualMathStudio() {
                 <span className="text-xs text-stone-500 block text-end">Surah Al-Ahzab (33:6) · «الأقرب يمنع الأبعد»</span>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* -------------------------------------------------------------------
+          TAB 5: THE 3 GENEALOGICAL CLASSES & THE PROXIMITY SHIELD
+          ------------------------------------------------------------------- */}
+      {activeTab === "tiers" && (
+        <div className="space-y-8">
+          <div className="text-center max-w-3xl mx-auto space-y-2">
+            <h3 className="text-2xl sm:text-3xl font-black text-stone-900 dark:text-stone-100">
+              {isUr ? "طبقاتِ سه‌گانہ اور حجبِ حرمان کا الٰہی قلعہ" : "The 3 Genealogical Classes & Proximity Barrier"}
+            </h3>
+            <p className="text-base sm:text-lg text-stone-600 dark:text-stone-300 leading-relaxed font-normal">
+              {isUr
+                ? "فقہ جعفریہ میں ورثاء کے ۳ آہنی طبقات ہیں: جب تک پچھلے طبقے کا ایک فرد بھی موجود ہو، اگلا طبقہ ایک پیسہ بھی نہیں پا سکتا: «الأقرب يمنع الأبعد»۔"
+                : "In Ja'fari jurisprudence, relatives are arranged in 3 impenetrable generational tiers. The presence of even one heir in Tier 1 completely excludes Tiers 2 and 3."}
+            </p>
+          </div>
+
+          {/* Interactive Tier Scenario Selector */}
+          <div className="flex justify-center">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 p-2 rounded-2xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-stone-800 shadow-sm max-w-4xl w-full">
+              {[
+                { id: "daughter", en: "1 Daughter Exists (Tier 1)", ur: "۱ بیٹی حیات ہے (طبقہ ۱)" },
+                { id: "parents", en: "Parents Exist (Tier 1)", ur: "والدین حیات ہیں (طبقہ ۱)" },
+                { id: "siblings", en: "Tier 1 Empty → Siblings Exist (Tier 2)", ur: "طبقہ ۱ خالی → بہن بھائی (طبقہ ۲)" },
+                { id: "uncles", en: "Tiers 1 & 2 Empty → Paternal Uncle (Tier 3)", ur: "طبقہ ۱ و ۲ خالی → چچا (طبقہ ۳)" },
+              ].map((sc) => (
+                <button
+                  key={sc.id}
+                  type="button"
+                  onClick={() => setTierScenario(sc.id as any)}
+                  className={`py-3 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer text-center ${
+                    tierScenario === sc.id
+                      ? "bg-[#245642] text-white shadow-md ring-2 ring-emerald-500/20"
+                      : "text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800"
+                  }`}
+                >
+                  {isUr ? sc.ur : sc.en}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 3 Tier Fortress Display */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+            {/* TIER 1 CARD */}
+            <div
+              className={`p-7 rounded-3xl border-2 transition-all duration-300 space-y-5 flex flex-col justify-between ${
+                tierScenario === "daughter" || tierScenario === "parents"
+                  ? "bg-white dark:bg-[#10241b] border-emerald-500 dark:border-emerald-500 shadow-xl ring-4 ring-emerald-500/20"
+                  : "bg-stone-50 dark:bg-stone-900/60 border-stone-200 dark:border-stone-800 opacity-60"
+              }`}
+            >
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs sm:text-sm font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-950 dark:bg-emerald-950 dark:text-emerald-200">
+                    {isUr ? "طبقہ اوّل (Tier 1)" : "Class I (Tier 1)"}
+                  </span>
+                  {tierScenario === "daughter" || tierScenario === "parents" ? (
+                    <span className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                      <Unlock size={18} />
+                      <span>{isUr ? "فعال و نافذ" : "Active & Inheriting"}</span>
+                    </span>
+                  ) : (
+                    <span className="text-xs text-stone-400 font-medium">{isUr ? "کوئی وارث نہیں" : "No Heirs"}</span>
+                  )}
+                </div>
+
+                <h4 className="text-xl sm:text-2xl font-black text-stone-900 dark:text-stone-100">
+                  {isUr ? "والدین اور اولاد" : "Parents & Descendants"}
+                </h4>
+
+                <p className="text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
+                  {isUr
+                    ? "والد، والدہ، بیٹا، بیٹی، اور اولاد کی اولاد (پوتے، پوتیاں، نواسے، نواسیاں) تا انتہا۔"
+                    : "Father, Mother, Sons, Daughters, and lineal grandchildren/great-grandchildren to any depth."}
+                </p>
+
+                <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 space-y-1">
+                  <span className="text-xs font-bold text-emerald-900 dark:text-emerald-300 block">
+                    {tierScenario === "daughter"
+                      ? (isUr ? "حالت: اکلوتی بیٹی موجود ہے (۱۰۰٪ ترکہ)" : "Status: 1 Daughter receives 100% estate")
+                      : tierScenario === "parents"
+                      ? (isUr ? "حالت: والدین موجود ہیں (۱۰۰٪ ترکہ)" : "Status: Parents receive 100% estate")
+                      : (isUr ? "حالت: طبقہ اول کا کوئی فرد حیات نہیں" : "Status: No living Class I heirs")}
+                  </span>
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-stone-200 dark:border-stone-800 text-xs font-semibold text-stone-500">
+                {isUr ? "قلعہ کی پہلی دیوار (The Primary Shield)" : "The Core Lineage (Primary Shield)"}
+              </div>
+            </div>
+
+            {/* TIER 2 CARD */}
+            <div
+              className={`p-7 rounded-3xl border-2 transition-all duration-300 space-y-5 flex flex-col justify-between ${
+                tierScenario === "siblings"
+                  ? "bg-white dark:bg-[#10241b] border-purple-500 dark:border-purple-500 shadow-xl ring-4 ring-purple-500/20"
+                  : "bg-stone-50/80 dark:bg-stone-900/40 border-stone-200 dark:border-stone-800/80"
+              }`}
+            >
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs sm:text-sm font-bold px-3 py-1 rounded-full bg-purple-100 text-purple-950 dark:bg-purple-950 dark:text-purple-200">
+                    {isUr ? "طبقہ دوم (Tier 2)" : "Class II (Tier 2)"}
+                  </span>
+                  {tierScenario === "daughter" || tierScenario === "parents" ? (
+                    <span className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-rose-600 dark:text-rose-400">
+                      <Lock size={18} />
+                      <span>{isUr ? "محجوب بالکلیہ (0%)" : "100% Blocked ($0)"}</span>
+                    </span>
+                  ) : tierScenario === "siblings" ? (
+                    <span className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-purple-600 dark:text-purple-400">
+                      <Unlock size={18} />
+                      <span>{isUr ? "فعال و نافذ" : "Active & Inheriting"}</span>
+                    </span>
+                  ) : (
+                    <span className="text-xs text-stone-400 font-medium">{isUr ? "کوئی وارث نہیں" : "No Heirs"}</span>
+                  )}
+                </div>
+
+                <h4 className="text-xl sm:text-2xl font-black text-stone-900 dark:text-stone-100">
+                  {isUr ? "اجداد اور بہن بھائی" : "Grandparents & Siblings"}
+                </h4>
+
+                <p className="text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
+                  {isUr
+                    ? "دادا، دادی، نانا، نانی، سگے، پدری اور مادری بہن بھائی اور ان کی اولاد۔"
+                    : "Paternal/maternal grandparents, and full, paternal, or maternal brothers and sisters (and their children)."}
+                </p>
+
+                <div
+                  className={`p-3.5 rounded-2xl border text-xs font-bold ${
+                    tierScenario === "daughter" || tierScenario === "parents"
+                      ? "bg-rose-50 dark:bg-rose-950/30 border-rose-200 dark:border-rose-900/60 text-rose-950 dark:text-rose-200"
+                      : "bg-purple-50 dark:bg-purple-950/40 border-purple-200 dark:border-purple-800 text-purple-950 dark:text-purple-200"
+                  }`}
+                >
+                  {tierScenario === "daughter" || tierScenario === "parents"
+                    ? (isUr ? "طبقہ ۱ کی موجودگی میں بھائی، بہن یا دادا کو ایک پیسہ بھی نہیں ملتا۔" : "Shielded: Siblings and Grandparents get exactly $0.00.")
+                    : tierScenario === "siblings"
+                    ? (isUr ? "حالت: طبقہ ۱ نہ ہونے کی بنا پر بہن بھائی پورا ترکہ پائیں گے۔" : "Status: Active! Siblings inherit the entire estate.")
+                    : (isUr ? "طبقہ ۲ کا کوئی فرد حیات نہیں" : "No Class II heirs")}
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-stone-200 dark:border-stone-800 text-xs font-semibold text-stone-500">
+                {isUr ? "قلعہ کی دوسری دیوار (Secondary Orbit)" : "Secondary Orbit (Intermediate Shield)"}
+              </div>
+            </div>
+
+            {/* TIER 3 CARD */}
+            <div
+              className={`p-7 rounded-3xl border-2 transition-all duration-300 space-y-5 flex flex-col justify-between ${
+                tierScenario === "uncles"
+                  ? "bg-white dark:bg-[#10241b] border-amber-500 dark:border-amber-500 shadow-xl ring-4 ring-amber-500/20"
+                  : "bg-stone-50/80 dark:bg-stone-900/40 border-stone-200 dark:border-stone-800/80"
+              }`}
+            >
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs sm:text-sm font-bold px-3 py-1 rounded-full bg-amber-100 text-amber-950 dark:bg-amber-950 dark:text-amber-200">
+                    {isUr ? "طبقہ سوم (Tier 3)" : "Class III (Tier 3)"}
+                  </span>
+                  {tierScenario === "uncles" ? (
+                    <span className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-amber-600 dark:text-amber-400">
+                      <Unlock size={18} />
+                      <span>{isUr ? "فعال و نافذ" : "Active & Inheriting"}</span>
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-rose-600 dark:text-rose-400">
+                      <Lock size={18} />
+                      <span>{isUr ? "محجوب بالکلیہ (0%)" : "100% Blocked ($0)"}</span>
+                    </span>
+                  )}
+                </div>
+
+                <h4 className="text-xl sm:text-2xl font-black text-stone-900 dark:text-stone-100">
+                  {isUr ? "چچا، پھوپھی، ماموں اور خالہ" : "Uncles & Aunts"}
+                </h4>
+
+                <p className="text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
+                  {isUr
+                    ? "پدری اور مادری چچا، پھوپھی، ماموں، خالہ، اور ان کے بعد چچا زاد، ماموں زاد تا انتہا۔"
+                    : "Paternal and maternal uncles, aunts, and their subsequent descendants (first cousins, etc.)."}
+                </p>
+
+                <div
+                  className={`p-3.5 rounded-2xl border text-xs font-bold ${
+                    tierScenario === "uncles"
+                      ? "bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800 text-amber-950 dark:text-amber-200"
+                      : "bg-rose-50 dark:bg-rose-950/30 border-rose-200 dark:border-rose-900/60 text-rose-950 dark:text-rose-200"
+                  }`}
+                >
+                  {tierScenario === "uncles"
+                    ? (isUr ? "حالت: طبقہ اول و دوم نہ ہونے پر چچا ترکے کے وارث بنیں گے۔" : "Status: Active! Uncles inherit as Class I & II are vacant.")
+                    : (isUr ? "محجوب: طبقہ اول یا دوم کی موجودگی میں چچا کو بالکل کچھ نہیں ملتا۔" : "Shielded: Uncles and cousins inherit exactly $0.00.")}
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-stone-200 dark:border-stone-800 text-xs font-semibold text-stone-500">
+                {isUr ? "قلعہ کا بیرونی دائرہ (Outer Perimeter)" : "Outer Perimeter (Final Tier)"}
+              </div>
+            </div>
+          </div>
+
+          {/* Special Sovereign Spouse Banner */}
+          <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-sky-900 via-indigo-950 to-emerald-950 text-white shadow-xl border border-sky-500/40 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-amber-400 text-stone-950 flex items-center justify-center shadow-md">
+                <Crown size={24} className="text-stone-950" />
+              </div>
+              <div>
+                <h4 className="text-xl sm:text-2xl font-bold flex items-center gap-2">
+                  <span>{isUr ? "شریکِ حیات کا شاہی استثناء (The Sovereign Spouse)" : "The Sovereign Spouse (Transcends All Tiers)"}</span>
+                </h4>
+                <p className="text-sm text-sky-200">
+                  {isUr ? "بیوہ یا شوہر کسی بھی طبقے سے کبھی محجوب نہیں ہوتے" : "Spouses are never blocked by Tier 1, Tier 2, or Tier 3"}
+                </p>
+              </div>
+            </div>
+
+            <p className="text-sm sm:text-base text-sky-100 leading-relaxed font-normal">
+              {isUr
+                ? "شوہر اور بیوی طبقاتِ سه‌گانہ کے نظام سے بالا تر ہیں۔ چاہے متوفیٰ کے بچے موجود ہوں (طبقہ ۱)، بہن بھائی موجود ہوں (طبقہ ۲)، یا چچا موجود ہوں (طبقہ ۳)، شریکِ حیات اپنا قرآنی قطعی حصہ (بیوہ: ۱/۸ یا ۱/۴؛ شوہر: ۱/۴ یا ۱/۲) پہلے وصول کرتا ہے اور باقی ماندہ ترکہ فعال طبقے میں تقسیم ہوتا ہے۔"
+                : "A surviving husband or wife sits outside and above the 3-tier hierarchy. Whether Tier 1, Tier 2, or Tier 3 inherits, the spouse ALWAYS receives their decreed Quranic share first (Wife: 1/8 with kids, 1/4 without; Husband: 1/4 with kids, 1/2 without)."}
+            </p>
+          </div>
+
+          {/* Quranic Maxim Foundation */}
+          <div className="p-6 rounded-3xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-stone-800 shadow-sm space-y-3">
+            <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400 font-bold text-sm sm:text-base">
+              <CheckCircle2 size={18} />
+              <span>{isUr ? "قرآنی سنہری قاعدہ: «الأقرب يمنع الأبعد»" : "The Golden Quranic Maxim: Proximity Excludes Distance"}</span>
+            </div>
+            <p className="text-sm sm:text-base text-stone-700 dark:text-stone-300 leading-relaxed">
+              {isUr
+                ? "سورۂ انفال (آیت ۷۵) اور سورۂ احزاب (آیت ۶) میں فرمانِ الٰہی ہے: «وَأُوْلُواْ ٱلۡأَرۡحَامِ بَعۡضُهُمۡ أَوۡلَىٰ بِبَعۡضٍ فِی كِتَـٰبِ ٱللَّهِ» (اور اللہ کی کتاب میں خونی رشتہ دار ایک دوسرے پر زیادہ حقدار ہیں)۔ اہلبیت علیہم السلام نے اس آیت کی بنیاد پر یہ ابدی اصول قائم فرمایا کہ جب تک زیادہ قریبی رشتہ دار موجود ہے، دور کا رشتہ دار کبھی ترکے میں شریک نہیں ہو سکتا۔"
+                : "Based on Surah Al-Anfal (8:75) and Surah Al-Ahzab (33:6), the Ahlulbayt (a.s.) decreed that closer blood relatives have absolute priority over distant ones. A surviving daughter or mother completely shields the deceased's home from being divided among distant paternal uncles or cousins."}
+            </p>
           </div>
         </div>
       )}
