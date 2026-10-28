@@ -25,6 +25,9 @@ import {
   Shield,
   ShieldCheck,
   Crown,
+  Building2,
+  Home,
+  Trees,
 } from "lucide-react";
 import { useInheritanceStore } from "@/store/useInheritanceStore";
 
@@ -229,8 +232,8 @@ export function VisualMathStudio() {
   const { language, setActiveView } = useInheritanceStore();
   const isUr = language === "ur";
 
-  // Active Tab: 5 sequential modules
-  const [activeTab, setActiveTab] = useState<"sandbox" | "fractions" | "scale" | "surplus" | "tiers">("sandbox");
+  // Active Tab: 6 sequential modules
+  const [activeTab, setActiveTab] = useState<"sandbox" | "fractions" | "scale" | "surplus" | "tiers" | "hajib">("sandbox");
 
   // Selected Quranic Fraction Card
   const [selectedFraction, setSelectedFraction] = useState<QuranicFraction>(QURANIC_FRACTIONS[2]); // Default 1/8
@@ -246,6 +249,11 @@ export function VisualMathStudio() {
 
   // Step 5: Tiers & Proximity Barrier Scenario
   const [tierScenario, setTierScenario] = useState<"daughter" | "parents" | "siblings" | "uncles">("daughter");
+
+  // Step 6: Hajib Paradox & Real Estate State
+  const [hajibBrothersCount, setHajibBrothersCount] = useState<number>(2); // 0, 1, or 2+
+  const [hajibWivesCount, setHajibWivesCount] = useState<number>(2); // 1, 2, 3, 4
+  const [hajibMarjaSchool, setHajibMarjaSchool] = useState<"sistani" | "khoei">("sistani");
 
   // Derive Sandbox Calculation & Total Slices
   const sandboxMath = useMemo(() => {
@@ -427,8 +435,8 @@ export function VisualMathStudio() {
 
             <p className="text-base sm:text-lg text-emerald-100 leading-relaxed font-normal">
               {isUr
-                ? "سمجھیں کہ قرآنی کسریں کیسی ہیں، ترکہ کُل ۴۸ یا ۷۲ حصوں میں کیوں تقسیم ہوتا ہے، اور طبقاتِ سه‌گانہ اور رد کا اصول بغیر کسی اعشاریہ یا کسر کے مکمل عدل کیسے قائم کرتا ہے۔"
-                : "Demystifying the 6 Quranic fractions, the 3 genealogical classes, the 2:1 child ratio, and why an estate expands into 48 or 72 clean slices with zero crumbs or decimals."}
+                ? "سمجھیں کہ قرآنی کسریں کیسی ہیں، ترکہ کُل ۴۸ یا ۷۲ حصوں میں کیوں تقسیم ہوتا ہے، اور طبقاتِ سه‌گانہ اور حجب کا اصول بغیر کسی اعشاریہ یا کسر کے مکمل عدل کیسے قائم کرتا ہے۔"
+                : "Demystifying the 6 Quranic fractions, the 3 genealogical classes, the Hājib paradox, and why an estate expands into 48 or 72 clean slices with zero crumbs or decimals."}
             </p>
           </div>
 
@@ -454,72 +462,85 @@ export function VisualMathStudio() {
       </div>
 
       {/* -------------------------------------------------------------------
-          MASTERCLASS NAVIGATION TABS (5 SEQUENTIAL MODULES)
+          MASTERCLASS NAVIGATION TABS (6 SEQUENTIAL MODULES)
           ------------------------------------------------------------------- */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 p-2 rounded-3xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-stone-800 shadow-sm">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 p-2 rounded-3xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-stone-800 shadow-sm">
         <button
           type="button"
           onClick={() => setActiveTab("sandbox")}
-          className={`py-3.5 px-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+          className={`py-3.5 px-2.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === "sandbox"
               ? "bg-[#245642] text-white shadow-md ring-2 ring-emerald-500/20"
               : "text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800/70"
           }`}
         >
-          <PieIcon size={17} className={activeTab === "sandbox" ? "text-amber-300" : "text-stone-400"} />
-          <span>{isUr ? "۱۔ لائیو کسروں کا لیب" : "1. Slices Lab"}</span>
+          <PieIcon size={16} className={activeTab === "sandbox" ? "text-amber-300" : "text-stone-400"} />
+          <span>{isUr ? "۱۔ سلائسز لیب" : "1. Slices Lab"}</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab("fractions")}
-          className={`py-3.5 px-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+          className={`py-3.5 px-2.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === "fractions"
               ? "bg-[#245642] text-white shadow-md ring-2 ring-emerald-500/20"
               : "text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800/70"
           }`}
         >
-          <Layers size={17} className={activeTab === "fractions" ? "text-amber-300" : "text-stone-400"} />
-          <span>{isUr ? "۲۔ ۶ قرآنی کسریں" : "2. 6 Quranic Shares"}</span>
+          <Layers size={16} className={activeTab === "fractions" ? "text-amber-300" : "text-stone-400"} />
+          <span>{isUr ? "۲۔ ۶ قرآنی کسریں" : "2. 6 Quranic"}</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab("scale")}
-          className={`py-3.5 px-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+          className={`py-3.5 px-2.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === "scale"
               ? "bg-[#245642] text-white shadow-md ring-2 ring-emerald-500/20"
               : "text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800/70"
           }`}
         >
-          <Scale size={17} className={activeTab === "scale" ? "text-amber-300" : "text-stone-400"} />
-          <span>{isUr ? "۳۔ ۲:۱ کا تناسب و میزان" : "3. 2:1 Ratio & Scale"}</span>
+          <Scale size={16} className={activeTab === "scale" ? "text-amber-300" : "text-stone-400"} />
+          <span>{isUr ? "۳۔ ۲:۱ کا تناسب" : "3. 2:1 Ratio"}</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab("surplus")}
-          className={`py-3.5 px-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+          className={`py-3.5 px-2.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === "surplus"
               ? "bg-[#245642] text-white shadow-md ring-2 ring-emerald-500/20"
               : "text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800/70"
           }`}
         >
-          <ArrowLeftRight size={17} className={activeTab === "surplus" ? "text-amber-300" : "text-stone-400"} />
-          <span>{isUr ? "۴۔ فاضل ترکہ: رد" : "4. Surplus (Radd)"}</span>
+          <ArrowLeftRight size={16} className={activeTab === "surplus" ? "text-amber-300" : "text-stone-400"} />
+          <span>{isUr ? "۴۔ فاضل ترکہ (رد)" : "4. Surplus (Radd)"}</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab("tiers")}
-          className={`py-3.5 px-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+          className={`py-3.5 px-2.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === "tiers"
               ? "bg-[#245642] text-white shadow-md ring-2 ring-emerald-500/20"
               : "text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800/70"
           }`}
         >
-          <ShieldCheck size={17} className={activeTab === "tiers" ? "text-amber-300" : "text-stone-400"} />
-          <span>{isUr ? "۵۔ طبقاتِ سه‌گانہ و حجب" : "5. 3 Tiers & Proximity"}</span>
+          <ShieldCheck size={16} className={activeTab === "tiers" ? "text-amber-300" : "text-stone-400"} />
+          <span>{isUr ? "۵۔ ۳ طبقات و قلعہ" : "5. 3 Tiers"}</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab("hajib")}
+          className={`py-3.5 px-2.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+            activeTab === "hajib"
+              ? "bg-[#245642] text-white shadow-md ring-2 ring-emerald-500/20"
+              : "text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800/70"
+          }`}
+        >
+          <Building2 size={16} className={activeTab === "hajib" ? "text-amber-300" : "text-stone-400"} />
+          <span>{isUr ? "۶۔ حجب اور جائیداد" : "6. Hājib & Property"}</span>
         </button>
       </div>
 
@@ -1393,6 +1414,349 @@ export function VisualMathStudio() {
                 ? "سورۂ انفال (آیت ۷۵) اور سورۂ احزاب (آیت ۶) میں فرمانِ الٰہی ہے: «وَأُوْلُواْ ٱلۡأَرۡحَامِ بَعۡضُهُمۡ أَوۡلَىٰ بِبَعۡضٍ فِی كِتَـٰبِ ٱللَّهِ» (اور اللہ کی کتاب میں خونی رشتہ دار ایک دوسرے پر زیادہ حقدار ہیں)۔ اہلبیت علیہم السلام نے اس آیت کی بنیاد پر یہ ابدی اصول قائم فرمایا کہ جب تک زیادہ قریبی رشتہ دار موجود ہے، دور کا رشتہ دار کبھی ترکے میں شریک نہیں ہو سکتا۔"
                 : "Based on Surah Al-Anfal (8:75) and Surah Al-Ahzab (33:6), the Ahlulbayt (a.s.) decreed that closer blood relatives have absolute priority over distant ones. A surviving daughter or mother completely shields the deceased's home from being divided among distant paternal uncles or cousins."}
             </p>
+          </div>
+        </div>
+      )}
+
+      {/* -------------------------------------------------------------------
+          TAB 6: THE HĀJIB PARADOX & THE REAL ESTATE DIVIDE (SOIL VS. BRICKS)
+          ------------------------------------------------------------------- */}
+      {activeTab === "hajib" && (
+        <div className="space-y-10">
+          <div className="text-center max-w-3xl mx-auto space-y-2">
+            <h3 className="text-2xl sm:text-3xl font-black text-stone-900 dark:text-stone-100">
+              {isUr ? "حجبِ نقصان اور زمین بنام ملبہ کا شرعی تجزیہ" : "The Hājib Paradox & The Real Estate Divide"}
+            </h3>
+            <p className="text-base sm:text-lg text-stone-600 dark:text-stone-300 leading-relaxed font-normal">
+              {isUr
+                ? "سمجھیں کہ بھائی خود کچھ نہ لے کر بھی والدہ کا حصہ ۱/۳ سے ۱/۶ کیوں کر دیتے ہیں، اور بیوہ کی وراثت زمین کی مٹی سے ہوتی ہے یا صرف اس کی مالیاتی قیمت سے۔"
+                : "Understand how brothers reduce their mother's share without taking anything themselves, and explore the widow's entitlement to land vs. buildings."}
+            </p>
+          </div>
+
+          {/* =================================================================
+              PART 1: THE MOTHER'S HĀJIB PARADOX (حجبِ نقصان)
+              ================================================================= */}
+          <div className="p-7 sm:p-9 rounded-3xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-stone-800 shadow-sm space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-stone-200 dark:border-stone-800">
+              <div className="space-y-1">
+                <span className="text-xs sm:text-sm font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-300">
+                  {isUr ? "حصہ اول: حجبِ نقصان (The Mother's Share Reduction)" : "Part 1: The Mother's Hājib Paradox"}
+                </span>
+                <h4 className="text-xl sm:text-2xl font-bold text-stone-900 dark:text-stone-100 mt-2">
+                  {isUr ? "بھائیوں کی موجودگی میں والدہ کا حصہ آدھا ہو جانا" : "How 2+ Brothers Cut Mother’s Share While Taking Zero"}
+                </h4>
+              </div>
+
+              {/* Brother count buttons */}
+              <div className="flex items-center gap-2">
+                <span className="text-xs sm:text-sm font-bold text-stone-500">{isUr ? "بھائیوں کی تعداد:" : "Brothers:"}</span>
+                {[
+                  { count: 0, label: "0" },
+                  { count: 1, label: "1" },
+                  { count: 2, label: "2+ (Hājib)" },
+                ].map((b) => (
+                  <button
+                    key={b.count}
+                    type="button"
+                    onClick={() => setHajibBrothersCount(b.count)}
+                    className={`py-2 px-3.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                      hajibBrothersCount === b.count
+                        ? "bg-[#245642] text-white shadow-md ring-2 ring-emerald-500/20"
+                        : "bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200"
+                    }`}
+                  >
+                    {b.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Live Interactive Allocation Display */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+              {/* Mother's Share Card */}
+              <div
+                className={`p-6 rounded-2xl border transition-all space-y-3 ${
+                  hajibBrothersCount >= 2
+                    ? "bg-rose-50/70 dark:bg-rose-950/20 border-rose-300 dark:border-rose-800"
+                    : "bg-emerald-50/70 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-800"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-bold text-stone-800 dark:text-stone-200">{isUr ? "والدہ (Mother)" : "Mother"}</span>
+                  <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-white dark:bg-stone-900 border font-mono">
+                    {hajibBrothersCount >= 2 ? "1/6 (16.7%)" : "1/3 (33.3%)"}
+                  </span>
+                </div>
+                <div className="text-3xl font-black font-mono text-[#245642] dark:text-emerald-400">
+                  {hajibBrothersCount >= 2 ? "4 of 24 Slices" : "8 of 24 Slices"}
+                </div>
+                <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
+                  {hajibBrothersCount >= 2
+                    ? (isUr ? "۲ یا زائد بھائیوں کی موجودگی نے والدہ کے حصے کو ۱/۳ سے گھٹا کر ۱/۶ کر دیا۔" : "Reduced from 1/3 to 1/6 due to the presence of 2+ full/paternal brothers.")
+                    : (isUr ? "چونکہ ۲ بھائی موجود نہیں ہیں، اس لیے والدہ کو پورا ۱/۳ ملا ہے۔" : "With zero or 1 brother, the mother retains her full uninhibited 1/3 share.")}
+                </p>
+              </div>
+
+              {/* Father's Share Card */}
+              <div className="p-6 rounded-2xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-300 dark:border-blue-800 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-bold text-stone-800 dark:text-stone-200">{isUr ? "والد (Father)" : "Father"}</span>
+                  <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-white dark:bg-stone-900 border font-mono text-blue-700 dark:text-blue-300">
+                    {hajibBrothersCount >= 2 ? "5/6 (83.3%)" : "2/3 (66.7%)"}
+                  </span>
+                </div>
+                <div className="text-3xl font-black font-mono text-blue-800 dark:text-blue-400">
+                  {hajibBrothersCount >= 2 ? "20 of 24 Slices" : "16 of 24 Slices"}
+                </div>
+                <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
+                  {hajibBrothersCount >= 2
+                    ? (isUr ? "والدہ سے کٹنے والا ۱/۶ سیدھا والد کو منتقل ہو گیا، جس سے والد کا حصہ ۸۳.۳٪ ہو گیا!" : "The 1/6 cut from the mother transfers directly to the father, raising his share to 83.3%!")
+                    : (isUr ? "والد قرابت کی بنا پر باقی ۲/۳ کا حقدار ہے۔" : "The father receives the remaining 2/3 (66.7%) by kinship.")}
+                </p>
+              </div>
+
+              {/* Brothers Share Card (The Paradox!) */}
+              <div className="p-6 rounded-2xl bg-stone-50 dark:bg-stone-900 border border-stone-300 dark:border-stone-800 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-bold text-stone-800 dark:text-stone-200">{isUr ? "بھائی (Brothers)" : "Brothers"}</span>
+                  <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 border border-rose-300 font-mono">
+                    0.0% ($0.00)
+                  </span>
+                </div>
+                <div className="text-3xl font-black font-mono text-stone-400">
+                  0 Slices
+                </div>
+                <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
+                  {isUr
+                    ? "بھائیوں کو خود ایک پیسہ بھی نہیں ملتا کیونکہ والد طبقہ ۱ میں ہے جبکہ بھائی طبقہ ۲ میں محجوب ہیں۔"
+                    : "Brothers inherit zero dollars because the father is Tier 1, which 100% blocks siblings (Tier 2)."}
+                </p>
+              </div>
+            </div>
+
+            {/* The Juristic Wisdom Box */}
+            <div className="p-5 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-800/60 space-y-2">
+              <span className="text-xs sm:text-sm font-bold text-amber-900 dark:text-amber-300 uppercase tracking-wider block flex items-center gap-1.5">
+                <Info size={16} />
+                <span>{isUr ? "اس حسابی معمہ کی شرعی و معاشی حکمت:" : "The Economic & Juristic Wisdom:"}</span>
+              </span>
+              <p className="text-xs sm:text-sm text-amber-950 dark:text-amber-100 leading-relaxed font-medium">
+                {isUr
+                  ? "اگر بھائیوں کو کچھ نہیں ملتا تو انہوں نے ماں کا حصہ کیوں گھٹایا؟ فقہ اسلامی کا جواب ہے: والد پر ان زیرِ کفالت بیٹوں کے نفقہ، اخراجات اور مستقبل کے مہر کی شرعی ذمہ داری عائد ہے۔ شریعت نے یہ ۱/۶ ماں سے نکال کر والد کے حوالے کیا تاکہ وہ ان بیٹوں کے اخراجات آسانی سے اٹھا سکے!"
+                  : "Why do brothers reduce their mother's share if they receive nothing? In Islamic law, the father is legally obligated to maintain and fund the living costs and future mahr of these dependent sons. The Shariah routes the extra 1/6 to the father so he has the liquid capital to bear this household burden!"}
+              </p>
+              <span className="text-xs text-amber-800 dark:text-amber-400 block font-mono">
+                Surah An-Nisa (4:11): «فَإِن كَانَ لَهُۥۤ إِخۡوَةࣱ فَلِأُمِّهِ ٱلسُّدُسُ»
+              </span>
+            </div>
+          </div>
+
+          {/* =================================================================
+              PART 2: MULTIPLE WIVES EQUAL PARTITION (BI AL-SAWIYYAH)
+              ================================================================= */}
+          <div className="p-7 sm:p-9 rounded-3xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-stone-800 shadow-sm space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-stone-200 dark:border-stone-800">
+              <div className="space-y-1">
+                <span className="text-xs sm:text-sm font-bold px-3 py-1 rounded-full bg-blue-100 text-blue-900 dark:bg-blue-950 dark:text-blue-300">
+                  {isUr ? "حصہ دوم: تعددِ ازواج میں مساوی تقسیم" : "Part 2: Multiple Wives Equal Partition (Bi al-Sawiyyah)"}
+                </span>
+                <h4 className="text-xl sm:text-2xl font-bold text-stone-900 dark:text-stone-100 mt-2">
+                  {isUr ? "تمام بیواؤں کا قرآنی حصہ میں برابر کا اشتراک" : "Strict Mathematical Equality Among Surviving Wives"}
+                </h4>
+              </div>
+
+              {/* Wives Slider Buttons */}
+              <div className="flex items-center gap-2">
+                <span className="text-xs sm:text-sm font-bold text-stone-500">{isUr ? "بیواؤں کی تعداد:" : "Wives:"}</span>
+                {[1, 2, 3, 4].map((w) => (
+                  <button
+                    key={w}
+                    type="button"
+                    onClick={() => setHajibWivesCount(w)}
+                    className={`py-2 px-3.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                      hajibWivesCount === w
+                        ? "bg-blue-600 text-white shadow-md ring-2 ring-blue-500/20"
+                        : "bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200"
+                    }`}
+                  >
+                    {w} {isUr ? "بیوہ" : (w === 1 ? "Wife" : "Wives")}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Wives Calculation Display */}
+            <div className="space-y-4">
+              <div className="p-4 rounded-2xl bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-sm sm:text-base flex items-center justify-between">
+                <span className="font-bold text-stone-700 dark:text-stone-300">
+                  {isUr ? "کُل قرآنی زوجی حصہ (اولاد کی موجودگی میں):" : "Collective Spousal Quranic Fraction (with children):"}
+                </span>
+                <span className="font-mono font-bold text-sky-600 dark:text-sky-400 text-lg">1/8 (12.5%)</span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {Array.from({ length: hajibWivesCount }).map((_, idx) => (
+                  <div
+                    key={idx}
+                    className="p-4 rounded-2xl bg-white dark:bg-[#12241c] border-2 border-sky-400 dark:border-sky-600 shadow-sm space-y-1.5 text-center"
+                  >
+                    <span className="text-xs font-bold text-sky-800 dark:text-sky-300 block">
+                      {isUr ? `زوجہ (بیوہ) نمبر ${idx + 1}` : `Wife ${idx + 1}`}
+                    </span>
+                    <div className="text-xl sm:text-2xl font-black font-mono text-[#245642] dark:text-emerald-400">
+                      {hajibWivesCount === 1 ? "1/8" : hajibWivesCount === 2 ? "1/16" : hajibWivesCount === 3 ? "1/24" : "1/32"}
+                    </div>
+                    <span className="text-xs text-stone-500 font-mono font-semibold block">
+                      {(12.5 / hajibWivesCount).toFixed(2)}% of estate
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
+                {isUr
+                  ? "فقہ جعفریہ میں پہلی اور دوسری بیوہ کے حصے میں کوئی فرق نہیں ہوتا۔ خواہ کسی کے بچے ہوں یا نہ ہوں، قرآنی ۱/۸ تمام بیواؤں میں بالکلیہ بالسویہ (برابر) تقسیم ہوتا ہے۔"
+                  : "In Ja'fari jurisprudence, co-wives enjoy absolute parity. Regardless of marriage duration or who bore children, the collective 1/8 pool is split with mathematical equality."}
+              </p>
+            </div>
+          </div>
+
+          {/* =================================================================
+              PART 3: REAL ESTATE DIVIDE (SOIL VS. BRICKS)
+              ================================================================= */}
+          <div className="p-7 sm:p-9 rounded-3xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-stone-800 shadow-sm space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-stone-200 dark:border-stone-800">
+              <div className="space-y-1">
+                <span className="text-xs sm:text-sm font-bold px-3 py-1 rounded-full bg-amber-100 text-amber-950 dark:bg-amber-950 dark:text-amber-300">
+                  {isUr ? "حصہ سوم: زمین کی مٹی بنام ملبہ و عمارت" : "Part 3: Real Estate (Land vs. Buildings)"}
+                </span>
+                <h4 className="text-xl sm:text-2xl font-bold text-stone-900 dark:text-stone-100 mt-2">
+                  {isUr ? "بیوہ کا رئیل اسٹیٹ میں حق: مٹی کی ملکیت یا نقدی قیمت؟" : "The Widow's Real Estate Title: Soil vs. Cash Valuation"}
+                </h4>
+              </div>
+
+              {/* School Toggle */}
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setHajibMarjaSchool("sistani")}
+                  className={`py-2 px-3.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                    hajibMarjaSchool === "sistani"
+                      ? "bg-[#245642] text-white shadow-md ring-2 ring-emerald-500/20"
+                      : "bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200"
+                  }`}
+                >
+                  {isUr ? "آیت اللہ سیستانی / خامنہ ای" : "Sayyid Sistani / Khamenei"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setHajibMarjaSchool("khoei")}
+                  className={`py-2 px-3.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                    hajibMarjaSchool === "khoei"
+                      ? "bg-[#245642] text-white shadow-md ring-2 ring-emerald-500/20"
+                      : "bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200"
+                  }`}
+                >
+                  {isUr ? "آیت اللہ خوئی / متقدمین" : "Sayyid Khoei & Classical"}
+                </button>
+              </div>
+            </div>
+
+            {/* Illustrative Property Appraisal Display */}
+            <div className="space-y-4">
+              <div className="p-4 rounded-2xl bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-xs sm:text-sm flex flex-wrap items-center justify-between gap-3">
+                <span className="font-bold text-stone-700 dark:text-stone-300">
+                  {isUr ? "فرضی خاندانی مکان کی کل مالیت:" : "Reference Property Value:"}
+                </span>
+                <div className="flex items-center gap-3 font-mono font-bold">
+                  <span className="text-amber-700 dark:text-amber-400 flex items-center gap-1">
+                    <Trees size={15} /> Land: $10,000,000
+                  </span>
+                  <span>+</span>
+                  <span className="text-blue-700 dark:text-blue-400 flex items-center gap-1">
+                    <Building2 size={15} /> Building: $6,000,000
+                  </span>
+                  <span>=</span>
+                  <span className="text-emerald-700 dark:text-emerald-400 font-black text-base">$16,000,000</span>
+                </div>
+              </div>
+
+              {/* Dynamic Comparison Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+                <div
+                  className={`p-6 rounded-2xl border transition-all space-y-3 ${
+                    hajibMarjaSchool === "sistani"
+                      ? "bg-emerald-50/80 dark:bg-emerald-950/30 border-emerald-500 shadow-md ring-2 ring-emerald-500/20"
+                      : "bg-stone-50 dark:bg-stone-900/60 border-stone-200 dark:border-stone-800 opacity-60"
+                  }`}
+                >
+                  <strong className="text-sm sm:text-base font-bold text-emerald-950 dark:text-emerald-200 block">
+                    {isUr ? "فتویٰ آیت اللہ سیستانی / خامنہ ای:" : "Ruling: Sayyid Sistani & Khamenei:"}
+                  </strong>
+                  <div className="space-y-1.5 text-xs sm:text-sm">
+                    <div className="flex justify-between">
+                      <span>{isUr ? "زمین کی نقدی قیمت سے حصہ (1/8):" : "Cash value of land (1/8):"}</span>
+                      <span className="font-mono font-bold">$1,250,000</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>{isUr ? "عمارت و ملبہ سے حصہ (1/8):" : "Cash value of building (1/8):"}</span>
+                      <span className="font-mono font-bold">$750,000</span>
+                    </div>
+                    <div className="pt-2 border-t border-emerald-300 dark:border-emerald-800 flex justify-between font-bold text-base text-emerald-900 dark:text-emerald-200">
+                      <span>{isUr ? "کُل واجب الادا نقدی:" : "Total Cash Entitlement:"}</span>
+                      <span className="font-mono font-black">$2,000,000</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-stone-600 dark:text-stone-300 leading-snug">
+                    {isUr
+                      ? "بیوہ تمام قسم کی زمین (رہائشی، تجارتی، زرعی) کی مالیاتی قیمت سے ۱/۸ نقدی وصول کرتی ہے۔"
+                      : "The widow inherits 1/8 from the cash valuation of ALL land (residential, commercial, agricultural) + structures."}
+                  </p>
+                </div>
+
+                <div
+                  className={`p-6 rounded-2xl border transition-all space-y-3 ${
+                    hajibMarjaSchool === "khoei"
+                      ? "bg-amber-50/80 dark:bg-amber-950/30 border-amber-500 shadow-md ring-2 ring-amber-500/20"
+                      : "bg-stone-50 dark:bg-stone-900/60 border-stone-200 dark:border-stone-800 opacity-60"
+                  }`}
+                >
+                  <strong className="text-sm sm:text-base font-bold text-amber-950 dark:text-amber-200 block">
+                    {isUr ? "فتویٰ آیت اللہ خوئی و فقہائے متقدمین:" : "Ruling: Sayyid Khoei & Classical Jurists:"}
+                  </strong>
+                  <div className="space-y-1.5 text-xs sm:text-sm">
+                    <div className="flex justify-between text-rose-600 dark:text-rose-400">
+                      <span>{isUr ? "زمین کی مٹی سے حصہ:" : "Entitlement from soil/land:"}</span>
+                      <span className="font-mono font-bold">$0.00 (Zero)</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>{isUr ? "عمارت، درخت و ملبہ سے حصہ (1/8):" : "Cash value of building/trees (1/8):"}</span>
+                      <span className="font-mono font-bold">$750,000</span>
+                    </div>
+                    <div className="pt-2 border-t border-amber-300 dark:border-amber-800 flex justify-between font-bold text-base text-amber-900 dark:text-amber-200">
+                      <span>{isUr ? "کُل واجب الادا نقدی:" : "Total Cash Entitlement:"}</span>
+                      <span className="font-mono font-black">$750,000</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-stone-600 dark:text-stone-300 leading-snug">
+                    {isUr
+                      ? "بیوہ زمین کی مٹی سے کچھ نہیں پاتی؛ صرف اینٹ، پتھر، درخت اور تعمیراتی ڈھانچے کی قیمت سے ۱/۸ لیتی ہے۔"
+                      : "The widow receives zero from the physical soil or land value; her 1/8 is strictly from the appraised value of bricks and trees."}
+                  </p>
+                </div>
+              </div>
+
+              {/* Crucial Safeguard Notice */}
+              <div className="p-4 rounded-2xl bg-stone-100 dark:bg-stone-900 text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed font-medium flex items-start gap-2.5">
+                <CheckCircle2 size={18} className="text-emerald-600 shrink-0 mt-0.5" />
+                <span>
+                  {isUr
+                    ? "اہم فقہی نکتہ: دونوں فتاویٰ کے مطابق بیوہ کو زمین پر قابض ہو کر مکان توڑنے کا حق نہیں ہوتا، بلکہ دیگر ورثاء مکان کی شرعی قیمت لگوا کر بیوہ کو اس کا پورا حصہ نقد ادا کرتے ہیں۔"
+                    : "Universal Legal Safeguard: Under both schools, the widow does not physically partition or divide the soil. Instead, the heirs must appraise the property and pay her full entitlement in cash to safeguard the family homestead."}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       )}
