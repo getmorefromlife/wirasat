@@ -1,7 +1,7 @@
 /** Structural constraints for the permanent-marriage inheritance sandbox.
  * Survival is a scenario input, not a structural constraint.
  */
-export type WhiteboardRelation = "DECEASED" | "SPOUSE" | "FATHER" | "MOTHER" | "SON" | "DAUGHTER" | "GRANDCHILD";
+export type WhiteboardRelation = "DECEASED" | "SPOUSE" | "FATHER" | "MOTHER" | "SON" | "DAUGHTER" | "GRANDCHILD" | "RELATIVE";
 export interface WhiteboardNode {
   id: string;
   nameEn: string;
@@ -119,16 +119,11 @@ export function getAddRelativeError(nodes: readonly WhiteboardNode[], personId: 
   const person = nodes.find(n => n.id === personId);
   if (!person) return "missing-person";
   if (type === "parent") {
-    if (person.relation !== "DECEASED") return "parent-scope";
-    const parents = nodes.filter(n => (n.relation === "FATHER" || n.relation === "MOTHER") && (!n.parentOfId || n.parentOfId === personId));
-    if (parents.some(n=>n.relation === "FATHER") && parents.some(n=>n.relation === "MOTHER")) return "parent-limit";
+    const parents = projectWhiteboardFamily(nodes, personId).parents;
+    if (parents.some(n=>n.gender === "MALE") && parents.some(n=>n.gender === "FEMALE")) return "parent-limit";
   }
   if (type === "spouse") {
     if (getWhiteboardSpouses(nodes,personId).length >= (person.gender === "MALE" ? 4 : 1)) return person.gender === "MALE" ? "wife-limit" : "husband-limit";
-  }
-  if (type === "child") {
-    const parent = person.relation === "SPOUSE" ? nodes.find(n => n.id === person.spouseOfId) : person;
-    if (!parent || !["DECEASED","SON","DAUGHTER"].includes(parent.relation)) return "child-scope";
   }
   return null;
 }
@@ -139,7 +134,7 @@ export function createWhiteboardRelative(nodes: readonly WhiteboardNode[], perso
   const person = nodes.find(n=>n.id === personId)!;
   let node: WhiteboardNode;
   if (type === "parent") {
-    const fatherExists = nodes.some(n => n.relation === "FATHER" && (!n.parentOfId || n.parentOfId === personId));
+    const fatherExists = projectWhiteboardFamily(nodes, personId).parents.some(n => n.gender === "MALE");
     node = {id,nameEn:fatherExists?"Mother":"Father",nameUr:fatherExists?"والدہ محترمہ":"والد صاحب",gender:fatherExists?"FEMALE":"MALE",relation:fatherExists?"MOTHER":"FATHER",isAlive:true,parentOfId:personId,x:person.x+(fatherExists?90:-90),y:Math.max(50,person.y-140)};
   } else if (type === "spouse") {
     const isWife = person.gender === "MALE";
@@ -150,9 +145,35 @@ export function createWhiteboardRelative(nodes: readonly WhiteboardNode[], perso
     const siblings = nodes.filter(n => n.parentId === parent.id).length;
     const male = siblings%2 === 0;
     const direct = parent.relation === "DECEASED";
-    node = {id,nameEn:direct?(male?"Son":"Daughter"):"Grandchild",nameUr:direct?(male?"بیٹا":"بیٹی"):(parent.gender === "MALE"?"پوتا / پوتی":"نواسہ / نواسی"),gender:male?"MALE":"FEMALE",relation:direct?(male?"SON":"DAUGHTER"):"GRANDCHILD",isAlive:true,parentId:parent.id,secondParentId:person.relation === "SPOUSE" ? person.id : undefined,x:parent.x-90+siblings*120,y:parent.y+160};
+    node = {id,nameEn:direct || !["SON","DAUGHTER"].includes(parent.relation)?(male?"Son":"Daughter"):"Grandchild",nameUr:direct || !["SON","DAUGHTER"].includes(parent.relation)?(male?"بیٹا":"بیٹی"):(parent.gender === "MALE"?"پوتا / پوتی":"نواسہ / نواسی"),gender:male?"MALE":"FEMALE",relation:direct?(male?"SON":"DAUGHTER"):(["SON","DAUGHTER"].includes(parent.relation)?"GRANDCHILD":"RELATIVE"),isAlive:true,parentId:parent.id,secondParentId:person.relation === "SPOUSE" ? person.id : undefined,x:parent.x-90+siblings*120,y:parent.y+160};
   }
   return {node,error:validateWhiteboard([...nodes,node])};
+}
+
+export type SiblingKind = "full" | "paternal" | "maternal";
+export function createWhiteboardSibling(nodes: readonly WhiteboardNode[], personId: string, gender: "MALE" | "FEMALE", kind: SiblingKind, id: string): {nodes: WhiteboardNode[]; error: WhiteboardError | null} {
+  if (!nodes.some(n=>n.id === personId)) return {nodes:[...nodes],error:"missing-person"};
+  const next=[...nodes];
+  // Missing parents are explicit placeholder people, initially predeceased to avoid
+  // introducing living heirs as a side effect of adding a sibling.
+  for (const sex of ["MALE","FEMALE"] as const) {
+    if (!projectWhiteboardFamily(next,personId).parents.some(n=>n.gender === sex)) {
+      const result=createWhiteboardRelative(next,personId,"parent",`${id}-${sex}`);
+      if(result.error || !result.node) return {nodes:[...nodes],error:result.error};
+      next.push({...result.node,isAlive:false,nameEn:sex === "MALE"?"Father (confirm details)":"Mother (confirm details)",nameUr:sex === "MALE"?"والد — تفصیل کی تصدیق کریں":"والدہ — تفصیل کی تصدیق کریں"});
+    }
+  }
+  const parents=projectWhiteboardFamily(next,personId).parents;
+  let father=parents.find(n=>n.gender === "MALE")!;
+  let mother=parents.find(n=>n.gender === "FEMALE")!;
+  if(kind !== "full") {
+    const sex=kind === "paternal"?"FEMALE":"MALE";
+    const other:WhiteboardNode={id:`${id}-other`,nameEn:sex === "MALE"?"Other father (confirm details)":"Other mother (confirm details)",nameUr:sex === "MALE"?"دوسرے والد — تصدیق کریں":"دوسری والدہ — تصدیق کریں",gender:sex,relation:"RELATIVE",isAlive:false,x:0,y:0};
+    next.push(other);
+    if(sex === "MALE")father=other;else mother=other;
+  }
+  next.push({id,nameEn:gender === "MALE"?"Brother":"Sister",nameUr:gender === "MALE"?"بھائی":"بہن",gender,relation:"RELATIVE",isAlive:true,parentId:father.id,secondParentId:mother.id,x:0,y:0});
+  return {nodes:next,error:validateWhiteboard(next)};
 }
 
 export function editWhiteboardPerson(nodes: readonly WhiteboardNode[], personId: string, partial: Partial<WhiteboardNode>): { nodes: WhiteboardNode[]; error: WhiteboardError | null } {
@@ -167,10 +188,16 @@ export function editWhiteboardPerson(nodes: readonly WhiteboardNode[], personId:
 
 export function removeWhiteboardPerson(nodes: readonly WhiteboardNode[], personId: string): WhiteboardNode[] {
   if(nodes.find(n=>n.id === personId)?.relation === "DECEASED") return [...nodes];
-  const removed = new Set([personId]);
-  let changed = true;
-  while(changed){changed=false;for(const n of nodes) if(!removed.has(n.id) && ((n.parentId && removed.has(n.parentId)) || (n.spouseOfId && removed.has(n.spouseOfId)) || (n.parentOfId && removed.has(n.parentOfId)))){removed.add(n.id);changed=true;}}
-  return nodes.filter(n=>!removed.has(n.id)).map(n => n.secondParentId && removed.has(n.secondParentId) ? {...n,secondParentId:undefined} : n);
+  const removed=new Set([personId]);
+  let changed=true;
+  while(changed){changed=false;for(const n of nodes)if(n.relation !== "DECEASED" && !removed.has(n.id) && ((n.parentId && removed.has(n.parentId)) || (n.spouseOfId && removed.has(n.spouseOfId)))){removed.add(n.id);changed=true;}}
+  return nodes.filter(n=>!removed.has(n.id)).map(n=>{
+    const next={...n};
+    if(next.parentId && removed.has(next.parentId))next.parentId=undefined;
+    if(next.secondParentId && removed.has(next.secondParentId))next.secondParentId=undefined;
+    if(next.parentOfId && removed.has(next.parentOfId)){next.parentOfId=undefined;next.relation="RELATIVE";}
+    return next;
+  });
 }
 
 /** Interpret existing family links around a chosen estate subject without rewriting them. */
@@ -236,27 +263,66 @@ export function projectWhiteboardFamily(nodes: readonly WhiteboardNode[], subjec
   return {subject,parents,children,spouses,grandchildren,grandparents,siblingGroups,unclesAndAunts,cousins,roles,unresolvedIds,getParents,getChildren};
 }
 
-/** Layout whole branches with generous space for avatars and bounded name plates. */
-export function arrangeWhiteboard(nodes: readonly WhiteboardNode[]): WhiteboardNode[] {
+/** Lay out an ownership forest; secondary parent links remain cross-links.
+ * Every person is placed once, including siblings, spouses and distant branches.
+ */
+export function arrangeWhiteboard(nodes: readonly WhiteboardNode[], rtl = false): WhiteboardNode[] {
   const anchor=nodes.find(n=>n.relation === "DECEASED");
   if(!anchor)return [...nodes];
   const result=nodes.map(n=>({...n}));
+  const family=projectWhiteboardFamily(nodes,anchor.id);
+  const owner=new Map<string,string>();
+  for(const n of nodes){
+    const parents=family.getParents(n.id);
+    const primary=parents.find(p=>p.gender === "MALE") || parents[0];
+    if(primary)owner.set(n.id,primary.id);
+    else if(n.spouseOfId)owner.set(n.id,n.spouseOfId);
+  }
+  // Co-parents sit alongside the owner rather than in a separate distant tree.
+  for(const n of nodes){
+    const parents=family.getParents(n.id);
+    if(parents.length === 2){const father=parents.find(p=>p.gender === "MALE")!;const mother=parents.find(p=>p.gender === "FEMALE")!;if(!owner.has(mother.id))owner.set(mother.id,father.id);}
+  }
   const byId=new Map(result.map(n=>[n.id,n]));
-  const partners=(id:string)=>result.filter(n=>n.spouseOfId === id);
-  const children=(id:string)=>result.filter(n=>n.parentId === id || (!n.parentId && ["SON","DAUGHTER"].includes(n.relation) && id === anchor.id));
-  const width=(id:string):number=>Math.max(250*(1+partners(id).length),children(id).reduce((sum,n)=>sum+width(n.id),0));
-  const place=(id:string,left:number,depth:number)=>{
-    const n=byId.get(id)!; const ownWidth=width(id); const groupWidth=250*(1+partners(id).length);
-    n.x=left+(ownWidth-groupWidth)/2+125;n.y=220+depth*330;
-    partners(id).forEach((p,i)=>{p.x=n.x+250*(i+1);p.y=n.y;});
-    let offset=left;for(const c of children(id)){place(c.id,offset,depth+1);offset+=width(c.id);}
+  const partners=(id:string)=>result.filter(n=>owner.get(n.id) === id && (n.spouseOfId === id || !family.getParents(n.id).length));
+  const children=(id:string)=>result.filter(n=>owner.get(n.id) === id && !partners(id).some(p=>p.id === n.id)).sort((a,b)=>(a.secondParentId || "~").localeCompare(b.secondParentId || "~"));
+  const widths=new Map<string,number>();
+  const measuring=new Set<string>();
+  const placed=new Set<string>();
+  const lanes=(id:string)=>{
+    const spouses=partners(id);
+    const kids=[...children(id),...spouses.flatMap(p=>children(p.id))];
+    const groups=spouses.map(p=>({partner:p,kids:kids.filter(c=>family.getParents(c.id).some(parent=>parent.id === p.id))}));
+    const assigned=new Set(groups.flatMap(g=>g.kids.map(c=>c.id)));
+    return [...groups,...(kids.some(c=>!assigned.has(c.id))?[{partner:undefined,kids:kids.filter(c=>!assigned.has(c.id))}]:[])];
   };
-  const hasParents=result.some(n=>["FATHER","MOTHER"].includes(n.relation));
-  place(anchor.id,100,hasParents?1:0);
-  const root=byId.get(anchor.id)!;
-  const parents=result.filter(n=>["FATHER","MOTHER"].includes(n.relation));
-  const parentWidth=parents.reduce((sum,n)=>sum+250*(1+partners(n.id).length),0);
-  let parentX=root.x-parentWidth/2;
-  parents.forEach(n=>{n.x=parentX+125;n.y=220;partners(n.id).forEach((p,i)=>{p.x=n.x+250*(i+1);p.y=n.y;});parentX+=250*(1+partners(n.id).length);});
+  const width=(id:string):number=>{
+    if(widths.has(id))return widths.get(id)!;
+    if(measuring.has(id))return 300;
+    measuring.add(id);
+    const groups=lanes(id);
+    const size=partners(id).length?300+groups.reduce((sum,g)=>sum+Math.max(300,g.kids.reduce((total,c)=>total+width(c.id),0)),0):Math.max(300,children(id).reduce((sum,c)=>sum+width(c.id),0));
+    measuring.delete(id);widths.set(id,size);return size;
+  };
+  const place=(id:string,left:number,depth:number)=>{
+    if(placed.has(id))return;placed.add(id);
+    const n=byId.get(id)!;const ownWidth=width(id);
+    n.x=left+(partners(id).length?150:ownWidth/2);n.y=220+depth*390;
+    if(partners(id).length){
+      let offset=left+300;
+      for(const group of lanes(id)){
+        const laneWidth=Math.max(300,group.kids.reduce((sum,c)=>sum+width(c.id),0));
+        if(group.partner){group.partner.x=offset+laneWidth/2;group.partner.y=n.y;placed.add(group.partner.id);}
+        let childLeft=offset;
+        for(const child of group.kids){place(child.id,childLeft,depth+1);childLeft+=width(child.id);}
+        offset+=laneWidth;
+      }
+    }else{let offset=left;for(const c of children(id)){place(c.id,offset,depth+1);offset+=width(c.id);}}
+  };
+  let left=100;
+  for(const n of result.filter(n=>!owner.has(n.id))){place(n.id,left,0);left+=width(n.id)+300;}
+  // Imported graphs may have ownership cycles through marriages; keep all nodes visible.
+  for(const n of result)if(!placed.has(n.id)){place(n.id,left,0);left+=width(n.id)+300;}
+  if(rtl){const axis=Math.min(...result.map(n=>n.x))+Math.max(...result.map(n=>n.x));result.forEach(n=>{n.x=axis-n.x;});}
   return result;
 }

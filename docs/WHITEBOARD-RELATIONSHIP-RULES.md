@@ -15,7 +15,7 @@ The permanent-marriage count reference is the official Sistani text, *A Code of 
 
 ## Supported branches
 
-Add parents to the subject, spouses to the subject or their sons/daughters, children to the subject, and grandchildren to a son/daughter. Adding through a spouse attaches the child to the corresponding subject/child branch. Deeper ancestors, great-grandchildren and sibling branches are explicitly unavailable rather than silently misclassified.
+Parents, spouses, children and full/paternal/maternal siblings can now be added from any person. Siblings are represented by explicit shared parents. Missing parents are created as named placeholders; the form explicitly lets the user choose whether newly created parents are alive (default: predeceased). Existing parents retain their status. Adding through a spouse records both parents. Extended branches use neutral structural roles and are reinterpreted relative to the selected estate subject. Tree creation beyond three generations does not expand the existing calculation engine’s supported depth.
 
 Spouses of children may appear in the family diagram but must not be counted as spouses of the subject, included in their unpaid-mahr list, or assigned the subject's spouse share. The subject's husband is counted when the subject is female. Preview and explicit synchronization use the same synthesized heir inputs, including named descendant branches and impediments.
 
@@ -31,7 +31,7 @@ Run `npm run test:whiteboard` for model regressions covering the spouse caps, in
 
 ### Verified behavior
 
-- 15 model regression tests pass; TypeScript and the production build pass.
+- Historical verification below predates the 28 October changes. Current verification is recorded in [Whiteboard family workspace](./WHITEBOARD-FAMILY-WORKSPACE.md).
 - Browser: adding the fourth wife makes the subject's spouse action unavailable, with the limit explained.
 - Browser: adding father and mother fills both parent slots and explains why another parent cannot be added.
 - Browser: changing the subject's gender while spouse links conflict rejects the edit and leaves the family intact.
@@ -45,14 +45,14 @@ The inspector header now exposes Delete and Close. Delete is reversible through 
 
 Name plates have opaque backgrounds, bounded two-line names (with full names in the inspector and title), and generous generation spacing. Parent-child curves start below the full name plate and end above the next person's share badge. Spouse connectors attach outside avatar circles. The status summary sits outside the canvas. The scale overlay has been removed entirely; only the selected estate subject receives an external golden halo.
 
-“Explore this person’s estate” is a separate action from survival toggles. It marks that person as the hypothetical decedent, recenters the viewport, moves the halo, and projects known family links around that person without rewriting the original relationships. Marking a relative predeceased alone does not steal the estate focus, preserving grandchildren simulations. The toolbar identifies the current estate subject.
+“Explore this person’s estate” is a separate action from survival toggles. It selects that person as the hypothetical estate focus without changing survival, recenters the viewport, moves the halo, and projects known family links around that person without rewriting the original relationships. Marking a relative predeceased alone does not steal the estate focus, preserving grandchildren simulations. The toolbar identifies the current estate subject.
 
 The projection supplies recorded spouses, parents, children, grandchildren, grandparents and known sibling/uncle/aunt/cousin categories to the existing engine. Individual badges use engine-returned per-person amounts; grandchildren use the engine's final branch results. Calculations and Sync are withheld when the relevant second-parent or full/half-sibling links are unresolved. A spouse is never automatically assumed to be every child's parent. A second-parent selector offers structurally compatible existing people or an explicit declaration that the other parent is not included in this scenario. The original three-generation construction scope remains; this is not a new universal kinship or jurisprudence engine.
 
 Additional regressions cover focus switching without relationship mutation, grandchild focus, second-parent assignment, ambiguous parentage, incompatible co-parents, label spacing, and deletion cleanup. The live review checked top-header deletion and Undo, a son becoming the estate subject, the missing-parent prompt, and mother/son roles updating after the recorded parent link was supplied.
 
-Spouse creation is now available for any recorded person, including a grandchild or parent selected as an estate subject. The same per-person cap applies to incoming and outgoing connections. This does not extend child creation beyond the existing three-generation branches.
+Spouse creation is now available for any recorded person, including a grandchild or parent selected as an estate subject. The same per-person cap applies to incoming and outgoing connections. Child creation now also supports extended branches; calculation coverage remains limited by the existing engine.
 
 ## Planned improvements
 
-The documentation-only [Whiteboard future enhancements](./WHITEBOARD-FUTURE-ENHANCEMENTS.md) records sibling creation, household groupings for children of different wives, and a smooth zoom slider. These three items are planned for later implementation.
+The original [Whiteboard future enhancements](./WHITEBOARD-FUTURE-ENHANCEMENTS.md) remains a historical requirements checklist. See [28 October implementation and verification](./WHITEBOARD-FAMILY-WORKSPACE.md) for current implementation, evidence and remaining work.

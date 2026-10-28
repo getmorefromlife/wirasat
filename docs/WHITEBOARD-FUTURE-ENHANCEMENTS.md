@@ -2,7 +2,7 @@
 
 Documented: 27 October 2026
 
-**Status: planning only. No implementation or deployment is authorized by this document.**
+**Historical plan (27 October). Sibling creation and household grouping were subsequently authorized in chat and implemented on 28 October. See [current implementation and verification](./WHITEBOARD-FAMILY-WORKSPACE.md); the acceptance checklist below includes requirements that may still be incomplete. This document is not deployment evidence.**
 
 This records the three requested improvements to the Kinship Whiteboard. Existing behavior is described separately in [Whiteboard relationship rules](./WHITEBOARD-RELATIONSHIP-RULES.md). The items below are future requirements, not claims that the features already work.
 
