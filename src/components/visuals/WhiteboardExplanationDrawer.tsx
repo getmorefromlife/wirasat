@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   X,
   BookOpen,
@@ -14,10 +12,13 @@ import {
   Sparkles,
   Users,
   FileText,
+  PieChart,
+  ChevronDown,
 } from "lucide-react";
 import { WhiteboardNode, projectWhiteboardFamily } from "@/lib/whiteboard-model";
 import { MARJA_DATABASE } from "@/lib/marja-rules";
 import { MarjaId, type HeirShareResult, type InheritanceCalculationResult, type BalanceSheetSummary, type DeceasedInfo } from "@/types/fiqh";
+import { analyzeEstateSlices, type EstateSlicesAnalysis, type HeirSliceDetail } from "@/lib/slices-explainer";
 
 interface WhiteboardExplanationDrawerProps {
   selectedPersonId: string | null;
@@ -98,6 +99,35 @@ export function WhiteboardExplanationDrawer({
     (sum: number, s: HeirShareResult) => sum + (s.percentage || 0),
     0
   );
+
+  // Compute Plain-Language "Why 48 (or 24, 72)?" Slices Analysis
+  const slicesAnalysis = useMemo(() => {
+    return analyzeEstateSlices(calcResult?.heirShares || [], currency);
+  }, [calcResult?.heirShares, currency]);
+
+  // Helper to map a person node to their specific slice details
+  const getPersonSlice = (person: WhiteboardNode): HeirSliceDetail | undefined => {
+    const role = family.roles.get(person.id);
+    if (role === "SPOUSE") {
+      return slicesAnalysis.heirSlices.find((s) => s.relationKey === "wife" || s.relationKey === "wives" || s.relationKey === "husband");
+    }
+    if (role === "SON") {
+      return slicesAnalysis.heirSlices.find((s) => s.relationKey === "son" || s.relationKey === "sons");
+    }
+    if (role === "DAUGHTER") {
+      return slicesAnalysis.heirSlices.find((s) => s.relationKey === "daughter" || s.relationKey === "daughters");
+    }
+    if (role === "FATHER") {
+      return slicesAnalysis.heirSlices.find((s) => s.relationKey === "father");
+    }
+    if (role === "MOTHER") {
+      return slicesAnalysis.heirSlices.find((s) => s.relationKey === "mother");
+    }
+    return (
+      slicesAnalysis.heirSlices.find((s) => s.id === `tanzil_${person.id}`) ||
+      slicesAnalysis.heirSlices[0]
+    );
+  };
 
   return (
     <div
@@ -198,12 +228,129 @@ export function WhiteboardExplanationDrawer({
             </section>
             {changes.length > 0 && <details className="rounded-xl bg-sky-50 border border-sky-200 p-4 text-sky-950"><summary className="cursor-pointer font-bold">{isUr?"آخری تبدیلی کا اثر":"What changed in the last calculation?"}</summary><ul className="mt-3 space-y-2 text-sm" aria-live="polite">{changes.map((change,index)=><li key={index}>{change}</li>)}</ul></details>}
             <section className="space-y-3">
-              <h3 className="text-lg font-bold">{isUr?"خاندان کے افراد — منتخب کر کے دیکھیں":"Your people — select to find them"}</h3>
+              <h3 className="text-sm font-bold text-stone-800 dark:text-stone-200 uppercase tracking-wider flex items-center justify-between">
+                <span>{isUr ? "خاندان کے افراد — منتخب کر کے دیکھیں" : "Your People — Select to Inspect"}</span>
+                <span className="text-[11px] font-normal text-stone-500 lowercase">
+                  {isUr ? "ترتیب وار شرعی تقسیم" : "ordered by priority"}
+                </span>
+              </h3>
               <div className="grid grid-cols-1 gap-3">
-                {nodes.filter(n=>family.roles.get(n.id) !== "OTHER" && n.id !== family.subject.id).map((person)=><article key={person.id} className={`rounded-2xl border-2 p-4 ${selectedPersonId === person.id?"border-emerald-700 bg-emerald-50 dark:bg-emerald-950":"border-stone-200 bg-white dark:bg-stone-900"}`} style={{borderInlineStartColor:({SPOUSE:"#0369a1",SON:"#7c3aed",DAUGHTER:"#b45309"} as Record<string,string>)[family.roles.get(person.id) || "OTHER"] || "#0f766e",borderInlineStartWidth:6}}>
-                  <button type="button" className="w-full text-start min-h-11" aria-pressed={selectedPersonId === person.id} onClick={()=>onSelectPerson(person.id)}><strong className="text-lg block">{isUr?person.nameUr:person.nameEn}</strong><span className="text-sm text-stone-600 dark:text-stone-300">{personRelation(person)}</span><span className="block mt-2 text-sm leading-relaxed">{personResult(person)}</span></button>
-                  <details className="mt-3 text-sm"><summary className="cursor-pointer font-semibold">{isUr?"حصے کی تفصیل":"Understand this result"}</summary><p className="mt-2 leading-relaxed">{personExplanation(person)}</p><p className="mt-2 leading-relaxed">{isUr?"یہ نتیجہ منتخب مرکزی شخص، رشتوں اور حیات کی حالت کے مطابق ہے۔ مشترکہ حصوں کی کسر پورے گروہ کی ہے؛ انفرادی رقم الگ دکھائی جاتی ہے۔ مزید وضاحت کے لیے نیچے گروہی حصے اور شرعی قواعد دیکھیں۔":"This result follows the selected estate subject, family links and survival settings. Fractions on shared allocations describe the group; the amount shown on a person is per individual. See the group allocations below and the Fiqh Rules tab for context."}</p></details>
-                </article>)}
+                {nodes
+                  .filter((n) => family.roles.get(n.id) !== "OTHER" && n.id !== family.subject.id)
+                  .map((person) => {
+                    const slice = getPersonSlice(person);
+                    return (
+                      <article
+                        key={person.id}
+                        className={`rounded-2xl border-2 p-4 transition-all ${
+                          selectedPersonId === person.id
+                            ? "border-emerald-700 bg-emerald-50/70 dark:bg-emerald-950/40 shadow-sm"
+                            : "border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-emerald-300"
+                        }`}
+                        style={{
+                          borderInlineStartColor:
+                            ({
+                              SPOUSE: "#0369a1",
+                              SON: "#7c3aed",
+                              DAUGHTER: "#b45309",
+                              FATHER: "#047857",
+                              MOTHER: "#059669",
+                            } as Record<string, string>)[family.roles.get(person.id) || "OTHER"] || "#0f766e",
+                          borderInlineStartWidth: 6,
+                        }}
+                      >
+                        <button
+                          type="button"
+                          className="w-full text-start min-h-11 cursor-pointer"
+                          aria-pressed={selectedPersonId === person.id}
+                          onClick={() => onSelectPerson(person.id)}
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div>
+                              <strong className="text-base block text-stone-900 dark:text-stone-100">
+                                {isUr ? person.nameUr : person.nameEn}
+                              </strong>
+                              <span className="text-xs text-stone-500 dark:text-stone-400">
+                                {personRelation(person)}
+                              </span>
+                            </div>
+
+                            {/* Order & Slice Pills */}
+                            {slice && (
+                              <div className="flex flex-col items-end gap-1">
+                                <span
+                                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${slice.orderBadgeColor}`}
+                                >
+                                  {isUr ? slice.orderBadgeUr : slice.orderBadgeEn}
+                                </span>
+                                <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300">
+                                  {slice.sliceCount} / {slice.totalSlices} {isUr ? "حصے" : "Slices"}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="mt-2 text-sm leading-relaxed text-[#1b4d3e] dark:text-emerald-300 font-bold">
+                            {personResult(person)}
+                          </div>
+                        </button>
+
+                        {/* Redesigned Colorful & Concise "Understand this result" Card */}
+                        <details className="mt-3 text-xs group">
+                          <summary className="cursor-pointer font-bold text-stone-700 dark:text-stone-300 hover:text-emerald-700 dark:hover:text-emerald-400 flex items-center justify-between py-1.5 px-3 rounded-xl bg-stone-100/80 dark:bg-stone-800/80 transition-colors">
+                            <span className="flex items-center gap-1.5">
+                              <Sparkles size={13} className="text-amber-500" />
+                              <span>
+                                {isUr
+                                  ? "حصے کی تفصیلی آسان وضاحت (کسر اور ترتیب)"
+                                  : "Understand this result in plain language"}
+                              </span>
+                            </span>
+                            <ChevronDown size={14} className="group-open:rotate-180 transition-transform text-stone-400" />
+                          </summary>
+
+                          <div className="mt-2.5 p-3.5 rounded-xl bg-gradient-to-br from-stone-50 via-white to-emerald-50/40 dark:from-[#0d1e17] dark:to-[#07130e] border border-stone-200 dark:border-emerald-800/60 space-y-3">
+                            {/* Sequence & Fraction Bar */}
+                            {slice && (
+                              <div>
+                                <div className="flex items-center justify-between text-[11px] font-medium text-stone-600 dark:text-stone-400 mb-1">
+                                  <span>{isUr ? "کُل ترکے میں سے حصہ:" : "Share of total estate:"}</span>
+                                  <span className="font-bold font-mono text-emerald-800 dark:text-emerald-300">
+                                    {slice.sliceCount} of {slice.totalSlices} Slices ({slice.percentage.toFixed(1)}%)
+                                  </span>
+                                </div>
+                                <div className="h-2 rounded-full bg-stone-200 dark:bg-stone-800 overflow-hidden">
+                                  <div
+                                    className="h-full bg-gradient-to-r from-emerald-600 to-amber-500 rounded-full transition-all duration-300"
+                                    style={{
+                                      width: `${Math.min(100, Math.max(4, slice.percentage))}%`,
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Derivation Step Box */}
+                            {slice && (
+                              <div className="p-2.5 rounded-lg bg-stone-100 dark:bg-stone-900/90 border border-stone-200 dark:border-stone-800 text-[11px] space-y-1">
+                                <span className="font-bold text-stone-500 dark:text-stone-400 block text-[10px] uppercase tracking-wider">
+                                  {isUr ? "کسر کا حسابی سفر:" : "How this fraction was calculated:"}
+                                </span>
+                                <code className="text-[#1b4d3e] dark:text-emerald-300 font-mono font-bold block">
+                                  {isUr ? slice.derivationStepUr : slice.derivationStepEn}
+                                </code>
+                              </div>
+                            )}
+
+                            {/* Plain-Language Explanation */}
+                            <div className="text-xs text-stone-700 dark:text-stone-300 leading-relaxed font-medium">
+                              {isUr ? slice?.plainExplanationUr : slice?.plainExplanationEn}
+                            </div>
+                          </div>
+                        </details>
+                      </article>
+                    );
+                  })}
               </div>
             </section>
             {/* Balance Sheet Card */}
@@ -262,11 +409,106 @@ export function WhiteboardExplanationDrawer({
               </span>
             </div>
 
-            {/* Heirs Distribution List */}
+            {/* -------------------------------------------------------------
+                THE "WHERE DOES 48 COME FROM?" PLAIN-LANGUAGE STORY CARD
+                ------------------------------------------------------------- */}
+            <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-50/90 via-white to-emerald-50/60 dark:from-[#11241c] dark:via-[#0c1a14] dark:to-[#172e23] border border-amber-200/90 dark:border-emerald-800/60 shadow-xs space-y-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center shadow-xs shrink-0">
+                  <PieChart size={17} />
+                </div>
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-stone-900 dark:text-stone-100 flex items-center gap-1.5">
+                    <span>
+                      {isUr
+                        ? `ترکے کے کُل ${slicesAnalysis.totalSlices} حصوں کی حقیقت (بغیر کسر تقسیم)`
+                        : `Where does the number ${slicesAnalysis.totalSlices} come from?`}
+                    </span>
+                    <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-amber-100 text-amber-900 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-300 dark:border-amber-700">
+                      {slicesAnalysis.totalSlices} Slices
+                    </span>
+                  </h4>
+                  <p className="text-[11px] text-stone-600 dark:text-stone-300 mt-0.5">
+                    {isUr
+                      ? "بغیر اعشاریہ اور بغیر کسر کے پوری تقسیم کی آسان حسابی کہانی"
+                      : "The plain-language story of why we cut the estate into whole clean slices"}
+                  </p>
+                </div>
+              </div>
+
+              {/* 3 Chronological Derivation Step Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                {/* Step 1 */}
+                <div className="p-2.5 rounded-xl bg-white/95 dark:bg-stone-900/90 border border-stone-200 dark:border-stone-800 space-y-1">
+                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-900 dark:bg-blue-950/60 dark:text-blue-300">
+                    {isUr ? "۱۔ پہلا مرحلہ" : "1. Priority"}
+                  </span>
+                  <p className="text-[11px] font-bold text-stone-800 dark:text-stone-200">
+                    {isUr
+                      ? slicesAnalysis.stepByStepDerivationUr.step1Title
+                      : slicesAnalysis.stepByStepDerivationEn.step1Title}
+                  </p>
+                  <p className="text-[10px] text-stone-600 dark:text-stone-400 leading-snug">
+                    {isUr
+                      ? slicesAnalysis.stepByStepDerivationUr.step1Body
+                      : slicesAnalysis.stepByStepDerivationEn.step1Body}
+                  </p>
+                </div>
+
+                {/* Step 2 */}
+                <div className="p-2.5 rounded-xl bg-white/95 dark:bg-stone-900/90 border border-stone-200 dark:border-stone-800 space-y-1">
+                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100 text-purple-900 dark:bg-purple-950/60 dark:text-purple-300">
+                    {isUr ? "۲۔ دوسرا مرحلہ" : "2. Children 2:1"}
+                  </span>
+                  <p className="text-[11px] font-bold text-stone-800 dark:text-stone-200">
+                    {isUr
+                      ? slicesAnalysis.stepByStepDerivationUr.step2Title
+                      : slicesAnalysis.stepByStepDerivationEn.step2Title}
+                  </p>
+                  <p className="text-[10px] text-stone-600 dark:text-stone-400 leading-snug">
+                    {isUr
+                      ? slicesAnalysis.stepByStepDerivationUr.step2Body
+                      : slicesAnalysis.stepByStepDerivationEn.step2Body}
+                  </p>
+                </div>
+
+                {/* Step 3 */}
+                <div className="p-2.5 rounded-xl bg-white/95 dark:bg-stone-900/90 border border-stone-200 dark:border-stone-800 space-y-1">
+                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-300">
+                    {isUr ? "۳۔ تیسرا مرحلہ" : "3. Clean Slices"}
+                  </span>
+                  <p className="text-[11px] font-bold text-stone-800 dark:text-stone-200">
+                    {isUr
+                      ? slicesAnalysis.stepByStepDerivationUr.step3Title
+                      : slicesAnalysis.stepByStepDerivationEn.step3Title}
+                  </p>
+                  <p className="text-[10px] text-stone-600 dark:text-stone-400 leading-snug">
+                    {isUr
+                      ? slicesAnalysis.stepByStepDerivationUr.step3Body
+                      : slicesAnalysis.stepByStepDerivationEn.step3Body}
+                  </p>
+                </div>
+              </div>
+
+              {/* Overall Summary Sentence */}
+              <div className="p-2.5 rounded-xl bg-amber-100/70 dark:bg-amber-950/40 border border-amber-300/60 dark:border-amber-800/40 text-[11px] text-amber-950 dark:text-amber-200 flex items-start gap-2">
+                <CheckCircle2 size={14} className="text-amber-600 shrink-0 mt-0.5" />
+                <span className="leading-relaxed font-medium">
+                  {isUr ? slicesAnalysis.whySlicesStoryUr : slicesAnalysis.whySlicesStoryEn}
+                </span>
+              </div>
+            </div>
+
+            {/* Heirs Distribution List with Chronological Order */}
             <div className="space-y-2">
-              <h3 className="text-xs font-bold text-stone-700 dark:text-stone-300 uppercase tracking-wider flex items-center gap-1.5">
-                <Users size={13} className="text-[#245642] dark:text-emerald-400" />
-                <span>{isUr ? "ورثاء کے شرعی حصے اور حصص" : "Heir Shares & Quranic Fractions"}</span>
+              <h3 className="text-xs font-bold text-stone-700 dark:text-stone-300 uppercase tracking-wider flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <Users size={13} className="text-[#245642] dark:text-emerald-400" />
+                  <span>{isUr ? "ورثاء کے شرعی حصے اور حصص" : "Heir Shares & Quranic Fractions"}</span>
+                </span>
+                <span className="text-[11px] font-mono text-stone-500">
+                  {isUr ? `کُل ${slicesAnalysis.totalSlices} حصے` : `${slicesAnalysis.totalSlices} total slices`}
+                </span>
               </h3>
 
               {(!calcResult?.heirShares || calcResult.heirShares.length === 0) ? (
@@ -274,45 +516,77 @@ export function WhiteboardExplanationDrawer({
                   {isUr ? "فی الوقت کوئی شرعی وارث موجود نہیں ہے۔" : "No eligible heirs currently in this scenario."}
                 </div>
               ) : (
-                calcResult.heirShares.map((share: HeirShareResult, idx: number) => (
-                  <div
-                    key={share.id || idx}
-                    className="p-3 rounded-xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-emerald-900/40 shadow-xs hover:border-emerald-600/40 transition-colors"
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <h4 className="text-xs font-bold text-stone-900 dark:text-stone-100 flex items-center gap-1.5">
-                          <span>{getHeirTitle(share)}</span>
-                          {share.count > 1 && (
-                            <span className="text-xs px-1.5 py-0.2 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 font-normal">
-                              × {share.count}
+                calcResult.heirShares.map((share: HeirShareResult, idx: number) => {
+                  const sliceInfo = slicesAnalysis.heirSlices.find(
+                    (s) => s.relationKey === share.relationKey || s.id === share.id
+                  );
+                  return (
+                    <div
+                      key={share.id || idx}
+                      className="p-3.5 rounded-2xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-emerald-900/40 shadow-2xs hover:border-emerald-600/40 transition-colors space-y-2"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <div className="flex items-center gap-1.5 flex-wrap mb-1">
+                            {/* Chronological Sequence Order Badge */}
+                            {sliceInfo && (
+                              <span
+                                className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${sliceInfo.orderBadgeColor}`}
+                              >
+                                {isUr ? sliceInfo.orderBadgeUr : sliceInfo.orderBadgeEn}
+                              </span>
+                            )}
+                            {share.count > 1 && (
+                              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 font-normal">
+                                × {share.count} {isUr ? "افراد" : "heirs"}
+                              </span>
+                            )}
+                          </div>
+
+                          <h4 className="text-xs font-bold text-stone-900 dark:text-stone-100">
+                            {getHeirTitle(share)}
+                          </h4>
+
+                          <div className="flex items-center gap-1.5 mt-1 text-xs text-stone-500 dark:text-stone-400 flex-wrap">
+                            <span className="font-bold px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/60 text-[#1b4d3e] dark:text-emerald-300 border border-emerald-600/20 font-mono">
+                              {share.fractionString || "قرابت"}
                             </span>
+                            {sliceInfo && (
+                              <span className="font-mono font-bold text-amber-700 dark:text-amber-300">
+                                ({sliceInfo.sliceCount} of {sliceInfo.totalSlices} Slices)
+                              </span>
+                            )}
+                            <span>•</span>
+                            <span className="font-semibold">{share.percentage.toFixed(1)}%</span>
+                          </div>
+                        </div>
+
+                        <div className="text-end shrink-0">
+                          <div className="text-xs font-bold text-stone-900 dark:text-emerald-300 font-mono">
+                            {currency} {formatMoney(share.totalMonetaryShare)}
+                          </div>
+                          {share.count > 1 && (
+                            <div className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5">
+                              {currency} {formatMoney(share.sharePerIndividual)} {isUr ? "فی کس" : "each"}
+                            </div>
                           )}
-                        </h4>
-                        <div className="flex items-center gap-2 mt-1 text-sm text-stone-500 dark:text-stone-400">
-                          <span className="font-semibold px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/60 text-[#1b4d3e] dark:text-emerald-300 border border-emerald-600/20 font-mono">
-                            {share.fractionString || "قرابت"}
-                          </span>
-                          <span>•</span>
-                          <span>{share.percentage.toFixed(1)}%</span>
-                          <span>•</span>
-                          <span className="capitalize">{share.count > 1 ? (isUr?"گروہی حصہ":"Group allocation") : (isUr?"انفرادی حصہ":"Individual allocation")}</span>
                         </div>
                       </div>
 
-                      <div className="text-end">
-                        <div className="text-xs font-bold text-stone-900 dark:text-emerald-300 font-mono">
-                          {currency} {formatMoney(share.totalMonetaryShare)}
+                      {/* Mini Slice Visualizer Bar */}
+                      {sliceInfo && (
+                        <div className="h-1.5 rounded-full bg-stone-100 dark:bg-stone-800 overflow-hidden">
+                          <div
+                            className="h-full bg-gradient-to-r from-emerald-600 to-amber-500 rounded-full"
+                            style={{
+                              width: `${Math.min(100, Math.max(3, share.percentage))}%`,
+                            }}
+                          />
                         </div>
-                        {share.count > 1 && (
-                          <div className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
-                            {currency} {formatMoney(share.sharePerIndividual)} {isUr ? "فی کس" : "each"}
-                          </div>
-                        )}
-                      </div>
+                      )}
                     </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
 
