@@ -116,7 +116,7 @@ export const SimpleDistributionInfographic: React.FC<Props> = ({
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#edf3e7] text-[#245642] text-[11px] font-black uppercase tracking-wider border border-[#c4d4be]">
               <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              <span>{isUr ? "ایک تصویری آسان خلاصہ (One-Picture Visual)" : "At-A-Glance Visual Infographic"}</span>
+              <span>{isUr ? "ایک تصویری آسان خلاصہ" : "At-A-Glance Visual Infographic"}</span>
             </div>
             <h3 className="font-serif font-bold text-xl sm:text-2xl text-[#172e22] mt-0.5">
               {isUr ? "خلاصۂ تقسیم برائے عام فہم" : "Simplified Heir Distribution Snapshot"}
@@ -145,7 +145,7 @@ export const SimpleDistributionInfographic: React.FC<Props> = ({
           }`}
         >
           <Calculator className="w-4 h-4" />
-          <span>{isUr ? "فوری جیبی کیلکولیٹر (What-If)" : "Live Pocket Calculator"}</span>
+          <span>{isUr ? "فوری فرضی تخمینہ کار" : "Live Pocket Calculator"}</span>
         </button>
       </div>
 
@@ -225,7 +225,7 @@ export const SimpleDistributionInfographic: React.FC<Props> = ({
           </div>
           <div>
             <span className="text-xs font-black uppercase tracking-wider text-[#245642] block">
-              {isUr ? "کل قابلِ تقسیم خالص ترکہ (Net Distributable Estate)" : "Total Net Distributable Estate"}
+              {isUr ? "کل قابلِ تقسیم خالص ترکہ" : "Total Net Distributable Estate"}
             </span>
             <div className="flex items-baseline gap-2 mt-1 flex-wrap">
               <span className="font-mono text-2xl sm:text-3xl font-black text-[#172e22]" dir="ltr">

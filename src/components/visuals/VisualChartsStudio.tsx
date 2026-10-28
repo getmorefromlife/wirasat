@@ -807,12 +807,12 @@ export const VisualChartsStudio: React.FC = () => {
           {/* Active Model Stage Canvas */}
           <div className="sacred-card p-6 md:p-8 rounded-3xl border border-[var(--theme-border)] relative bg-white dark:bg-stone-900 shadow-xs">
             {/* Banner */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 mb-6 border-b border-[var(--theme-border)] gap-4">
-              <div className="flex items-center gap-3.5">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between pb-5 mb-6 border-b border-[var(--theme-border)] gap-4">
+              <div className="flex items-center gap-3.5 min-w-0">
                 <div className="w-12 h-12 rounded-2xl bg-[#edf3e7] dark:bg-emerald-950/40 border border-[#a5b69d] dark:border-emerald-800/40 flex items-center justify-center text-[#245642] dark:text-emerald-300 shadow-2xs shrink-0">
                   <currentMeta.icon size={24} />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-xs font-extrabold text-[#245642] dark:text-emerald-400">
                       {isUr ? `ماڈل نمبر ${currentMeta.number}` : `Model #${currentMeta.number}`}
@@ -837,7 +837,7 @@ export const VisualChartsStudio: React.FC = () => {
                 </div>
               </div>
 
-              <div className="text-xs text-stone-500 dark:text-stone-400 max-w-xs text-start sm:text-end font-medium leading-relaxed">
+              <div className="text-xs text-stone-500 dark:text-stone-400 max-w-sm text-start lg:text-end font-medium leading-relaxed">
                 {isUr ? currentMeta.descUr : currentMeta.descEn}
               </div>
             </div>

@@ -32,6 +32,11 @@ const HEIR_TITLES: Record<string, { en: string; ur: string }> = {
 };
 
 export function EstateSettlementWorksheet() {
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const {
     language,
     deceased,
@@ -40,6 +45,8 @@ export function EstateSettlementWorksheet() {
     heirs,
     getCalculationResult,
   } = useInheritanceStore();
+
+  if (!mounted) return null;
 
   const isUr = language === "ur";
   const result = getCalculationResult();

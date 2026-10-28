@@ -134,7 +134,11 @@ export function WasiyyahView() {
             {/* Quick Language Toggle */}
             <button
               type="button"
-              onClick={() => setInternalLang(isUr ? "en" : "ur")}
+              onClick={() => {
+                const nextLang = isUr ? "en" : "ur";
+                setInternalLang(nextLang);
+                setLanguage(nextLang);
+              }}
               className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-theme-chip text-theme-brand text-xs font-bold border border-theme-chip hover:bg-theme-chip transition-all cursor-pointer shadow-2xs ${isUr ? "font-nastaliq leading-[2]" : ""}`}
             >
               <Globe2 className="w-3.5 h-3.5" />

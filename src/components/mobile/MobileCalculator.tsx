@@ -50,6 +50,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
     loadPreset,
     activePresetId,
     setActiveView,
+    setLanguage,
   } = useInheritanceStore();
 
   const isUr = language === "ur";
@@ -297,6 +298,15 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
         </div>
 
         <div className="flex items-center gap-2.5">
+          {/* Quick Language Toggle */}
+          <button
+            onClick={() => setLanguage(isUr ? "en" : "ur")}
+            className="px-2.5 py-1.5 rounded-xl text-xs font-black text-emerald-900 bg-emerald-50 hover:bg-emerald-100 border-2 border-emerald-300 transition-colors cursor-pointer"
+            title={isUr ? "Switch to English" : "اردو میں دیکھیں"}
+          >
+            {isUr ? "EN" : "اردو"}
+          </button>
+
           {/* Quick Reset */}
           <button
             onClick={() => {
@@ -362,7 +372,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
         <div className="space-y-1.5">
           <div className="flex items-center justify-between px-1">
             <span className={`text-xs font-black uppercase tracking-wider text-stone-700 ${isUr ? "font-nastaliq" : "font-sans"}`}>
-              {isUr ? "حقیقی خاندانی نمونے (1-Tap Templates):" : "Real-World Family Archetypes:"}
+              {isUr ? "حقیقی خاندانی سانچے (فوری انتخاب):" : "Real-World Family Archetypes (1-Tap):"}
             </span>
             <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">
               ~99% Cases
@@ -460,7 +470,26 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                 className="w-full min-w-0 bg-transparent text-3xl sm:text-5xl font-black text-white placeholder-stone-400 outline-hidden font-sans tracking-tight"
               />
             </div>
-            <div className={`text-xs sm:text-sm text-white font-medium px-1 ${
+            {/* Human-Readable Amount Helper */}
+            {totalGrossAssets > 0 && (
+              <div className="flex items-center justify-between text-xs font-bold text-emerald-200 px-1 pt-0.5">
+                <span className="font-mono">{currency} {totalGrossAssets.toLocaleString()}</span>
+                {currency === "PKR" && (
+                  <span className={isUr ? "font-nastaliq text-xs" : "font-sans"}>
+                    {totalGrossAssets >= 10000000
+                      ? isUr
+                        ? `${(totalGrossAssets / 10000000).toFixed(2)} کروڑ روپے`
+                        : `${(totalGrossAssets / 10000000).toFixed(2)} Crore PKR`
+                      : totalGrossAssets >= 100000
+                      ? isUr
+                        ? `${(totalGrossAssets / 100000).toFixed(2)} لاکھ روپے`
+                        : `${(totalGrossAssets / 100000).toFixed(2)} Lakh PKR`
+                      : ""}
+                  </span>
+                )}
+              </div>
+            )}
+            <div className={`text-xs sm:text-sm text-white/90 font-medium px-1 ${
               isUr ? "font-nastaliq leading-[2.2]" : "font-sans"
             }`}>
               {isUr
@@ -1052,26 +1081,26 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
       </main>
 
       {/* 8. Sticky Bottom Floating CTA (High Contrast) */}
-      <div className={`fixed bottom-0 inset-x-0 z-40 bg-white border-t-3 border-stone-400 p-4 shadow-2xl ${
+      <div className={`fixed bottom-0 inset-x-0 z-40 bg-white border-t-3 border-stone-400 p-3 sm:p-4 shadow-2xl ${
         isUr ? "font-nastaliq" : "font-sans"
       }`}>
-        <div className="max-w-lg mx-auto flex items-center justify-between gap-4">
-          <div className="shrink-0">
-            <div className="flex items-center gap-2 text-sm sm:text-base font-black text-theme-brand">
-              <span className="w-3.5 h-3.5 rounded-full bg-theme-brand animate-pulse" />
+        <div className="max-w-lg mx-auto flex items-center justify-between gap-3">
+          <div className="shrink-0 min-w-[95px]">
+            <div className="flex items-center gap-1.5 text-xs sm:text-base font-black text-theme-brand">
+              <span className="w-2.5 h-2.5 rounded-full bg-theme-brand animate-pulse shrink-0" />
               <span suppressHydrationWarning>{totalPercentage.toFixed(0)}% {isUr ? "تقسیم" : "Distributed"}</span>
             </div>
-            <div className="text-sm sm:text-base text-[#0f172a] font-black mt-0.5">
+            <div className="text-xs sm:text-base text-[#0f172a] font-black mt-0.5 truncate">
               <span suppressHydrationWarning>{currency} {formatNumber(netEstate)}</span>
             </div>
           </div>
 
           <button
             onClick={() => setIsResultSheetOpen(true)}
-            className="flex-1 py-4 px-6 rounded-2xl bg-theme-card-dark hover:bg-theme-card-dark-hover text-white font-black text-base sm:text-lg flex items-center justify-center gap-2.5 shadow-xl border-2 border-theme-card-dark transition-transform active:scale-98 cursor-pointer"
+            className="flex-1 py-3.5 px-3 sm:px-6 rounded-2xl bg-theme-card-dark hover:bg-theme-card-dark-hover text-white font-black text-sm sm:text-lg flex items-center justify-center gap-2 shadow-xl border-2 border-theme-card-dark transition-transform active:scale-98 cursor-pointer min-w-0"
           >
-            <Sparkles size={22} className="text-theme-gold shrink-0" />
-            <span className={isUr ? "font-nastaliq text-lg sm:text-xl leading-none pt-1" : "leading-none"}>
+            <Sparkles size={18} className="text-theme-gold shrink-0" />
+            <span className={`truncate ${isUr ? "font-nastaliq text-base sm:text-xl leading-none pt-1" : "leading-none"}`}>
               {isUr ? "حساب کی تفصیل دیکھیں" : "View Breakdown"}
             </span>
           </button>
