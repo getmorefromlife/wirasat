@@ -130,11 +130,11 @@ export const Step5Results: React.FC = () => {
 
           <button
             onClick={() => window.print()}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl sacred-card text-sm font-bold text-stone-700 hover:border-stone-400 transition-all shadow-sm cursor-pointer"
-            title={language === "ur" ? "پرنٹ کریں / محفوظ کریں" : "Print Calculation Summary"}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-stone-900 text-white hover:bg-stone-800 text-sm font-bold transition-all shadow-md cursor-pointer border border-stone-700"
+            title={language === "ur" ? "باقاعدہ خاندانی صلح نامہ و ورقۂ حساب پرنٹ کریں" : "Print Formal Estate Worksheet & Settlement Draft"}
           >
-            <Printer className="w-3.5 h-3.5" />
-            <span>{language === "ur" ? "پرنٹ" : "Print"}</span>
+            <Printer className="w-4 h-4 text-amber-400" />
+            <span>{language === "ur" ? "ورقۂ صلح نامہ پرنٹ کریں (PDF)" : "Print Settlement Draft (PDF)"}</span>
           </button>
         </div>
       </div>

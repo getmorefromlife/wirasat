@@ -21,6 +21,7 @@ import { OnePageDashboard } from "@/components/dashboard/OnePageDashboard";
 import { MobileCalculator } from "@/components/mobile/MobileCalculator";
 import { KinshipWhiteboard } from "@/components/visuals/KinshipWhiteboard";
 import { VisualMathStudio } from "@/components/academy/VisualMathStudio";
+import { EstateSettlementWorksheet } from "@/components/export/EstateSettlementWorksheet";
 
 export default function Home() {
   const { activeView, setActiveView, language } = useInheritanceStore();
@@ -37,16 +38,19 @@ export default function Home() {
 
   return (
     <>
+      {/* 0. Official Printable A4 Family Worksheet (Active only on window.print) */}
+      <EstateSettlementWorksheet />
+
       {/* 1. Mobile-First Experience (< 768px) */}
       {!forceDesktopOnMobile && isCalculatorView && (
-        <div className="block md:hidden">
+        <div className="block md:hidden print-hidden">
           <MobileCalculator onSwitchToDesktopMode={() => setForceDesktopOnMobile(true)} />
         </div>
       )}
 
       {/* 2. Desktop & Full Scholarly Views (>= 768px or forced/secondary views) */}
       <div
-        className={`min-h-screen flex flex-col justify-between selection:bg-[var(--theme-gold)]/30 selection:text-[var(--theme-gold-light)] relative ${
+        className={`min-h-screen flex flex-col justify-between selection:bg-[var(--theme-gold)]/30 selection:text-[var(--theme-gold-light)] relative print-hidden ${
           !forceDesktopOnMobile && isCalculatorView ? "hidden md:flex" : "flex"
         }`}
       >

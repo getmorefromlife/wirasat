@@ -1183,3 +1183,37 @@ body{margin:0;} .site-header button,.hero-actions button{border:0;font-family:in
   border-color: #064e3b;
 }
 
+/* =========================================================================
+   PRINT STYLES: SHARIA ESTATE SETTLEMENT WORKSHEET
+   ========================================================================= */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+  html, body {
+    background: #ffffff !important;
+    color: #111827 !important;
+    font-size: 10pt !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .print-hidden,
+  .site-header,
+  header,
+  nav,
+  footer,
+  aside,
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .page-break-inside-avoid {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+}
+
+

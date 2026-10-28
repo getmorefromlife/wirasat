@@ -18,8 +18,10 @@ import {
   FileText,
   BadgePercent,
   Plus,
+  Home,
 } from "lucide-react";
 import { WasiyyahLink } from "@/components/wasiyyah/WasiyyahLink";
+import { ValuationHelpersModal } from "@/components/calculator/ValuationHelpersModal";
 
 export const Step2BalanceSheet: React.FC = () => {
   const {
@@ -34,6 +36,8 @@ export const Step2BalanceSheet: React.FC = () => {
 
   const t = TRANSLATIONS[language];
   const { balanceSheet } = getCalculationResult();
+  const [helperModalOpen, setHelperModalOpen] = React.useState(false);
+  const [helperTab, setHelperTab] = React.useState<"real-estate" | "gold">("real-estate");
 
   const handleAssetChange = (field: keyof typeof assets, value: string) => {
     const num = Math.max(0, parseFloat(value) || 0);
@@ -224,6 +228,38 @@ export const Step2BalanceSheet: React.FC = () => {
             <span className="text-sm font-mono font-bold text-[var(--theme-text-muted)]">
               Total: {balanceSheet.grossEstate.toLocaleString()}
             </span>
+          </div>
+
+          {/* Quick Valuation Helpers Toolbar */}
+          <div className="p-2.5 rounded-xl bg-[var(--theme-gold)]/10 border border-[var(--theme-gold)]/30 flex flex-wrap items-center justify-between gap-2">
+            <span className="text-xs font-bold text-[var(--theme-gold)] flex items-center gap-1">
+              <Sparkles className="w-3 h-3" />
+              {language === "ur" ? "تخمینہ کاری میں آسانی:" : "Valuation Helpers:"}
+            </span>
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => {
+                  setHelperTab("real-estate");
+                  setHelperModalOpen(true);
+                }}
+                className="px-2.5 py-1 rounded-lg bg-[var(--theme-card)] hover:bg-[var(--theme-gold)]/20 text-xs font-bold text-[var(--theme-text-primary)] border border-[var(--theme-border)] transition-colors cursor-pointer flex items-center gap-1"
+              >
+                <Home className="w-3 h-3 text-emerald-400" />
+                <span>{language === "ur" ? "مکان: زمین و تعمیر تقسیم کار" : "House Splitter"}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setHelperTab("gold");
+                  setHelperModalOpen(true);
+                }}
+                className="px-2.5 py-1 rounded-lg bg-[var(--theme-card)] hover:bg-[var(--theme-gold)]/20 text-xs font-bold text-[var(--theme-text-primary)] border border-[var(--theme-border)] transition-colors cursor-pointer flex items-center gap-1"
+              >
+                <Coins className="w-3 h-3 text-amber-400" />
+                <span>{language === "ur" ? "سونا و مہر کنورٹر" : "Gold & Mahr"}</span>
+              </button>
+            </div>
           </div>
 
           <div className="space-y-4">
@@ -548,6 +584,12 @@ export const Step2BalanceSheet: React.FC = () => {
           </div>
         </div>
       </div>
+      {/* Valuation Helpers Modal */}
+      <ValuationHelpersModal
+        isOpen={helperModalOpen}
+        onClose={() => setHelperModalOpen(false)}
+        defaultTab={helperTab}
+      />
     </div>
   );
 };

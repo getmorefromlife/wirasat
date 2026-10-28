@@ -21,7 +21,10 @@ import {
   GitFork,
   Crown,
   Percent,
+  Home,
+  Sparkles,
 } from "lucide-react";
+import { ValuationHelpersModal } from "@/components/calculator/ValuationHelpersModal";
 
 export const OnePageDashboard: React.FC = () => {
   const {
@@ -50,6 +53,8 @@ export const OnePageDashboard: React.FC = () => {
 
   const [showMarjaDropdown, setShowMarjaDropdown] = useState(false);
   const [activeTab, setActiveTab] = useState<"estate" | "heirs" | "habwah">("estate");
+  const [helperModalOpen, setHelperModalOpen] = useState(false);
+  const [helperTab, setHelperTab] = useState<"real-estate" | "gold">("real-estate");
 
   // Format monetary figures
   const formatAmount = (val: number) => {
@@ -270,6 +275,38 @@ export const OnePageDashboard: React.FC = () => {
                       ? "خالص ترکہ = کل اثاثے منہا کفن و دفن، قرضہ جات اور وصیت (زیادہ سے زیادہ ایک تہائی)"
                       : "Net Estate = Assets minus Burial, Outstanding Debts, and Wasiyyah (max 1/3)"}
                   </p>
+                </div>
+              </div>
+
+              {/* Valuation Helpers Toolbar */}
+              <div className="p-2.5 rounded-xl bg-[#edf3e7] border border-[#b4caa9] flex flex-wrap items-center justify-between gap-2">
+                <span className="text-xs font-bold text-[#1b4332] flex items-center gap-1">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                  <span>{isUr ? "تخمینہ کاری میں آسانی:" : "Valuation Helpers:"}</span>
+                </span>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setHelperTab("real-estate");
+                      setHelperModalOpen(true);
+                    }}
+                    className="px-2.5 py-1 rounded-lg bg-white hover:bg-stone-50 text-xs font-bold text-[#1b4332] border border-[#b4caa9] transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
+                  >
+                    <Home className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>{isUr ? "مکان: زمین و تعمیر تقسیم کار" : "House Splitter"}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setHelperTab("gold");
+                      setHelperModalOpen(true);
+                    }}
+                    className="px-2.5 py-1 rounded-lg bg-white hover:bg-stone-50 text-xs font-bold text-amber-800 border border-[#b4caa9] transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
+                  >
+                    <Coins className="w-3.5 h-3.5 text-amber-600" />
+                    <span>{isUr ? "سونا و مہر کنورٹر" : "Gold & Mahr"}</span>
+                  </button>
                 </div>
               </div>
 
@@ -770,14 +807,22 @@ export const OnePageDashboard: React.FC = () => {
             <button
               type="button"
               onClick={() => window.print()}
-              className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-white hover:bg-theme-chip border border-theme-chip text-xs font-bold text-theme-brand transition-all shadow-2xs cursor-pointer"
+              className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-stone-900 hover:bg-stone-800 border border-stone-700 text-xs font-bold text-white transition-all shadow-sm cursor-pointer"
+              title={isUr ? "باقاعدہ خاندانی صلح نامہ و ورقۂ حساب پرنٹ کریں" : "Print Formal Estate Worksheet & Settlement Draft"}
             >
-              <Printer className="w-3.5 h-3.5" />
-              <span>{isUr ? "پرنٹ خلاصہ" : "Print Summary"}</span>
+              <Printer className="w-3.5 h-3.5 text-amber-400" />
+              <span>{isUr ? "ورقۂ صلح نامہ (PDF)" : "Print Settlement (PDF)"}</span>
             </button>
           </div>
         </div>
       </div>
+
+      {/* Valuation Helpers Modal */}
+      <ValuationHelpersModal
+        isOpen={helperModalOpen}
+        onClose={() => setHelperModalOpen(false)}
+        defaultTab={helperTab}
+      />
     </div>
   );
 };

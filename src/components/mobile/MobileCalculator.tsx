@@ -18,7 +18,10 @@ import {
   RotateCcw,
   Baby,
   AlertCircle,
+  Home,
+  Coins,
 } from "lucide-react";
+import { ValuationHelpersModal } from "@/components/calculator/ValuationHelpersModal";
 
 interface MobileCalculatorProps {
   onSwitchToDesktopMode?: () => void;
@@ -53,6 +56,8 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
   const [showDebtsAccordion, setShowDebtsAccordion] = useState(false);
   const [showAdvancedHeirs, setShowAdvancedHeirs] = useState(false);
   const [showGrandchildren, setShowGrandchildren] = useState(false);
+  const [helperModalOpen, setHelperModalOpen] = useState(false);
+  const [helperTab, setHelperTab] = useState<"real-estate" | "gold">("real-estate");
 
   // Grandchildren Local Counters (synced with store)
   const [poteCount, setPoteCount] = useState<number>(
@@ -434,6 +439,30 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                 {chip.label}
               </button>
             ))}
+          </div>
+
+          {/* Quick Smart Valuation Helper Chips */}
+          <div className="flex gap-2 pt-2 border-t-2 border-white/10">
+            <button
+              onClick={() => {
+                setHelperTab("real-estate");
+                setHelperModalOpen(true);
+              }}
+              className="flex-1 py-2 px-3 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold flex items-center justify-center gap-1.5 border border-white/20 transition-all cursor-pointer"
+            >
+              <Home size={14} className="text-emerald-300" />
+              <span>{isUr ? "مکان: زمین و تعمیر تقسیم" : "House Splitter"}</span>
+            </button>
+            <button
+              onClick={() => {
+                setHelperTab("gold");
+                setHelperModalOpen(true);
+              }}
+              className="flex-1 py-2 px-3 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold flex items-center justify-center gap-1.5 border border-white/20 transition-all cursor-pointer"
+            >
+              <Coins size={14} className="text-amber-300" />
+              <span>{isUr ? "سونا و مہر کنورٹر" : "Gold & Mahr"}</span>
+            </button>
           </div>
 
           {/* Debts/Wasiyyah Section */}
@@ -1012,6 +1041,12 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
       <MobileResultSheet
         isOpen={isResultSheetOpen}
         onClose={() => setIsResultSheetOpen(false)}
+      />
+      {/* Valuation Helpers Modal */}
+      <ValuationHelpersModal
+        isOpen={helperModalOpen}
+        onClose={() => setHelperModalOpen(false)}
+        defaultTab={helperTab}
       />
     </div>
   );

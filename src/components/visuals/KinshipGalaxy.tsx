@@ -10,6 +10,7 @@ import {
   AlertTriangle,
   Scale,
   ArrowRight,
+  ArrowLeft,
   Info,
   HelpCircle,
   ExternalLink,
@@ -1028,6 +1029,13 @@ export function KinshipGalaxy() {
             </div>
             <div>
               <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setActiveView("whiteboard")}
+                  className="flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white/10 hover:bg-white/20 text-emerald-300 border border-emerald-500/30 transition-colors cursor-pointer"
+                >
+                  <ArrowLeft size={12} className="rtl:rotate-180" />
+                  <span>{isUr ? "وائٹ بورڈ پر واپس جائیں" : "Back to Whiteboard"}</span>
+                </button>
                 <span className="text-[11px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
                   {isUr ? "برصغیر کا وہم شکن فلک" : "Subcontinent Myth-Shatterer"}
                 </span>

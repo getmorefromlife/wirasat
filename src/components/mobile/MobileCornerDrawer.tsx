@@ -16,6 +16,8 @@ import {
   Globe2,
   Palette,
   Library,
+  PieChart,
+  Compass,
 } from "lucide-react";
 import { type Theme } from "@/types/fiqh";
 
@@ -106,6 +108,57 @@ export const MobileCornerDrawer: React.FC<MobileCornerDrawerProps> = ({
           }`}>
             {isUr ? "علمی و تربیتی سیکشن" : "Learning & Exploration"}
           </div>
+
+          {/* Visual Math Masterclass */}
+          <button
+            onClick={() => navigateTo("math-academy")}
+            className="w-full flex items-center justify-between p-4 rounded-2xl bg-amber-50/70 border-2 border-amber-300 hover:border-amber-600 hover:bg-amber-100/60 transition-all text-left rtl:text-right shadow-xs cursor-pointer group"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-2xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-xs">
+                <PieChart size={22} className="stroke-[2.5]" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-black text-base sm:text-lg text-stone-950 group-hover:text-amber-900">
+                    {isUr ? "بصری ریاضی اور کسریں" : "Visual Math Masterclass"}
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-200 text-amber-900">
+                    {isUr ? "نئی پیشکش" : "New"}
+                  </span>
+                </div>
+                <div className={`text-xs sm:text-sm text-stone-600 font-medium ${
+                  isUr ? "font-nastaliq leading-[2]" : "font-sans"
+                }`}>
+                  {isUr ? "ترکے کے کُل ۴۸ حصوں کی حقیقت اور ۲:۱ کا راز" : "Interactive pie slicer & 48-fraction lab"}
+                </div>
+              </div>
+            </div>
+            <ChevronRight size={20} className="text-amber-600 rtl:rotate-180 stroke-[2.5]" />
+          </button>
+
+          {/* Kinship Whiteboard Studio */}
+          <button
+            onClick={() => navigateTo("whiteboard")}
+            className="w-full flex items-center justify-between p-4 rounded-2xl bg-white border-2 border-stone-200 hover:border-[#1b4332] hover:bg-[#edf3e7]/50 transition-all text-left rtl:text-right shadow-xs cursor-pointer group"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-2xl bg-emerald-100 text-[#1b4332] flex items-center justify-center shrink-0 border border-emerald-200">
+                <Compass size={22} className="stroke-[2.5]" />
+              </div>
+              <div>
+                <div className="font-black text-base sm:text-lg text-stone-950 group-hover:text-[#1b4332]">
+                  {isUr ? "کنبہ وائٹ بورڈ اسٹوڈیو" : "Kinship Whiteboard Studio"}
+                </div>
+                <div className={`text-xs sm:text-sm text-stone-600 font-medium ${
+                  isUr ? "font-nastaliq leading-[2]" : "font-sans"
+                }`}>
+                  {isUr ? "انٹرایکٹو کینوس اور فرضی مشق" : "Interactive kinship canvas & sandbox"}
+                </div>
+              </div>
+            </div>
+            <ChevronRight size={20} className="text-stone-400 rtl:rotate-180 stroke-[2.5]" />
+          </button>
 
           {/* Scholarly Library & Books */}
           <button

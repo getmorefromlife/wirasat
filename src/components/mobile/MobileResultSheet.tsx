@@ -13,6 +13,7 @@ import {
   Check,
   PieChart,
   ChevronRight,
+  Printer,
 } from "lucide-react";
 import { PlainStoryModal } from "@/components/modals/PlainStoryModal";
 
@@ -295,29 +296,40 @@ export const MobileResultSheet: React.FC<MobileResultSheetProps> = ({
         </div>
 
         {/* Action Buttons Footer (Large Buttons) */}
-        <div className={`p-4 sm:p-5 border-t-2 border-stone-200 bg-white flex gap-3.5 ${
+        <div className={`p-4 sm:p-5 border-t-2 border-stone-200 bg-white flex flex-col sm:flex-row gap-2.5 ${
           isUr ? "font-nastaliq" : "font-sans"
         }`}>
-          <button
-            onClick={handleCopySummary}
-            className="flex-1 py-4 px-5 rounded-2xl bg-[#1b4332] hover:bg-[#122e23] text-white font-black text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-md border-2 border-[#0e271c] transition-transform active:scale-98 cursor-pointer"
-          >
-            {copied ? (
-              <>
-                <Check size={20} className="text-emerald-300 stroke-[3]" />
-                <span>{isUr ? "خلاصہ کاپی ہو گیا!" : "Summary Copied!"}</span>
-              </>
-            ) : (
-              <>
-                <Copy size={20} className="stroke-[2.5]" />
-                <span>{isUr ? "خلاصہ کاپی کریں" : "Copy Breakdown"}</span>
-              </>
-            )}
-          </button>
+          <div className="flex gap-2 flex-1">
+            <button
+              onClick={() => window.print()}
+              className="flex-1 py-3.5 px-4 rounded-2xl bg-stone-900 hover:bg-stone-800 text-white font-black text-sm flex items-center justify-center gap-2 shadow-md border-2 border-stone-950 transition-transform active:scale-98 cursor-pointer"
+              title={isUr ? "باقاعدہ خاندانی صلح نامہ و ورقۂ حساب پرنٹ کریں" : "Print Formal Estate Worksheet"}
+            >
+              <Printer size={18} className="text-amber-400 stroke-[2.5]" />
+              <span>{isUr ? "صلح نامہ (PDF)" : "Print PDF"}</span>
+            </button>
+
+            <button
+              onClick={handleCopySummary}
+              className="flex-1 py-3.5 px-4 rounded-2xl bg-[#1b4332] hover:bg-[#122e23] text-white font-black text-sm flex items-center justify-center gap-2 shadow-md border-2 border-[#0e271c] transition-transform active:scale-98 cursor-pointer"
+            >
+              {copied ? (
+                <>
+                  <Check size={18} className="text-emerald-300 stroke-[3]" />
+                  <span>{isUr ? "کاپی ہو گیا!" : "Copied!"}</span>
+                </>
+              ) : (
+                <>
+                  <Copy size={18} className="stroke-[2.5]" />
+                  <span>{isUr ? "خلاصہ کاپی" : "Copy"}</span>
+                </>
+              )}
+            </button>
+          </div>
 
           <button
             onClick={onClose}
-            className="py-4 px-6 rounded-2xl border-2 border-stone-300 bg-stone-100 hover:bg-stone-200 text-stone-900 font-black text-sm sm:text-base transition-colors cursor-pointer"
+            className="py-3 px-5 rounded-2xl border-2 border-stone-300 bg-stone-100 hover:bg-stone-200 text-stone-900 font-black text-sm transition-colors cursor-pointer"
           >
             {isUr ? "بند کریں" : "Close"}
           </button>

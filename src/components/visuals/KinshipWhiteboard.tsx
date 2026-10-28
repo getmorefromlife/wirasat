@@ -34,6 +34,7 @@ import {
   Users,
   Home,
   UserCheck,
+  Orbit,
 } from "lucide-react";
 import { useInheritanceStore } from "@/store/useInheritanceStore";
 import { calculateInheritance, calculateBalanceSheet } from "@/lib/fiqh-engine";
@@ -342,7 +343,7 @@ const INITIAL_NODES_SIMULTANEOUS_ACCIDENT: WhiteboardNode[] = [
    ========================================================================= */
 
 export function KinshipWhiteboard() {
-  const { language, assets, debts, deceased: planningInfo, updateDeceased, updateAssets, updateDebts, updateHeirs } = useInheritanceStore();
+  const { language, assets, debts, deceased: planningInfo, updateDeceased, updateAssets, updateDebts, updateHeirs, setActiveView } = useInheritanceStore();
   const isUr = language === "ur";
   const arrangeWhiteboard=useCallback((familyNodes:readonly WhiteboardNode[])=>arrangeFamily(familyNodes,isUr),[isUr]);
 
@@ -1251,6 +1252,16 @@ export function KinshipWhiteboard() {
 
         {/* Right: Canvas Utilities & Zoom */}
         <div className="flex items-center gap-1.5 shrink-0">
+          {/* 3D Cosmic Galaxy Mode Switch */}
+          <button
+            onClick={() => setActiveView("galaxy")}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-purple-200 dark:border-purple-800 bg-purple-50/60 dark:bg-purple-950/40 text-purple-800 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/50 text-xs font-bold cursor-pointer transition-all shadow-2xs whitespace-nowrap"
+            title={isUr ? "3D کہکشاں ویو کھولیں" : "Open 3D Cosmic Galaxy View"}
+          >
+            <Orbit size={14} className="text-purple-600 dark:text-purple-400" />
+            <span>{isUr ? "3D کہکشاں" : "3D Galaxy"}</span>
+          </button>
+
           {/* Full HD Mode Toggle */}
           <button
             onClick={toggleFullHD}

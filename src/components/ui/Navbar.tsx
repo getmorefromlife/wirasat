@@ -17,6 +17,7 @@ import {
   Palette,
   Check,
   Library,
+  Scale,
 } from "lucide-react";
 import { useInheritanceStore, type ViewTab } from "@/store/useInheritanceStore";
 import { type Theme } from "@/types/fiqh";
@@ -146,7 +147,7 @@ export function Navbar() {
       titleEn: "Knowledge & Academy",
       titleUr: "علم و فقہی رہنمائی",
       icon: GraduationCap,
-      views: ["math-academy", "academy", "wasiyyah", "glossary", "library"],
+      views: ["math-academy", "academy", "matrix", "wasiyyah", "glossary", "library"],
       items: [
         {
           id: "math-academy",
@@ -189,6 +190,14 @@ export function Navbar() {
           descEn: "Dictionary: Kalalah, Radd, Tanzil, Habwah",
           descUr: "کلالہ، رد، تنزیل اور حبوہ کی تفصیلی شرعی لغت",
           icon: BookOpen,
+        },
+        {
+          id: "matrix",
+          titleEn: "Marja‘ Comparison Matrix",
+          titleUr: "مراجع کا تقابلی میٹرکس",
+          descEn: "Side-by-side scholarly differences (Sistani, Khoei, etc.)",
+          descUr: "سیستانی، خامنہ ای اور خوئی کے فتاویٰ کا تقابلی جائزہ",
+          icon: Scale,
         },
       ],
     },
