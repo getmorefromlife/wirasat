@@ -69,21 +69,26 @@ export function WhiteboardExplanationDrawer({
     const entries=JSON.parse(signature) as {key:string;title:string;percentage:number;money:number}[];
     const rows=Object.fromEntries(entries.map(row=>[row.key,{percentage:row.percentage,money:row.money}]));
     const old=previous.current;
-    if(old && old.subject === `${family.subject.id}:${isUr}`){
+    if(old && old.subject === `${family?.subject?.id || ""}:${isUr}`){
       const changed=entries.filter(row=>old.rows[row.key]?.percentage !== row.percentage || old.rows[row.key]?.money !== row.money).map(row=>`${row.title}: ${(old.rows[row.key]?.percentage || 0).toFixed(1)}% → ${row.percentage.toFixed(1)}% · ${currency} ${(old.rows[row.key]?.money || 0).toLocaleString()} → ${row.money.toLocaleString()}`);
       Object.keys(old.rows).filter(key=>!(key in rows)).forEach(key=>changed.push(`${key}: ${old.rows[key].percentage.toFixed(1)}% → 0%`));
       if(changed.length)setChanges(changed);
     }else setChanges([]);
-    previous.current={subject:`${family.subject.id}:${isUr}`,rows};
-  },[signature,family.subject.id,currency,isUr]);
-  if (!isOpen) return null;
-
+    previous.current={subject:`${family?.subject?.id || ""}:${isUr}`,rows};
+  },[signature,family?.subject?.id,currency,isUr]);
   const calcResult = calculationData?.calcResult;
   const balanceSheet = calculationData?.balanceSheet;
   const isGrossZero = calculationData?.isGrossZero;
   const canvasEstateGross = calculationData?.canvasEstateGross || 0;
   const rawMarja = calculationData?.deceasedInfo?.marja as MarjaId | undefined;
   const marjaInfo = (rawMarja && MARJA_DATABASE[rawMarja]) ? MARJA_DATABASE[rawMarja] : MARJA_DATABASE.sistani;
+
+  // Compute Plain-Language "Why 48 (or 24, 72)?" Slices Analysis (Must precede any early returns)
+  const slicesAnalysis = useMemo(() => {
+    return analyzeEstateSlices(calcResult?.heirShares || [], currency);
+  }, [calcResult?.heirShares, currency]);
+
+  if (!isOpen) return null;
 
   const formatMoney = (val: number) => {
     return new Intl.NumberFormat(isUr ? "ur-PK" : "en-US", {
@@ -102,11 +107,6 @@ export function WhiteboardExplanationDrawer({
     (sum: number, s: HeirShareResult) => sum + (s.percentage || 0),
     0
   );
-
-  // Compute Plain-Language "Why 48 (or 24, 72)?" Slices Analysis
-  const slicesAnalysis = useMemo(() => {
-    return analyzeEstateSlices(calcResult?.heirShares || [], currency);
-  }, [calcResult?.heirShares, currency]);
 
   // Helper to map a person node to their specific slice details
   const getPersonSlice = (person: WhiteboardNode): HeirSliceDetail | undefined => {
@@ -239,7 +239,7 @@ export function WhiteboardExplanationDrawer({
               </h3>
               <div className="grid grid-cols-1 gap-3">
                 {nodes
-                  .filter((n) => family.roles.get(n.id) !== "OTHER" && n.id !== family.subject.id)
+                  .filter((n) => family.roles.get(n.id) !== "OTHER" && n.id !== family?.subject?.id)
                   .map((person) => {
                     const slice = getPersonSlice(person);
                     return (
