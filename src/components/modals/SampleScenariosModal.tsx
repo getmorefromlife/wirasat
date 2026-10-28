@@ -79,7 +79,7 @@ export const SampleScenariosModal: React.FC<SampleScenariosModalProps> = ({
                 <span>{isUr ? "حقیقی فقہی مثالیں" : "Real-World Shia Inheritance Cases"}</span>
               </div>
               <h2 className="text-lg sm:text-xl font-bold mt-0.5 leading-snug">
-                {isUr ? "۵ نمونۂ کیسز براؤز کریں" : "Browse 5 Sample Scenarios"}
+                {isUr ? "۸ مستند خاندانی نمونے براؤز کریں" : "Browse 8 Family Archetypes"}
               </h2>
             </div>
           </div>

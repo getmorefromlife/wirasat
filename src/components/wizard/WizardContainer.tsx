@@ -165,7 +165,7 @@ export const WizardContainer: React.FC = () => {
             className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-linear-to-r from-[var(--theme-gold)]/20 to-[var(--theme-gold)]/10 hover:from-[var(--theme-gold)]/30 hover:to-[var(--theme-gold)]/20 border-2 border-[var(--theme-gold)]/60 text-sm font-black text-[var(--theme-gold)] transition-all shadow-sm cursor-pointer"
           >
             <Sparkles className="w-4 h-4 text-[var(--theme-gold)]" />
-            <span>{language === "ur" ? "نمونۂ کیسز دیکھیں (۵ کیسز)" : "Browse 5 Sample Scenarios"}</span>
+            <span>{language === "ur" ? "۸ مستند خاندانی خاکے دیکھیں" : "Browse 8 Family Archetypes"}</span>
           </button>
 
           {/* Reset All */}
@@ -192,28 +192,36 @@ export const WizardContainer: React.FC = () => {
             </div>
             <div>
               <strong className="text-sm sm:text-base font-bold text-[#172e22] block">
-                {language === "ur" ? "سمجھنے کے لیے ۵ حقیقی فقہی کیسز دیکھیں" : "Explore 5 Real-World Shia Inheritance Cases"}
+                {language === "ur" ? "سمجھنے کے لیے ۸ مستند خاندانی خاکے دیکھیں" : "Explore 8 Real-World Family Archetypes"}
               </strong>
               <p className="text-xs text-[#52735a] font-nastaliq leading-[2.2] mt-0.5">
                 {language === "ur"
-                  ? "اگر آپ براہ راست فرضی مثال دیکھ کر سمجھنا چاہتے ہیں تو نیچے دیے گئے ۵ نمونہ کیسز میں سے کسی ایک کا انتخاب فرمائیں۔"
-                  : "Select any of our 5 real-world cases to see how Ja'fari inheritance law resolves complex family scenarios."}
+                  ? "اگر آپ براہ راست فرضی مثال دیکھ کر سمجھنا چاہتے ہیں تو ۸ مستند خاندانی خاکوں میں سے کسی ایک کا انتخاب فرمائیں۔"
+                  : "Select any of our 8 demographic family archetypes (~99% of global cases) to see how Ja'fari inheritance law resolves diverse estate scenarios."}
               </p>
             </div>
           </div>
 
           {/* Quick Case Pills */}
           <div className="flex items-center gap-1.5 flex-wrap">
-            {SCENARIO_PRESETS.slice(0, 3).map((p, idx) => (
+            {SCENARIO_PRESETS.slice(0, 4).map((p, idx) => (
               <button
                 key={p.id}
                 type="button"
                 onClick={() => loadPreset(p.id)}
                 className="px-3 py-1.5 rounded-xl bg-white hover:bg-theme-card-dark text-theme-brand hover:text-white border border-theme-brand text-xs font-bold transition-all shadow-2xs cursor-pointer"
+                title={language === "ur" ? p.titleUr : p.titleEn}
               >
-                {language === "ur" ? `کیس ${idx + 1}` : `Case ${idx + 1}`}
+                {language === "ur" ? `نمونہ ${idx + 1}` : `Case ${idx + 1}`}
               </button>
             ))}
+            <button
+              type="button"
+              onClick={() => setIsPresetModalOpen(true)}
+              className="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold transition-all shadow-2xs cursor-pointer"
+            >
+              {language === "ur" ? "تمام ۸ نمونے..." : "All 8 Archetypes..."}
+            </button>
           </div>
         </div>
       )}
@@ -316,7 +324,7 @@ export const WizardContainer: React.FC = () => {
     </>
   )}
 
-      {/* Full-Screen 5 Sample Scenarios Modal */}
+      {/* Full-Screen 8 Family Archetypes Modal */}
       <SampleScenariosModal
         isOpen={isPresetModalOpen}
         onClose={() => setIsPresetModalOpen(false)}
