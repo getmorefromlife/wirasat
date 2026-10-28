@@ -1,6 +1,6 @@
 # Whiteboard family workspace — 28 October 2026
 
-Implemented locally. Not deployed.
+Deployed to production on 28 October 2026: [shia-wirasat.vercel.app](https://shia-wirasat.vercel.app). Implementation commit: `c442c7e`. Vercel reported Ready and the GitHub Vercel status reported success. Live checks covered full/paternal sibling creation, explicit parent assignment through the spouse branch, live results, loaded images, and a clean browser console. The verification details below also record the broader pre-release local checks.
 
 ## Family creation
 
