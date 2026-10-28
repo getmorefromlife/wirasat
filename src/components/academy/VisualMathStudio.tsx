@@ -18,6 +18,8 @@ import {
   ChevronRight,
   Split,
   Sliders,
+  ShieldAlert,
+  ArrowLeftRight,
 } from "lucide-react";
 import { useInheritanceStore } from "@/store/useInheritanceStore";
 
@@ -173,9 +175,9 @@ interface PieWedge {
 
 function renderSvgPieWedges(wedges: PieWedge[], totalSlices: number) {
   let accumulatedAngle = 0;
-  const radius = 90;
-  const cx = 110;
-  const cy = 110;
+  const radius = 98;
+  const cx = 120;
+  const cy = 120;
 
   return wedges.map((wedge, idx) => {
     const angle = (wedge.slices / totalSlices) * 360;
@@ -205,7 +207,7 @@ function renderSvgPieWedges(wedges: PieWedge[], totalSlices: number) {
         d={pathData}
         fill={wedge.color}
         stroke="#ffffff"
-        strokeWidth="1.5"
+        strokeWidth="2"
         className="transition-all duration-300 hover:opacity-90 hover:scale-[1.02] origin-center cursor-pointer"
       >
         <title>{`${wedge.label}: ${wedge.slices} of ${totalSlices} Slices (${wedge.percentage.toFixed(1)}%)`}</title>
@@ -222,8 +224,8 @@ export function VisualMathStudio() {
   const { language, setActiveView } = useInheritanceStore();
   const isUr = language === "ur";
 
-  // Active Tab
-  const [activeTab, setActiveTab] = useState<"sandbox" | "fractions" | "scale">("sandbox");
+  // Active Tab: 4 modules
+  const [activeTab, setActiveTab] = useState<"sandbox" | "fractions" | "scale" | "surplus">("sandbox");
 
   // Selected Quranic Fraction Card
   const [selectedFraction, setSelectedFraction] = useState<QuranicFraction>(QURANIC_FRACTIONS[2]); // Default 1/8
@@ -233,6 +235,9 @@ export function VisualMathStudio() {
   const [parentsOption, setParentsOption] = useState<"none" | "both" | "father" | "mother">("none");
   const [sonsCount, setSonsCount] = useState<number>(2);
   const [daughtersCount, setDaughtersCount] = useState<number>(2);
+
+  // Step 4: Surplus Simulation Scenario
+  const [surplusScenario, setSurplusScenario] = useState<"sole_daughter" | "mother_daughter" | "two_daughters">("sole_daughter");
 
   // Derive Sandbox Calculation & Total Slices
   const sandboxMath = useMemo(() => {
@@ -290,7 +295,6 @@ export function VisualMathStudio() {
     const remainingBaseParts = Math.max(0, baseDenominator - totalFixedBaseParts);
 
     // Multiplier for children (The "Why 48?" secret!)
-    // If remainingBaseParts does not divide cleanly by childShares, multiply by childShares!
     let multiplier = 1;
     if (childShares > 0 && remainingBaseParts > 0) {
       if (remainingBaseParts % childShares !== 0) {
@@ -391,48 +395,50 @@ export function VisualMathStudio() {
   }, [spouseType, parentsOption, sonsCount, daughtersCount, isUr]);
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] dark:bg-[#0B1713] text-stone-800 dark:text-stone-100 transition-colors select-none py-6 px-3 sm:px-6 max-w-7xl mx-auto space-y-6">
+    <div className="min-h-screen bg-[#FAF8F5] dark:bg-[#0B1713] text-stone-900 dark:text-stone-100 transition-colors select-none py-8 px-4 sm:px-8 max-w-7xl mx-auto space-y-8">
       {/* -------------------------------------------------------------------
           HERO BANNER: VISUAL MATH OF ISLAMIC INHERITANCE
           ------------------------------------------------------------------- */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#16382a] via-[#245642] to-[#122b20] text-white p-6 sm:p-8 shadow-xl border border-emerald-700/50">
-        <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="space-y-3 max-w-2xl">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-400 text-stone-900 shadow-xs">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#16382a] via-[#245642] to-[#122b20] text-white p-7 sm:p-10 shadow-2xl border border-emerald-600/50">
+        <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+          <div className="space-y-4 max-w-3xl">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <span className="text-xs sm:text-sm font-bold px-3.5 py-1 rounded-full bg-amber-400 text-stone-950 shadow-sm">
                 {isUr ? "بنیادی آغاز (Start Here)" : "Foundational Masterclass"}
               </span>
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-white/10 text-emerald-200 border border-emerald-500/30">
+              <span className="text-xs sm:text-sm font-semibold px-3 py-1 rounded-full bg-white/15 text-emerald-200 border border-emerald-400/40">
                 {isUr ? "عِلمُ الحِسابِ وَالفرائض" : "Visual Math of Fara'id"}
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
               {isUr
                 ? "وراثت کی بصری ریاضی اور کسروں کی حقیقت"
                 : "The Visual Mathematics of Islamic Inheritance"}
             </h1>
 
-            <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed font-light">
+            <p className="text-base sm:text-lg text-emerald-100 leading-relaxed font-normal">
               {isUr
-                ? "سمجھیں کہ قرآنی کسریں کیسی ہیں، ترکہ کُل ۴۸ یا ۷۲ حصوں میں کیوں تقسیم ہوتا ہے، اور ۲:۱ کا تناسب بغیر کسی اعشاریہ یا کسر کے مکمل عدل کیسے قائم کرتا ہے۔"
+                ? "سمجھیں کہ قرآنی کسریں کیسی ہیں، ترکہ کُل ۴۸ یا ۷۲ حصوں میں کیوں تقسیم ہوتا ہے، اور ۲:۱ کا تناسب اور فاضل ترکہ (رد) بغیر کسی اعشاریہ یا کسر کے مکمل عدل کیسے قائم کرتا ہے۔"
                 : "Demystifying the 6 Quranic fractions, the 2:1 child ratio, and the secret of why an estate expands into 48 or 72 clean slices with zero crumbs or decimals."}
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-2.5 shrink-0 w-full md:w-auto">
+          <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0 w-full md:w-auto">
             <button
+              type="button"
               onClick={() => setActiveView("whiteboard")}
-              className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-white text-[#245642] hover:bg-emerald-50 font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
+              className="w-full sm:w-auto px-5 py-3 rounded-2xl bg-white text-[#245642] hover:bg-emerald-50 font-bold text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-lg hover:shadow-xl transition-all cursor-pointer"
             >
-              <Compass size={16} />
+              <Compass size={18} />
               <span>{isUr ? "کنبہ وائٹ بورڈ کھولیں" : "Open Kinship Whiteboard"}</span>
             </button>
             <button
+              type="button"
               onClick={() => setActiveView("wizard")}
-              className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-emerald-800/80 hover:bg-emerald-700/80 text-white font-bold text-xs flex items-center justify-center gap-2 border border-emerald-500/40 transition-all cursor-pointer"
+              className="w-full sm:w-auto px-5 py-3 rounded-2xl bg-emerald-800/90 hover:bg-emerald-700 text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2.5 border border-emerald-400/50 shadow-md transition-all cursor-pointer"
             >
-              <Calculator size={16} />
+              <Calculator size={18} />
               <span>{isUr ? "اصل کیلکولیٹر" : "Main Calculator"}</span>
             </button>
           </div>
@@ -440,43 +446,59 @@ export function VisualMathStudio() {
       </div>
 
       {/* -------------------------------------------------------------------
-          MASTERCLASS NAVIGATION TABS
+          MASTERCLASS NAVIGATION TABS (4 SEQUENTIAL MODULES)
           ------------------------------------------------------------------- */}
-      <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-stone-800 shadow-xs">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 p-2 rounded-3xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-stone-800 shadow-sm">
         <button
+          type="button"
           onClick={() => setActiveTab("sandbox")}
-          className={`flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+          className={`py-3.5 px-4 rounded-2xl text-sm sm:text-base font-bold flex items-center justify-center gap-2.5 transition-all cursor-pointer ${
             activeTab === "sandbox"
-              ? "bg-[#245642] text-white shadow-sm"
-              : "text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800"
+              ? "bg-[#245642] text-white shadow-md ring-2 ring-emerald-500/20"
+              : "text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800/70"
           }`}
         >
-          <PieIcon size={16} className={activeTab === "sandbox" ? "text-amber-300" : "text-stone-400"} />
-          <span>{isUr ? "۱۔ لائیو کسروں کا لیب (Pizza Slicer)" : "1. Interactive Slices Lab"}</span>
+          <PieIcon size={18} className={activeTab === "sandbox" ? "text-amber-300" : "text-stone-400"} />
+          <span>{isUr ? "۱۔ لائیو کسروں کا لیب" : "1. Interactive Slices Lab"}</span>
         </button>
 
         <button
+          type="button"
           onClick={() => setActiveTab("fractions")}
-          className={`flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+          className={`py-3.5 px-4 rounded-2xl text-sm sm:text-base font-bold flex items-center justify-center gap-2.5 transition-all cursor-pointer ${
             activeTab === "fractions"
-              ? "bg-[#245642] text-white shadow-sm"
-              : "text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800"
+              ? "bg-[#245642] text-white shadow-md ring-2 ring-emerald-500/20"
+              : "text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800/70"
           }`}
         >
-          <Layers size={16} className={activeTab === "fractions" ? "text-amber-300" : "text-stone-400"} />
-          <span>{isUr ? "۲۔ چھ قرآنی بنیادیں (Hexagon)" : "2. The 6 Quranic Fractions"}</span>
+          <Layers size={18} className={activeTab === "fractions" ? "text-amber-300" : "text-stone-400"} />
+          <span>{isUr ? "۲۔ چھ قرآنی کسریں" : "2. 6 Quranic Fractions"}</span>
         </button>
 
         <button
+          type="button"
           onClick={() => setActiveTab("scale")}
-          className={`flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+          className={`py-3.5 px-4 rounded-2xl text-sm sm:text-base font-bold flex items-center justify-center gap-2.5 transition-all cursor-pointer ${
             activeTab === "scale"
-              ? "bg-[#245642] text-white shadow-sm"
-              : "text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800"
+              ? "bg-[#245642] text-white shadow-md ring-2 ring-emerald-500/20"
+              : "text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800/70"
           }`}
         >
-          <Scale size={16} className={activeTab === "scale" ? "text-amber-300" : "text-stone-400"} />
-          <span>{isUr ? "۳۔ ۲:۱ کا تناسب اور میزانِ عدل" : "3. The 2:1 Child Ratio & Scale"}</span>
+          <Scale size={18} className={activeTab === "scale" ? "text-amber-300" : "text-stone-400"} />
+          <span>{isUr ? "۳۔ ۲:۱ کا تناسب و میزان" : "3. 2:1 Ratio & Scale"}</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab("surplus")}
+          className={`py-3.5 px-4 rounded-2xl text-sm sm:text-base font-bold flex items-center justify-center gap-2.5 transition-all cursor-pointer ${
+            activeTab === "surplus"
+              ? "bg-[#245642] text-white shadow-md ring-2 ring-emerald-500/20"
+              : "text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800/70"
+          }`}
+        >
+          <ArrowLeftRight size={18} className={activeTab === "surplus" ? "text-amber-300" : "text-stone-400"} />
+          <span>{isUr ? "۴۔ فاضل ترکہ: رد بنام تعصیب" : "4. Surplus: Radd vs Ta'seeb"}</span>
         </button>
       </div>
 
@@ -484,63 +506,69 @@ export function VisualMathStudio() {
           TAB 1: LIVE INTERACTIVE ESTATE SLICES LAB (THE DYNAMIC PIZZA SLICER)
           ------------------------------------------------------------------- */}
       {activeTab === "sandbox" && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Column: Interactive Family Controls (5 cols) */}
-          <div className="lg:col-span-5 bg-white dark:bg-[#10241b] rounded-3xl p-5 sm:p-6 border border-stone-200 dark:border-stone-800 shadow-sm space-y-5">
+          <div className="lg:col-span-5 bg-white dark:bg-[#10241b] rounded-3xl p-6 sm:p-8 border border-stone-200 dark:border-stone-800 shadow-sm space-y-6">
             <div>
-              <h3 className="text-base font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2">
-                <Sliders size={18} className="text-[#245642] dark:text-emerald-400" />
+              <h3 className="text-xl sm:text-2xl font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2.5">
+                <Sliders size={22} className="text-[#245642] dark:text-emerald-400" />
                 <span>{isUr ? "کنبہ ترتیب دیں اور لائیو کسریں دیکھیں" : "Adjust Heirs to Watch Slices Multiply"}</span>
               </h3>
-              <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
+              <p className="text-sm sm:text-base text-stone-600 dark:text-stone-300 mt-1.5 leading-relaxed">
                 {isUr
                   ? "سلائیڈرز تبدیل کریں اور دیکھیں کہ کُل حصے خود بخود ۸ سے ۴۸ یا ۷۲ کیسے بنتے ہیں۔"
-                  : "Drag the counters below to witness in real-time how the pie slices expand without crumbs."}
+                  : "Move the sliders below to witness in real-time how the pie slices expand without crumbs or decimals."}
               </p>
             </div>
 
             {/* Quick Presets */}
-            <div className="space-y-1.5">
-              <span className="text-[11px] font-bold text-stone-500 uppercase tracking-wider block">
+            <div className="space-y-2">
+              <span className="text-xs sm:text-sm font-bold text-stone-500 uppercase tracking-wider block">
                 {isUr ? "تیار شدہ مثالیں (Quick Presets):" : "Popular Presets:"}
               </span>
-              <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="grid grid-cols-2 gap-3">
                 <button
+                  type="button"
                   onClick={() => {
                     setSpouseType("wife");
                     setParentsOption("none");
                     setSonsCount(2);
                     setDaughtersCount(2);
                   }}
-                  className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-300 font-bold border border-emerald-200 dark:border-emerald-800/50 hover:bg-emerald-100 text-start transition-all cursor-pointer"
+                  className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 font-bold border border-emerald-300 dark:border-emerald-800 hover:bg-emerald-100 text-start transition-all cursor-pointer shadow-xs"
                 >
-                  {isUr ? "روایتی بنیادی (۴۸ حصے)" : "Nuclear (48 Slices)"}
-                  <span className="block text-[10px] font-normal opacity-80">Wife + 2 Sons + 2 Daughters</span>
+                  <span className="text-sm sm:text-base block">
+                    {isUr ? "روایتی بنیادی (۴۸ حصے)" : "Nuclear (48 Slices)"}
+                  </span>
+                  <span className="block text-xs text-stone-600 dark:text-emerald-300/80 mt-0.5">Wife + 2 Sons + 2 Daughters</span>
                 </button>
                 <button
+                  type="button"
                   onClick={() => {
                     setSpouseType("wife");
                     setParentsOption("both");
                     setSonsCount(1);
                     setDaughtersCount(1);
                   }}
-                  className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-900 dark:text-blue-300 font-bold border border-blue-200 dark:border-blue-800/50 hover:bg-blue-100 text-start transition-all cursor-pointer"
+                  className="p-3.5 rounded-2xl bg-blue-50 dark:bg-blue-950/40 text-blue-900 dark:text-blue-200 font-bold border border-blue-300 dark:border-blue-800 hover:bg-blue-100 text-start transition-all cursor-pointer shadow-xs"
                 >
-                  {isUr ? "مشترکہ خاندان (۷۲ حصے)" : "Joint Family (72 Slices)"}
-                  <span className="block text-[10px] font-normal opacity-80">Parents + Wife + 1S + 1D</span>
+                  <span className="text-sm sm:text-base block">
+                    {isUr ? "مشترکہ خاندان (۷۲ حصے)" : "Joint Family (72 Slices)"}
+                  </span>
+                  <span className="block text-xs text-stone-600 dark:text-blue-300/80 mt-0.5">Parents + Wife + 1S + 1D</span>
                 </button>
               </div>
             </div>
 
             {/* 1. Spouse Selector */}
-            <div className="space-y-2 pt-2 border-t border-stone-100 dark:border-stone-800">
-              <label className="text-xs font-bold text-stone-700 dark:text-stone-300 flex items-center justify-between">
+            <div className="space-y-2.5 pt-3 border-t border-stone-200 dark:border-stone-800">
+              <label className="text-sm sm:text-base font-bold text-stone-800 dark:text-stone-200 flex items-center justify-between">
                 <span>{isUr ? "شریکِ حیات (Spouse):" : "Surviving Spouse:"}</span>
-                <span className="text-[11px] font-mono text-sky-600 dark:text-sky-400">
+                <span className="text-sm font-mono font-bold text-sky-600 dark:text-sky-400">
                   {spouseType === "wife" ? (sonsCount + daughtersCount > 0 ? "1/8" : "1/4") : spouseType === "husband" ? (sonsCount + daughtersCount > 0 ? "1/4" : "1/2") : "None"}
                 </span>
               </label>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-2.5">
                 {[
                   { id: "wife", en: "1 Wife", ur: "زوجہ (بیوہ)" },
                   { id: "husband", en: "Husband", ur: "شوہر" },
@@ -548,10 +576,11 @@ export function VisualMathStudio() {
                 ].map((s) => (
                   <button
                     key={s.id}
+                    type="button"
                     onClick={() => setSpouseType(s.id as any)}
-                    className={`py-2 px-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    className={`py-2.5 px-3 rounded-xl text-sm sm:text-base font-bold transition-all cursor-pointer ${
                       spouseType === s.id
-                        ? "bg-sky-600 text-white shadow-xs"
+                        ? "bg-sky-600 text-white shadow-md ring-2 ring-sky-500/30"
                         : "bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200"
                     }`}
                   >
@@ -562,26 +591,27 @@ export function VisualMathStudio() {
             </div>
 
             {/* 2. Parents Selector */}
-            <div className="space-y-2 pt-2 border-t border-stone-100 dark:border-stone-800">
-              <label className="text-xs font-bold text-stone-700 dark:text-stone-300 flex items-center justify-between">
+            <div className="space-y-2.5 pt-3 border-t border-stone-200 dark:border-stone-800">
+              <label className="text-sm sm:text-base font-bold text-stone-800 dark:text-stone-200 flex items-center justify-between">
                 <span>{isUr ? "والدین (Parents):" : "Parents:"}</span>
-                <span className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400">
+                <span className="text-sm font-mono font-bold text-emerald-600 dark:text-emerald-400">
                   {parentsOption === "both" ? "1/6 + 1/6" : parentsOption !== "none" ? "1/6" : "None"}
                 </span>
               </label>
-              <div className="grid grid-cols-4 gap-1.5 text-xs">
+              <div className="grid grid-cols-4 gap-2 text-sm sm:text-base">
                 {[
                   { id: "none", en: "None", ur: "کوئی نہیں" },
-                  { id: "both", en: "Both", ur: "دونوں (1/6+1/6)" },
-                  { id: "father", en: "Father", ur: "صرف والد" },
-                  { id: "mother", en: "Mother", ur: "صرف والدہ" },
+                  { id: "both", en: "Both", ur: "دونوں" },
+                  { id: "father", en: "Father", ur: "والد" },
+                  { id: "mother", en: "Mother", ur: "والدہ" },
                 ].map((p) => (
                   <button
                     key={p.id}
+                    type="button"
                     onClick={() => setParentsOption(p.id as any)}
-                    className={`py-2 px-1 rounded-xl font-bold transition-all cursor-pointer text-center ${
+                    className={`py-2.5 px-2 rounded-xl font-bold transition-all cursor-pointer text-center ${
                       parentsOption === p.id
-                        ? "bg-emerald-700 text-white shadow-xs"
+                        ? "bg-emerald-700 text-white shadow-md ring-2 ring-emerald-500/30"
                         : "bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200"
                     }`}
                   >
@@ -592,12 +622,12 @@ export function VisualMathStudio() {
             </div>
 
             {/* 3. Sons Counter */}
-            <div className="space-y-2 pt-2 border-t border-stone-100 dark:border-stone-800">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-stone-700 dark:text-stone-300">
+            <div className="space-y-2.5 pt-3 border-t border-stone-200 dark:border-stone-800">
+              <div className="flex items-center justify-between">
+                <span className="text-sm sm:text-base font-bold text-stone-800 dark:text-stone-200">
                   {isUr ? "زندہ بیٹے (Sons — 2 Shares each):" : "Living Sons (2 shares each):"}
                 </span>
-                <span className="font-mono font-bold text-purple-700 dark:text-purple-300 text-sm">
+                <span className="font-mono font-bold text-purple-700 dark:text-purple-300 text-base sm:text-lg">
                   {sonsCount} {isUr ? "بیٹے" : "Sons"}
                 </span>
               </div>
@@ -608,9 +638,9 @@ export function VisualMathStudio() {
                 step="1"
                 value={sonsCount}
                 onChange={(e) => setSonsCount(Number(e.target.value))}
-                className="w-full h-2 rounded-lg accent-purple-600 cursor-pointer"
+                className="w-full h-3 rounded-lg accent-purple-600 cursor-pointer"
               />
-              <div className="flex justify-between text-[10px] text-stone-400 font-mono">
+              <div className="flex justify-between text-xs font-mono text-stone-500 font-bold px-1">
                 <span>0</span>
                 <span>1</span>
                 <span>2</span>
@@ -621,12 +651,12 @@ export function VisualMathStudio() {
             </div>
 
             {/* 4. Daughters Counter */}
-            <div className="space-y-2 pt-2 border-t border-stone-100 dark:border-stone-800">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-stone-700 dark:text-stone-300">
+            <div className="space-y-2.5 pt-3 border-t border-stone-200 dark:border-stone-800">
+              <div className="flex items-center justify-between">
+                <span className="text-sm sm:text-base font-bold text-stone-800 dark:text-stone-200">
                   {isUr ? "زندہ بیٹیاں (Daughters — 1 Share each):" : "Living Daughters (1 share each):"}
                 </span>
-                <span className="font-mono font-bold text-amber-700 dark:text-amber-300 text-sm">
+                <span className="font-mono font-bold text-amber-700 dark:text-amber-300 text-base sm:text-lg">
                   {daughtersCount} {isUr ? "بیٹیاں" : "Daughters"}
                 </span>
               </div>
@@ -637,9 +667,9 @@ export function VisualMathStudio() {
                 step="1"
                 value={daughtersCount}
                 onChange={(e) => setDaughtersCount(Number(e.target.value))}
-                className="w-full h-2 rounded-lg accent-amber-600 cursor-pointer"
+                className="w-full h-3 rounded-lg accent-amber-600 cursor-pointer"
               />
-              <div className="flex justify-between text-[10px] text-stone-400 font-mono">
+              <div className="flex justify-between text-xs font-mono text-stone-500 font-bold px-1">
                 <span>0</span>
                 <span>1</span>
                 <span>2</span>
@@ -652,39 +682,39 @@ export function VisualMathStudio() {
           </div>
 
           {/* Right Column: Visual Pie & Derivation Story (7 cols) */}
-          <div className="lg:col-span-7 space-y-5">
+          <div className="lg:col-span-7 space-y-6">
             {/* Real-Time Mathematical Derivation Card */}
-            <div className="p-6 rounded-3xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-stone-800 shadow-sm space-y-5">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-4 border-b border-stone-100 dark:border-stone-800">
+            <div className="p-7 sm:p-9 rounded-3xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-stone-800 shadow-sm space-y-6">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pb-6 border-b border-stone-200 dark:border-stone-800">
                 {/* SVG Pie Chart */}
                 <div className="relative shrink-0 flex items-center justify-center">
-                  <svg width="220" height="220" className="drop-shadow-md">
+                  <svg width="240" height="240" className="drop-shadow-lg">
                     {renderSvgPieWedges(sandboxMath.wedges, sandboxMath.totalSlices)}
-                    <circle cx="110" cy="110" r="38" className="fill-white dark:fill-[#0c1a14]" />
+                    <circle cx="120" cy="120" r="42" className="fill-white dark:fill-[#0c1a14]" />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-                    <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">
+                    <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">
                       {isUr ? "کُل حصے" : "Total Slices"}
                     </span>
-                    <span className="text-xl font-black font-mono text-[#245642] dark:text-emerald-400">
+                    <span className="text-3xl font-black font-mono text-[#245642] dark:text-emerald-400">
                       {sandboxMath.totalSlices}
                     </span>
                   </div>
                 </div>
 
                 {/* Mathematical Equation & Story */}
-                <div className="space-y-3 flex-1">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 text-xs font-bold border border-emerald-300">
-                    <CheckCircle2 size={13} />
-                    <span>{isUr ? "بغیر اعشاریہ تقسیم کا راز" : "The Secret to Whole Slices"}</span>
+                <div className="space-y-4 flex-1">
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 text-sm font-bold border border-emerald-300">
+                    <CheckCircle2 size={16} />
+                    <span>{isUr ? "بغیر اعشاریہ تقسیم کا حسابی راز" : "The Secret to Whole Slices"}</span>
                   </div>
 
                   {/* Formula Banner */}
-                  <div className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/90 border border-stone-200 dark:border-stone-800 font-mono text-xs space-y-1">
-                    <span className="text-[10px] text-stone-500 font-bold block">
+                  <div className="p-4 rounded-2xl bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 font-mono space-y-1.5">
+                    <span className="text-xs font-bold text-stone-500 uppercase tracking-wider block">
                       {isUr ? "حسابی ضربی مساوات:" : "Multiplication Equation:"}
                     </span>
-                    <div className="text-sm font-bold text-[#245642] dark:text-emerald-300">
+                    <div className="text-base sm:text-lg font-bold text-[#245642] dark:text-emerald-300">
                       Base ({sandboxMath.baseDenominator}) × Children Shares ({sandboxMath.multiplier}) ={" "}
                       <strong className="text-amber-600 dark:text-amber-400 font-black">
                         {sandboxMath.totalSlices} Slices
@@ -692,7 +722,7 @@ export function VisualMathStudio() {
                     </div>
                   </div>
 
-                  <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed font-medium">
+                  <p className="text-sm sm:text-base text-stone-700 dark:text-stone-300 leading-relaxed font-medium">
                     {isUr
                       ? `بیوہ یا والدین کے حصے نکالنے کے بعد بقیہ ترکہ بچوں میں تقسیم ہونا تھا، جس کے کُل ${sandboxMath.childShares} حصے بنتے تھے۔ چونکہ باقی رقم ${sandboxMath.childShares} پر پوری تقسیم نہیں ہوتی تھی، اس لیے ابتدائی مخرج کو ضرب دے کر کُل ${sandboxMath.totalSlices} حصے بنا لیے گئے۔`
                       : `After setting aside fixed spousal/parental reserves, the remaining estate had to be split among children (${sandboxMath.childShares} family shares). Multiplying the base by ${sandboxMath.multiplier} creates ${sandboxMath.totalSlices} clean slices with zero crumbs!`}
@@ -701,29 +731,29 @@ export function VisualMathStudio() {
               </div>
 
               {/* Exact Breakdown Slices Pill List */}
-              <div className="space-y-2">
-                <span className="text-xs font-bold text-stone-700 dark:text-stone-300 uppercase tracking-wider block">
+              <div className="space-y-3">
+                <span className="text-sm sm:text-base font-bold text-stone-800 dark:text-stone-200 uppercase tracking-wider block">
                   {isUr ? "ہر وارث کے مقررہ حصے (Slices Breakdown):" : "Per-Heir Slices Breakdown:"}
                 </span>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {sandboxMath.wedges.map((w, idx) => (
                     <div
                       key={idx}
-                      className="p-3 rounded-xl bg-stone-50 dark:bg-stone-900/80 border border-stone-200 dark:border-stone-800 flex items-center justify-between"
+                      className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 flex items-center justify-between"
                     >
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: w.color }} />
+                      <div className="flex items-center gap-3">
+                        <div className="w-4 h-4 rounded-full shrink-0 shadow-xs" style={{ backgroundColor: w.color }} />
                         <div>
-                          <strong className="text-stone-900 dark:text-stone-100 block">{w.label}</strong>
-                          <span className="text-[10px] text-stone-500">{w.fraction}</span>
+                          <strong className="text-sm sm:text-base text-stone-900 dark:text-stone-100 block">{w.label}</strong>
+                          <span className="text-xs text-stone-500 font-mono font-bold">{w.fraction}</span>
                         </div>
                       </div>
                       <div className="text-end font-mono">
-                        <span className="font-black text-stone-900 dark:text-emerald-300">
+                        <span className="text-sm sm:text-base font-black text-stone-900 dark:text-emerald-300 block">
                           {w.slices} / {sandboxMath.totalSlices} Slices
                         </span>
-                        <span className="block text-[10px] text-stone-500">{w.percentage.toFixed(1)}%</span>
+                        <span className="text-xs text-stone-500 font-semibold">{w.percentage.toFixed(1)}%</span>
                       </div>
                     </div>
                   ))}
@@ -731,9 +761,9 @@ export function VisualMathStudio() {
               </div>
 
               {/* Zero Crumb Verification Note */}
-              <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 text-xs text-emerald-900 dark:text-emerald-300 flex items-center gap-2">
-                <Sparkles size={16} className="text-amber-500 shrink-0" />
-                <span className="font-semibold">
+              <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-sm sm:text-base text-emerald-950 dark:text-emerald-200 flex items-center gap-3">
+                <Sparkles size={20} className="text-amber-500 shrink-0" />
+                <span className="font-semibold leading-relaxed">
                   {isUr
                     ? `تمام حصص کا کُل مجموعہ ٹھیک ${sandboxMath.totalSlices} ہے (۱۰۰٪ مکمل ترکہ بغیر کسی کمی یا بیشی کے)۔`
                     : `Check: All slices sum to exactly ${sandboxMath.totalSlices} (100.0% of the estate, mathematically flawless).`}
@@ -748,43 +778,44 @@ export function VisualMathStudio() {
           TAB 2: THE 6 QURANIC MASTER FRACTIONS (THE DIVINE HEXAGON)
           ------------------------------------------------------------------- */}
       {activeTab === "fractions" && (
-        <div className="space-y-6">
-          <div className="text-center max-w-2xl mx-auto space-y-1">
-            <h3 className="text-xl font-bold text-stone-900 dark:text-stone-100">
+        <div className="space-y-8">
+          <div className="text-center max-w-3xl mx-auto space-y-2">
+            <h3 className="text-2xl sm:text-3xl font-black text-stone-900 dark:text-stone-100">
               {isUr ? "قرآنِ مجید کی ۶ مقررہ کسریں (The 6 Quranic Fractions)" : "The 6 Quranic Master Fractions"}
             </h3>
-            <p className="text-xs text-stone-500 dark:text-stone-400">
+            <p className="text-base sm:text-lg text-stone-600 dark:text-stone-300 leading-relaxed font-normal">
               {isUr
-                ? "تمام اسلامی تقسیم کا دارومدار قرآن کی سورہ النساء میں بیان کردہ ان ۶ الٰہی کسروں پر ہے۔"
-                : "All Islamic inheritance stems from exactly six divine fractions explicitly decreed in Surah An-Nisa."}
+                ? "تمام اسلامی تقسیم کا دارومدار قرآن کی سورہ النساء میں بیان کردہ ان ۶ الٰہی کسروں پر ہے۔ کسی بھی کسر پر کلک کر کے اس کا قرآنی حکم دیکھیں۔"
+                : "All Islamic inheritance stems from exactly six divine fractions decreed in Surah An-Nisa. Click any fraction to inspect its sacred text and primary beneficiaries."}
             </p>
           </div>
 
           {/* 6 Fractions Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
             {QURANIC_FRACTIONS.map((qf) => {
               const isSelected = selectedFraction.fraction === qf.fraction;
               return (
                 <button
                   key={qf.fraction}
+                  type="button"
                   onClick={() => setSelectedFraction(qf)}
-                  className={`p-4 rounded-2xl border transition-all text-center flex flex-col items-center justify-between cursor-pointer ${
+                  className={`p-5 rounded-3xl border transition-all text-center flex flex-col items-center justify-between cursor-pointer ${
                     isSelected
-                      ? "border-[#245642] dark:border-emerald-500 bg-white dark:bg-[#12241c] shadow-md ring-2 ring-emerald-500/30 scale-[1.02]"
-                      : "border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-emerald-300"
+                      ? "border-[#245642] dark:border-emerald-500 bg-white dark:bg-[#12241c] shadow-lg ring-4 ring-emerald-500/20 scale-[1.03]"
+                      : "border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-emerald-400"
                   }`}
                 >
-                  <span className="text-[10px] font-bold text-stone-400 font-mono">{qf.arabicName}</span>
+                  <span className="text-xs sm:text-sm font-bold text-stone-400 font-mono">{qf.arabicName}</span>
                   <div
-                    className={`my-2 text-3xl font-black bg-gradient-to-br ${qf.color} bg-clip-text text-transparent font-mono`}
+                    className={`my-2 text-3xl sm:text-4xl font-black bg-gradient-to-br ${qf.color} bg-clip-text text-transparent font-mono`}
                   >
                     {qf.fraction}
                   </div>
                   <div>
-                    <strong className="text-xs block text-stone-800 dark:text-stone-200">
+                    <strong className="text-sm sm:text-base block text-stone-900 dark:text-stone-100 font-bold">
                       {isUr ? qf.nameUr : qf.nameEn}
                     </strong>
-                    <span className="text-[10px] text-stone-500 font-mono">{qf.percent}</span>
+                    <span className="text-xs sm:text-sm text-stone-500 font-mono font-semibold">{qf.percent}</span>
                   </div>
                 </button>
               );
@@ -792,56 +823,56 @@ export function VisualMathStudio() {
           </div>
 
           {/* Selected Fraction Deep Dive Card */}
-          <div className="p-6 rounded-3xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-stone-800 shadow-sm space-y-4">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-stone-100 dark:border-stone-800">
-              <div className="flex items-center gap-3">
+          <div className="p-7 sm:p-9 rounded-3xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-stone-800 shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-stone-200 dark:border-stone-800">
+              <div className="flex items-center gap-4">
                 <div
-                  className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${selectedFraction.color} text-white flex items-center justify-center text-xl font-black font-mono shadow-md`}
+                  className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${selectedFraction.color} text-white flex items-center justify-center text-2xl font-black font-mono shadow-md`}
                 >
                   {selectedFraction.fraction}
                 </div>
                 <div>
-                  <h4 className="text-base font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2">
+                  <h4 className="text-lg sm:text-xl font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2.5">
                     <span>{isUr ? selectedFraction.nameUr : selectedFraction.nameEn}</span>
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 font-mono">
+                    <span className="text-xs sm:text-sm px-3 py-0.5 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-mono font-bold">
                       {selectedFraction.percent}
                     </span>
                   </h4>
-                  <span className="text-xs text-stone-500">{selectedFraction.quranRef}</span>
+                  <span className="text-sm text-stone-500 font-medium">{selectedFraction.quranRef}</span>
                 </div>
               </div>
 
               {/* Slices of 24 preview */}
               <div className="text-end font-mono">
-                <span className="text-xs text-stone-500 block">{isUr ? "۲۴ میں سے حصہ:" : "Out of 24 Base Slices:"}</span>
-                <span className="text-base font-bold text-[#245642] dark:text-emerald-400">
+                <span className="text-xs sm:text-sm text-stone-500 block">{isUr ? "۲۴ میں سے حصہ:" : "Out of 24 Base Slices:"}</span>
+                <span className="text-lg sm:text-xl font-bold text-[#245642] dark:text-emerald-400">
                   {selectedFraction.slicesOf24} of 24 Slices
                 </span>
               </div>
             </div>
 
             {/* Quranic Ayah Box */}
-            <div className="p-4 rounded-2xl bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-800/40 space-y-1">
-              <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider block">
+            <div className="p-6 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 space-y-2">
+              <span className="text-xs sm:text-sm font-bold text-amber-800 dark:text-amber-400 uppercase tracking-wider block">
                 {isUr ? "قرآنی نصِ قطعی:" : "Decreed Quranic Text:"}
               </span>
-              <p className="text-base font-arabic text-amber-950 dark:text-amber-100 font-bold text-end leading-relaxed">
+              <p className="text-xl sm:text-2xl font-arabic text-amber-950 dark:text-amber-100 font-bold text-end leading-loose">
                 {selectedFraction.quranVerse}
               </p>
             </div>
 
             {/* Eligible Heirs List */}
-            <div className="space-y-2">
-              <span className="text-xs font-bold text-stone-700 dark:text-stone-300 uppercase tracking-wider block">
+            <div className="space-y-3">
+              <span className="text-sm sm:text-base font-bold text-stone-800 dark:text-stone-200 uppercase tracking-wider block">
                 {isUr ? "اس کسر کے شرعی حقدار ورثاء:" : "Heirs Entitled to this Fraction:"}
               </span>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm sm:text-base">
                 {(isUr ? selectedFraction.heirsUr : selectedFraction.heirsEn).map((heir, idx) => (
                   <li
                     key={idx}
-                    className="p-2.5 rounded-xl bg-stone-50 dark:bg-stone-900/80 border border-stone-200 dark:border-stone-800 flex items-center gap-2 text-stone-700 dark:text-stone-300 font-medium"
+                    className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 flex items-center gap-3 text-stone-800 dark:text-stone-200 font-medium"
                   >
-                    <CheckCircle2 size={14} className="text-emerald-600 shrink-0" />
+                    <CheckCircle2 size={18} className="text-emerald-600 shrink-0" />
                     <span>{heir}</span>
                   </li>
                 ))}
@@ -855,96 +886,247 @@ export function VisualMathStudio() {
           TAB 3: THE 2:1 CHILD RATIO & THE SACRED SCALE (REJECTION OF 'AWL)
           ------------------------------------------------------------------- */}
       {activeTab === "scale" && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           {/* Card A: The 2:1 Brotherhood & Sisterhood Ratio */}
-          <div className="p-6 rounded-3xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-stone-800 shadow-sm space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-2xl bg-purple-600 text-white flex items-center justify-center font-bold text-base shadow-sm">
+          <div className="p-7 sm:p-9 rounded-3xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-stone-800 shadow-sm space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-purple-600 text-white flex items-center justify-center font-bold text-lg shadow-sm">
                 2:1
               </div>
               <div>
-                <h4 className="text-base font-bold text-stone-900 dark:text-stone-100">
+                <h4 className="text-lg sm:text-xl font-bold text-stone-900 dark:text-stone-100">
                   {isUr ? "۲:۱ کا تناسب (للذكر مثل حظ الأنثيين)" : "The 2:1 Brotherhood Ratio"}
                 </h4>
-                <p className="text-xs text-stone-500">
+                <p className="text-sm text-stone-500">
                   {isUr ? "بیٹے اور بیٹی کے درمیان حسابی توازن کی حکمت" : "Why a brother receives twice a sister’s share"}
                 </p>
               </div>
             </div>
 
             {/* Visual Token Model */}
-            <div className="p-4 rounded-2xl bg-purple-50/60 dark:bg-purple-950/20 border border-purple-200/80 dark:border-purple-800/40 space-y-3">
-              <span className="text-[11px] font-bold text-purple-900 dark:text-purple-300 uppercase tracking-wider block">
+            <div className="p-5 rounded-2xl bg-purple-50/70 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 space-y-4">
+              <span className="text-xs sm:text-sm font-bold text-purple-900 dark:text-purple-300 uppercase tracking-wider block">
                 {isUr ? "حسابی ٹوکن ماڈل (Family Token Model):" : "The Family Token Model:"}
               </span>
-              <div className="flex items-center justify-around py-3 bg-white dark:bg-stone-900 rounded-xl border border-purple-200 dark:border-purple-800">
-                <div className="text-center space-y-1">
-                  <div className="flex justify-center gap-1">
-                    <div className="w-6 h-6 rounded-full bg-purple-600 text-white text-xs font-bold flex items-center justify-center">1</div>
-                    <div className="w-6 h-6 rounded-full bg-purple-600 text-white text-xs font-bold flex items-center justify-center">2</div>
+              <div className="flex items-center justify-around py-4 bg-white dark:bg-stone-900 rounded-2xl border border-purple-200 dark:border-purple-800">
+                <div className="text-center space-y-1.5">
+                  <div className="flex justify-center gap-1.5">
+                    <div className="w-8 h-8 rounded-full bg-purple-600 text-white text-sm font-bold flex items-center justify-center shadow-xs">1</div>
+                    <div className="w-8 h-8 rounded-full bg-purple-600 text-white text-sm font-bold flex items-center justify-center shadow-xs">2</div>
                   </div>
-                  <strong className="text-xs block text-purple-950 dark:text-purple-200">{isUr ? "۱ بیٹا = ۲ ٹوکن" : "1 Son = 2 Shares"}</strong>
+                  <strong className="text-sm sm:text-base block text-purple-950 dark:text-purple-200 font-bold">{isUr ? "۱ بیٹا = ۲ ٹوکن" : "1 Son = 2 Shares"}</strong>
                 </div>
 
-                <div className="text-lg font-black text-stone-400">:</div>
+                <div className="text-2xl font-black text-stone-400">:</div>
 
-                <div className="text-center space-y-1">
+                <div className="text-center space-y-1.5">
                   <div className="flex justify-center">
-                    <div className="w-6 h-6 rounded-full bg-amber-500 text-white text-xs font-bold flex items-center justify-center">1</div>
+                    <div className="w-8 h-8 rounded-full bg-amber-500 text-white text-sm font-bold flex items-center justify-center shadow-xs">1</div>
                   </div>
-                  <strong className="text-xs block text-amber-950 dark:text-amber-200">{isUr ? "۱ بیٹی = ۱ ٹوکن" : "1 Daughter = 1 Share"}</strong>
+                  <strong className="text-sm sm:text-base block text-amber-950 dark:text-amber-200 font-bold">{isUr ? "۱ بیٹی = ۱ ٹوکن" : "1 Daughter = 1 Share"}</strong>
                 </div>
               </div>
             </div>
 
-            <div className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed space-y-2">
+            <div className="text-sm sm:text-base text-stone-700 dark:text-stone-300 leading-relaxed space-y-3 font-normal">
               <p>
                 {isUr
-                  ? "اسلامی فقہ میں بیٹی کا مال اس کی خالص ذاتی ملکیت ہوتا ہے جس پر خاندان کے اخراجات کی کوئی شرعی ذمہ داری نہیں؛ جبکہ بیٹے پر اپنی بیوی کا مہر، نفقہ اور والدین کے واجبات کی ذمہ داری ہوتی ہے۔"
+                  ? "اسلامی فقہ میں بیٹی کا مال اس کی خالص ذاتی ملکیت ہوتا ہے جس پر خاندان کے اخراجات کی کوئی شرعی ذمہ داری نہیں؛ جبکہ بیٹے پر اپنی بیوی کا مہر، نفقہ، رہائش اور والدین کے واجبات کی شرعی ذمہ داری عائد ہوتی ہے۔"
                   : "A daughter retains her inheritance as 100% unconditional private wealth with zero marital liability; a son is legally bound to fund mahr, household living expenses, and parental maintenance."}
               </p>
             </div>
           </div>
 
           {/* Card B: Rejection of 'Awl in Shia Fiqh */}
-          <div className="p-6 rounded-3xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-stone-800 shadow-sm space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-2xl bg-[#245642] text-white flex items-center justify-center shadow-sm">
-                <Scale size={20} className="text-amber-300" />
+          <div className="p-7 sm:p-9 rounded-3xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-stone-800 shadow-sm space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-[#245642] text-white flex items-center justify-center shadow-sm">
+                <Scale size={24} className="text-amber-300" />
               </div>
               <div>
-                <h4 className="text-base font-bold text-stone-900 dark:text-stone-100">
+                <h4 className="text-lg sm:text-xl font-bold text-stone-900 dark:text-stone-100">
                   {isUr ? "بطلانِ عول (Shia Rejection of ‘Awl)" : "Why Shia Fiqh Rejects ‘Awl"}
                 </h4>
-                <p className="text-xs text-stone-500">
+                <p className="text-sm text-stone-500">
                   {isUr ? "قرآنی حصوں کی حفاظت اور حسابی عدمِ تخفیف" : "Preventing arithmetic dilution of divine fixed shares"}
                 </p>
               </div>
             </div>
 
             {/* Comparison Pill Box */}
-            <div className="space-y-2 text-xs">
-              <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-800/40 space-y-1">
-                <strong className="text-rose-900 dark:text-rose-300 block">
+            <div className="space-y-3 text-sm sm:text-base">
+              <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-800 space-y-1.5">
+                <strong className="text-rose-900 dark:text-rose-300 block font-bold text-sm sm:text-base">
                   {isUr ? "غیر جعفری فقہ (عول کا طریقہ):" : "Non-Shia Fiqh (‘Awl Inflation):"}
                 </strong>
-                <p className="text-rose-800 dark:text-rose-200 text-[11px] leading-snug">
+                <p className="text-rose-800 dark:text-rose-200 text-xs sm:text-sm leading-relaxed">
                   {isUr
                     ? "اگر کسریں ۱۰۰٪ سے بڑھ جائیں تو مخرج کو بڑا کر کے سب ورثاء (بشمول بیوہ اور والدین) کے حصوں میں کٹوتی کر دی جاتی ہے۔"
                     : "If fractions exceed 1.0, the base is artificially inflated, cutting everyone’s Quranic shares (including wife and parents)."}
                 </p>
               </div>
 
-              <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-300 dark:border-emerald-800 text-emerald-950 dark:text-emerald-200 space-y-1">
-                <strong className="text-emerald-900 dark:text-emerald-300 block flex items-center gap-1.5">
-                  <CheckCircle2 size={13} className="text-emerald-600" />
+              <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-300 dark:border-emerald-800 text-emerald-950 dark:text-emerald-200 space-y-1.5">
+                <strong className="text-emerald-900 dark:text-emerald-300 block font-bold text-sm sm:text-base flex items-center gap-2">
+                  <CheckCircle2 size={16} className="text-emerald-600" />
                   <span>{isUr ? "فقہِ جعفریہ کا الٰہی عدل:" : "Ja'fari Fiqh (Sacred Fixed Shares):"}</span>
                 </strong>
-                <p className="text-[11px] leading-snug">
+                <p className="text-xs sm:text-sm leading-relaxed">
                   {isUr
-                    ? "بیوی اور والدین کا حصہ خدا نے قطعی رکھا ہے جس میں کبھی کٹوتی نہیں ہوتی۔ حسابی کمی صرف ان ورثاء سے وضع کی جاتی ہے جن کا حصہ حالات کے ساتھ گھٹتا بڑھتا ہے۔"
-                    : "Imam Ali (a.s.) taught that God never decrees a deficit in His law. The fixed shares of spouses and parents remain sacred and 100% untouchable."}
+                    ? "امیرالمومنین علی علیہ السلام نے فرمایا: «إنَّ الَّذي أَحصى رَمْلَ عَالِجٍ لَيَعْلَمُ أَنَّ السِّهَامَ لا تَعُولُ». خدا کے نظام میں کسروں کا خسارہ نہیں ہوتا۔ بیوی اور والدین کا حصہ قطعی ہے، کمی صرف ان سے وضع ہوتی ہے جن کا حصہ حالات کے ساتھ بدلتا ہے۔"
+                    : "Imam Ali (a.s.) taught that God who counted the sands of the desert never decrees a deficit in His law. The fixed shares of spouses and parents remain sacred and 100% untouchable."}
                 </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* -------------------------------------------------------------------
+          TAB 4: THE MYSTERY OF SURPLUS RESIDUE (RADD VS TA'SEEB)
+          ------------------------------------------------------------------- */}
+      {activeTab === "surplus" && (
+        <div className="space-y-8">
+          <div className="text-center max-w-3xl mx-auto space-y-2">
+            <h3 className="text-2xl sm:text-3xl font-black text-stone-900 dark:text-stone-100">
+              {isUr ? "فاضل ترکہ: رد بنام تعصیب (Surplus: Radd vs. Ta'seeb)" : "The Mystery of Surplus: Radd vs. Ta'seeb"}
+            </h3>
+            <p className="text-base sm:text-lg text-stone-600 dark:text-stone-300 leading-relaxed font-normal">
+              {isUr
+                ? "جب قرآنی کسریں پوری ہونے کے بعد بھی ترکہ بچ جائے، تو کیا وہ بچی ہوئی دولت دور کے چچا زادوں کو جائے گی یا قریبی بیٹی اور ماں کو؟"
+                : "When Quranic shares leave surplus wealth, does it go to distant male cousins, or return exclusively to the deceased's closest daughters and mother?"}
+            </p>
+          </div>
+
+          {/* Scenario Selector */}
+          <div className="flex justify-center">
+            <div className="inline-flex p-1.5 rounded-2xl bg-white dark:bg-[#10241b] border border-stone-200 dark:border-stone-800 shadow-sm gap-2">
+              {[
+                { id: "sole_daughter", en: "Sole Daughter (50% Farḍ)", ur: "اکلوتی بیٹی (۵۰٪ فرض)" },
+                { id: "mother_daughter", en: "Mother + Daughter (66.7% Farḍ)", ur: "والدہ + بیٹی (۶۶.۷٪ فرض)" },
+                { id: "two_daughters", en: "2 Daughters (66.7% Farḍ)", ur: "دو بیٹیاں (۶۶.۷٪ فرض)" },
+              ].map((sc) => (
+                <button
+                  key={sc.id}
+                  type="button"
+                  onClick={() => setSurplusScenario(sc.id as any)}
+                  className={`py-2.5 px-4 rounded-xl text-sm sm:text-base font-bold transition-all cursor-pointer ${
+                    surplusScenario === sc.id
+                      ? "bg-[#245642] text-white shadow-md"
+                      : "text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800"
+                  }`}
+                >
+                  {isUr ? sc.ur : sc.en}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Visual Comparison Grid: Shia Radd vs Sunni Ta'seeb */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+            {/* Box A: Sunni Ta'seeb */}
+            <div className="p-7 sm:p-9 rounded-3xl bg-white dark:bg-[#10241b] border border-rose-200 dark:border-rose-900/60 shadow-sm space-y-6 flex flex-col justify-between">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs sm:text-sm font-bold px-3 py-1 rounded-full bg-rose-100 text-rose-900 dark:bg-rose-950 dark:text-rose-300">
+                    {isUr ? "دیگر مکاتبِ فکر (تعصیب)" : "Other Schools (Ta'seeb)"}
+                  </span>
+                  <ShieldAlert size={20} className="text-rose-500" />
+                </div>
+
+                <h4 className="text-xl sm:text-2xl font-bold text-stone-900 dark:text-stone-100">
+                  {isUr ? "دور کے پدری مرد رشتہ داروں کو ترکہ دینا" : "Surplus to Distant Agnatic Relatives"}
+                </h4>
+
+                <p className="text-sm sm:text-base text-stone-600 dark:text-stone-300 leading-relaxed font-normal">
+                  {isUr
+                    ? surplusScenario === "sole_daughter"
+                      ? "بیٹی کو صرف اس کا قرآنی نصف (۵۰٪) دیا جاتا ہے، جبکہ بقیہ پچاس فیصد (۵۰٪) دور کے چچا یا چچا زاد بھائی لے جاتے ہیں، خواہ وہ متوفی کے خاندان سے بے تعلق ہی کیوں نہ ہوں۔"
+                      : "قرآنی فرض دینے کے بعد باقی بچنے والی دولت بیٹی اور ماں کو نہیں دی جاتی، بلکہ عصبہ (چچا، تایا یا بھتیجوں) کو منتقل کر دی جاتی ہے۔"
+                    : surplusScenario === "sole_daughter"
+                    ? "The sole daughter receives only her prescribed 50%. The remaining 50% surplus is legally handed over to distant agnatic uncles or cousins under Ta'seeb."
+                    : "The remaining surplus is barred from the daughter and mother, and diverted to distant paternal uncles or cousins."}
+                </p>
+
+                {/* Progress Bar Visualizer */}
+                <div className="space-y-2">
+                  <div className="flex justify-between text-xs sm:text-sm font-mono font-bold">
+                    <span className="text-purple-700 dark:text-purple-300">
+                      {isUr ? "بیٹی / قریبی وارث:" : "Close Heir (Daughter):"} {surplusScenario === "sole_daughter" ? "50%" : "66.7%"}
+                    </span>
+                    <span className="text-rose-600 dark:text-rose-400">
+                      {isUr ? "دور کا چچا (عصبہ):" : "Distant Uncle (Ta'seeb):"} {surplusScenario === "sole_daughter" ? "50%" : "33.3%"}
+                    </span>
+                  </div>
+                  <div className="h-4 rounded-full bg-stone-100 dark:bg-stone-800 overflow-hidden flex">
+                    <div
+                      style={{ width: surplusScenario === "sole_daughter" ? "50%" : "66.7%" }}
+                      className="bg-purple-600 h-full"
+                    />
+                    <div
+                      style={{ width: surplusScenario === "sole_daughter" ? "50%" : "33.3%" }}
+                      className="bg-rose-500 h-full"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/30 text-rose-950 dark:text-rose-200 text-xs sm:text-sm font-medium">
+                {isUr
+                  ? "نتیجہ: بیٹی گھر میں موجود ہونے کے باوجود اپنی والد کی آدھی جائیداد سے محروم ہو جاتی ہے۔"
+                  : "Outcome: The daughter is forced to share her father's home/estate with distant relatives."}
+              </div>
+            </div>
+
+            {/* Box B: Shia Ja'fari Radd */}
+            <div className="p-7 sm:p-9 rounded-3xl bg-white dark:bg-[#10241b] border-2 border-emerald-500 dark:border-emerald-600 shadow-xl space-y-6 flex flex-col justify-between">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs sm:text-sm font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-950 dark:bg-emerald-950 dark:text-emerald-200">
+                    {isUr ? "فقہِ جعفریہ (رد / واپسی کا اصول)" : "Ja'fari Fiqh (Radd / Return Principle)"}
+                  </span>
+                  <CheckCircle2 size={22} className="text-emerald-600 dark:text-emerald-400" />
+                </div>
+
+                <h4 className="text-xl sm:text-2xl font-bold text-stone-900 dark:text-stone-100">
+                  {isUr ? "۱۰۰٪ مکمل ترکہ قریبی بیٹی / ماں کی ملکیت" : "100% Estate Reverts to Closest Blood Heirs"}
+                </h4>
+
+                <p className="text-sm sm:text-base text-stone-700 dark:text-stone-200 leading-relaxed font-normal">
+                  {isUr
+                    ? surplusScenario === "sole_daughter"
+                      ? "اکلوتی بیٹی کو آدھا (۵۰٪) قرآنی فرض کے طور پر دیا جاتا ہے، اور بقیہ ۵۰٪ بچا ہوا ترکہ 'رد' کے شرعی اصول کے تحت دوبارہ اسی بیٹی کو لوٹا دیا جاتا ہے، چنانچہ بیٹی کو کُل ۱۰۰٪ ترکہ ملتا ہے اور چچا مکمل محجوب رہتا ہے!"
+                      : "بچا ہوا سارا ترکہ بیٹی اور والدہ کے درمیان ان کے حصوں کے تناسب سے واپس 'رد' کر دیا جاتا ہے، اور کوئی دور کا رشتہ دار مداخلت نہیں کر سکتا۔"
+                    : surplusScenario === "sole_daughter"
+                    ? "The sole daughter takes 50% by Farḍ (Quranic share) and the remaining 50% by Radd (Surplus Return). She inherits 100% of her father's estate, and the distant uncle inherits zero!"
+                    : "The surplus residue is returned (Radd) strictly to the daughter and mother proportionally. Distant relatives are 100% excluded."}
+                </p>
+
+                {/* Progress Bar Visualizer */}
+                <div className="space-y-2">
+                  <div className="flex justify-between text-xs sm:text-sm font-mono font-bold">
+                    <span className="text-emerald-700 dark:text-emerald-300">
+                      {isUr ? "بیٹی / قریبی وارث (فرض + رد):" : "Daughter (Farḍ + Radd):"} 100.0%
+                    </span>
+                    <span className="text-stone-400">
+                      {isUr ? "دور کا رشتہ دار:" : "Distant Relatives:"} 0%
+                    </span>
+                  </div>
+                  <div className="h-4 rounded-full bg-stone-100 dark:bg-stone-800 overflow-hidden flex">
+                    <div style={{ width: "100%" }} className="bg-gradient-to-r from-emerald-600 to-teal-500 h-full" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Quranic Proof Box */}
+              <div className="p-4 rounded-2xl bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 space-y-1">
+                <span className="text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider block">
+                  {isUr ? "قرآنی نصِ برہان:" : "The Quranic Foundation:"}
+                </span>
+                <p className="text-base sm:text-lg font-arabic font-bold text-emerald-950 dark:text-emerald-100 text-end">
+                  وَأُوْلُواْ ٱلۡأَرۡحَامِ بَعۡضُهُمۡ أَوۡلَىٰ بِبَعۡضٍ فِی كِتَـٰبِ ٱللَّهِ
+                </p>
+                <span className="text-xs text-stone-500 block text-end">Surah Al-Ahzab (33:6) · «الأقرب يمنع الأبعد»</span>
               </div>
             </div>
           </div>
