@@ -81,7 +81,16 @@ A verified digital repository under **Knowledge & Academy** featuring downloadab
 - Instant toggle between simple overview, detailed math, and scholarly notes.
 
 ### 4. 🎨 Kinship Whiteboard Studio (استودیو نسب)
-- A generative family tree canvas with customizable node relationships.
+- A generative family tree canvas with customizable node relationships and automatic spatial layout.
+- **Ready-Made Case Templates (تیار شدہ فقہی خاکے):** Instant loading of empirical real-world scenarios across India, Pakistan, and global Shia communities:
+  1. *Standard Nuclear Family (~52%):* Wife, 2 sons, 2 daughters (parents deceased).
+  2. *Subcontinent Joint Family (~22%):* Living parents, wife, children, highlighting the *Habwah* rule for the eldest son.
+  3. *Daughters Only & Total Exclusion (~14%):* Demonstration of Class I daughters completely barring Class II/III collaterals (brothers/uncles) via Return (*Radd*).
+  4. *Orphaned Grandchildren & Tanzīl (~7%):* Grandchildren stepping into their predeceased parent's branch *per stirpes*.
+  5. *Childless Couple (~5%):* *Bēwa Bilā Aulād* rules governing movable assets vs. raw land.
+  6. *Sole Surviving Daughter (~4%):* 100% estate sole heir barring all collaterals.
+  7. *Siblings Only (~3%):* Class II succession without Class I survivors.
+  8. *Blank Canvas:* Clean slate builder.
 - Real-time simulation of living heirs, deceased parents, and representation branches.
 - **Full HD Canvas Export:** High-resolution export of the complete family diagram for legal documentation and family archives.
 - **Simultaneous Catastrophe Simulation (*Al-Gharqā wa al-Hadmā*):** Simulating plane crashes or building collapses where the sequence of death is unknown, demonstrating bilateral cross-succession without circular looping.

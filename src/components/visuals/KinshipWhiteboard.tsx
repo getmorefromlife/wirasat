@@ -31,12 +31,16 @@ import {
   LayoutGrid,
   Target,
   BookOpen,
+  Users,
+  Home,
+  UserCheck,
 } from "lucide-react";
 import { useInheritanceStore } from "@/store/useInheritanceStore";
 import { calculateInheritance, calculateBalanceSheet } from "@/lib/fiqh-engine";
 import { WhiteboardExplanationDrawer } from "./WhiteboardExplanationDrawer";
 import { PersonNode, WifeProfile, HeirsInput, DeceasedInfo, EstateAssets, EstateDebts, BranchCalculationResult } from "@/types/fiqh";
 import html2canvas from "html2canvas";
+import { WHITEBOARD_TEMPLATES, type WhiteboardPresetTemplate, type TemplateCategory } from "@/lib/whiteboard-templates";
 
 /* =========================================================================
    TYPES & INTERFACES FOR WHITEBOARD
@@ -395,6 +399,11 @@ export function KinshipWhiteboard() {
   // Catastrophe Simulation Modal
   const [showAccidentModal, setShowAccidentModal] = useState<boolean>(false);
 
+  // Ready-Made Shia Inheritance Templates Modal
+  const [showTemplatesModal, setShowTemplatesModal] = useState<boolean>(false);
+  const [templateCategoryFilter, setTemplateCategoryFilter] = useState<"ALL" | TemplateCategory>("ALL");
+  const [activeTemplateId, setActiveTemplateId] = useState<string>("template-nuclear-standard");
+
   // Inspector Open State
   const [inspectorOpen, setInspectorOpen] = useState<boolean>(true);
   const [isExplanationOpen, setIsExplanationOpen] = useState<boolean>(false);
@@ -431,15 +440,39 @@ export function KinshipWhiteboard() {
     []
   );
 
-  const frameBoard = (candidate: WhiteboardNode[]) => {
-    const surface=canvasRef.current;
-    if(!surface || !candidate.length)return;
-    const minX=Math.min(...candidate.map(n=>n.x))-140, maxX=Math.max(...candidate.map(n=>n.x))+140;
-    const minY=Math.min(...candidate.map(n=>n.y))-110, maxY=Math.max(...candidate.map(n=>n.y))+190;
-    const scale=Math.min(1.1,Math.max(.35,Math.min(surface.clientWidth/(maxX-minX+60),surface.clientHeight/(maxY-minY+60))));
+  const frameBoard = useCallback((candidate: WhiteboardNode[]) => {
+    const surface = canvasRef.current;
+    if (!surface || !candidate.length) return;
+    const minX = Math.min(...candidate.map((n) => n.x)) - 140,
+      maxX = Math.max(...candidate.map((n) => n.x)) + 140;
+    const minY = Math.min(...candidate.map((n) => n.y)) - 110,
+      maxY = Math.max(...candidate.map((n) => n.y)) + 190;
+    const scale = Math.min(
+      1.1,
+      Math.max(0.35, Math.min(surface.clientWidth / (maxX - minX + 60), surface.clientHeight / (maxY - minY + 60)))
+    );
     setZoom(Number(scale.toFixed(2)));
-    setPan({x:(surface.clientWidth-(maxX-minX)*scale)/2-minX*scale,y:(surface.clientHeight-(maxY-minY)*scale)/2-minY*scale});
-  };
+    setPan({
+      x: (surface.clientWidth - (maxX - minX) * scale) / 2 - minX * scale,
+      y: (surface.clientHeight - (maxY - minY) * scale) / 2 - minY * scale,
+    });
+  }, []);
+
+  // Load a preset template onto the canvas
+  const loadPresetTemplate = useCallback(
+    (template: WhiteboardPresetTemplate) => {
+      const arranged = arrangeFamily(template.nodes, isUr);
+      if (replaceNodes(arranged)) {
+        frameBoard(arranged);
+        setEstateSubjectId("deceased-root");
+        setDeletedSnapshot(null);
+        setSelectedNodeId("deceased-root");
+        setActiveTemplateId(template.id);
+        setShowTemplatesModal(false);
+      }
+    },
+    [isUr, frameBoard]
+  );
   useEffect(() => { frameBoard(nodesRef.current); }, []);
 
   useEffect(()=>{
@@ -499,6 +532,10 @@ export function KinshipWhiteboard() {
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
+        if (showTemplatesModal) {
+          setShowTemplatesModal(false);
+          return;
+        }
         if (showAccidentModal) {
           setShowAccidentModal(false);
           return;
@@ -522,7 +559,7 @@ export function KinshipWhiteboard() {
       document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isFullHD, showAccidentModal]);
+  }, [isFullHD, showAccidentModal, showTemplatesModal]);
 
   // Lock body scroll in Full HD mode to prevent double scrollbars / jumping
   useEffect(() => {
@@ -1121,16 +1158,27 @@ export function KinshipWhiteboard() {
             </button>
           </div>
 
-          <div className="flex items-center gap-1 bg-stone-100 dark:bg-stone-800/80 p-1 rounded-xl border border-stone-200 dark:border-stone-700 shrink-0">
+          <div className="flex items-center gap-1.5 bg-stone-100 dark:bg-stone-800/80 p-1 rounded-xl border border-stone-200 dark:border-stone-700 shrink-0">
+            {/* Primary Templates Modal Trigger */}
+            <button
+              onClick={() => setShowTemplatesModal(true)}
+              className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#245642] hover:bg-[#1a3f30] text-white text-xs font-bold transition-all shadow-2xs hover:shadow-md cursor-pointer whitespace-nowrap active:scale-95 ring-1 ring-emerald-400/40"
+              title={isUr ? "تمام فقہی نمونوں کی فہرست کھولیں" : "Open Shia Family Templates Library"}
+            >
+              <LayoutGrid size={13} className="text-amber-300" />
+              <span>{isUr ? "تیار شدہ خاکے" : "Templates"}</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-white/20 text-emerald-100">
+                {WHITEBOARD_TEMPLATES.length}
+              </span>
+            </button>
+
+            {/* Quick Presets Pills */}
             <button
               onClick={() => {
-                replaceNodes(arrangeWhiteboard(INITIAL_NODES_CLEAN));
-                frameBoard(arrangeWhiteboard(INITIAL_NODES_CLEAN));
-                setEstateSubjectId("deceased-root");
-                setDeletedSnapshot(null);
-                setSelectedNodeId("deceased-root");
+                const tmpl = WHITEBOARD_TEMPLATES.find((t) => t.id === "template-clean-slate");
+                if (tmpl) loadPresetTemplate(tmpl);
               }}
-              className="px-2.5 py-1 text-xs font-semibold rounded-lg text-stone-700 dark:text-stone-300 hover:bg-white dark:hover:bg-stone-700 transition-colors cursor-pointer whitespace-nowrap"
+              className="px-2 py-1 text-xs font-medium rounded-lg text-stone-600 dark:text-stone-300 hover:bg-white dark:hover:bg-stone-700 transition-colors cursor-pointer whitespace-nowrap"
               title="Clean Slate"
             >
               {isUr ? "خالی" : "Clean"}
@@ -1138,30 +1186,48 @@ export function KinshipWhiteboard() {
 
             <button
               onClick={() => {
-                replaceNodes(arrangeWhiteboard(INITIAL_NODES_4_CHILDREN));
-                frameBoard(arrangeWhiteboard(INITIAL_NODES_4_CHILDREN));
-                setEstateSubjectId("deceased-root");
-                setDeletedSnapshot(null);
-                setSelectedNodeId("deceased-root");
+                const tmpl = WHITEBOARD_TEMPLATES.find((t) => t.id === "template-nuclear-standard");
+                if (tmpl) loadPresetTemplate(tmpl);
               }}
-              className="px-2.5 py-1 text-xs font-bold rounded-lg bg-white dark:bg-stone-700 text-[#245642] dark:text-emerald-300 shadow-2xs transition-colors cursor-pointer whitespace-nowrap"
-              title="The 4 Children & Grandchildren Mystery"
+              className={`px-2 py-1 text-xs font-semibold rounded-lg transition-colors cursor-pointer whitespace-nowrap ${
+                activeTemplateId === "template-nuclear-standard"
+                  ? "bg-white dark:bg-stone-700 text-[#245642] dark:text-emerald-300 shadow-2xs font-bold"
+                  : "text-stone-700 dark:text-stone-300 hover:bg-white dark:hover:bg-stone-700"
+              }`}
+              title="Standard Nuclear Family (~52% of cases)"
             >
-              {isUr ? "۴ اولادیں" : "4 Children"}
+              {isUr ? "بنیادی خاندان" : "Nuclear"}
             </button>
 
             <button
               onClick={() => {
-                replaceNodes(arrangeWhiteboard(INITIAL_NODES_ORPHANED_TANZIL));
-                frameBoard(arrangeWhiteboard(INITIAL_NODES_ORPHANED_TANZIL));
-                setEstateSubjectId("deceased-root");
-                setDeletedSnapshot(null);
-                setSelectedNodeId("son-predeceased");
+                const tmpl = WHITEBOARD_TEMPLATES.find((t) => t.id === "template-daughters-only");
+                if (tmpl) loadPresetTemplate(tmpl);
               }}
-              className="px-2.5 py-1 text-xs font-bold rounded-lg text-emerald-800 dark:text-emerald-300 hover:bg-white dark:hover:bg-stone-700 transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap"
+              className={`px-2 py-1 text-xs font-semibold rounded-lg transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap ${
+                activeTemplateId === "template-daughters-only"
+                  ? "bg-purple-100 dark:bg-purple-950/60 text-purple-900 dark:text-purple-300 shadow-2xs font-bold border border-purple-300 dark:border-purple-800"
+                  : "text-purple-800 dark:text-purple-300 hover:bg-white dark:hover:bg-stone-700"
+              }`}
+              title="Daughters Only (Brother/Uncle Excluded)"
+            >
+              <ShieldAlert size={12} className="text-purple-600 dark:text-purple-400" />
+              <span>{isUr ? "صرف بیٹیاں" : "Daughters"}</span>
+            </button>
+
+            <button
+              onClick={() => {
+                const tmpl = WHITEBOARD_TEMPLATES.find((t) => t.id === "template-tanzil-orphaned-grandchildren");
+                if (tmpl) loadPresetTemplate(tmpl);
+              }}
+              className={`px-2 py-1 text-xs font-semibold rounded-lg transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap ${
+                activeTemplateId === "template-tanzil-orphaned-grandchildren"
+                  ? "bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 shadow-2xs font-bold border border-amber-300 dark:border-amber-800"
+                  : "text-amber-800 dark:text-amber-300 hover:bg-white dark:hover:bg-stone-700"
+              }`}
               title="Orphaned Grandchild Tanzil Representation"
             >
-              <Sparkles size={13} className="text-amber-500" />
+              <Sparkles size={12} className="text-amber-500" />
               <span>{isUr ? "تنزیل" : "Tanzīl"}</span>
             </button>
 
@@ -1174,10 +1240,10 @@ export function KinshipWhiteboard() {
                 setSelectedNodeId("deceased-root");
                 setShowAccidentModal(true);
               }}
-              className="px-2.5 py-1 text-xs font-bold rounded-lg text-rose-800 dark:text-rose-300 hover:bg-white dark:hover:bg-stone-700 transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap"
+              className="px-2 py-1 text-xs font-semibold rounded-lg text-rose-800 dark:text-rose-300 hover:bg-white dark:hover:bg-stone-700 transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap"
               title="Simultaneous Catastrophe (Al-Gharqa wa al-Hadma)"
             >
-              <Flame size={13} className="text-rose-500" />
+              <Flame size={12} className="text-rose-500" />
               <span>{isUr ? "الغرقیٰ" : "Accident"}</span>
             </button>
           </div>
@@ -2172,6 +2238,168 @@ export function KinshipWhiteboard() {
                 className="px-4 py-2 rounded-xl bg-[#245642] text-white text-xs font-bold hover:bg-[#1a3f30] cursor-pointer"
               >
                 {isUr ? "سمجھ آ گئی — کینوس پر واپس جائیں" : "Understood — Return to Canvas"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* -------------------------------------------------------------------
+          SHIA INHERITANCE READY-MADE TEMPLATES MODAL
+          ------------------------------------------------------------------- */}
+      {showTemplatesModal && (
+        <div className="fixed inset-0 z-[100000] bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5">
+          <div className="bg-white dark:bg-[#0E1E18] rounded-2xl max-w-4xl w-full border border-stone-200 dark:border-stone-700 shadow-2xl overflow-hidden flex flex-col max-h-[92vh] animate-in fade-in duration-150">
+            {/* Modal Header */}
+            <div className="px-5 py-4 bg-gradient-to-r from-[#245642] to-[#16382a] text-white flex items-center justify-between border-b border-emerald-700/50">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-amber-300 shadow-inner">
+                  <LayoutGrid size={22} />
+                </div>
+                <div>
+                  <h3 className="text-base sm:text-lg font-bold tracking-tight">
+                    {isUr ? "تیار شدہ خاندانی نمونے (فقہِ جعفریہ)" : "Shia Inheritance Case Templates"}
+                  </h3>
+                  <p className="text-xs text-emerald-200 font-light">
+                    {isUr
+                      ? "ہند و پاک اور دنیا بھر میں سب سے زیادہ پیش آنے والے خاندانی خاکے ایک کلک میں منتخب کریں"
+                      : "Common real-world family structures from India, Pakistan & global Shia practice"}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowTemplatesModal(false)}
+                className="text-emerald-200 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+                aria-label={isUr ? "بند کریں" : "Close templates modal"}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Category Filter Tabs */}
+            <div className="px-5 py-2.5 bg-stone-50 dark:bg-stone-900/80 border-b border-stone-200 dark:border-stone-800 flex items-center gap-2 overflow-x-auto text-xs">
+              <span className="font-semibold text-stone-500 dark:text-stone-400 shrink-0">
+                {isUr ? "زمرہ:" : "Category:"}
+              </span>
+              {[
+                { id: "ALL", en: "All Templates", ur: "تمام خاکے" },
+                { id: "MOST_COMMON", en: "Most Common (~50%+)", ur: "سب سے عام صورتحال" },
+                { id: "SOUTH_ASIA_SPECIAL", en: "South Asia & Landmark Rules", ur: "ہند و پاک قانونی نکات" },
+                { id: "EDGE_CASES", en: "Edge Cases & Class II", ur: "خصوصی کیسز" },
+              ].map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setTemplateCategoryFilter(cat.id as any)}
+                  className={`px-3 py-1.5 rounded-xl font-bold transition-all whitespace-nowrap cursor-pointer ${
+                    templateCategoryFilter === cat.id
+                      ? "bg-[#245642] text-white shadow-2xs"
+                      : "bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700"
+                  }`}
+                >
+                  {isUr ? cat.ur : cat.en}
+                </button>
+              ))}
+            </div>
+
+            {/* Templates Grid Content */}
+            <div className="p-4 sm:p-6 space-y-4 overflow-y-auto flex-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {WHITEBOARD_TEMPLATES.filter(
+                  (tmpl) => templateCategoryFilter === "ALL" || tmpl.category === templateCategoryFilter
+                ).map((tmpl) => {
+                  const isActive = activeTemplateId === tmpl.id;
+                  return (
+                    <div
+                      key={tmpl.id}
+                      className={`relative flex flex-col justify-between p-4 rounded-2xl border transition-all duration-200 hover:shadow-md ${
+                        isActive
+                          ? "border-[#245642] dark:border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20 shadow-xs ring-2 ring-emerald-500/30"
+                          : "border-stone-200 dark:border-stone-800 bg-white dark:bg-[#12221b] hover:border-emerald-300"
+                      }`}
+                    >
+                      {/* Top Badges */}
+                      <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
+                        <span
+                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${tmpl.badgeColor}`}
+                        >
+                          {isUr ? tmpl.badgeTextUr : tmpl.badgeTextEn}
+                        </span>
+                        <span className="text-[10px] font-medium text-stone-500 dark:text-stone-400">
+                          {isUr ? tmpl.frequencyLabelUr : tmpl.frequencyLabelEn}
+                        </span>
+                      </div>
+
+                      {/* Title & Subtitle */}
+                      <div className="mb-3">
+                        <h4 className="text-base font-bold text-stone-900 dark:text-stone-100 flex items-center justify-between">
+                          <span>{isUr ? tmpl.nameUr : tmpl.nameEn}</span>
+                          {isActive && (
+                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-emerald-600 text-white flex items-center gap-1">
+                              <Check size={11} /> {isUr ? "فعال" : "Active"}
+                            </span>
+                          )}
+                        </h4>
+                        <p className="text-xs text-stone-600 dark:text-stone-300 mt-0.5 font-medium">
+                          {isUr ? tmpl.subtitleUr : tmpl.subtitleEn}
+                        </p>
+                      </div>
+
+                      {/* Fiqh Calculation Summary */}
+                      <div className="p-3 rounded-xl bg-stone-50 dark:bg-stone-900/90 border border-stone-200/80 dark:border-stone-800 text-xs mb-3 space-y-1.5">
+                        <div className="font-semibold text-emerald-900 dark:text-emerald-300 flex items-center gap-1.5">
+                          <Scale size={13} className="text-[#245642] dark:text-emerald-400" />
+                          <span>{isUr ? "شرعی تقسیم کا خلاصہ:" : "Shia Fiqh Distribution:"}</span>
+                        </div>
+                        <p className="text-stone-700 dark:text-stone-300 text-[11px] leading-relaxed">
+                          {isUr ? tmpl.fiqhSummaryUr : tmpl.fiqhSummaryEn}
+                        </p>
+                      </div>
+
+                      {/* Key Rule Box */}
+                      <div className="p-2.5 rounded-lg bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-800/40 text-[11px] text-amber-950 dark:text-amber-200 mb-4 leading-relaxed flex items-start gap-1.5">
+                        <Info size={13} className="text-amber-600 shrink-0 mt-0.5" />
+                        <span>{isUr ? tmpl.keyRuleUr : tmpl.keyRuleEn}</span>
+                      </div>
+
+                      {/* Load Button */}
+                      <button
+                        onClick={() => loadPresetTemplate(tmpl)}
+                        className={`w-full py-2 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                          isActive
+                            ? "bg-emerald-700 text-white hover:bg-emerald-800 shadow-xs"
+                            : "bg-[#245642] hover:bg-[#1a3f30] text-white shadow-2xs hover:shadow-sm"
+                        }`}
+                      >
+                        {isActive ? (
+                          <>
+                            <Check size={14} />
+                            <span>{isUr ? "دوبارہ لوڈ کریں" : "Reload this Template"}</span>
+                          </>
+                        ) : (
+                          <>
+                            <ArrowRight size={14} />
+                            <span>{isUr ? "یہ نمونہ وائٹ بورڈ پر لائیں" : "Load this Template"}</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-5 py-3.5 bg-stone-50 dark:bg-stone-900 border-t border-stone-200 dark:border-stone-800 flex items-center justify-between text-xs">
+              <span className="text-stone-500 dark:text-stone-400">
+                {isUr
+                  ? "نمونہ لوڈ کرنے کے بعد آپ کسی بھی فرد پر کلک کر کے نام اور رشتہ تبدیل کر سکتے ہیں۔"
+                  : "After loading, click on any person card to rename or adjust relations as needed."}
+              </span>
+              <button
+                onClick={() => setShowTemplatesModal(false)}
+                className="px-4 py-2 rounded-xl bg-stone-200 dark:bg-stone-800 text-stone-800 dark:text-stone-200 font-bold hover:bg-stone-300 dark:hover:bg-stone-700 transition-colors cursor-pointer"
+              >
+                {isUr ? "بند کریں" : "Close"}
               </button>
             </div>
           </div>
