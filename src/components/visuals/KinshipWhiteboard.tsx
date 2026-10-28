@@ -35,6 +35,8 @@ import {
   Home,
   UserCheck,
   Orbit,
+  ArrowDownToLine,
+  ArrowUpFromLine,
 } from "lucide-react";
 import { useInheritanceStore } from "@/store/useInheritanceStore";
 import { calculateInheritance, calculateBalanceSheet } from "@/lib/fiqh-engine";
@@ -48,7 +50,7 @@ import { WHITEBOARD_TEMPLATES, type WhiteboardPresetTemplate, type TemplateCateg
    ========================================================================= */
 
 export type { WhiteboardRelation, WhiteboardNode } from "@/lib/whiteboard-model";
-import { type WhiteboardNode, type WhiteboardError, type AddRelativeType, WHITEBOARD_ERRORS, validateWhiteboard, getAddRelativeError, createWhiteboardRelative, editWhiteboardPerson, removeWhiteboardPerson, projectWhiteboardFamily, arrangeWhiteboard as arrangeFamily, createWhiteboardSibling, type SiblingKind } from "@/lib/whiteboard-model";
+import { type WhiteboardNode, type WhiteboardError, type AddRelativeType, WHITEBOARD_ERRORS, validateWhiteboard, getAddRelativeError, createWhiteboardRelative, editWhiteboardPerson, removeWhiteboardPerson, projectWhiteboardFamily, arrangeWhiteboard as arrangeFamily, createWhiteboardSibling, type SiblingKind, buildWhiteboardNodesFromCalculator } from "@/lib/whiteboard-model";
 
 export const AVATAR_OPTIONS = [
   { id: "father", src: "/images/avatars/father.jpeg", labelEn: "Father / Elder Male", labelUr: "والد / بزرگ مرد" },
@@ -343,9 +345,22 @@ const INITIAL_NODES_SIMULTANEOUS_ACCIDENT: WhiteboardNode[] = [
    ========================================================================= */
 
 export function KinshipWhiteboard() {
-  const { language, assets, debts, deceased: planningInfo, updateDeceased, updateAssets, updateDebts, updateHeirs, setActiveView, loadPreset } = useInheritanceStore();
+  const {
+    language,
+    assets,
+    debts,
+    deceased: planningInfo,
+    heirs,
+    activePresetId,
+    updateDeceased,
+    updateAssets,
+    updateDebts,
+    updateHeirs,
+    setActiveView,
+    loadPreset,
+  } = useInheritanceStore();
   const isUr = language === "ur";
-  const arrangeWhiteboard=useCallback((familyNodes:readonly WhiteboardNode[])=>arrangeFamily(familyNodes,isUr),[isUr]);
+  const arrangeWhiteboard = useCallback((familyNodes: readonly WhiteboardNode[]) => arrangeFamily(familyNodes, isUr), [isUr]);
 
   // Canvas Viewport State
   const [zoom, setZoom] = useState<number>(1);
@@ -353,8 +368,14 @@ export function KinshipWhiteboard() {
   const [isPanning, setIsPanning] = useState<boolean>(false);
   const [panStart, setPanStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
-  // Nodes & Selection
-  const [nodes, setNodes] = useState<WhiteboardNode[]>(() => arrangeWhiteboard(INITIAL_NODES_4_CHILDREN));
+  // Nodes & Selection: Initialize with active calculator template if one is loaded, or fallback to default
+  const [nodes, setNodes] = useState<WhiteboardNode[]>(() => {
+    if (activePresetId) {
+      const tmpl = WHITEBOARD_TEMPLATES.find((t) => t.id === activePresetId);
+      if (tmpl) return arrangeFamily(tmpl.nodes, isUr);
+    }
+    return arrangeFamily(INITIAL_NODES_4_CHILDREN, isUr);
+  });
   const [estateSubjectId, setEstateSubjectId] = useState("deceased-root");
   const [deletedSnapshot, setDeletedSnapshot] = useState<WhiteboardNode[] | null>(null);
   const family = useMemo(() => projectWhiteboardFamily(nodes, estateSubjectId), [nodes, estateSubjectId]);
@@ -461,7 +482,7 @@ export function KinshipWhiteboard() {
 
   // Load a preset template onto the canvas
   const loadPresetTemplate = useCallback(
-    (template: WhiteboardPresetTemplate) => {
+    (template: WhiteboardPresetTemplate, skipStoreLoad = false) => {
       const arranged = arrangeFamily(template.nodes, isUr);
       if (replaceNodes(arranged)) {
         frameBoard(arranged);
@@ -470,13 +491,26 @@ export function KinshipWhiteboard() {
         setSelectedNodeId("deceased-root");
         setActiveTemplateId(template.id);
         setShowTemplatesModal(false);
-        if (template.id !== "template-clean-slate") {
+        if (!skipStoreLoad && template.id !== "template-clean-slate") {
           loadPreset(template.id);
         }
       }
     },
     [isUr, frameBoard, loadPreset]
   );
+
+  // Auto-sync: Whenever an archetype is selected in the calculator, auto-reflect on whiteboard canvas!
+  const prevActivePresetRef = useRef<string | null>(activePresetId);
+  useEffect(() => {
+    if (activePresetId && activePresetId !== prevActivePresetRef.current) {
+      prevActivePresetRef.current = activePresetId;
+      const tmpl = WHITEBOARD_TEMPLATES.find((t) => t.id === activePresetId);
+      if (tmpl) {
+        loadPresetTemplate(tmpl, true);
+      }
+    }
+  }, [activePresetId, loadPresetTemplate]);
+
   useEffect(() => { frameBoard(nodesRef.current); }, []);
 
   useEffect(()=>{
@@ -997,6 +1031,37 @@ export function KinshipWhiteboard() {
   };
 
   /* -------------------------------------------------------------------------
+     PULL ACTIVE CALCULATOR TEMPLATE OR CUSTOM FAMILY ONTO WHITEBOARD CANVAS
+     ------------------------------------------------------------------------- */
+  const [pullSuccess, setPullSuccess] = useState<boolean>(false);
+  const handlePullFromCalculator = useCallback(() => {
+    // 1. If activePresetId matches one of our 8 templates in WHITEBOARD_TEMPLATES, load its rich canonical nodes
+    if (activePresetId) {
+      const tmpl = WHITEBOARD_TEMPLATES.find((t) => t.id === activePresetId);
+      if (tmpl) {
+        loadPresetTemplate(tmpl, true);
+        setCanvasEstateGross(assets.cash || 0);
+        setPullSuccess(true);
+        setTimeout(() => setPullSuccess(false), 3000);
+        return;
+      }
+    }
+
+    // 2. Otherwise, synthesize nodes from current calculator heirs & deceased
+    const synthesized = buildWhiteboardNodesFromCalculator(heirs, planningInfo, isUr);
+    if (synthesized && synthesized.length > 0) {
+      if (replaceNodes(synthesized)) {
+        frameBoard(synthesized);
+        setEstateSubjectId("deceased-root");
+        setSelectedNodeId("deceased-root");
+        setCanvasEstateGross(assets.cash || 0);
+        setPullSuccess(true);
+        setTimeout(() => setPullSuccess(false), 3000);
+      }
+    }
+  }, [activePresetId, assets.cash, heirs, isUr, loadPresetTemplate, planningInfo, frameBoard]);
+
+  /* -------------------------------------------------------------------------
      EXPORT CANVAS TO PNG
      ------------------------------------------------------------------------- */
 
@@ -1132,21 +1197,44 @@ export function KinshipWhiteboard() {
 
         {/* Center: Scenario Presets & Sandbox Toggle */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* Free Sandbox Supposition Mode Checkbox & Sync */}
-          <div className="flex items-center gap-2 px-2.5 py-1 rounded-xl bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 shadow-2xs">
-            <label className="flex items-center gap-1.5 text-xs font-bold text-amber-900 dark:text-amber-200 cursor-pointer select-none whitespace-nowrap">
+          {/* Dual-Direction Calculator Sync Hub */}
+          <div className="flex items-center gap-1.5 px-2 py-1 rounded-xl bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 shadow-2xs">
+            <label className="flex items-center gap-1 text-xs font-bold text-amber-900 dark:text-amber-200 cursor-pointer select-none whitespace-nowrap pr-1.5 border-r border-amber-300 dark:border-amber-800">
               <input
                 type="checkbox"
                 checked={sandboxMode}
                 onChange={(e) => setSandboxMode(e.target.checked)}
                 className="w-3.5 h-3.5 rounded text-[#245642] focus:ring-[#245642] cursor-pointer"
               />
-              <span>{isUr ? "فرضی مشق (Sandbox)" : "Sandbox"}</span>
+              <span className="hidden sm:inline">{isUr ? "فرضی مشق" : "Sandbox"}</span>
             </label>
+
+            {/* Pull from Calculator (Loads active template or custom heirs from calculator) */}
             <button
+              type="button"
+              onClick={handlePullFromCalculator}
+              className="px-2 py-1 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-[11px] font-bold transition-all shadow-2xs cursor-pointer flex items-center gap-1 whitespace-nowrap active:scale-95"
+              title={isUr ? "کیلکولیٹر کا فعال خاکہ اور ورثاء یہاں لائیں" : "Pull active Calculator template & heirs onto Whiteboard"}
+            >
+              {pullSuccess ? (
+                <>
+                  <Check size={12} className="text-emerald-200" />
+                  <span>{isUr ? "درآمد ہو گیا!" : "Imported!"}</span>
+                </>
+              ) : (
+                <>
+                  <ArrowDownToLine size={12} />
+                  <span>{isUr ? "کیلکولیٹر سے لائیں" : "Pull from Calc"}</span>
+                </>
+              )}
+            </button>
+
+            {/* Push to Calculator (Sends current whiteboard family into calculator) */}
+            <button
+              type="button"
               onClick={handleSyncToCalculator}
-              className="px-2 py-0.5 rounded-lg bg-[#245642] hover:bg-[#1a3f30] text-white text-[11px] font-bold transition-all shadow-2xs cursor-pointer flex items-center gap-1 whitespace-nowrap"
-              title={isUr ? "اس خاندانی خاکے کو اصل کیلکولیٹر میں منتقل کریں" : "Sync this family into Main Calculator"}
+              className="px-2 py-1 rounded-lg bg-[#245642] hover:bg-[#1a3f30] text-white text-[11px] font-bold transition-all shadow-2xs cursor-pointer flex items-center gap-1 whitespace-nowrap active:scale-95"
+              title={isUr ? "اس خاندانی خاکے کو اصل کیلکولیٹر میں منتقل کریں" : "Push this whiteboard family into Main Calculator"}
             >
               {syncSuccess ? (
                 <>
@@ -1155,11 +1243,18 @@ export function KinshipWhiteboard() {
                 </>
               ) : (
                 <>
-                  <Split size={12} />
-                  <span>{isUr ? "کیلکولیٹر سنک" : "Sync"}</span>
+                  <ArrowUpFromLine size={12} />
+                  <span>{isUr ? "کیلکولیٹر میں بھیجیں" : "Push to Calc"}</span>
                 </>
               )}
             </button>
+
+            {activePresetId && (
+              <span className="hidden xl:inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold border border-emerald-300">
+                <Check size={10} className="text-emerald-600" />
+                <span>{isUr ? "مربوط" : "Integrated"}</span>
+              </span>
+            )}
           </div>
 
           <div className="flex items-center gap-1.5 bg-stone-100 dark:bg-stone-800/80 p-1 rounded-xl border border-stone-200 dark:border-stone-700 shrink-0">

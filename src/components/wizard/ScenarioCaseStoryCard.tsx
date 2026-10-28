@@ -15,6 +15,7 @@ import {
   HelpCircle,
   ChevronRight,
   Eye,
+  GitFork,
 } from "lucide-react";
 
 interface ScenarioCaseStoryCardProps {
@@ -30,6 +31,7 @@ export const ScenarioCaseStoryCard: React.FC<ScenarioCaseStoryCardProps> = ({ cl
     resetAll,
     setWizardStep,
     wizardStep,
+    setActiveView,
   } = useInheritanceStore();
 
   const isUr = language === "ur";
@@ -170,7 +172,17 @@ export const ScenarioCaseStoryCard: React.FC<ScenarioCaseStoryCardProps> = ({ cl
             : "This complete scenario is automatically loaded across all 5 wizard steps below."}
         </span>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            type="button"
+            onClick={() => setActiveView("whiteboard")}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-950 border border-amber-300 text-xs sm:text-sm font-bold shadow-xs transition-all cursor-pointer active:scale-95"
+            title={isUr ? "اس خاندانی خاکے کو انٹرایکٹو وائٹ بورڈ پر دیکھیں" : "Explore this family on Kinship Whiteboard"}
+          >
+            <GitFork className="w-4 h-4 text-amber-700" />
+            <span>{isUr ? "نقشۂ قرابت (Whiteboard) پر دیکھیں" : "Explore on Whiteboard"}</span>
+          </button>
+
           {wizardStep !== 5 ? (
             <button
               type="button"

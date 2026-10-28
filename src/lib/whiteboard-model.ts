@@ -1,3 +1,5 @@
+import type { HeirsInput, DeceasedInfo } from "@/types/fiqh";
+
 /** Structural constraints for the permanent-marriage inheritance sandbox.
  * Survival is a scenario input, not a structural constraint.
  */
@@ -325,4 +327,277 @@ export function arrangeWhiteboard(nodes: readonly WhiteboardNode[], rtl = false)
   for(const n of result)if(!placed.has(n.id)){place(n.id,left,0);left+=width(n.id)+300;}
   if(rtl){const axis=Math.min(...result.map(n=>n.x))+Math.max(...result.map(n=>n.x));result.forEach(n=>{n.x=axis-n.x;});}
   return result;
+}
+
+/**
+ * Synthesizes a valid WhiteboardNode graph from Main Calculator's HeirsInput & DeceasedInfo.
+ * Supports parents, spouses, sons, daughters, grandchildren (Tanzil), and Class 2 siblings.
+ */
+export function buildWhiteboardNodesFromCalculator(
+  heirs: HeirsInput,
+  deceased: DeceasedInfo,
+  isUr = false
+): WhiteboardNode[] {
+  const isMale = deceased.gender === "male";
+  const nodes: WhiteboardNode[] = [];
+
+  // 1. Root Deceased
+  nodes.push({
+    id: "deceased-root",
+    nameEn: deceased.name || (isMale ? "Deceased (Father/Husband)" : "Deceased (Mother/Wife)"),
+    nameUr: deceased.name || (isMale ? "مرحوم (مورث)" : "مرحومہ (مورثہ)"),
+    gender: isMale ? "MALE" : "FEMALE",
+    relation: "DECEASED",
+    isAlive: false,
+    x: 540,
+    y: 160,
+  });
+
+  // 2. Parents
+  if (heirs.fatherAlive) {
+    nodes.push({
+      id: "father-1",
+      nameEn: "Father",
+      nameUr: "والد محترم",
+      gender: "MALE",
+      relation: "FATHER",
+      isAlive: true,
+      parentOfId: "deceased-root",
+      x: 360,
+      y: 40,
+    });
+  }
+  if (heirs.motherAlive) {
+    nodes.push({
+      id: "mother-1",
+      nameEn: "Mother",
+      nameUr: "والدہ محترمہ",
+      gender: "FEMALE",
+      relation: "MOTHER",
+      isAlive: true,
+      parentOfId: "deceased-root",
+      x: 720,
+      y: 40,
+    });
+  }
+
+  // 3. Spouses
+  if (isMale) {
+    const wivesCount = heirs.wives && heirs.wives.length > 0 
+      ? heirs.wives.filter(w => w.isAlive).length 
+      : (heirs.spouseCount > 0 ? heirs.spouseCount : 0);
+    
+    for (let i = 0; i < wivesCount; i++) {
+      const wifeData = heirs.wives?.[i];
+      nodes.push({
+        id: `wife-${i + 1}`,
+        nameEn: wifeData?.name || `Wife ${i + 1}`,
+        nameUr: wifeData?.name || `زوجہ ${i + 1}`,
+        gender: "FEMALE",
+        relation: "SPOUSE",
+        isAlive: true,
+        spouseOfId: "deceased-root",
+        unpaidMahr: wifeData?.pendingMahrAmount || 0,
+        x: 780 + i * 160,
+        y: 160,
+      });
+    }
+  } else {
+    if (heirs.spouseCount > 0) {
+      nodes.push({
+        id: "husband-1",
+        nameEn: "Husband",
+        nameUr: "شوہر",
+        gender: "MALE",
+        relation: "SPOUSE",
+        isAlive: true,
+        spouseOfId: "deceased-root",
+        x: 780,
+        y: 160,
+      });
+    }
+  }
+
+  // 4. Children (Sons & Daughters)
+  const sonsCount = heirs.sonsCount || 0;
+  const daughtersCount = heirs.daughtersCount || 0;
+
+  for (let i = 0; i < sonsCount; i++) {
+    nodes.push({
+      id: `son-${i + 1}`,
+      nameEn: `Son ${i + 1}`,
+      nameUr: `بیٹا ${i + 1}`,
+      gender: "MALE",
+      relation: "SON",
+      isAlive: true,
+      parentId: "deceased-root",
+      x: 300 + i * 160,
+      y: 420,
+    });
+  }
+
+  for (let i = 0; i < daughtersCount; i++) {
+    nodes.push({
+      id: `daughter-${i + 1}`,
+      nameEn: `Daughter ${i + 1}`,
+      nameUr: `بیٹی ${i + 1}`,
+      gender: "FEMALE",
+      relation: "DAUGHTER",
+      isAlive: true,
+      parentId: "deceased-root",
+      x: 300 + (sonsCount + i) * 160,
+      y: 420,
+    });
+  }
+
+  // 5. Grandchildren through predeceased children (Tanzil)
+  if (heirs.deceasedSonsWithChildren && heirs.deceasedSonsWithChildren.length > 0) {
+    heirs.deceasedSonsWithChildren.forEach((group, gIdx) => {
+      const pSonId = `predeceased-son-${gIdx + 1}`;
+      nodes.push({
+        id: pSonId,
+        nameEn: `Late Son ${gIdx + 1}`,
+        nameUr: `مرحوم بیٹا ${gIdx + 1}`,
+        gender: "MALE",
+        relation: "SON",
+        isAlive: false,
+        parentId: "deceased-root",
+        x: 200 + gIdx * 200,
+        y: 420,
+      });
+      for (let s = 0; s < (group.sons || 0); s++) {
+        nodes.push({
+          id: `pota-${gIdx + 1}-${s + 1}`,
+          nameEn: `Pota (Grandson) ${s + 1}`,
+          nameUr: `پوتا ${s + 1}`,
+          gender: "MALE",
+          relation: "GRANDCHILD",
+          isAlive: true,
+          parentId: pSonId,
+          x: 200 + s * 140,
+          y: 700,
+        });
+      }
+      for (let d = 0; d < (group.daughters || 0); d++) {
+        nodes.push({
+          id: `poti-${gIdx + 1}-${d + 1}`,
+          nameEn: `Poti (Granddaughter) ${d + 1}`,
+          nameUr: `پوتی ${d + 1}`,
+          gender: "FEMALE",
+          relation: "GRANDCHILD",
+          isAlive: true,
+          parentId: pSonId,
+          x: 200 + ((group.sons || 0) + d) * 140,
+          y: 700,
+        });
+      }
+    });
+  }
+
+  if (heirs.deceasedDaughtersWithChildren && heirs.deceasedDaughtersWithChildren.length > 0) {
+    heirs.deceasedDaughtersWithChildren.forEach((group, gIdx) => {
+      const pDauId = `predeceased-dau-${gIdx + 1}`;
+      nodes.push({
+        id: pDauId,
+        nameEn: `Late Daughter ${gIdx + 1}`,
+        nameUr: `مرحومہ بیٹی ${gIdx + 1}`,
+        gender: "FEMALE",
+        relation: "DAUGHTER",
+        isAlive: false,
+        parentId: "deceased-root",
+        x: 600 + gIdx * 200,
+        y: 420,
+      });
+      for (let s = 0; s < (group.sons || 0); s++) {
+        nodes.push({
+          id: `nawasa-${gIdx + 1}-${s + 1}`,
+          nameEn: `Nawasa (Grandson) ${s + 1}`,
+          nameUr: `نواسا ${s + 1}`,
+          gender: "MALE",
+          relation: "GRANDCHILD",
+          isAlive: true,
+          parentId: pDauId,
+          x: 600 + s * 140,
+          y: 700,
+        });
+      }
+      for (let d = 0; d < (group.daughters || 0); d++) {
+        nodes.push({
+          id: `nawasi-${gIdx + 1}-${d + 1}`,
+          nameEn: `Nawasi (Granddaughter) ${d + 1}`,
+          nameUr: `نواسی ${d + 1}`,
+          gender: "FEMALE",
+          relation: "GRANDCHILD",
+          isAlive: true,
+          parentId: pDauId,
+          x: 600 + ((group.sons || 0) + d) * 140,
+          y: 700,
+        });
+      }
+    });
+  }
+
+  // 6. Siblings (if Class 2)
+  if (sonsCount === 0 && daughtersCount === 0 && !heirs.fatherAlive && !heirs.motherAlive) {
+    const rootFatherId = "deceased-father-placeholder";
+    if (!nodes.some(n => n.id === "father-1")) {
+      nodes.push({
+        id: rootFatherId,
+        nameEn: "Deceased Father",
+        nameUr: "مرحوم والد",
+        gender: "MALE",
+        relation: "FATHER",
+        isAlive: false,
+        parentOfId: "deceased-root",
+        x: 360,
+        y: 40,
+      });
+    }
+    const fatherNodeId = nodes.find(n => n.relation === "FATHER")?.id || rootFatherId;
+
+    const fullBro = heirs.fullBrothersCount || 0;
+    const fullSis = heirs.fullSistersCount || 0;
+    for (let i = 0; i < fullBro; i++) {
+      nodes.push({
+        id: `full-brother-${i + 1}`,
+        nameEn: `Full Brother ${i + 1}`,
+        nameUr: `سگا بھائی ${i + 1}`,
+        gender: "MALE",
+        relation: "RELATIVE",
+        isAlive: true,
+        parentId: fatherNodeId,
+        x: 100 + i * 160,
+        y: 220,
+      });
+    }
+    for (let i = 0; i < fullSis; i++) {
+      nodes.push({
+        id: `full-sister-${i + 1}`,
+        nameEn: `Full Sister ${i + 1}`,
+        nameUr: `سگی بہن ${i + 1}`,
+        gender: "FEMALE",
+        relation: "RELATIVE",
+        isAlive: true,
+        parentId: fatherNodeId,
+        x: 100 + (fullBro + i) * 160,
+        y: 220,
+      });
+    }
+    const uterineSis = heirs.uterineSistersCount || 0;
+    for (let i = 0; i < uterineSis; i++) {
+      nodes.push({
+        id: `uterine-sister-${i + 1}`,
+        nameEn: `Maternal Sister ${i + 1}`,
+        nameUr: `مادری بہن ${i + 1}`,
+        gender: "FEMALE",
+        relation: "RELATIVE",
+        isAlive: true,
+        parentId: fatherNodeId,
+        x: 100 + (fullBro + fullSis + i) * 160,
+        y: 220,
+      });
+    }
+  }
+
+  return arrangeWhiteboard(nodes, isUr);
 }

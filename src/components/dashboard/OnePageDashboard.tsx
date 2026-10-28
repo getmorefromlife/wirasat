@@ -242,6 +242,17 @@ export const OnePageDashboard: React.FC = () => {
             </div>
           )}
 
+          {/* Whiteboard Bridge */}
+          <button
+            type="button"
+            onClick={() => setActiveView("whiteboard")}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold transition-all shadow-2xs cursor-pointer active:scale-95"
+            title={isUr ? "اس حساب کو انٹرایکٹو وائٹ بورڈ پر دیکھیں" : "Explore this estate on Kinship Whiteboard"}
+          >
+            <GitFork className="w-4 h-4 text-amber-700" />
+            <span className="hidden sm:inline">{isUr ? "وائٹ بورڈ" : "Whiteboard"}</span>
+          </button>
+
           <button
             type="button"
             onClick={resetAll}

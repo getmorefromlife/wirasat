@@ -20,6 +20,7 @@ import {
   AlertCircle,
   Home,
   Coins,
+  GitFork,
 } from "lucide-react";
 import { ValuationHelpersModal } from "@/components/calculator/ValuationHelpersModal";
 import { SCENARIO_PRESETS } from "@/lib/scenarios";
@@ -48,6 +49,7 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
     getCalculationResult,
     loadPreset,
     activePresetId,
+    setActiveView,
   } = useInheritanceStore();
 
   const isUr = language === "ur";
@@ -386,6 +388,15 @@ export const MobileCalculator: React.FC<MobileCalculatorProps> = ({
                 </button>
               );
             })}
+            <button
+              type="button"
+              onClick={() => setActiveView("whiteboard")}
+              className="px-3 py-2 rounded-2xl text-xs font-black whitespace-nowrap transition-all border-2 border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-950 shrink-0 cursor-pointer flex items-center gap-1.5 shadow-2xs active:scale-95"
+              title={isUr ? "اس خاندانی خاکے کو وائٹ بورڈ پر دیکھیں" : "Explore on Whiteboard"}
+            >
+              <GitFork className="w-4 h-4 text-amber-700" />
+              <span>{isUr ? "وائٹ بورڈ پر دیکھیں" : "Open in Whiteboard"}</span>
+            </button>
           </div>
         </div>
 
